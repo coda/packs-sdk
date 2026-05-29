@@ -1,4 +1,4 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
 // Regular expressions that match Todoist task URLs. Used by the column format
 // and also the formula that powers it.
@@ -8,7 +8,7 @@ const TaskUrlPatterns: RegExp[] = [
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
 ];
 
-export const pack = coda.newPack();
+export const pack = sdk.newPack();
 
 // Add a column format that displays a task URL as rich metadata.
 pack.addColumnFormat({
@@ -21,25 +21,25 @@ pack.addColumnFormat({
 });
 
 // A schema defining the rich metadata to be returned.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -54,13 +54,13 @@ pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by URL",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "The URL of the task",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: TaskSchema,
 
   execute: async function ([url], context) {
@@ -87,7 +87,7 @@ function extractTaskId(taskUrl: string) {
       return matches[1];
     }
   }
-  throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
+  throw new sdk.UserVisibleError("Invalid task URL: " + taskUrl);
 }
 
 // Allow the pack to make requests to Todoist.
@@ -95,6 +95,6 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });

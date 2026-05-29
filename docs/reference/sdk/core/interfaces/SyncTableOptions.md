@@ -91,6 +91,34 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 ***
 
+### indexing?
+
+> `optional` **indexing**: `object`
+
+Options to control the default indexing (ingestion) behavior for this sync table when
+setting up a connector. Use this to exclude sync tables from ingestion by default when
+they aren't relevant to most users, while still allowing users to opt in.
+
+#### Example
+
+```
+pack.addSyncTable({
+  name: "MessagesSharedMailbox",
+  // ...
+  indexing: {
+    default: sdk.DataIndexing.Exclude,
+  },
+});
+```
+
+#### default
+
+> **default**: [`DataIndexing`](../enumerations/DataIndexing.md)
+
+The default indexing status for this sync table. See [DataIndexing](../enumerations/DataIndexing.md).
+
+***
+
 ### instructions?
 
 > `optional` **instructions**: `string`

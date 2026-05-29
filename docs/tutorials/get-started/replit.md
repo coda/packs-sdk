@@ -34,7 +34,7 @@ It may take a few minutes for the repl to fully initialize. When it's complete y
 To finish the setup and test the Pack, click the **Run** button in the Replit UI. This will install the Node dependencies and run following command in the console:
 
 ```shell
-npx coda execute pack.ts Hello "World"
+npx packs execute pack.ts Hello "World"
 ```
 
 If everything works correctly this should output `Hello World!`.

@@ -1,45 +1,19 @@
-/* Create a custom Coda color scheme. */
-[data-md-color-scheme="coda"] {
-  /* Theme overrides. */
-  --md-primary-fg-color: #006838; /* Emerald */
-  --md-accent-fg-color: #EE5A29; /* Tomato Soup */
-  --md-code-hl-color: #FFE6C9; /* Peach */
-
-  /* Custom variables. */
-  --coda-external-link-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M256 64c0-17.67 14.3-32 32-32h127.1c5.2 0 9.4.86 13.1 2.43 2.9 1.55 7.3 3.84 10.4 6.87 0 .05 0 .1.1.14 6.2 6.22 8.4 14.34 9.3 22.46V192c0 17.7-14.3 32-32 32s-32-14.3-32-32v-50.7L214.6 310.6c-12.5 12.5-32.7 12.5-45.2 0s-12.5-32.7 0-45.2L338.7 96H288c-17.7 0-32-14.33-32-32zM0 128c0-35.35 28.65-64 64-64h96c17.7 0 32 14.33 32 32 0 17.7-14.3 32-32 32H64v288h288v-96c0-17.7 14.3-32 32-32s32 14.3 32 32v96c0 35.3-28.7 64-64 64H64c-35.35 0-64-28.7-64-64V128z"/></svg>')
-}
-
-/* Don't use link colors in the announcement banner, for readability. */
-.md-announce a {
-  color: inherit;
-  text-decoration: underline;
-}
-
-/* Ensure <button> and <a> buttons have the same height. */
-.md-button {
-  line-height: 1.6em;
-}
-
-/* Size in-line image to be the same size as the text. */
-img.inline-icon {
-  height: 1em;
-}
-
 .screenshot {
   border-radius: 8px;
-  box-shadow: 0 0 24px rgba(0,0,0,var(--opacity-shadow-normal,.15));
+  box-shadow: 0 0 24px rgba(0, 0, 0, var(--opacity-shadow-normal, 0.15));
 }
 
-li.yes, li.no {
+li.yes,
+li.no {
   padding-left: 0.5rem;
 }
 
 li.yes {
-  list-style-type: "✅";
+  list-style-type: '✅';
 }
 
 li.no {
-  list-style-type: "❌";
+  list-style-type: '❌';
 }
 
 div.yes pre code {
@@ -48,23 +22,6 @@ div.yes pre code {
 
 div.no pre code {
   background-color: #f9f1f1;
-}
-
-/* Add an icon next to external links in the nav. */
-.md-sidebar a[href]:where(
-  [href^="https://"],
-):after {
-  background-color: currentColor;
-  mask-image: var(--coda-external-link-image);
-  -webkit-mask-image: var(--coda-external-link-image);
-  mask-size: contain;
-  -webkit-mask-size: contain;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
-  display: inline-block;
-  width: 0.6rem;
-  height: 0.6rem;
-  content:"";
 }
 
 .landing-row {
@@ -122,7 +79,7 @@ div.no pre code {
 }
 
 .box-item {
-  border: .05rem solid var(--md-default-fg-color--lightest);
+  border: 0.05rem solid var(--md-default-fg-color--lightest);
   padding: 0 2em;
   display: flex;
   flex-direction: column;
@@ -137,25 +94,10 @@ div.no pre code {
   display: none;
 }
 
-.md-banner a {
-  color: var(--md-code-hl-color);
-}
-
-/*
- * Work around search suggest results being too large.
- * See: https://github.com/squidfunk/mkdocs-material/issues/4278#issuecomment-1562597537
- */
-.md-search-result .md-typeset {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  max-height: 140px;
-}
-
 /* Early Access Admonition */
 
 :root {
-  --md-admonition-icon--early-access: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path d="M6 0a6 6 0 1 1 0 12A6 6 0 0 1 6 0m3 5H3v2h6Z"/></svg>')
+  --md-admonition-icon--early-access: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path d="M6 0a6 6 0 1 1 0 12A6 6 0 0 1 6 0m3 5H3v2h6Z"/></svg>');
 }
 .md-typeset .admonition.early-access,
 .md-typeset details.early-access {
@@ -169,5 +111,5 @@ div.no pre code {
 .md-typeset .early-access > summary::before {
   background-color: rgb(255, 204, 77);
   -webkit-mask-image: var(--md-admonition-icon--early-access);
-          mask-image: var(--md-admonition-icon--early-access);
+  mask-image: var(--md-admonition-icon--early-access);
 }

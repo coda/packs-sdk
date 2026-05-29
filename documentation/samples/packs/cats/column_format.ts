@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Column format that displays the cell's value within a random cat image,
 // using the CatPhoto() formula defined above.
@@ -14,18 +14,18 @@ pack.addFormula({
   name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "Text to display over the image.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text] = args;
     let url = "https://cataas.com/cat/says/" + encodeURIComponent(text);
-    url = coda.withQueryParams(url, {
+    url = sdk.withQueryParams(url, {
       json: true,
     });
     let response = await context.fetcher.fetch({

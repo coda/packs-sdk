@@ -22,7 +22,7 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
@@ -38,8 +38,8 @@ A formula that returns a random value. This sample rolls virtual dice and return
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Rolls virtual dice and returns the resulting numbers. Use it with a button in
 // table and store the results in another column.
@@ -47,22 +47,22 @@ pack.addFormula({
   name: "RollDice",
   description: "Roll some virtual dice.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "quantity",
       description: "How many dice to roll.",
       suggestedValue: 1,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "sides",
       description: "How many sides the dice have.",
       suggestedValue: 6,
     }),
   ],
-  resultType: coda.ValueType.Array,
-  items: coda.makeSchema({
-    type: coda.ValueType.Number,
+  resultType: sdk.ValueType.Array,
+  items: sdk.makeSchema({
+    type: sdk.ValueType.Number,
   }),
   isAction: true,
   execute: async function ([quantity, sides], context) {
@@ -81,21 +81,21 @@ A formula that posts data to an external API. This sample creates a new task in 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Action formula (for buttons and automations) that adds a new task in Todoist.
 pack.addFormula({
   name: "AddTask",
   description: "Add a new task.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the task.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
 
   execute: async function ([name], context) {
@@ -120,7 +120,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}
@@ -130,29 +130,29 @@ A formula that updates an item on the server, and the existing row in a sync tab
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -167,22 +167,22 @@ pack.addFormula({
   name: "UpdateTask",
   description: "Updates the name of a task.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "taskId",
       description: "The ID of the task to update.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The new name of the task.",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   // For schemas returned by actions to update rows in a sync table, set the
   // identity on the schema to match the identityName on the sync table being
-  // updated, using the helper function coda.withIdentity().
-  schema: coda.withIdentity(TaskSchema, "Task"),
+  // updated, using the helper function sdk.withIdentity().
+  schema: sdk.withIdentity(TaskSchema, "Task"),
   isAction: true,
 
   execute: async function ([taskId, name], context) {
@@ -250,7 +250,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}

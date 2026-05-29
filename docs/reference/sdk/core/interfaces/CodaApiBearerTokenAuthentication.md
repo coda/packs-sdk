@@ -16,14 +16,14 @@ This is identical to [AuthenticationType.HeaderBearerToken](../enumerations/Auth
 with a UI to generate an API token rather than needing to paste an arbitrary API
 token into a text input.
 
-This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
+This is primarily for use by Superhuman-authored packs, as it is only relevant for interacting with the
 Coda REST API.
 
 ## Example
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
 });
 ```
 
@@ -99,7 +99,7 @@ A link to a help article or other page with more instructions about how to set u
 Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 
-Using multiple authenticated network domains is uncommon and requires Coda approval.
+Using multiple authenticated network domains is uncommon and requires Superhuman approval.
 
 #### Inherited from
 

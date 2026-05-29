@@ -22,12 +22,12 @@ boilerplate.
 ## Example
 
 ```
-coda.makeObjectSchema({
+sdk.makeObjectSchema({
   id: "email",
   primary: "name",
   properties: {
-    email: {type: coda.ValueType.String, required: true},
-    name: {type: coda.ValueType.String, required: true},
+    email: {type: sdk.ValueType.String, required: true},
+    name: {type: sdk.ValueType.String, required: true},
   },
 });
 ```

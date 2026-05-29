@@ -1,26 +1,26 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A formula that generates an image using some input text.
 pack.addFormula({
   name: "TextToImage",
   description: "Generates an image using the text provided.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text to include in the image.",
       suggestedValue: "Hello World!",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "color",
       description: "The desired color of the text. Defaults to black.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function ([text, color = "black"], context) {
     // Calculate the width of the generated image required to fit the text.
     // Using a fixed-width font to make this easy.
@@ -36,6 +36,6 @@ pack.addFormula({
     // Encode the markup as base64.
     let encoded = Buffer.from(svg).toString("base64");
     // Return the SVG as a data URL.
-    return coda.SvgConstants.DataUrlPrefix + encoded;
+    return sdk.SvgConstants.DataUrlPrefix + encoded;
   },
 });

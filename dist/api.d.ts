@@ -3,6 +3,7 @@ import type { ArrayType } from './api_types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
+import type { DataIndexing } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
 import type { GetPermissionExecutionContext } from './api_types';
@@ -50,7 +51,7 @@ export { FetchRequest } from './api_types';
  * @example
  * ```
  * if (!url.startsWith("https://")) {
- *   throw new coda.UserVisibleError("Please provide a valid url.");
+ *   throw new sdk.UserVisibleError("Please provide a valid url.");
  * }
  * ```
  *
@@ -135,13 +136,13 @@ export interface StatusCodeErrorResponse {
  *   });
  * } catch (error) {
  *   // If the request failed because the server returned a 300+ status code.
- *   if (coda.StatusCodeError.isStatusCodeError(error)) {
+ *   if (sdk.StatusCodeError.isStatusCodeError(error)) {
  *     // Cast the error as a StatusCodeError, for better intellisense.
- *     let statusError = error as coda.StatusCodeError;
+ *     let statusError = error as sdk.StatusCodeError;
  *     // If the API returned an error message in the body, show it to the user.
  *     let message = statusError.body?.detail;
  *     if (message) {
- *       throw new coda.UserVisibleError(message);
+ *       throw new sdk.UserVisibleError(message);
  *     }
  *   }
  *   // The request failed for some other reason. Re-throw the error so that it
@@ -185,10 +186,10 @@ export declare class StatusCodeError extends Error {
 /**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added
  * to the pack since their connection was created, or scopes that are specific to a certain formula.
- * This is useful because Coda will always attempt to execute a formula even if a user has not yet
+ * This is useful because the platform will always attempt to execute a formula even if a user has not yet
  * re-authenticated with all relevant scopes.
  *
- * You don't *always* need to throw this specific error, as Coda will interpret a 403 (Forbidden)
+ * You don't *always* need to throw this specific error, as the platform will interpret a 403 (Forbidden)
  * status code error as a MissingScopesError when the user's connection was made without all
  * currently relevant scopes. This error exists because that default behavior is insufficient if
  * the OAuth service does not set a 403 status code (the OAuth spec doesn't specifically require
@@ -203,7 +204,7 @@ export declare class StatusCodeError extends Error {
  * } catch (error) {
  *   // Determine if the error is due to missing scopes.
  *   if (error.statusCode == 400 && error.body?.message.includes("permission")) {
- *     throw new coda.MissingScopesError();
+ *     throw new sdk.MissingScopesError();
  *   }
  *   // Else handle or throw the error as normal.
  * }
@@ -300,6 +301,11 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
      * @hidden
      */
     role?: TableRole;
+    /** See {@link SyncTableOptions.indexing} */
+    indexing?: {
+        /** See {@link DataIndexing} */
+        default: DataIndexing;
+    };
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -330,7 +336,7 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
  * can be invoked quickly. The end result of a sync is the concatenation of the results from
  * each individual invocation.
  *
- * To instruct Coda to fetch a subsequent result page, return a `Continuation` that
+ * To instruct the platform to fetch a subsequent result page, return a `Continuation` that
  * describes which page of results to fetch next. The continuation will be passed verbatim
  * as an input to the subsequent invocation of the sync formula.
  *
@@ -353,7 +359,7 @@ export interface Continuation {
 }
 /**
  * Type definition for some additional data that is returned by a sync table
- * in addition to the data itself. This data is not stored in Coda, but
+ * in addition to the data itself. This data is not stored in the doc, but
  * is passed to the executeGetPermissions function of the sync table
  * See {@link SyncFormulaResult.permissionsContext}.
  * TODO(drew): Unhide this
@@ -606,7 +612,7 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
  * metadata formulas, and the formulas that implement sync tables.
  *
  * It should be very uncommon to need to use this type, it is most common in meta analysis of the
- * contents of a pack for Coda internal use.
+ * contents of a pack for internal use.
  */
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
@@ -1092,7 +1098,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * A variety of tasks like those mentioned above can all be accomplished with formulas that
  * share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
  * You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
- * the JavaScript function that implements the formula. Coda will wrap this function with the necessary
+ * the JavaScript function that implements the formula. The platform will wrap this function with the necessary
  * formula boilerplate to make it look like a complete Coda formula.
  *
  * All metadata functions are passed an {@link ExecutionContext} as the first parameter,
@@ -1177,7 +1183,7 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
- * function implementation, and Coda will wrap it with this to generate a full metadata formula
+ * function implementation, and the platform will wrap it with this to generate a full metadata formula
  * definition.
  *
  * All function-like behavior in a pack is ultimately implemented using formulas, like you would
@@ -1224,7 +1230,7 @@ export interface SimpleAutocompleteOption<T extends AutocompleteParameterTypes> 
  * autocomplete: async function(context, search) {
  *   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
  *   const allOptions = response.body.entities.map(entity => entity.name);
- *   return coda.simpleAutocomplete(search, allOptions);
+ *   return sdk.simpleAutocomplete(search, allOptions);
  * }
  * ```
  */
@@ -1243,7 +1249,7 @@ export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>
  *
  * @example
  * ```
- * coda.makeParameter({
+ * sdk.makeParameter({
  *   type: ParameterType.Number,
  *   name: "userId",
  *   description: "The ID of a user.",
@@ -1255,7 +1261,7 @@ export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>
  *     // those that match. Then it will transform the matching objects into the form
  *     // `{display: "Jane Doe", value: 123}` which is what is required to render
  *     // autocomplete responses.
- *     return coda.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
+ *     return sdk.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
  *   }
  * });
  * ```
@@ -1368,6 +1374,26 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * @hidden
      */
     role?: TableRole;
+    /**
+     * Options to control the default indexing (ingestion) behavior for this sync table when
+     * setting up a connector. Use this to exclude sync tables from ingestion by default when
+     * they aren't relevant to most users, while still allowing users to opt in.
+     *
+     * @example
+     * ```
+     * pack.addSyncTable({
+     *   name: "MessagesSharedMailbox",
+     *   // ...
+     *   indexing: {
+     *     default: sdk.DataIndexing.Exclude,
+     *   },
+     * });
+     * ```
+     */
+    indexing?: {
+        /** The default indexing status for this sync table. See {@link DataIndexing}. */
+        default: DataIndexing;
+    };
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -1468,16 +1494,16 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      *
      * @example
      * ```
-     * coda.makeDynamicSyncTable({
+     * sdk.makeDynamicSyncTable({
      *   name: "MySyncTable",
      *   getSchema: async function (context) => {
-     *     return coda.makeObjectSchema({
+     *     return sdk.makeObjectSchema({
      *       properties: {
      *         dynamicPropertyName: {
-     *           type: coda.ValueType.String,
-     *           codaType: coda.ValueHintType.SelectList,
+     *           type: sdk.ValueType.String,
+     *           codaType: sdk.ValueHintType.SelectList,
      *           mutable: true,
-     *           options: coda.OptionsType.Dynamic,
+     *           options: sdk.OptionsType.Dynamic,
      *         },
      *       },
      *     });
@@ -1486,7 +1512,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      *     if (context.propertyName === "dynamicPropertyName") {
      *       return ["Dynamic Value 1", "Dynamic value 2"];
      *     }
-     *     throw new coda.UserVisibleError(
+     *     throw new sdk.UserVisibleError(
      *       `Cannot generate options for property ${context.propertyName}`
      *     );
      *   },
@@ -1494,6 +1520,14 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * ```
      */
     propertyOptions?: PropertyOptionsMetadataFunction<any>;
+    /**
+     * Options to control the default indexing (ingestion) behavior for this sync table.
+     * See {@link SyncTableOptions.indexing} for details.
+     */
+    indexing?: {
+        /** The default indexing status for this sync table. See {@link DataIndexing}. */
+        default: DataIndexing;
+    };
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
@@ -1501,14 +1535,14 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  *
  * This wrapper does a variety of helpful things, including
  * * Doing basic validation of the provided definition.
- * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Normalizing the schema definition to conform to recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
     identity?: Identity;
-}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
+}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, indexing, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 /** @deprecated */
 export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>(name: string, schema: SchemaT, formula: FormulaOptions<ParamDefsT, SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;
@@ -1519,7 +1553,7 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
  *
  * @example
  * ```
- * coda.makeDynamicSyncTable({
+ * sdk.makeDynamicSyncTable({
  *   name: "MySyncTable",
  *   getName: async function(context) => {
  *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
@@ -1533,7 +1567,7 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, indexing, }: {
     name: string;
     displayName?: string;
     description?: string;
@@ -1549,6 +1583,9 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     defaultAddDynamicColumns?: boolean;
     placeholderSchema?: SchemaT;
     propertyOptions?: PropertyOptionsMetadataFunction<any>;
+    indexing?: {
+        default: DataIndexing;
+    };
 }): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.
@@ -1612,7 +1649,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  *
  * @example
  * ```
- * coda.makeEmptyFormula({
+ * sdk.makeEmptyFormula({
     name: "GetWidget",
     description: "Gets a widget.",
     request: {
@@ -1620,7 +1657,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
       method: "GET",
     },
     parameters: [
-      coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
+      sdk.makeParameter({type: sdk.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
     ],
   }),
  * ```

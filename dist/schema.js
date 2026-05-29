@@ -42,7 +42,7 @@ var ValueType;
     ValueType["Object"] = "object";
 })(ValueType || (exports.ValueType = ValueType = {}));
 /**
- * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+ * Synthetic types that instruct the platform how to coerce values from primitives at ingestion time.
  */
 var ValueHintType;
 (function (ValueHintType) {
@@ -237,7 +237,7 @@ var CurrencyFormat;
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
- * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: sdk.ScaleIconSet.Star`.
  */
 var ScaleIconSet;
 (function (ScaleIconSet) {
@@ -577,9 +577,9 @@ exports.generateSchema = generateSchema;
  *
  * @example
  * ```
- * coda.makeSchema({
- *   type: coda.ValueType.Array,
- *   items: {type: coda.ValueType.String},
+ * sdk.makeSchema({
+ *   type: sdk.ValueType.Array,
+ *   items: {type: sdk.ValueType.String},
  * });
  * ```
  */
@@ -597,12 +597,12 @@ exports.makeSchema = makeSchema;
  *
  * @example
  * ```
- * coda.makeObjectSchema({
+ * sdk.makeObjectSchema({
  *   id: "email",
  *   primary: "name",
  *   properties: {
- *     email: {type: coda.ValueType.String, required: true},
- *     name: {type: coda.ValueType.String, required: true},
+ *     email: {type: sdk.ValueType.String, required: true},
+ *     name: {type: sdk.ValueType.String, required: true},
  *   },
  * });
  * ```
@@ -946,7 +946,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 /**
- * Convenience for defining the result schema for an action. The identity enables Coda to
+ * Convenience for defining the result schema for an action. The identity enables the platform to
  * update the corresponding sync table row, if it exists.
  * You could add the identity directly, but that would make the schema less re-usable.
  */

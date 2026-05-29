@@ -30,10 +30,10 @@ If you are sending a JSON payload, make sure to call `JSON.stringify()` on the o
 
 > `optional` **cacheTtlSecs**: `number`
 
-A time in seconds that Coda should cache the result of this HTTP request.
+A time in seconds that the platform should cache the result of this HTTP request.
 
 Any time that this pack makes the same FetchRequest, a cached value can be returned
-instead of making the HTTP request. If left unspecified, Coda will automatically
+instead of making the HTTP request. If left unspecified, the platform will automatically
 cache all GET requests for approximately 5 minutes. To disable the default caching,
 set this value to `0`.
 
@@ -46,7 +46,7 @@ set [FetchRequest.forceCache](#forcecache) to true.
 
 > `optional` **disableAuthentication**: `boolean`
 
-If true, Coda will not apply authentication credentials even if this pack is
+If true, the platform will not apply authentication credentials even if this pack is
 configured to use authentication. This is very rare, but sometimes you may
 wish to make an unauthenticated supporting request as part of a formula implementation.
 
@@ -56,7 +56,7 @@ wish to make an unauthenticated supporting request as part of a formula implemen
 
 > `optional` **forceCache**: `boolean`
 
-If true, Coda will cache the request (including POST, PUT, PATCH, and DELETE) and return the
+If true, the platform will cache the request (including POST, PUT, PATCH, and DELETE) and return the
 same response for subsequent requests. This option does *not* need to be specified to cache
 GET requests.
 
@@ -81,7 +81,7 @@ Key-value form fields, if submitting to an endpoint expecting a URL-encoded form
 
 > `optional` **headers**: `object`
 
-HTTP headers. You should NOT include authentication headers, as Coda will add them for you.
+HTTP headers. You should NOT include authentication headers, as the platform will add them for you.
 
 #### Index Signature
 
@@ -102,8 +102,8 @@ You may inspect the `Location` header of the response to observe the indicated r
 
 > `optional` **isBinaryResponse**: `boolean`
 
-Indicates that you expect the response to be binary data, instructing Coda
-not to attempt to parse the response in any way. Otherwise, Coda may attempt
+Indicates that you expect the response to be binary data, instructing the platform
+not to attempt to parse the response in any way. Otherwise, the platform may attempt
 to parse the response as a JSON object. If true, [FetchResponse.body](FetchResponse.md#body)
 will be a NodeJS Buffer.
 
@@ -123,5 +123,5 @@ The HTTP method/verb (e.g. GET or POST).
 
 The URL to connect to. This is typically an absolute URL, but if your
 pack uses authentication and [BaseAuthentication.requiresEndpointUrl](BaseAuthentication.md#requiresendpointurl) and so has a unique
-endpoint per user account, you may also use a relative URL and Coda will
+endpoint per user account, you may also use a relative URL and the platform will
 apply the user's endpoint automatically.

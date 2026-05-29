@@ -72,7 +72,7 @@ If your action is creating an item in an external API you could return the URL o
 pack.addFormula({
   name: "AddThing",
   description: "Add a new thing.",
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function ([], context) {
     let response = await context.fetcher.fetch({ method: "POST", url: "..." });
@@ -102,10 +102,10 @@ Unlike other formulas, actions are never cached or automatically recalculated. T
 
 It's common for a Pack to have a [sync table][sync_table] that brings in records from an external API, and an action that allows the user to update those records. The changes made by the action will be reflected in the table the next time it syncs, but you can update the row immediately by selecting the correct return value for your formula.
 
-If an action formula returns a [schema][schemas] with an identity matching an existing sync table, Coda will look up the corresponding row in the table and update it with the returned object. Use the helper function `coda.withIdentity()` to add the identity information to the schema.
+If an action formula returns a [schema][schemas] with an identity matching an existing sync table, the platform will look up the corresponding row in the table and update it with the returned object. Use the helper function `sdk.withIdentity()` to add the identity information to the schema.
 
 ```ts
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   // ...
 });
 
@@ -120,8 +120,8 @@ pack.addFormula({
   name: "UpdateTask",
   description: "Updates the name of a task.",
   // ...
-  resultType: coda.ValueType.Object,
-  schema: coda.withIdentity(TaskSchema, "Task"),
+  resultType: sdk.ValueType.Object,
+  schema: sdk.withIdentity(TaskSchema, "Task"),
   isAction: true,
   execute: async function ([taskId, name], context) {
     // Call the API to update the task and get back the updated content.
@@ -141,12 +141,12 @@ The returned object is merged into the existing row, such that any top-level pro
 
 Action formulas must declare the schema of the object they return, which presents a challenge when trying to update rows in sync tables that use the `getSchema` method to [dynamically generate their schemas][getSchema]. It's possible to work around this incompatibility however, as long as there is a predictable `idProperty` for the dynamic schema.
 
-Create a "base schema" for your action formula to use, which at a minimum includes an `idProperty` (and the corresponding property definition). Additionally, set the schema field [`includeUnknownProperties`][includeUnknownProperties] to true. This tells Coda not to strip out extra data in the response that doesn't match a defined property, allowing it to flow through to the sync table.
+Create a "base schema" for your action formula to use, which at a minimum includes an `idProperty` (and the corresponding property definition). Additionally, set the schema field [`includeUnknownProperties`][includeUnknownProperties] to true. This tells the platform not to strip out extra data in the response that doesn't match a defined property, allowing it to flow through to the sync table.
 
 ```ts
-const BaseTaskSchema = coda.makeObjectSchema({
+const BaseTaskSchema = sdk.makeObjectSchema({
   properties: {
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   idProperty: "id",
   includeUnknownProperties: true,
@@ -167,8 +167,8 @@ pack.addSyncTable({
 pack.addFormula({
   name: "UpdateTask",
   // ...
-  resultType: coda.ValueType.Object,
-  schema: coda.withIdentity(BaseTaskSchema, "Task"),
+  resultType: sdk.ValueType.Object,
+  schema: sdk.withIdentity(BaseTaskSchema, "Task"),
   isAction: true,
   execute: async function ([taskId, name], context) {
     let task = updateTask(taskId, name, context);
@@ -190,8 +190,8 @@ Dynamic sync tables have dynamic schemas, and therefore need to use the techniqu
 While there is no solution for the general case, there is for the common case where a button appears in a column of the same table. As long as the `identity.name` of the schema matches that of the dynamic sync table containing the button, the dynamic URL will be automatically populated and the row update will work. Using that same action elsewhere in the doc however will not update the existing row.
 
 
-[help_buttons]: https://help.coda.io/en/articles/2033889-overview-of-buttons
-[help_automations]: https://help.coda.io/en/articles/2423860-automations-in-coda
+[help_buttons]: https://help.coda.io/hc/en-us/articles/39555758072717-Button-basics
+[help_automations]: https://help.coda.io/hc/en-us/articles/39555778179853-Automations-in-Coda
 [fetcher]: ../basics/fetcher.md
 [samples]: ../../samples/topic/action.md
 [formulas]: formulas.md

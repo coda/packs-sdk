@@ -22,7 +22,7 @@ adequately simulate the fact that in a real execution environment each iteration
 will be run in a completely isolated environment, with absolutely no sharing
 of state or global variables between iterations.
 
-For now, use `coda execute --vm` to simulate that level of isolation.
+For now, use `packs execute --vm` to simulate that level of isolation.
 
 ## Deprecated
 

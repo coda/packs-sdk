@@ -1,23 +1,23 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Schema defining the fields to sync for each file.
-const FileSchema = coda.makeObjectSchema({
+const FileSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    path: { type: coda.ValueType.String, fromKey: "path_display" },
+    name: { type: sdk.ValueType.String },
+    path: { type: sdk.ValueType.String, fromKey: "path_display" },
     url: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     thumbnail: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc. This is required, since the thumbnail image URLs returned by
       // TemporaryBlobStorage expire.
-      codaType: coda.ValueHintType.ImageAttachment,
+      codaType: sdk.ValueHintType.ImageAttachment,
     },
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -97,7 +97,7 @@ pack.addSyncTable({
 });
 
 // Gets a batch of files from the API.
-async function getFiles(context: coda.SyncExecutionContext): Promise<any> {
+async function getFiles(context: sdk.SyncExecutionContext): Promise<any> {
   let url = "https://api.dropboxapi.com/2/files/list_folder";
   let body;
 
@@ -105,7 +105,7 @@ async function getFiles(context: coda.SyncExecutionContext): Promise<any> {
   let cursor = context.sync.continuation?.cursor;
   if (cursor) {
     // Continue from the cursor.
-    url = coda.joinUrl(url, "/continue");
+    url = sdk.joinUrl(url, "/continue");
     body = {
       cursor: cursor,
     };
@@ -131,7 +131,7 @@ async function getFiles(context: coda.SyncExecutionContext): Promise<any> {
 }
 
 // Get the thumbnail metadata for a list of file paths.
-async function getThumbnails(paths, context: coda.ExecutionContext):
+async function getThumbnails(paths, context: sdk.ExecutionContext):
     Promise<string[]> {
   // Use a batch URL to get all of the thumbnail metadata in one request.
   let url = "https://content.dropboxapi.com/2/files/get_thumbnail_batch";
@@ -162,7 +162,7 @@ async function getThumbnails(paths, context: coda.ExecutionContext):
 }
 
 // Get the Dropbox URLs for a list of file IDs.
-async function getFileUrls(fileIds, context: coda.ExecutionContext):
+async function getFileUrls(fileIds, context: sdk.ExecutionContext):
     Promise<string[]> {
   // Use a batch URL to get all of the thumbnail metadata in one request.
   let url = "https://api.dropboxapi.com/2/sharing/get_file_metadata/batch";
@@ -183,7 +183,7 @@ async function getFileUrls(fileIds, context: coda.ExecutionContext):
 
 // Set per-user authentication using Dropbox's OAuth2.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://www.dropbox.com/oauth2/authorize",
   tokenUrl: "https://api.dropbox.com/oauth2/token",
   scopes: ["files.content.read", "sharing.read"],

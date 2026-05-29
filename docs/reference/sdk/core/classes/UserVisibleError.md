@@ -19,7 +19,7 @@ and the Coda UI will display the message.
 
 ```
 if (!url.startsWith("https://")) {
-  throw new coda.UserVisibleError("Please provide a valid url.");
+  throw new sdk.UserVisibleError("Please provide a valid url.");
 }
 ```
 

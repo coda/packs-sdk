@@ -1,34 +1,34 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "TotalCost",
   description: "Calculates the total cost for an order.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.SparseNumberArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.SparseNumberArray,
       name: "prices",
       description: "The prices for each item.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.SparseNumberArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.SparseNumberArray,
       name: "quantities",
       description: "The quantities of each item. Default: 1.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.SparseNumberArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.SparseNumberArray,
       name: "taxRates",
       description: "The tax rates for each item. Default: 0.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Currency,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Currency,
   execute: async function ([prices, quantities=[], taxRates=[]], context) {
     if ((quantities.length > 0 && quantities.length !== prices.length) ||
         (taxRates.length > 0 && taxRates.length !== prices.length)) {
-      throw new coda.UserVisibleError("All lists must be the same length.");
+      throw new sdk.UserVisibleError("All lists must be the same length.");
     }
     let result = 0;
     for (let i = 0; i < prices.length; i++) {

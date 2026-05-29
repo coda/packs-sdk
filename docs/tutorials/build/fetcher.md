@@ -80,26 +80,26 @@ Now that we've got our API selected and formula designed we're ready to dive int
     <div markdown>
 
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "ToUSD",
       description: "Convert a currency to US dollars.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.Number,
+        sdk.makeParameter({
+          type: sdk.ParameterType.Number,
           name: "amount",
           description: "The amount to convert."
         }),
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "from",
           description: "The currency to convert from."
         }),
       ],
-      resultType: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+      resultType: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
       execute: async function ([amount, from], context) {
         // TODO
         return 0;
@@ -170,7 +170,7 @@ Now that we've got our API selected and formula designed we're ready to dive int
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    The fetcher response includes lots of information about what the API sent back, but in this case we're interested in the `body` only. When Coda detects that the response is JSON it will automatically parse it for you.
+    The fetcher response includes lots of information about what the API sent back, but in this case we're interested in the `body` only. When the platform detects that the response is JSON it will automatically parse it for you.
 
     Referring back to the raw API response we saw earlier, the information you need is in the `rates` sub-object under the key `USD`. Since the response is already parsed you can "dot" into that value and use it.
 
@@ -201,7 +201,7 @@ Now that we've got our API selected and formula designed we're ready to dive int
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    For security and transparency reasons, Coda requires that all Packs declare which domains they make requests to. Before your Pack will function property you must add that declaration to your code.
+    For security and transparency reasons, the platform requires that all Packs declare which domains they make requests to. Before your Pack will function property you must add that declaration to your code.
 
     The function `pack.addNetworkDomain` adds a domain to the Pack's declaration. This line can be added anywhere in your code after the boilerplate, but it's usually done at the top of the file.
 
@@ -211,8 +211,8 @@ Now that we've got our API selected and formula designed we're ready to dive int
     <div markdown>
 
     ```{.ts hl_lines="4"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("er-api.com");
 
@@ -250,8 +250,8 @@ If everything is working correctly you should get back the currency value conver
 
 ??? example "View the full code"
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("er-api.com");
 
@@ -259,19 +259,19 @@ If everything is working correctly you should get back the currency value conver
       name: "ToUSD",
       description: "Convert a currency to US dollars.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.Number,
+        sdk.makeParameter({
+          type: sdk.ParameterType.Number,
           name: "amount",
           description: "The amount to convert."
         }),
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "from",
           description: "The currency to convert from."
         }),
       ],
-      resultType: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+      resultType: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
       execute: async function ([amount, from], context) {
         let url =
           "https://open.er-api.com/v6/latest/" + from;
@@ -288,7 +288,7 @@ If everything is working correctly you should get back the currency value conver
 
 ## :material-view-list: View the logs
 
-Coda logs every API request that your Pack makes, and examining those logs can be very useful when troubleshooting.
+The platform logs every API request that your Pack makes, and examining those logs can be very useful when troubleshooting.
 
 === ":material-numeric-1-circle: Open the logs"
 

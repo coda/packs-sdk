@@ -5,7 +5,7 @@
  * This module is imported using the following code:
  *
  * ```ts
- * import * as coda from "@codahq/packs-sdk";
+ * import * as sdk from "@codahq/packs-sdk";
  * ```
  *
  * @module core
@@ -77,6 +77,7 @@ export type {PropertyOptionsMetadataFormula} from './api';
 export type {PropertyOptionsExecutionContext} from './api_types';
 export type {ChunkedResponseBody} from './api_types';
 export {ConnectionRequirement} from './api_types';
+export {DataIndexing} from './api_types';
 export type {Continuation} from './api';
 export type {CrawlStrategy} from './api_types';
 export type {SyncTableRelation} from './api_types';
@@ -305,7 +306,6 @@ export type {PackKnowledgeToolSource} from './types';
 export type {PackTool} from './types';
 export type {ScreenAnnotationTool} from './types';
 export type {RewriteScreenAnnotation} from './types';
-export type {AssistantMessageTool} from './types';
 export type {MCPTool} from './types';
 export type {ContactResolutionTool} from './types';
 export type {CodaDocsAndTablesTool} from './types';

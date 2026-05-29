@@ -1,11 +1,11 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to Facebook (Meta) APIs, using OAuth2.
 // eslint-disable-next-line max-len
 // See https://developers.facebook.com/docs/facebook-login/guides/advanced/manual-flow
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://www.facebook.com/v14.0/dialog/oauth",
   tokenUrl: "https://graph.facebook.com/v14.0/oauth/access_token",
 

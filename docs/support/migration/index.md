@@ -20,10 +20,10 @@ npm install @codahq/packs-sdk@<version> --save
 
 Where `<version>` is the version you want to upgrade to.
 
-After updating the SDK locally you'll need to upload a new version of your Pack to Coda's servers:
+After updating the SDK locally you'll need to upload a new version of your Pack to the platform's servers:
 
 ```shell
-npx coda upload pack.ts
+npx packs upload pack.ts
 ```
 
 
@@ -32,9 +32,9 @@ npx coda upload pack.ts
 To determine if you are using a deprecated SDK feature:
 
 - If you build in the Pack Studio web editor, press the **Build** button to rebuild your Pack.
-- If you build using the Pack CLI, run the `coda validate` command on your Pack:
+- If you build using the Pack CLI, run the `packs validate` command on your Pack:
     ```shell
-    npx coda validate pack.ts
+    npx packs validate pack.ts
     ```
 
 You'll then get warnings about any deprecated features your Pack is using. Consult a migration guide or the changelog for alternatives.

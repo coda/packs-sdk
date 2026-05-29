@@ -10,7 +10,7 @@ _A Pack is an extension that adds new powers to your doc._
 
 What other platforms call plugins, add-ons, or extensions, we call "Packs". A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs. Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
 
-Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on Coda's own servers. We have a [gallery][gallery_packs] where users can discover and install Packs, as well as a robust set of [admin controls][help_admin].
+Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on the platform's servers. We have a [gallery][gallery_packs] where users can discover and install Packs, as well as a robust set of [admin controls][help_admin].
 
 [Packs overview][packs_landing]{ .md-button }
 [Why build Packs?][packs_why]{ .md-button }
@@ -76,7 +76,7 @@ You will need to have a basic understanding of JavaScript or TypeScript to be su
 
 ## How do Packs work?
 
-Each Pack is its own [serverless application][wikipedia_serverless], fully managed and run by Coda. All you have to do is write the code and we'll take care of the rest.
+Each Pack is its own [serverless application][wikipedia_serverless], fully managed and run by the platform. All you have to do is write the code and we'll take care of the rest.
 
 All Pack code is run on the server, ensuring a consistent and secure environment. Each execution of a Pack can run for at most a minute, but there are features that allow for longer running operations.
 
@@ -96,7 +96,7 @@ sequenceDiagram
   Pack-->>-Doc: Result
 ```
 
-Packs are run in a custom JavaScript execution environment created by Coda, compatible with the [ES2022 standard][mdn_ecmascript]. You can use all the modern JavaScript features, but browser- and Node-specific objects are not available (`window`, `fs`, etc).
+Packs are run in a custom JavaScript execution environment, compatible with the [ES2022 standard][mdn_ecmascript]. You can use all the modern JavaScript features, but browser- and Node-specific objects are not available (`window`, `fs`, etc).
 
 
 
@@ -104,10 +104,10 @@ Packs are run in a custom JavaScript execution environment created by Coda, comp
 [packs_why]: https://coda.io/why-build-packs
 [gallery_slack]: https://coda.io/packs/slack-1000
 [formula_list]: https://coda.io/formulas
-[help_buttons]: https://help.coda.io/en/articles/2033889-overview-of-buttons
-[help_automations]: https://help.coda.io/en/articles/2423860-automations-in-coda
-[help_format]: https://help.coda.io/en/articles/1235680-overview-of-column-formats
-[help_pack_table]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
+[help_buttons]: https://help.coda.io/hc/en-us/articles/39555758072717-Button-basics
+[help_automations]: https://help.coda.io/hc/en-us/articles/39555778179853-Automations-in-Coda
+[help_format]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
+[help_pack_table]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
 [codecademy]: https://www.codecademy.com/learn/introduction-to-javascript
 [community]: https://community.coda.io/c/developers-central/making-packs/15
 [quickstart_web]: ../tutorials/get-started/web.md
@@ -119,5 +119,5 @@ Packs are run in a custom JavaScript execution environment created by Coda, comp
 [actions]: blocks/actions.md
 [column_formats]: blocks/column-formats.md
 [sync_tables]: blocks/sync-tables/index.md
-[help_admin]: https://help.coda.io/en/articles/5574990-managing-packs-approvals-for-enterprise-admins
+[help_admin]: https://help.coda.io/hc/en-us/articles/39555784421773-Enable-Pack-approvals-and-manage-requests
 [gallery_packs]: https://coda.io/gallery?filter=packs

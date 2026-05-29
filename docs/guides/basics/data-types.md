@@ -5,7 +5,7 @@ description: Use semantic types to accurately represent data in the document.
 
 # Return data with meaningful types
 
-Pack formulas are written in JavaScript and can return standard JavaScript data types. Coda however supports a wider array of semantic types that change how the data is displayed to the user. When defining a [formula][formulas] or [schema][schemas] you must specify the type of the data being returned.
+Pack formulas are written in JavaScript and can return standard JavaScript data types. The platform however supports a wider array of semantic types that change how the data is displayed to the user. When defining a [formula][formulas] or [schema][schemas] you must specify the type of the data being returned.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -21,7 +21,7 @@ For a formula the value type is specified in the `resultType` property, and for 
     ```ts
     pack.addFormula({
       // ...
-      resultType: coda.ValueType.String,
+      resultType: sdk.ValueType.String,
       execute: async function ([], context) {
         return "This is a string";
       },
@@ -31,8 +31,8 @@ For a formula the value type is specified in the `resultType` property, and for 
 === "Schema"
 
     ```ts
-    const MySchema = coda.makeSchema({
-      type: coda.ValueType.String,
+    const MySchema = sdk.makeSchema({
+      type: sdk.ValueType.String,
       // ...
     });
     ```
@@ -47,7 +47,7 @@ Text values can be returned as [JavaScript strings][mdn_string] using the [`Stri
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([], context) {
     return "Hello World!";
   },
@@ -62,7 +62,7 @@ Number values can be returned as [JavaScript numbers][mdn_number] using the [`Nu
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([], context) {
     return 42;
   },
@@ -77,7 +77,7 @@ True or false values can be returned as [JavaScript booleans][mdn_boolean] using
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Boolean,
+  resultType: sdk.ValueType.Boolean,
   execute: async function ([], context) {
     return true;
   },
@@ -90,10 +90,10 @@ pack.addFormula({
 Structured data can be returned as [JavaScript objects][mdn_object] using the [`Object`][Object] value type. These objects must conform to an defined schema, as specified in the `schema` property. See the [Schemas guide][schemas] for more information about defining and using schemas.
 
 ```ts
-const MySchema = coda.makeObjectSchema({
+const MySchema = sdk.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.String },
-    property2: { type: coda.ValueType.Number },
+    property1: { type: sdk.ValueType.String },
+    property2: { type: sdk.ValueType.Number },
     // ...
   },
   // ...
@@ -101,7 +101,7 @@ const MySchema = coda.makeObjectSchema({
 
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: MySchema,
   execute: async function ([], context) {
     return {
@@ -131,8 +131,8 @@ You must also specify the [schema][schemas] of the items in the array, using the
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Array,
-  items: { type: coda.ValueType.String },
+  resultType: sdk.ValueType.Array,
+  items: { type: sdk.ValueType.String },
   execute: async function ([], context) {
     return ["This", "is", "a", "string", "array"];
   },
@@ -142,17 +142,17 @@ pack.addFormula({
 For arrays of objects, set `items` to the full object schema.
 
 ```ts
-const MySchema = coda.makeObjectSchema({
+const MySchema = sdk.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.String },
-    property2: { type: coda.ValueType.Number },
+    property1: { type: sdk.ValueType.String },
+    property2: { type: sdk.ValueType.Number },
   },
   // ...
 });
 
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Array,
+  resultType: sdk.ValueType.Array,
   items: MySchema,
   execute: async function ([], context) {
     return [
@@ -172,8 +172,8 @@ To indicate that Coda should display your value in a more meaningful way you can
 pack.addFormula({
   name: "HalfWayThere",
   // ...
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Percent,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Percent,
   execute: async function ([], context) {
     return 50;
   },
@@ -190,8 +190,8 @@ The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the 
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Markdown,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Markdown,
   execute: async function ([], context) {
     return "This is _so_ **cool**!";
   },
@@ -209,8 +209,8 @@ The [`Html`][hint_html] value hint indicates that Coda should parse the returned
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Html,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Html,
   execute: async function ([], context) {
     return "This is <i>so</i> <b>cool</b>!";
   },
@@ -234,8 +234,8 @@ When used with a number value, the number should contain the number of seconds s
     ```ts
     pack.addFormula({
       // ...
-      resultType: coda.ValueType.String,
-      codaType: coda.ValueHintType.DateTime,
+      resultType: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.DateTime,
       execute: async function ([], context) {
         let now = new Date();
         return now.toISOString();
@@ -248,8 +248,8 @@ When used with a number value, the number should contain the number of seconds s
     ```ts
     pack.addFormula({
       // ...
-      resultType: coda.ValueType.Number,
-      codaType: coda.ValueHintType.DateTime,
+      resultType: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.DateTime,
       execute: async function ([], context) {
         let now = new Date();
         return now.getTime() / 1000;
@@ -278,8 +278,8 @@ The [`Duration`][Duration] value hint represents an amount of time, rather than 
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Duration,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Duration,
   execute: async function ([], context) {
     return "525600 minutes";
   },
@@ -293,8 +293,8 @@ Formulas that return a result as a percentage can use the value type `Number` an
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Percent,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Percent,
   execute: async function ([], context) {
     return 0.5; // Displayed as "50%" in the doc.
   },
@@ -311,8 +311,8 @@ Image attachments should be used in most cases. An image reference may make more
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
     return "https://via.placeholder.com/150";
   },
@@ -328,12 +328,12 @@ pack.addFormula({
 Similar to `ImageAttachment` mentioned above, you can return other file types using the value hint `Attachment`. This hint is also applied to string values, where the string contains the URL of the file. Coda copies the file from the source URL into the document and uses that local copy.
 
 ```ts
-const DealSchema = coda.makeObjectSchema({
+const DealSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     contract: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Attachment,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Attachment,
     },
   },
   // ...
@@ -354,11 +354,11 @@ The [`SelectList`][hint_selectlist] value hint can be used to render the propert
 It can be applied to properties of type `String` or `Object`. The possible options of the select list are set in the `options` field, which can contain an array of values or a function that generates them.
 
 ```ts
-const ShirtSchema = coda.makeObjectSchema({
+const ShirtSchema = sdk.makeObjectSchema({
   properties: {
     size: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       options: ["S", "M", "L", "XL"],
     },
     // ...
@@ -370,13 +370,13 @@ const ShirtSchema = coda.makeObjectSchema({
 To allow multiple selections, wrap the schema in an outer `Array` schema.
 
 ```ts
-const OrderSchema = coda.makeObjectSchema({
+const OrderSchema = sdk.makeObjectSchema({
   properties: {
     sizes: {
-      type: coda.ValueType.Array,
+      type: sdk.ValueType.Array,
       items: {
-        type: coda.ValueType.String,
-        codaType: coda.ValueHintType.SelectList,
+        type: sdk.ValueType.String,
+        codaType: sdk.ValueHintType.SelectList,
         options: ["S", "M", "L", "XL"],
       },
     },
@@ -396,8 +396,8 @@ The [`Embed`][Embed] value hint can be used to embed external content in the Cod
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Embed,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Embed,
   execute: async function ([], context) {
     return "https://www.youtube.com/watch?v=oLYZv68M3Kg";
   },
@@ -412,11 +412,11 @@ Read the [Embedding content][embeds] guide to learn more.
 The [`Person`][Person] value hint can be used to @-reference a Coda user account. This hint can be applied to `Object` values, where the object has a property that specifies the user's email address. The email address must be contained within the property of the object that is listed as its `idProperty` within the schema definition, and that property must be marked as `required`.
 
 ```ts
-const MyPersonSchema = coda.makeObjectSchema({
-  codaType: coda.ValueHintType.Person,
+const MyPersonSchema = sdk.makeObjectSchema({
+  codaType: sdk.ValueHintType.Person,
   properties: {
-    name: { type: coda.ValueType.String },
-    email: { type: coda.ValueType.String, required: true },
+    name: { type: sdk.ValueType.String },
+    email: { type: sdk.ValueType.String, required: true },
   },
   displayProperty: "name",
   idProperty: "email",
@@ -484,10 +484,10 @@ Some value types and hints support additional formatting options. For example, `
     pack.addFormula({
       name: "GetPrice",
       // ...
-      resultType: coda.ValueType.Number,
+      resultType: sdk.ValueType.Number,
       schema: {
-        type: coda.ValueType.Number,
-        codaType: coda.ValueHintType.Currency,
+        type: sdk.ValueType.Number,
+        codaType: sdk.ValueHintType.Currency,
         currencyCode: "EUR",
         precision: 2,
       },
@@ -498,9 +498,9 @@ Some value types and hints support additional formatting options. For example, `
 === "Schema"
 
     ```ts
-    const PriceSchema = coda.makeSchema({
-      type: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+    const PriceSchema = sdk.makeSchema({
+      type: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
       currencyCode: "EUR",
       precision: 2,
     });
@@ -543,8 +543,8 @@ The full set of formatting options for a given value type and hint can be found 
 [unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
 [iframely]: https://iframely.com/
 [oEmbed]: https://oembed.com/
-[embed_force]: https://help.coda.io/en/articles/1211364-embedding-content-in-your-doc#using-the-force-parameter
-[column_formats]: https://help.coda.io/en/articles/1235680-overview-of-column-formats
+[embed_force]: https://help.coda.io/hc/en-us/articles/39555949656077-Embed-third-party-content-in-your-doc#h_01K57937QDYQQRV47NPGVMPRCY
+[column_formats]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
 [actions]: ../blocks/actions.md
 [precision]: ../../reference/sdk/core/interfaces/NumericSchema.md#precision
 [currencyCode]: ../../reference/sdk/core/interfaces/CurrencySchema.md#currencycode

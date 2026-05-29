@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Greet someone in their language, with the greeting autocomplete adjusting
 // based on the language selected.
@@ -7,8 +7,8 @@ pack.addFormula({
   name: "Greeting",
   description: "Greet someone.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "language",
       description: "The language to greet them in.",
       autocomplete: [
@@ -16,8 +16,8 @@ pack.addFormula({
         { display: "Spanish", value: "es" },
       ],
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "greeting",
       description: "The greeting to use.",
       autocomplete: async function (context, search, { language }) {
@@ -27,17 +27,17 @@ pack.addFormula({
         } else {
           options = ["Hello", "Howdy"];
         }
-        return coda.simpleAutocomplete(search, options);
+        return sdk.simpleAutocomplete(search, options);
       },
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name to greet.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  connectionRequirement: coda.ConnectionRequirement.None,
+  resultType: sdk.ValueType.String,
+  connectionRequirement: sdk.ConnectionRequirement.None,
   execute: async function ([language, greeting, name], context) {
     let result = greeting + " " + name + "!";
     if (language === "es") {

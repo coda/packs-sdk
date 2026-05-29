@@ -26,7 +26,7 @@ for matches. The helper generalizes this use case.
 ## Example
 
 ```
-coda.makeParameter({
+sdk.makeParameter({
   type: ParameterType.Number,
   name: "userId",
   description: "The ID of a user.",
@@ -38,7 +38,7 @@ coda.makeParameter({
     // those that match. Then it will transform the matching objects into the form
     // `{display: "Jane Doe", value: 123}` which is what is required to render
     // autocomplete responses.
-    return coda.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
+    return sdk.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
   }
 });
 ```

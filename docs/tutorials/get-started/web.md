@@ -91,7 +91,7 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 
 
 [coda_sign_up]: https://coda.io/signup
-[hc_doc_maker]: https://help.coda.io/en/articles/3388781-members-and-roles
+[hc_doc_maker]: https://help.coda.io/hc/en-us/articles/39556004184077-Roles-in-Coda-Doc-Makers-Admins-and-Editors
 [coda_home]: https://coda.io/docs
 [samples_hello_world]: ../../samples/full/hello-world.md
 [samples]: ../../samples/topic/formula.md

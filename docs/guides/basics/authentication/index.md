@@ -5,7 +5,7 @@ description: Configure your Pack to request credentials from the user and pass t
 
 # Authenticating with other services
 
-One of the key use cases for Packs is integrating Coda with other apps and services, which often involves some form of authentication. When building a Pack you specify the type of authentication required by the API and Coda handles the credentials exchange, token storage, and account management.
+One of the key use cases for Packs is integrating Coda with other apps and services, which often involves some form of authentication. When building a Pack you specify the type of authentication required by the API and the platform handles the credentials exchange, token storage, and account management.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -51,7 +51,7 @@ User authentication requires that users of the Pack provide their own credential
 ```ts
 pack.setUserAuthentication({
   // A variety of different authentication types are supported.
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   // Additional settings...
 });
 ```
@@ -65,7 +65,7 @@ System authentication requires the Pack maker to provide a single set of credent
 ```ts
 pack.setSystemAuthentication({
   // A variety of different authentication types are supported.
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   // Additional settings...
 });
 ```
@@ -79,14 +79,14 @@ The types of authentication supported, as well as the additional settings, are d
 
 ## Authentication types
 
-Coda supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of [custom token authentication](#custom-tokens) to support more complex scenarios. It's not possible to write completely custom authentication code however, as Coda alone has access to the user's credentials. If your API's authentication needs can't be met by any of these types please [contact support][support].
+The platform supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of [custom token authentication](#custom-tokens) to support more complex scenarios. It's not possible to write completely custom authentication code however, as Packs don't have direct access to the user's credentials. If your API's authentication needs can't be met by any of these types please [contact support][support].
 
 The sections below will cover some of the most common types of authentication, and you can see the full set in the [`AuthenticationType`][AuthenticationType] enum.
 
 
 ### Simple tokens
 
-Many APIs use tokens or keys for authentication. Per-user tokens are typically generated from a settings screen within the application, while API keys are often generated when registering an app in a developer portal. How you pass these tokens varies depending on the API, and Coda provides built-in support for the most common methods:
+Many APIs use tokens or keys for authentication. Per-user tokens are typically generated from a settings screen within the application, while API keys are often generated when registering an app in a developer portal. How you pass these tokens varies depending on the API, and the platform provides built-in support for the most common methods:
 
 === "Authorization header"
 
@@ -102,7 +102,7 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.HeaderBearerToken,
+      type: sdk.AuthenticationType.HeaderBearerToken,
     });
     ```
 
@@ -122,7 +122,7 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.CustomHeaderToken,
+      type: sdk.AuthenticationType.CustomHeaderToken,
       headerName: "X-API-Key",
     });
     ```
@@ -144,7 +144,7 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.MultiHeaderToken,
+      type: sdk.AuthenticationType.MultiHeaderToken,
       headers: [
         { name: "X-API-Key", description: "The key." },
         { name: "X-API-Secret", description: "The secret." },
@@ -167,7 +167,7 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.QueryParamToken,
+      type: sdk.AuthenticationType.QueryParamToken,
       paramName: "key",
     });
     ```
@@ -187,7 +187,7 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.MultiQueryParamToken,
+      type: sdk.AuthenticationType.MultiQueryParamToken,
       params: [
         { name: "key", description: "The key." },
         { name: "secret", description: "The secret." },
@@ -204,10 +204,10 @@ When using per-user authentication, the user will be prompted to enter their tok
 <img src="site:images/auth_token.png" srcset="site:images/auth_token_2x.png 2x" class="screenshot" alt="Users entering an auth token">
 
 !!! tip "Set an instructions URL"
-    It may not be obvious to users where they can find their API token. You can set the `instructionsUrl` field of the authentication configuration to a relevant help center article, or in some cases directly to the screen within the application that lists the API token. Coda will link to this URL in the dialog.
+    It may not be obvious to users where they can find their API token. You can set the `instructionsUrl` field of the authentication configuration to a relevant help center article, or in some cases directly to the screen within the application that lists the API token. The platform will link to this URL in the dialog.
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.HeaderBearerToken,
+      type: sdk.AuthenticationType.HeaderBearerToken,
       instructionsUrl: "https://help.example.com/where-is-my-api-token",
     });
     ```
@@ -218,7 +218,7 @@ When using per-user authentication, the user will be prompted to enter their tok
 Some APIs require a combination of tokens to be used, or for them to be passed in the request body or URL. In these cases you can use the [`Custom`][Custom] authentication type.
 
 !!! warning "Approval required"
-    In order to use `Custom` authentication in your Pack must get approval from Coda. [Contact support][support_network_domain] to request approval.
+    In order to use `Custom` authentication your Pack must get approval. [Contact support][support_network_domain] to request approval.
 
 Consider this example, where a key is passed in the URL and an additional token is passed in the request body:
 
@@ -237,7 +237,7 @@ This can be accomplished using a `Custom` authentication configuration like:
 
 ```ts
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.Custom,
+  type: sdk.AuthenticationType.Custom,
   params: [
     { name: "key", description: "The API key" },
     { name: "token", description: "The account token" },
@@ -250,7 +250,7 @@ Each token defined within the `params` array will result in an additional prompt
 <img src="site:images/auth_custom.png" srcset="site:images/auth_custom_2x.png 2x" class="screenshot" alt="Entering tokens for custom authentication">
 
 {% raw %}
-Unlike with other authentication types where the values are added to your fetch requests automatically, with `Custom` authentication you must manually add these tokens to your request. Wherever you need to inject one of these tokens enter a placeholder value instead, and before your request is sent Coda will replace it with the value of the corresponding token. The placeholder format is `{{<paramName>-<invocationToken>}}`, where `<paramName>` is the name of the token you defined and `<invocateToken>` is the unique ID generated for that execution of your Pack.
+Unlike with other authentication types where the values are added to your fetch requests automatically, with `Custom` authentication you must manually add these tokens to your request. Wherever you need to inject one of these tokens enter a placeholder value instead, and before your request is sent the platform will replace it with the value of the corresponding token. The placeholder format is `{{<paramName>-<invocationToken>}}`, where `<paramName>` is the name of the token you defined and `<invocateToken>` is the unique ID generated for that execution of your Pack.
 {% endraw %}
 
 {% raw %}
@@ -297,7 +297,7 @@ You can support this by using [`WebBasic`][WebBasic] authentication in your Pack
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.WebBasic,
+  type: sdk.AuthenticationType.WebBasic,
 });
 ```
 
@@ -309,7 +309,7 @@ pack.setUserAuthentication({
     Sometimes Basic authentication is used for other types of identifiers and secrets, and the terms "Username" and "Password" in the dialog can be misleading. You can customize the dialog using the `uxConfig` field of the authentication configuration.
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.WebBasic,
+      type: sdk.AuthenticationType.WebBasic,
       uxConfig: {
         placeholderUsername: "Account ID",
         placeholderPassword: "Secret Token",
@@ -337,7 +337,7 @@ Can be implemented using:
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
 });
 ```
 
@@ -348,7 +348,7 @@ Enabling the option `shouldAutoAuthSetup: true` further simplifies the sign-in e
 
 ### AWS Signature Version 4
 
-Amazon Web Services (AWS) use a proprietary authentication scheme, and Coda provides built-in support for it. You can read more about it in the [AWS authentication guide][aws_guide].
+Amazon Web Services (AWS) use a proprietary authentication scheme, and the platform provides built-in support for it. You can read more about it in the [AWS authentication guide][aws_guide].
 
 
 ## Requiring authentication
@@ -368,7 +368,7 @@ pack.addFormula({
 pack.addFormula({
   name: "NoAuthNeededFormula",
   // ...
-  connectionRequirement: coda.ConnectionRequirement.None,
+  connectionRequirement: sdk.ConnectionRequirement.None,
 });
 ```
 
@@ -377,13 +377,13 @@ Alternatively, you can set the `defaultConnectionRequirement` field of the authe
 ```ts
 pack.setUserAuthentication({
   // ...
-  defaultConnectionRequirement: coda.ConnectionRequirement.None,
+  defaultConnectionRequirement: sdk.ConnectionRequirement.None,
 });
 
 pack.addFormula({
   name: "NeedsAuthFormula",
   // ...
-  connectionRequirement: coda.ConnectionRequirement.Required,
+  connectionRequirement: sdk.ConnectionRequirement.Required,
   // ...
 });
 
@@ -489,7 +489,7 @@ You can automatically extract this value and use it as the endpoint URL by setti
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // ...
   endpointKey: "site_url",
 });
@@ -506,7 +506,7 @@ pack.setUserAuthentication({
   // After approving access, the user should select which instance they want to
   // connect to.
   postSetup: [{
-    type: coda.PostSetupType.SetEndpoint,
+    type: sdk.PostSetupType.SetEndpoint,
     name: "SelectEndpoint",
     description: "Select the site to connect to:",
     // Generate the list of endpoint options.
@@ -556,7 +556,6 @@ There are services however where each account is associated with a distinct doma
 [sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
 [sample_multiple_headers]: ../../../samples/topic/authentication.md#multiple-headers
 
-[hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
 [AuthenticationType]: ../../../reference/sdk/core/enumerations/AuthenticationType.md
 [support]: ../../../support/index.md

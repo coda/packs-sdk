@@ -20,7 +20,7 @@ We recommend building out a dedicated doc for testing, which you can use to vali
 
 ## On your local machine {: #local}
 
-When developing locally using the [`coda` CLI][cli], you can leverage some utilities in the SDK to help you write unit tests and integration tests for your Pack. These utilities include:
+When developing locally using the [`packs` CLI][cli], you can leverage some utilities in the SDK to help you write unit tests and integration tests for your Pack. These utilities include:
 
 - Helper functions to execute a specific formula or sync from your pack definition.
 - Mock fetchers (using `sinon`) to simulate HTTP requests and responses.
@@ -29,7 +29,7 @@ When developing locally using the [`coda` CLI][cli], you can leverage some utili
 
 You'll find testing and development utilities in `packs-sdk/dist/development`.
 
-The primary testing utilities are `executeFormulaFromPackDef` and `executeSyncFormula`. You provide the name of a formula, a reference to your Pack definition, and a parameter list, and the utility will execute the formula for you, validate the return value, and return it to you for further assertions. These utilities provide sane default execution contexts, and in the case of a sync, will execute your sync formula repeatedly for each page of results, simulating what a real Coda sync will do.
+The primary testing utilities are `executeFormulaFromPackDef` and `executeSyncFormula`. You provide the name of a formula, a reference to your Pack definition, and a parameter list, and the utility will execute the formula for you, validate the return value, and return it to you for further assertions. These utilities provide sane default execution contexts, and in the case of a sync, will execute your sync formula repeatedly for each page of results, simulating what a real sync will do.
 
 By default, these utilities will use an execution environment that includes a mock fetcher that will not actually make HTTP requests. You can pass your own mock fetcher if you wish to configure and inspect the mock requests.
 
@@ -158,13 +158,13 @@ describe('Formula integration test', () => {
 });
 ```
 
-The fetcher will apply authentication to these requests if you have configured authentication locally using `coda auth`. For this to work you must specify the `manifestPath` and set it to the directory where the `.coda-credentials.json` file is located (usually the same directory as the Pack definition).
+The fetcher will apply authentication to these requests if you have configured authentication locally using `packs auth`. For this to work you must specify the `manifestPath` and set it to the directory where the `.coda-credentials.json` file is located (usually the same directory as the Pack definition).
 
 ### Return value validation
 
-By default, these testing utility functions will validate return values after executing your Pack formulas. This validation checks that the values you actually return from your formula implementations match the schema you have written. This helps find bugs in your code and also helps catch subtle issues in how your values might be interpreted in the Coda application when you Pack is executed for real.
+By default, these testing utility functions will validate return values after executing your Pack formulas. This validation checks that the values you actually return from your formula implementations match the schema you have written. This helps find bugs in your code and also helps catch subtle issues in how your values might be interpreted in the application when your Pack is executed for real.
 
-This validation can also help ensure that your test code correctly simulates responses from the API that you're integrating with. For instance, while developing our Pack, you may have been regularly exercising your formula code by running `coda execute` frequently and you're confident that your code works correctly when run against the real API. Then you go to write unit tests for you Pack and you define some fake response objects, but you forget some required fields or you specified a field as an array when it should be a comma-separated list. If your fake response result in your Pack is returning a value that doesn't match the schema you defined, the validator will catch these and notify you.
+This validation can also help ensure that your test code correctly simulates responses from the API that you're integrating with. For instance, while developing our Pack, you may have been regularly exercising your formula code by running `packs execute` frequently and you're confident that your code works correctly when run against the real API. Then you go to write unit tests for you Pack and you define some fake response objects, but you forget some required fields or you specified a field as an array when it should be a comma-separated list. If your fake response result in your Pack is returning a value that doesn't match the schema you defined, the validator will catch these and notify you.
 
 The validator will check for things like:
 
@@ -173,7 +173,7 @@ The validator will check for things like:
 - Are all properties that are declared as `required` in the schema present and non-empty?
 - If the schema for a property declares a `codaType` type hint, can the value actually be interpreted as the hinted type? For example, if you declare a property as a string and give a hint type of `ValueType.DateTime`, the validator will try to parse the value as a datetime and give an error if that fails.
 
-The validator does not perfectly represent how Coda will process your return values at runtime but is intended to help catch the most common bugs so that you can fix them before uploading your Pack to Coda.
+The validator does not perfectly represent how the platform will process your return values at runtime but is intended to help catch the most common bugs so that you can fix them before uploading your Pack.
 
 If desired, you can disable return value validation by passing `validateResult: false` in the `ExecuteOptions` argument of these testing utilities.
 

@@ -1,30 +1,30 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Action that uploads a file to Amazon S3.
 pack.addFormula({
   name: "Upload",
   description: "Upload a file to AWS S3.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.File,
+    sdk.makeParameter({
+      type: sdk.ParameterType.File,
       name: "file",
       description: "The file to upload.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The target file name. Default: the original file name.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "path",
       description: "The target directory path. Default: the root directory.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function ([fileUrl, name, path="/"], context) {
     // Fetch the file contents.
@@ -48,7 +48,7 @@ pack.addFormula({
     }
 
     // Upload to S3.
-    let s3Url = coda.joinUrl(context.endpoint, path, name);
+    let s3Url = sdk.joinUrl(context.endpoint, path, name);
     await context.fetcher.fetch({
       method: "PUT",
       url: s3Url,
@@ -76,7 +76,7 @@ function getFilename(contentDisposition) {
 
 // Set per-user authentication using AWS Signature Version 4 with an access key.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAccessKey,
+  type: sdk.AuthenticationType.AWSAccessKey,
   service: "s3",
   requiresEndpointUrl: true,
   endpointDomain: "amazonaws.com",

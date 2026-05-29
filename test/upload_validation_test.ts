@@ -7,6 +7,7 @@ import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '..';
+import {DataIndexing} from '../api_types';
 import {DurationUnit} from '..';
 import {EmbeddedContentType} from '../types';
 import type {GenericSyncTable} from '../api';
@@ -4751,6 +4752,17 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('CodaApiHeaderBearerToken, valid superhuman.com subdomain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.CodaApiHeaderBearerToken,
+          networkDomain: 'coda.io',
+        },
+        networkDomains: ['coda.io', 'notetaker.superhuman.com'],
+      });
+      await validateJson(metadata);
+    });
+
     it('CustomHeaderToken', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
@@ -5459,6 +5471,80 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
+    it('missing networkDomains when specifying mcpServers', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: undefined,
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            "This pack uses MCP servers but did not declare a network domain. Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+          path: 'networkDomains',
+        },
+      ]);
+    });
+
+    it('valid networkDomains when specifying mcpServers', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['mcp.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('mcpServer endpointUrl domain not covered by networkDomains', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.canva.com/mcp',
+            name: 'Canva',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Domain mcp.canva.com is used in MCP server Canva but not declared in the pack's "networkDomains".`,
+          path: 'mcpServers[0].endpointUrl',
+        },
+      ]);
+    });
+
+    it('mcpServer endpointUrl subdomain differs from networkDomains subdomain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['api.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Domain mcp.example.com is used in MCP server Example but not declared in the pack's "networkDomains".`,
+          path: 'mcpServers[0].endpointUrl',
+        },
+      ]);
+    });
+
     describe('Admin authentication', () => {
       it('validates name', async () => {
         const metadata = createFakePackVersionMetadata({
@@ -6080,9 +6166,6 @@ describe('Pack metadata Validation', async () => {
                 },
               },
               {
-                type: ToolType.AssistantMessage,
-              },
-              {
                 type: ToolType.MCP,
               },
               {
@@ -6121,8 +6204,8 @@ describe('Pack metadata Validation', async () => {
         ],
         mcpServers: [
           {
-            endpointUrl: 'https://mcp.canva.com/mcp',
-            name: 'Canva',
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
           },
         ],
       });
@@ -6166,8 +6249,6 @@ describe('Pack metadata Validation', async () => {
           break;
         case ToolType.ScreenAnnotation:
           break;
-        case ToolType.AssistantMessage:
-          break;
         case ToolType.MCP:
           break;
         case ToolType.ContactResolution:
@@ -6202,8 +6283,8 @@ describe('Pack metadata Validation', async () => {
         ],
         mcpServers: [
           {
-            endpointUrl: 'https://mcp.canva.com/mcp',
-            name: 'Canva',
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
           },
         ],
       });
@@ -6802,11 +6883,7 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [
-              {type: ToolType.CodaDocsAndTables},
-              {type: ToolType.AssistantMessage},
-              {type: ToolType.ContactResolution},
-            ],
+            tools: [{type: ToolType.CodaDocsAndTables}, {type: ToolType.ContactResolution}],
           },
         ],
       });
@@ -6883,6 +6960,100 @@ describe('Pack metadata Validation', async () => {
             ],
           },
         ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for chatSkill tool referencing non-existent formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ExistingFormula'})],
+        chatSkill: {
+          name: 'ChatSkill',
+          displayName: 'Chat Skill',
+          description: 'A chat skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'NonExistentFormula'}],
+            },
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'chatSkill.tools[0].formulas[0].formulaName',
+          message:
+            'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
+        },
+      ]);
+    });
+
+    it('fails for benchInitializationSkill tool referencing non-existent formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ExistingFormula'})],
+        benchInitializationSkill: {
+          name: 'BenchSkill',
+          displayName: 'Bench Skill',
+          description: 'A bench initialization skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'NonExistentFormula'}],
+            },
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'benchInitializationSkill.tools[0].formulas[0].formulaName',
+          message:
+            'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
+        },
+      ]);
+    });
+
+    it('validates chatSkill tool referencing valid formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ValidFormula'})],
+        chatSkill: {
+          name: 'ChatSkill',
+          displayName: 'Chat Skill',
+          description: 'A chat skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'ValidFormula'}],
+            },
+          ],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates benchInitializationSkill tool referencing valid formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ValidFormula'})],
+        benchInitializationSkill: {
+          name: 'BenchSkill',
+          displayName: 'Bench Skill',
+          description: 'A bench initialization skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'ValidFormula'}],
+            },
+          ],
+        },
       });
       await validateJson(metadata);
     });
@@ -8127,6 +8298,187 @@ describe('Pack metadata Validation', async () => {
       });
     });
   });
+
+  describe('Sync table indexing', () => {
+    it('Succeeds with indexing.default set to Exclude', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SharedMailbox',
+        identityName: 'SharedMailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SharedMailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+        indexing: {
+          default: DataIndexing.Exclude,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Succeeds with indexing.default set to Include', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Mailbox',
+        identityName: 'Mailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Mailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+        indexing: {
+          default: DataIndexing.Include,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Succeeds without indexing field', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Mailbox',
+        identityName: 'Mailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Mailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Fails with invalid indexing.default value', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Mailbox',
+        identityName: 'Mailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Mailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+        indexing: {
+          default: 'invalid' as any,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await validateJsonAndAssertFails(metadata);
+    });
+
+    it('Succeeds with indexing.default on dynamic sync table', async () => {
+      const syncTable = makeDynamicSyncTable({
+        name: 'DynamicSharedMailbox',
+        identityName: 'DynamicSharedMailbox',
+        getName: makeMetadataFormula(async () => {
+          return '';
+        }),
+        getSchema: makeMetadataFormula(async () => {
+          return '';
+        }),
+        formula: {
+          name: 'DynamicSharedMailbox',
+          description: '',
+          examples: [],
+          parameters: [],
+          execute: async () => {
+            return {result: []};
+          },
+        },
+        getDisplayUrl: makeMetadataFormula(async () => {
+          return '';
+        }),
+        indexing: {
+          default: DataIndexing.Exclude,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+  });
 });
 
 describe('normalizeTool', () => {
@@ -8168,11 +8520,7 @@ describe('normalizeTool', () => {
 
 describe('findDuplicateTools', () => {
   it('returns empty array when no duplicates', () => {
-    const tools: Tool[] = [
-      {type: ToolType.ContactResolution},
-      {type: ToolType.AssistantMessage},
-      {type: ToolType.Pack, packId: 123},
-    ];
+    const tools: Tool[] = [{type: ToolType.ContactResolution}, {type: ToolType.Pack, packId: 123}];
     const duplicates = findDuplicateTools(tools);
     assert.deepEqual(duplicates, []);
   });

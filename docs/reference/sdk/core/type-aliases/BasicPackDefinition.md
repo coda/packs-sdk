@@ -13,4 +13,4 @@ search:
 > **BasicPackDefinition** = `Omit`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), `"version"`\>
 
 A pack definition without an author-defined semantic version, for use in the web
-editor where Coda will manage versioning on behalf of the pack author.
+editor where the platform will manage versioning on behalf of the pack author.

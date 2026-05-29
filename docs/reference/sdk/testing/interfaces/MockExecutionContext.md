@@ -33,7 +33,7 @@ The base endpoint URL for the user's account, only if applicable. See
 
 If the API URLs are variable based on the user account, you will need this endpoint
 to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
-(e.g. "/api/entity") and Coda will include the endpoint for you automatically.
+(e.g. "/api/entity") and the platform will include the endpoint for you automatically.
 
 #### Inherited from
 
@@ -61,8 +61,8 @@ The [core.Fetcher](../../core/interfaces/Fetcher.md) used for making HTTP reques
 
 > `readonly` **invocationLocation**: [`InvocationLocation`](../../core/interfaces/InvocationLocation.md)
 
-Information about the Coda environment and doc this formula was invoked from.
-This is mostly for Coda internal use and we do not recommend relying on it.
+Information about the environment and doc this formula was invoked from.
+This is mostly for internal use and we do not recommend relying on it.
 
 #### Inherited from
 

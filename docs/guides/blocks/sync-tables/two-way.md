@@ -33,11 +33,11 @@ You can add support for two-way sync to any sync table, even after it's publishe
 Not every field that you sync from the external data source can be changed. To indicate which columns should be editable you need to annotate your schema by adding `mutable: true` to the corresponding properties.
 
 ```{.ts hl_lines="7"}
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
       mutable: true,
     },
@@ -54,11 +54,11 @@ Only top-level properties in the schema are eligible to be editable, since they 
     If the property's schema is reused in multiple columns, and only some of those are editable, you can use the [object spread operator][mdn_spread_object] to duplicate the schema and merge in the `mutable` field.
 
     ```{.ts hl_lines="10-13"}
-    const UserSchema = coda.makeObjectSchema({
+    const UserSchema = sdk.makeObjectSchema({
       // ...
     });
 
-    const TaskSchema = coda.makeObjectSchema({
+    const TaskSchema = sdk.makeObjectSchema({
       properties: {
         // The creator cannot be edited.
         creator: UserSchema,
@@ -151,15 +151,15 @@ executeUpdate: async function (args, updates, context) {
 
 While needed for all sync tables, when implementing two-way sync you need to pay extra attention to how you transform row values between the form used by the API and that used by the table. This is not an issue if your sync table schema exactly matches the items returned by the API, but often you want or need a different representation of the data in Coda.
 
-When possible, utilize the `fromKey` field of property schemas to allow Coda to automatically map between the API results and the table columns. This works not only when syncing in rows in the `execute` function, but also in reverse when sending updates in the `executeUpdate` function. Specifically, the [`SyncUpdate`][reference_sync_update] object's `newValue`, `previousValue`, and `updatedFields` will all be keyed using the `fromKey` value if set.
+When possible, utilize the `fromKey` field of property schemas to allow the platform to automatically map between the API results and the table columns. This works not only when syncing in rows in the `execute` function, but also in reverse when sending updates in the `executeUpdate` function. Specifically, the [`SyncUpdate`][reference_sync_update] object's `newValue`, `previousValue`, and `updatedFields` will all be keyed using the `fromKey` value if set.
 
 ??? example "Using fromKey to transform automatically"
     ```ts
-    const TaskSchema = coda.makeObjectSchema({
+    const TaskSchema = sdk.makeObjectSchema({
       properties: {
-        id: { type: coda.ValueType.String },
+        id: { type: sdk.ValueType.String },
         // Map the API's "content" field to the property "name".
-        name: { type: coda.ValueType.String, fromKey: "content", mutable: true },
+        name: { type: sdk.ValueType.String, fromKey: "content", mutable: true },
       },
       // ...
     });
@@ -173,7 +173,8 @@ When possible, utilize the `fromKey` field of property schemas to allow Coda to 
         execute: async function (args, context) {
           let tasks = await getTasks(context);
           // Each task looks like: {"id": "123", "content": "Foo"}
-          // Coda will automatically map the "content" field to the "name" property.
+          // The platform will automatically map the "content" field to the
+          // "name" property.
           return {
             result: tasks,
           };
@@ -182,10 +183,12 @@ When possible, utilize the `fromKey` field of property schemas to allow Coda to 
           let update = updates[0];
           let task = update.newValue;
           // The new value looks like: {"id": "123", "content": "Bar"}
-          // Coda automatically mapped "name" property back to "content".
+          // The platform automatically mapped "name" property back to
+          // "content".
           task = await updateTask(context, task);
           // The final value will look like: {"id": "123", "content": "Bar"}
-          // Once again, Coda will automatically map "content" to "name".
+          // Once again, the platform will automatically map "content" to
+          // "name".
           return {
             result: [task],
           };
@@ -198,10 +201,10 @@ In cases where `fromKey` is not sufficient and you must manually transform API r
 
 ??? example "Using helper functions to transform manually"
     ```ts
-    const TaskSchema = coda.makeObjectSchema({
+    const TaskSchema = sdk.makeObjectSchema({
       properties: {
-        id: { type: coda.ValueType.String },
-        name: { type: coda.ValueType.String, mutable: true },
+        id: { type: sdk.ValueType.String },
+        name: { type: sdk.ValueType.String, mutable: true },
       },
       // ...
     });
@@ -314,17 +317,17 @@ Similar to [parameter autocomplete][parameters_autocomplete], you can provide a 
  The possible choices are defined in the `options` field of the property, which can be either an array of static values or a function that generates them dynamically. An options function can access the value of other properties in the row via `context.propertyValues` and the current search string typed by the user via `context.search`.
 
 ```ts
-const ShirtSchema = coda.makeObjectSchema({
+const ShirtSchema = sdk.makeObjectSchema({
   properties: {
     size: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       mutable: true,
       options: ["S", "M", "L", "XL"],
     },
     color: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       mutable: true,
       options: async function (context) {
         let size = context.propertyValues.size;
@@ -333,8 +336,8 @@ const ShirtSchema = coda.makeObjectSchema({
       },
     },
     pattern: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       mutable: true,
       options: async function (context) {
         let search = context.search;
@@ -349,7 +352,7 @@ const ShirtSchema = coda.makeObjectSchema({
 
 ### In dynamic schemas
 
-For sync tables with dynamic schemas, you aren't able to define the options function directly on the property itself. Instead use the special value `OptionsType.Dynamic`, which tells Coda to call the sync table's `propertyOptions` function. This is a single function that handles the option generating for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide options for by inspecting `context.propertyName`.
+For sync tables with dynamic schemas, you aren't able to define the options function directly on the property itself. Instead use the special value `OptionsType.Dynamic`, which tells the platform to call the sync table's `propertyOptions` function. This is a single function that handles the option generating for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide options for by inspecting `context.propertyName`.
 
 <!-- TODO: Document exactly what propertyName contains (original, normalized, fromKey). -->
 
@@ -363,9 +366,9 @@ For sync tables with dynamic schemas, you aren't able to define the options func
         for (let attr of attributes) {
           properties[attr] = {
             // ...
-            codaType: coda.ValueHintType.SelectList,
+            codaType: sdk.ValueHintType.SelectList,
             mutable: true,
-            options: coda.OptionsType.Dynamic,
+            options: sdk.OptionsType.Dynamic,
           }
         }
         // ...
@@ -390,9 +393,9 @@ For sync tables with dynamic schemas, you aren't able to define the options func
           for (let attr of attributes) {
             properties[attr] = {
               // ...
-              codaType: coda.ValueHintType.SelectList,
+              codaType: sdk.ValueHintType.SelectList,
               mutable: true,
-              options: coda.OptionsType.Dynamic,
+              options: sdk.OptionsType.Dynamic,
             }
           }
           // ...
@@ -411,14 +414,14 @@ For sync tables with dynamic schemas, you aren't able to define the options func
 The default behavior is to only allow users to select from the set of options provided. However there are times where you may want to also allow users to create new values from within the sync table. For example, a schema property that represents a set of user-defined tags. This can be controlled using the schema field `allowNewValues`.
 
 ```{.ts hl_lines="13"}
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     tags: {
-      type: coda.ValueType.Array,
+      type: sdk.ValueType.Array,
       items: {
-        type: coda.ValueType.String,
-        codaType: coda.ValueHintType.SelectList,
+        type: sdk.ValueType.String,
+        codaType: sdk.ValueHintType.SelectList,
         options: async function (context) {
           let tags = await getTags(context);
           return tags;

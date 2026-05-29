@@ -25,7 +25,7 @@ so metadata formulas intentionally resemble regular formulas.
 A variety of tasks like those mentioned above can all be accomplished with formulas that
 share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
 You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
-the JavaScript function that implements the formula. Coda will wrap this function with the necessary
+the JavaScript function that implements the formula. The platform will wrap this function with the necessary
 formula boilerplate to make it look like a complete Coda formula.
 
 All metadata functions are passed an [ExecutionContext](../interfaces/ExecutionContext.md) as the first parameter,

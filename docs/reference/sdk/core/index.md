@@ -16,7 +16,7 @@ define your Pack, its building blocks, and their logic.
 This module is imported using the following code:
 
 ```ts
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 ```
 
 ## Namespaces
@@ -29,6 +29,7 @@ import * as coda from "@codahq/packs-sdk";
 - [AuthenticationType](enumerations/AuthenticationType.md)
 - [ConnectionRequirement](enumerations/ConnectionRequirement.md)
 - [CurrencyFormat](enumerations/CurrencyFormat.md)
+- [DataIndexing](enumerations/DataIndexing.md)
 - [DurationUnit](enumerations/DurationUnit.md)
 - [EmailDisplayType](enumerations/EmailDisplayType.md)
 - [HttpStatusCode](enumerations/HttpStatusCode.md)
@@ -115,6 +116,7 @@ import * as coda from "@codahq/packs-sdk";
 - [NumericSchema](interfaces/NumericSchema.md)
 - [NumericTimeSchema](interfaces/NumericTimeSchema.md)
 - [OAuth2ClientCredentialsAuthentication](interfaces/OAuth2ClientCredentialsAuthentication.md)
+- [OAuth2DynamicCodeAuthentication](interfaces/OAuth2DynamicCodeAuthentication.md)
 - [OAuth2StaticCodeAuthentication](interfaces/OAuth2StaticCodeAuthentication.md)
 - [ObjectArrayFormulaDef](interfaces/ObjectArrayFormulaDef.md)
 - [ObjectSchemaDefinition](interfaces/ObjectSchemaDefinition.md)

@@ -74,7 +74,7 @@ pack.setChatSkill({
     End every reply with "Moo!".
   `,
   tools: [
-    { type: coda.ToolType.Pack },
+    { type: sdk.ToolType.Pack },
   ],
 });
 ```
@@ -83,10 +83,10 @@ When defining your own chat skill, you must explicitly define the tools you want
 
 ```ts
 tools: [
-  { type: coda.ToolType.Pack },
+  { type: sdk.ToolType.Pack },
   {
-    type: coda.ToolType.Knowledge,
-    source: { type: coda.KnowledgeToolSourceType.Pack },
+    type: sdk.ToolType.Knowledge,
+    source: { type: sdk.KnowledgeToolSourceType.Pack },
   },
 ],
 ```
@@ -134,7 +134,7 @@ pack.addSkill({
   prompt: `Write a funny poem.`,
   tools: [],
   models: [
-    { model: coda.SkillModel.OpenAIGPT4 },
+    { model: sdk.SkillModel.OpenAIGPT4 },
   ],
 });
 ```
@@ -146,11 +146,11 @@ Additionally, you can customize the prompt for each model. This allows you to su
 ```ts
 models: [
   {
-    model: coda.SkillModel.OpenAIGPT4,
+    model: sdk.SkillModel.OpenAIGPT4,
     prompt: `Write a funny poem.`,
   },
   {
-    model: coda.SkillModel.OpenAIGPT5,
+    model: sdk.SkillModel.OpenAIGPT5,
     prompt: `Write a _really_ funny poem. It's OK to be silly!`,
   },
 ],

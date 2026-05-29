@@ -50,24 +50,71 @@ pack.addNetworkDomain("icons8.com");
 
 ## Authentication
 
-Requests to MCP servers use the same [authentication system][authentication] as the rest of the platform. The authentication type must be declared in the code, and any client credentials must be uploaded on the **Settings** screen of the Pack Studio.
+Requests to MCP servers use the same [authentication system][authentication] as the rest of the platform, supporting common patterns like static tokens or OAuth2. Your code must declare the type of auth used.
 
-```{.ts hl_lines="6-13"}
-pack.addMCPServer({
-  name: "Todoist",
-  endpointUrl: "https://ai.todoist.net/mcp",
-});
+=== "OAuth2 (DCR)"
 
-pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
-  authorizationUrl: "https://todoist.com/oauth/authorize",
-  tokenUrl: "https://todoist.com/oauth/access_token",
-  scopes: ["data:read_write"],
-  scopeDelimiter: ",",
-});
-```
+    Many MCP servers use OAuth2 with [dynamic client registration (DCR)][oauth2_dcr].
 
-Many MCP servers do not document the required authentication type or how to register for credentials, instead supporting open-source standards for automatic discovery ([RFC9728][rfc9728], [RFC8414][rfc8414]) and registration ([RFC7591][rfc7591]). Superhuman Go agents don't currently support these standards, so you may need to obtain this information manually. The [MCP Inspector][mcp_inspector] utility can inspect and test an MCP server and is helpful for manual discovery of authentication information.
+    ```ts
+    pack.addMCPServer({
+      name: "Example",
+      endpointUrl: "https://mcp.example.com/mcp",
+    });
+
+    pack.setUserAuthentication({
+      type: sdk.AuthenticationType.OAuth2,
+      useDynamicClientRegistration: true,
+      useProofKeyForCodeExchange: true,
+      scopes: ["read", "write"],
+    });
+    ```
+
+=== "OAuth2 (manual)"
+
+    For MCP servers that use OAuth2 but don't support DCR, you can manually specify the OAuth URLs in your code. You'll also need to manually register an application in their portal and upload client credentials on the **Settings** screen of the Pack Studio.
+
+    ```ts
+    pack.addMCPServer({
+      name: "Example",
+      endpointUrl: "https://mcp.example.com/mcp",
+    });
+
+    pack.setUserAuthentication({
+      type: sdk.AuthenticationType.OAuth2,
+      authorizationUrl: "https://example.com/authorize",
+      tokenUrl: "https://example.com/token",
+      useProofKeyForCodeExchange: true,
+      scopes: ["read", "write"],
+    });
+    ```
+
+=== "Bearer token"
+
+    ```ts
+    pack.addMCPServer({
+      name: "Example",
+      endpointUrl: "https://mcp.example.com/mcp",
+    });
+
+    pack.setUserAuthentication({
+      type: sdk.AuthenticationType.HeaderBearerToken,
+    });
+    ```
+
+=== "Query parameter"
+
+    ```ts
+    pack.addMCPServer({
+      name: "Example",
+      endpointUrl: "https://mcp.example.com/mcp",
+    });
+
+    pack.setUserAuthentication({
+      type: sdk.AuthenticationType.QueryParamToken,
+      paramName: "api_key",
+    });
+    ```
 
 !!! tip "Same authentication as the REST API is preferred"
 
@@ -80,10 +127,7 @@ Superhuman Go agents prompt the user for confirmation before performing actions 
 
 
 [mcp]: https://modelcontextprotocol.io/
-[rfc9728]: https://datatracker.ietf.org/doc/html/rfc9728
-[rfc8414]: https://datatracker.ietf.org/doc/html/rfc8414
-[rfc7591]: https://datatracker.ietf.org/doc/html/rfc7591
 [fetcher]: ../../guides/basics/fetcher.md
 [authentication]: ../../guides/basics/authentication/index.md
-[mcp_inspector]: https://modelcontextprotocol.io/docs/tools/inspector
+[oauth2_dcr]: ../../guides/basics/authentication/oauth2.md#dcr
 [mcp_tool_annotations]: https://modelcontextprotocol.io/specification/2025-11-25/schema#toolannotations

@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
 // BEGIN
 
-const $1$Thing$Schema = coda.makeObjectSchema({
+const $1$Thing$Schema = sdk.makeObjectSchema({
   properties: {
-    $2$name$: { type: coda.ValueType.String },
-    $3$description$: { type: coda.ValueType.String },
+    $2$name$: { type: sdk.ValueType.String },
+    $3$description$: { type: sdk.ValueType.String },
     $4$picture$: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
     $5$link$: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     // TODO: Add more properties.
   },

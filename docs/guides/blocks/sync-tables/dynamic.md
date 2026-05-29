@@ -154,9 +154,9 @@ pack.addDynamicSyncTable({
 
     // Start with the properties are the same regardless of the which project
     // was selected.
-    let properties: coda.ObjectSchemaProperties = {
-      name: { type: coda.ValueType.String },
-      id: { type: coda.ValueType.String },
+    let properties: sdk.ObjectSchemaProperties = {
+      name: { type: sdk.ValueType.String },
+      id: { type: sdk.ValueType.String },
     };
     // Use them as the display value and ID of the rows.
     let displayProperty = "name";
@@ -175,7 +175,7 @@ pack.addDynamicSyncTable({
     }
 
     // Return the schema for each row.
-    return coda.makeObjectSchema({
+    return sdk.makeObjectSchema({
       properties: properties,
       displayProperty: displayProperty,
       idProperty: idProperty,
@@ -242,7 +242,7 @@ Since the schema itself is dynamically generated, getting the rows to match that
 
 When generating the schema for the table you need to determine the name of each property. Usually this is based on the name or title of the corresponding field or column in the dataset. Although the convention for manually defined schemas is to use lower camel case, there are no limitations to the characters you can use in a property name. This means that you don't need to sanitize or convert the names as you build the schema.
 
-It's worth remembering though that Coda will [normalize your property names][schemas_normalization] before exposing them in the Coda formula language. When you click the **Add Column** button for a property in the sync table, that normalized name is then transformed again into a column title. This process can sometimes lead to unexpected results.
+It's worth remembering though that the platform will [normalize your property names][schemas_normalization] before exposing them in the Coda formula language. When you click the **Add Column** button for a property in the sync table, that normalized name is then transformed again into a column title. This process can sometimes lead to unexpected results.
 
 For example, if you define a property with the name `GitHub (Beta)`, it will be normalized to `GitHubBeta` in the Coda formula language, and then transformed to `Git Hub Beta` as a column name. Currently it's not possible to override this behavior and manually specify the column name.
 
@@ -254,21 +254,21 @@ Similar to property names, you must also determine the schema for each property.
 ```ts
 function getPropertySchema(
   customField
-): coda.Schema & coda.ObjectSchemaProperty {
+): sdk.Schema & sdk.ObjectSchemaProperty {
   // Select the schema type depending on the custom field type.
   switch (customField.type) {
     case "yes_no":
-      return { type: coda.ValueType.Boolean };
+      return { type: sdk.ValueType.Boolean };
     case "number":
-      return { type: coda.ValueType.Number };
+      return { type: sdk.ValueType.Number };
     case "date":
       return {
-        type: coda.ValueType.String,
-        codaType: coda.ValueHintType.Date,
+        type: sdk.ValueType.String,
+        codaType: sdk.ValueHintType.Date,
       };
     default:
       // Default to strings.
-      return { type: coda.ValueType.String };
+      return { type: sdk.ValueType.String };
   }
 }
 ```
@@ -294,8 +294,8 @@ Here is a demonstration of this approach, showing some dummy values.
     ```ts
     properties: {
       "Total Cost": {
-        type: coda.ValueType.Number,
-        codaType: coda.ValueHintType.Currency,
+        type: sdk.ValueType.Number,
+        codaType: sdk.ValueHintType.Currency,
         fromKey: "abc123",
       },
       // ...
@@ -337,8 +337,8 @@ pack.addDynamicSyncTable({
   formula: {
     // ...
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "query",
         description: "A filter query.",
       }),
@@ -391,7 +391,7 @@ Finding the desired dataset, even when [organized into folders](#folders), can b
 pack.addDynamicSyncTable({
   // ...
   searchDynamicUrls: async function (context, search) {
-    let url = coda.withQueryParams("https://api.example.com/projects", {
+    let url = sdk.withQueryParams("https://api.example.com/projects", {
       q: search,
     });
     // Fetch and return the matching projects...

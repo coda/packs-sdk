@@ -269,7 +269,7 @@ class AuthenticatingFetcher {
         }
         if (!this._credentials) {
             throw new Error(`${this._authDef.type} authentication is required for this pack, but no local credentials were found. ` +
-                'Run "coda auth path/to/pack/manifest to set up credentials."');
+                'Run "packs auth path/to/pack/manifest to set up credentials."');
         }
         const url = this._applyAndValidateEndpoint(rawUrl);
         const { host } = (0, url_parse_1.default)(url);

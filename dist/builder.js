@@ -31,7 +31,7 @@ exports.newPack = newPack;
  */
 class PackDefinitionBuilder {
     /**
-     * Constructs a {@link PackDefinitionBuilder}. However, `coda.newPack()` should be used instead
+     * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
      * rather than constructing a builder directly.
      */
     constructor(definition) {
@@ -93,7 +93,7 @@ class PackDefinitionBuilder {
      * pack.addSyncTable({
      *   name: 'MySyncTable',
      *   identityName: 'EntityName',
-     *   schema: coda.makeObjectSchema({
+     *   schema: sdk.makeObjectSchema({
      *     ...
      *   }),
      *   formula: {
@@ -170,7 +170,7 @@ class PackDefinitionBuilder {
      *   description: "My description.",
      *   prompt: `My prompt.`,
      *   tools: [
-     *     { type: coda.ToolType.Pack },
+     *     { type: sdk.ToolType.Pack },
      *   ],
      * });
      * ```
@@ -215,8 +215,8 @@ class PackDefinitionBuilder {
      * // Override tools — replaces the defaults
      * pack.setChatSkill({
      *   tools: [
-     *     { type: coda.ToolType.Pack },
-     *     { type: coda.ToolType.ContactResolution },
+     *     { type: sdk.ToolType.Pack },
+     *     { type: sdk.ToolType.ContactResolution },
      *   ],
      * });
      * ```
@@ -365,11 +365,11 @@ class PackDefinitionBuilder {
      * use "example.com" as your network domain.
      *
      * If your pack make HTTP requests, it must declare a network domain,
-     * for security purposes. Coda enforces that your pack cannot make requests to
+     * for security purposes. The platform enforces that your pack cannot make requests to
      * any undeclared domains.
      *
      * You are allowed one network domain per pack by default. If your pack needs
-     * to connect to multiple domains, contact Coda Support for approval.
+     * to connect to multiple domains, contact Superhuman for approval.
      *
      * @example
      * ```

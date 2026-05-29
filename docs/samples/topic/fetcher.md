@@ -47,8 +47,8 @@ A formula that gets a JSON value. This sample generates random bacon-themed Lore
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // When using the fetcher, this is the domain of the API that your pack makes
 // fetcher requests to.
@@ -59,7 +59,7 @@ pack.addFormula({
   name: "BaconIpsum",
   description: "Returns meat-themed lorem ipsum copy.",
   parameters: [], // No parameters required.
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
 
   // This function is declared async to that is can wait for the fetcher to
   // complete. The context parameter provides access to the fetcher.
@@ -88,8 +88,8 @@ A formula that fetches binary data. This sample gets image data and calculates t
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Regular expression that matches Coda-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
@@ -99,20 +99,20 @@ pack.addFormula({
   name: "FileSize",
   description: "Gets the file size of an image, in bytes.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Image,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Image,
       name: "image",
       description:
         "The image to operate on. Not compatible with Image URL columns.",
     }),
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([imageUrl], context) {
     // Throw an error if the image isn't Coda-hosted. Image URL columns can
     // contain images on any domain, but by default Packs can only access image
     // attachments hosted on codahosted.io.
     if (!imageUrl.match(HostedImageUrlRegex)) {
-      throw new coda.UserVisibleError("Not compatible with Image URL columns.");
+      throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }
     // Fetch the image content.
     let response = await context.fetcher.fetch({
@@ -134,29 +134,29 @@ A sync table that queries a GraphQL API. This sample lists the products in a moc
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 const PageSize = 20;
 const OneDaySecs = 24 * 60 * 60;
 
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     name: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "title",
     },
-    description: { type: coda.ValueType.String },
+    description: { type: sdk.ValueType.String },
     image: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageAttachment,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageAttachment,
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
       fromKey: "onlineStoreUrl",
     },
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -174,8 +174,8 @@ pack.addSyncTable({
     name: "SyncProducts",
     description: "Syncs the data.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "name",
         description: "If specified, only matching products will be included.",
         optional: true,
@@ -252,26 +252,26 @@ An action formula that sends application/x-www-form-urlencoded data. This sample
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "Upload",
   description: "Uploads an image to Imgur.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Image,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Image,
       name: "image",
       description: "The image to upload.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "title",
       description: "The title of the image.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function (args, context) {
     let [imageUrl, title] = args;
@@ -293,7 +293,7 @@ pack.addFormula({
 pack.addNetworkDomain("imgur.com");
 
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "Authentication",
   tokenPrefix: "Client-ID",
 });

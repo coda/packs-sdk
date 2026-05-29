@@ -22,7 +22,7 @@ A class that assists in constructing a pack definition. Use [newPack](../functio
 
 > **new PackDefinitionBuilder**(`definition?`): `PackDefinitionBuilder`
 
-Constructs a PackDefinitionBuilder. However, `coda.newPack()` should be used instead
+Constructs a PackDefinitionBuilder. However, `sdk.newPack()` should be used instead
 rather than constructing a builder directly.
 
 #### Parameters
@@ -311,11 +311,11 @@ For example, if your pack makes HTTP requests to "api.example.com",
 use "example.com" as your network domain.
 
 If your pack make HTTP requests, it must declare a network domain,
-for security purposes. Coda enforces that your pack cannot make requests to
+for security purposes. The platform enforces that your pack cannot make requests to
 any undeclared domains.
 
 You are allowed one network domain per pack by default. If your pack needs
-to connect to multiple domains, contact Coda Support for approval.
+to connect to multiple domains, contact Superhuman for approval.
 
 #### Example
 
@@ -352,7 +352,7 @@ pack.addSkill({
   description: "My description.",
   prompt: `My prompt.`,
   tools: [
-    { type: coda.ToolType.Pack },
+    { type: sdk.ToolType.Pack },
   ],
 });
 ```
@@ -413,7 +413,7 @@ In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton
 pack.addSyncTable({
   name: 'MySyncTable',
   identityName: 'EntityName',
-  schema: coda.makeObjectSchema({
+  schema: sdk.makeObjectSchema({
     ...
   }),
   formula: {
@@ -504,8 +504,8 @@ pack.setChatSkill({
 // Override tools — replaces the defaults
 pack.setChatSkill({
   tools: [
-    { type: coda.ToolType.Pack },
-    { type: coda.ToolType.ContactResolution },
+    { type: sdk.ToolType.Pack },
+    { type: sdk.ToolType.ContactResolution },
   ],
 });
 ```

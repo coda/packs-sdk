@@ -1,6 +1,6 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 // BEGIN
 
@@ -10,7 +10,7 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.Boolean,
+  resultType: sdk.ValueType.Boolean,
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
     let [] = args;

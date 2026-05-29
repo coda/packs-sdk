@@ -17,7 +17,7 @@ Authenticate using HTTP Basic authorization. The user provides a username and pa
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.WebBasic,
+  type: sdk.AuthenticationType.WebBasic,
 });
 ```
 
@@ -86,7 +86,7 @@ A link to a help article or other page with more instructions about how to set u
 Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 
-Using multiple authenticated network domains is uncommon and requires Coda approval.
+Using multiple authenticated network domains is uncommon and requires Superhuman approval.
 
 #### Inherited from
 

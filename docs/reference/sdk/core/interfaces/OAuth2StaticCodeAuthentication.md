@@ -17,7 +17,7 @@ Both `authorizationUrl` and `tokenUrl` are required.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // These URLs come from the API's developer documentation.
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",
@@ -57,7 +57,7 @@ user to the [authorizationUrl](#authorizationurl).
 > **authorizationUrl**: `string`
 
 The URL to which the user will be redirected in order to authorize this pack.
-This is typically just a base url with no parameters. Coda will append the `scope`
+This is typically just a base url with no parameters. The platform will append the `scope`
 parameter automatically. If the authorization flow requires additional parameters,
 they may be specified using [additionalParams](#additionalparams).
 
@@ -161,7 +161,7 @@ their authentication response.
 Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 
-Using multiple authenticated network domains is uncommon and requires Coda approval.
+Using multiple authenticated network domains is uncommon and requires Superhuman approval.
 
 #### Inherited from
 
@@ -215,7 +215,7 @@ when creating a new account.
 
 The delimiter to use when joining [scopes](#scopes) when generating authorization URLs.
 
-The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+The OAuth2 standard is to use spaces to delimit scopes, and the platform will do that by default.
 If the API you are using requires a different delimiter, say a comma, specify it here.
 
 #### Inherited from
@@ -286,7 +286,7 @@ that should contain the token.
 
 > **tokenUrl**: `string`
 
-The URL that Coda will hit in order to exchange the temporary code for an access token.
+The URL that the platform will hit in order to exchange the temporary code for an access token.
 
 #### Overrides
 

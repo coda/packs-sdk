@@ -395,7 +395,7 @@ export interface ParamDef<T extends UnionType> {
    *
    * Pack code cannot completely assume it will never see other values, though. For example, if this
    * parameter's value is being set via a formula (instead of a user manually picking a value from
-   * Coda's UI), Coda will do nothing to validate that input before passing it to the pack.
+   * Coda's UI), the platform will do nothing to validate that input before passing it to the pack.
    *
    * Defaults to true.
    *
@@ -593,14 +593,14 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly cacheTtlSecs?: number;
 
   /**
-   * If specified, the formula will not be suggested to users in Coda's formula autocomplete.
+   * If specified, the formula will not be suggested to users in the formula autocomplete.
    * The formula can still be invoked by manually typing its full name.
    */
   readonly isExperimental?: boolean;
 
   /**
-   * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
-   * Not for use by packs that are not authored by Coda.
+   * Whether this is a formula that will be used internally and not exposed directly to users.
+   * Not for use by packs that are not Superhuman-authored.
    */
   readonly isSystem?: boolean;
 
@@ -613,7 +613,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   /**
    * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
    * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
-   * can use the bulk of the pack without those privileges. Coda will give users help in understanding
+   * can use the bulk of the pack without those privileges. The platform will give users help in understanding
    * that they need additional authentication to use a formula with extra OAuth scopes. Note that
    * these scopes will always be requested in addition to the default scopes for the pack,
    * so an end user must have both sets of permissions.
@@ -744,7 +744,7 @@ export interface FetchRequest {
   /**
    * The URL to connect to. This is typically an absolute URL, but if your
    * pack uses authentication and {@link BaseAuthentication.requiresEndpointUrl} and so has a unique
-   * endpoint per user account, you may also use a relative URL and Coda will
+   * endpoint per user account, you may also use a relative URL and the platform will
    * apply the user's endpoint automatically.
    */
   url: string;
@@ -759,14 +759,14 @@ export interface FetchRequest {
    */
   form?: {[key: string]: string};
   /**
-   * HTTP headers. You should NOT include authentication headers, as Coda will add them for you.
+   * HTTP headers. You should NOT include authentication headers, as the platform will add them for you.
    */
   headers?: {[header: string]: string};
   /**
-   * A time in seconds that Coda should cache the result of this HTTP request.
+   * A time in seconds that the platform should cache the result of this HTTP request.
    *
    * Any time that this pack makes the same FetchRequest, a cached value can be returned
-   * instead of making the HTTP request. If left unspecified, Coda will automatically
+   * instead of making the HTTP request. If left unspecified, the platform will automatically
    * cache all GET requests for approximately 5 minutes. To disable the default caching,
    * set this value to `0`.
    *
@@ -775,7 +775,7 @@ export interface FetchRequest {
    */
   cacheTtlSecs?: number;
   /**
-   * If true, Coda will cache the request (including POST, PUT, PATCH, and DELETE) and return the
+   * If true, the platform will cache the request (including POST, PUT, PATCH, and DELETE) and return the
    * same response for subsequent requests. This option does *not* need to be specified to cache
    * GET requests.
    *
@@ -784,14 +784,14 @@ export interface FetchRequest {
    */
   forceCache?: boolean;
   /**
-   * Indicates that you expect the response to be binary data, instructing Coda
-   * not to attempt to parse the response in any way. Otherwise, Coda may attempt
+   * Indicates that you expect the response to be binary data, instructing the platform
+   * not to attempt to parse the response in any way. Otherwise, the platform may attempt
    * to parse the response as a JSON object. If true, {@link FetchResponse.body}
    * will be a NodeJS Buffer.
    */
   isBinaryResponse?: boolean;
   /**
-   * If true, Coda will not apply authentication credentials even if this pack is
+   * If true, the platform will not apply authentication credentials even if this pack is
    * configured to use authentication. This is very rare, but sometimes you may
    * wish to make an unauthenticated supporting request as part of a formula implementation.
    */
@@ -856,7 +856,7 @@ export interface Fetcher {
    * If authentication is used with this pack, the user's secret credentials will be
    * automatically applied to the request (whether in the HTTP headers, as a URL parameter,
    * or whatever the authentication type dictates). Your invocation of `fetch()` need not
-   * deal with authentication in any way, Coda will handle that entirely on your behalf.
+   * deal with authentication in any way, the platform will handle that entirely on your behalf.
    */
   fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
@@ -1186,7 +1186,7 @@ export enum InvocationSource {
 }
 
 /**
- * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
+ * Information about the platform environment and doc this formula was invoked from, for internal use.
  */
 export interface InvocationLocation {
   // TODO(patrick): Make this non-optional after implementing support in Coda.
@@ -1195,7 +1195,7 @@ export interface InvocationLocation {
    */
   source?: InvocationSource;
 
-  /** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
+  /** The base URL of the platform environment executing this formula. Only for internal use. */
   protocolAndHost: string;
 
   /**
@@ -1225,12 +1225,12 @@ export interface ExecutionContext {
    *
    * If the API URLs are variable based on the user account, you will need this endpoint
    * to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
-   * (e.g. "/api/entity") and Coda will include the endpoint for you automatically.
+   * (e.g. "/api/entity") and the platform will include the endpoint for you automatically.
    */
   readonly endpoint?: string;
   /**
-   * Information about the Coda environment and doc this formula was invoked from.
-   * This is mostly for Coda internal use and we do not recommend relying on it.
+   * Information about the environment and doc this formula was invoked from.
+   * This is mostly for internal use and we do not recommend relying on it.
    */
   readonly invocationLocation: InvocationLocation;
   /**
@@ -1553,6 +1553,19 @@ export enum TableRole {
 }
 
 /**
+ * Indicates the default indexing (ingestion) behavior for a sync table when setting up a connector.
+ *
+ * By default, all sync tables are included in ingestion. Use {@link DataIndexing.Exclude} to
+ * mark a sync table as excluded by default, while still allowing users to opt in.
+ */
+export enum DataIndexing {
+  /** The sync table is included in ingestion by default. */
+  Include = 'include',
+  /** The sync table is excluded from ingestion by default, but users can manually opt in. */
+  Exclude = 'exclude',
+}
+
+/**
  * Contains metadata for a completed sync.
  */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> =
@@ -1564,7 +1577,7 @@ export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation
  */
 export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
   /**
-   * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
+   * For enabling incremental syncs. If your sync execution provides this, then the platform will provide it to the
    * next sync execution.
    */
   incrementalContinuation: IncrementalContinuationT;

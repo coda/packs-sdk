@@ -36,17 +36,17 @@ edits this property.
 ```
 properties: {
   color: {
-     type: coda.ValueType.String,
-     codaType: coda.ValueHintType.SelectList,
+     type: sdk.ValueType.String,
+     codaType: sdk.ValueHintType.SelectList,
      mutable: true,
      options: ['red', 'green', 'blue'],
   },
   user: {
-     type: coda.ValueType.String,
-     codaType: coda.ValueHintType.SelectList,
+     type: sdk.ValueType.String,
+     codaType: sdk.ValueHintType.SelectList,
      mutable: true,
      options: async function (context) {
-       let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
+       let url = sdk.withQueryParams("https://example.com/userSearch", { name: context.search });
        let response = await context.fetcher.fetch({ method: "GET", url: url });
        let results = response.body.users;
        return results.map(user => {display: user.name, value: user.id})

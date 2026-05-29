@@ -31,21 +31,21 @@ desired records.
 #### Example
 
 ```ts
-const ManufacturerSchema = coda.makeObjectSchema({
+const ManufacturerSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    id: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
 });
 
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
-    size: { type: coda.ValueType.String },
+    size: { type: sdk.ValueType.String },
     materials: {
-      type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      type: sdk.ValueType.Array,
+      items: { type: sdk.ValueType.String },
     },
     manufacturer: ManufacturerSchema,
   },
@@ -84,12 +84,12 @@ properties will be broken down into smaller chunks for retrieval and usage by th
 #### Example
 
 ```ts
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     specSheetLink: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Attachment,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Attachment,
       description: "Link the PDF spec sheet for the product.",
     },
   },

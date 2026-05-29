@@ -38,7 +38,7 @@ The item is displayed as a chip in the first column of the sync table, and it co
 The schema used in a sync table can be shared by other building blocks in your Pack, like a formula or column format. Even when the schema is only used by the sync table, we recommend you define it as a separate variable in your code for readability and future reuse.
 
 ```ts
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   // ...
 });
 ```
@@ -106,7 +106,7 @@ pack.addSyncTable({
 });
 ```
 
-On each sync your code must return the full set of items, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
+On each sync your code must return the full set of items, and the platform will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
 
 
 ## Naming
@@ -145,14 +145,14 @@ In most sync tables, parameters are used to allow users to filter the results in
 
 ## Row limits
 
-Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit Coda will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
+Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit the platform will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
 
 
 ## Long-running syncs {: #longrunning}
 
 The sync formula that populates a sync table will timeout after a minute, but for some data sources it may take longer to retrieve all the results. In these cases you can utilize the continuation mechanism of sync tables to break your sync up into multiple executions. A continuation is like a save point, allowing you to record where you left off and then pick up again later.
 
-If at the end of an execution there are more items left to sync, return a custom continuation object along with the synced items. Coda will then re-run your sync formula, passing in the previous continuation object. The synced items from each execution will be appended to the table. This process will continue until no continuation object is returned or the table reaches the row limit.
+If at the end of an execution there are more items left to sync, return a custom continuation object along with the synced items. The platform will then re-run your sync formula, passing in the previous continuation object. The synced items from each execution will be appended to the table. This process will continue until no continuation object is returned or the table reaches the row limit.
 
 ```mermaid
 flowchart TD
@@ -258,7 +258,7 @@ Users can choose from top-level properties in the schema, and only those they se
 
 While there is no harm in your Pack retrieving properties that won't be persisted, in some cases you can optimize your sync if you know the exact set of fields the user is requesting. This can be determined by inspecting the value of `context.sync.schema`. This will be a copy of the original schema, but with only properties that the user selected.
 
-Since the properties themselves may use the [`fromKey`][fromKey] option to load their value from a different field in the row objects, it can be somewhat involved to map the properties back to API fields. To assist with this there is a helper function [`coda.getEffectivePropertyKeysFromSchema()`][getEffectivePropertyKeysFromSchema] that will do the conversion for you.
+Since the properties themselves may use the [`fromKey`][fromKey] option to load their value from a different field in the row objects, it can be somewhat involved to map the properties back to API fields. To assist with this there is a helper function [`sdk.getEffectivePropertyKeysFromSchema()`][getEffectivePropertyKeysFromSchema] that will do the conversion for you.
 
 ??? example "Example: Open Data NY sync table"
     ```ts
@@ -266,7 +266,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
     ```
 
 [samples]: ../../../samples/topic/sync-table.md
-[help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
+[help_center]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
 [sample_todoist]: ../../../samples/full/todoist.md
 [schemas]: ../../advanced/schemas.md
 [featured]: ../../../reference/sdk/core/interfaces/ObjectSchemaDefinition.md#featuredproperties
@@ -279,7 +279,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [actions]: ../actions.md
 [dynamic_sync_tables]: dynamic.md
 [dynamic_sync_tables_schema_only]: dynamic.md#schema-only
-[hc_relations]: https://help.coda.io/en/articles/1385997-connect-tables-with-relation-columns
+[hc_relations]: https://help.coda.io/hc/en-us/articles/39555878926861-Connect-tables-with-relation-columns
 [sample_continuation]: ../../../samples/topic/sync-table.md#with-continuation
 [sample_reference]: ../../../samples/topic/sync-table.md#with-row-references
 [parmeters]: ../../basics/parameters/index.md

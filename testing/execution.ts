@@ -292,7 +292,7 @@ export async function executeFormulaOrSyncFromCLI({
       if (!vm && !isSourceMapsEnabled()) {
         print(`
 Enable the Node flag --enable-source-maps to get an accurate stack trace. For example:
-NODE_OPTIONS="--enable-source-maps" npx coda execute ...`);
+NODE_OPTIONS="--enable-source-maps" npx packs execute ...`);
       }
     } else {
       // Just print the error message.
@@ -697,7 +697,7 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
  * will be run in a completely isolated environment, with absolutely no sharing
  * of state or global variables between iterations.
  *
- * For now, use `coda execute --vm` to simulate that level of isolation.
+ * For now, use `packs execute --vm` to simulate that level of isolation.
  */
 export async function executeSyncFormula(
   packDef: BasicPackDefinition,
@@ -782,7 +782,7 @@ export async function executeSyncFormula(
  * will be run in a completely isolated environment, with absolutely no sharing
  * of state or global variables between iterations.
  *
- * For now, use `coda execute --vm` to simulate that level of isolation.
+ * For now, use `packs execute --vm` to simulate that level of isolation.
  * @deprecated Use {@link executeSyncFormula} instead.
  */
 export async function executeSyncFormulaFromPackDef(

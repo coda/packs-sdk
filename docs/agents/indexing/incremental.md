@@ -64,8 +64,8 @@ pack.addSyncTable({
 For some APIs, only some filters are compatible with incremental sync. If you need to hide an optional parameter when the table is used in the data layer, you can set the field `supportsIncrementalSync` to false.
 
 ```{.ts hl_lines="6"}
-coda.makeParameter({
-  type: coda.ParameterType.String,
+sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "status",
   description: "The status of the task.",
   optional: true,

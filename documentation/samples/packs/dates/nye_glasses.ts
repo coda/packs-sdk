@@ -1,18 +1,18 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "GoodNYEGlasses",
   description: "Determines if a date is good for New Years Eve glasses " +
     "(the year contains two zeros).",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "date",
       description: "The input date.",
     }),
   ],
-  resultType: coda.ValueType.Boolean,
+  resultType: sdk.ValueType.Boolean,
   execute: async function ([date], context) {
     // Format the JavaScript Date into a four-digit year.
     let formatted = date.toLocaleDateString("en", {

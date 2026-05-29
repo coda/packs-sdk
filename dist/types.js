@@ -25,7 +25,7 @@ var PackCategory;
     PackCategory["Weather"] = "Weather";
 })(PackCategory || (exports.PackCategory = PackCategory = {}));
 /**
- * Authentication types supported by Coda Packs.
+ * Authentication types supported by Packs.
  *
  * @see [Authenticating with other services](https://coda.io/packs/build/latest/guides/basics/authentication/)
  * @see [Authentication samples](https://coda.io/packs/build/latest/samples/topic/authentication/)
@@ -93,7 +93,7 @@ var AuthenticationType;
     AuthenticationType["WebBasic"] = "WebBasic";
     /**
      * Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
-     * headers, or the form data using template replacement. Approval from Coda is required.
+     * headers, or the form data using template replacement. Approval from Superhuman is required.
      *
      * @see {@link CustomAuthentication}
      */
@@ -117,7 +117,7 @@ var AuthenticationType;
      */
     AuthenticationType["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
     /**
-     * Only for use by Coda-authored packs.
+     * Only for use by Superhuman-authored packs.
      *
      * @see {@link GoogleDomainWideDelegationAuthentication}
      * TODO(neal): Unhide.
@@ -125,7 +125,7 @@ var AuthenticationType;
      */
     AuthenticationType["GoogleDomainWideDelegation"] = "GoogleDomainWideDelegation";
     /**
-     * Only for use by Coda-authored packs.
+     * Only for use by Superhuman-authored packs.
      *
      * @see {@link GoogleServiceAccountAuthentication}
      * TODO(neal): Unhide.
@@ -133,7 +133,7 @@ var AuthenticationType;
      */
     AuthenticationType["GoogleServiceAccount"] = "GoogleServiceAccount";
     /**
-     * Only for use by Coda-authored packs.
+     * Only for use by Superhuman-authored packs.
      *
      * @see {@link VariousAuthentication}
      * @hidden
@@ -157,7 +157,7 @@ var PostSetupType;
 var TokenExchangeCredentialsLocation;
 (function (TokenExchangeCredentialsLocation) {
     /**
-     * Allow Coda to determine this automatically. Currently that means Coda tries passing the
+     * Allow the platform to determine this automatically. Currently that means the platform tries passing the
      * credentials in the body first, and if that fails then tries passing them in the Authorization
      * header.
      */
@@ -236,11 +236,6 @@ var ToolType;
      * Allows screen annotations to be used as tools.
      */
     ToolType["ScreenAnnotation"] = "ScreenAnnotation";
-    /**
-     * Allows assistant messages to be used as tools.
-     * @internal
-     */
-    ToolType["AssistantMessage"] = "AssistantMessage";
     /**
      * Tool that provides access to MCP capabilities.
      * @internal

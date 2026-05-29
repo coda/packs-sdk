@@ -47,7 +47,7 @@ pack.addFormula({
 In metadata formulas, such as those that determine autocomplete choices or connection names, the context is the only parameter:
 
 ```ts
-coda.makeParameter({
+sdk.makeParameter({
   // ...
   autocomplete: async function(context) {
     let fetcher = context.fetcher;
@@ -136,10 +136,10 @@ let response = await context.fetcher.fetch({
 
 ### URL query parameters {:#query-parameters}
 
-To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
+To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`sdk.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
 
 ```ts
-let url = coda.withQueryParams("https://www.example.com", {
+let url = sdk.withQueryParams("https://www.example.com", {
   foo: "bar",
   thing: true,
 });
@@ -186,7 +186,7 @@ Both of these options are compatible with Packs, as described in [URL query para
         }
       }
     `;
-    let url = coda.withQueryParams("https://api.example.com", {
+    let url = sdk.withQueryParams("https://api.example.com", {
       query: query,
     });
     let response = await context.fetcher.fetch({
@@ -385,13 +385,13 @@ try {
   });
 } catch (error) {
   // If the request failed because the server returned a 300+ status code.
-  if (coda.StatusCodeError.isStatusCodeError(error)) {
+  if (sdk.StatusCodeError.isStatusCodeError(error)) {
     // Cast the error as a StatusCodeError, for better intellisense.
-    let statusError = error as coda.StatusCodeError;
+    let statusError = error as sdk.StatusCodeError;
     // If the API returned an error message in the body, show it to the user.
     let message = statusError.body?.detail;
     if (message) {
-      throw new coda.UserVisibleError(message);
+      throw new sdk.UserVisibleError(message);
     }
   }
   // The request failed for some other reason. Re-throw the error so that it
@@ -413,7 +413,7 @@ The HTTP headers returned can be accessed using the `headers` field of the respo
 let contentType = response.headers["content-type"].toString();
 ```
 
-Unless it's a known safe header, all the header values will be redacted by Coda (contain the value `<<<REDACTED by Coda>>>` instead of the actual value). To request that a specific header be unredacted you will need to [contact support][support].
+Unless it's a known safe header, all the header values will be redacted by the platform (contain the value `<<<REDACTED by Superhuman>>>` instead of the actual value). To request that a specific header be unredacted you will need to [contact support][support].
 
 !!! info "Multiple header values"
     A server may return multiple headers with the same name. In this case, the header value will be a string array instead of a single string. As per [the spec][spec_headers], this should only happen for headers that return comma-separated values. Adding a `.toString()` call after retrieving the header value is an easy way to collapse both cases down to a single string.

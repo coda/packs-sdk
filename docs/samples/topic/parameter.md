@@ -16,8 +16,8 @@ The basic structure of a parameter. This sample is for a string parameter.
 
 ```ts
 {% raw %}
-coda.makeParameter({
-  type: coda.ParameterType.String,
+sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "myParameter",
   description: "My description.",
 }),
@@ -28,15 +28,15 @@ A formula without any parameters. This sample returns the name of the current da
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that gets the current weekday, for example "Monday".
 pack.addFormula({
   name: "CurrentWeekday",
   description: "Get the current day of the week.",
   parameters: [],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([], context) {
     let now = new Date();
     let formatter = Intl.DateTimeFormat("us-US", {
@@ -53,21 +53,21 @@ A formula that takes plain text as a parameter. This sample returns a greeting t
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Say Hello to the given name.
 pack.addFormula({
   name: "Hello",
   description: "A Hello World example.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The person's name you would like to say hello to.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([name]) {
     return "Hello " + name + "!";
   },
@@ -79,22 +79,22 @@ A formula that takes a number as a parameter. This sample converts a number of s
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that converts slices of a pizza into a percentage eaten.
 pack.addFormula({
   name: "PizzaEaten",
   description: "Calculates what percentage of a pizza was eaten.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "slices",
       description: "How many slices were eaten.",
     }),
   ],
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Percent,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Percent,
   execute: async function ([slices], context) {
     return slices / 8;
   },
@@ -106,21 +106,21 @@ A formula that takes a date as a parameter. This sample determines if the year o
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "GoodNYEGlasses",
   description: "Determines if a date is good for New Years Eve glasses " +
     "(the year contains two zeros).",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "date",
       description: "The input date.",
     }),
   ],
-  resultType: coda.ValueType.Boolean,
+  resultType: sdk.ValueType.Boolean,
   execute: async function ([date], context) {
     // Format the JavaScript Date into a four-digit year.
     let formatted = date.toLocaleDateString("en", {
@@ -139,8 +139,8 @@ A formula that takes an image as a parameter. This sample returns the file size 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Regular expression that matches Coda-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
@@ -150,20 +150,20 @@ pack.addFormula({
   name: "FileSize",
   description: "Gets the file size of an image, in bytes.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Image,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Image,
       name: "image",
       description:
         "The image to operate on. Not compatible with Image URL columns.",
     }),
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([imageUrl], context) {
     // Throw an error if the image isn't Coda-hosted. Image URL columns can
     // contain images on any domain, but by default Packs can only access image
     // attachments hosted on codahosted.io.
     if (!imageUrl.match(HostedImageUrlRegex)) {
-      throw new coda.UserVisibleError("Not compatible with Image URL columns.");
+      throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }
     // Fetch the image content.
     let response = await context.fetcher.fetch({
@@ -185,23 +185,23 @@ A formula that takes a string array as a parameter. This sample returns the long
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "Longest",
   description: "Given a list of strings, returns the longest one.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.StringArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.StringArray,
       name: "strings",
       description: "The input strings.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([strings], context) {
     if (strings.length === 0) {
-      throw new coda.UserVisibleError("No options provided.");
+      throw new sdk.UserVisibleError("No options provided.");
     }
     let result;
     for (let str of strings) {
@@ -219,37 +219,37 @@ A formula that takes sparse number arrays as a parameter, useful when passing ta
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "TotalCost",
   description: "Calculates the total cost for an order.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.SparseNumberArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.SparseNumberArray,
       name: "prices",
       description: "The prices for each item.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.SparseNumberArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.SparseNumberArray,
       name: "quantities",
       description: "The quantities of each item. Default: 1.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.SparseNumberArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.SparseNumberArray,
       name: "taxRates",
       description: "The tax rates for each item. Default: 0.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Currency,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Currency,
   execute: async function ([prices, quantities=[], taxRates=[]], context) {
     if ((quantities.length > 0 && quantities.length !== prices.length) ||
         (taxRates.length > 0 && taxRates.length !== prices.length)) {
-      throw new coda.UserVisibleError("All lists must be the same length.");
+      throw new sdk.UserVisibleError("All lists must be the same length.");
     }
     let result = 0;
     for (let i = 0; i < prices.length; i++) {
@@ -278,33 +278,33 @@ A formula with some required and some optional parameters. This sample formats t
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formats text to look like screaming. For example, "Hello" => "HELLO!!!".
 pack.addFormula({
   name: "Scream",
   description: "Make text uppercase and add exclamation points.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text to scream.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "volume",
       description: "The number of exclamation points to add.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "character",
       description: "The character to repeat.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   examples: [
     { params: ["Hello"], result: "HELLO!!!" },
     { params: ["Hello", 5], result: "HELLO!!!!!" },
@@ -322,8 +322,8 @@ A formula with a parameter that defines a suggested value. This sample rolls vir
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Rolls virtual dice and returns the resulting numbers. Use it with a button in
 // table and store the results in another column.
@@ -331,22 +331,22 @@ pack.addFormula({
   name: "RollDice",
   description: "Roll some virtual dice.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "quantity",
       description: "How many dice to roll.",
       suggestedValue: 1,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "sides",
       description: "How many sides the dice have.",
       suggestedValue: 6,
     }),
   ],
-  resultType: coda.ValueType.Array,
-  items: coda.makeSchema({
-    type: coda.ValueType.Number,
+  resultType: sdk.ValueType.Array,
+  items: sdk.makeSchema({
+    type: sdk.ValueType.Number,
   }),
   isAction: true,
   execute: async function ([quantity, sides], context) {
@@ -365,8 +365,8 @@ A formula that accepts a variable number of arguments. This sample draws a simpl
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Takes an unknown number of steps and labels and outputs a simple diagram.
 // Example: Steps("Idea", "Experiment", "Prototype", "Refine", "Product")
@@ -375,25 +375,25 @@ pack.addFormula({
   name: "Steps",
   description: "Draws a simple step diagram using text.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "start",
       description: "The starting step.",
     }),
   ],
   varargParameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "label",
       description: "The label for the arrow.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "step",
       description: "The next step.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([start, ...varargs], context) {
     let result = start;
     while (varargs.length > 0) {
@@ -412,12 +412,12 @@ A Pack that reuses a parameter across multiple formulas. This sample includes ma
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A "numbers" parameter shared by both formulas.
-const NumbersParameter = coda.makeParameter({
-  type: coda.ParameterType.NumberArray,
+const NumbersParameter = sdk.makeParameter({
+  type: sdk.ParameterType.NumberArray,
   name: "numbers",
   description: "The numbers to perform the calculation on.",
 });
@@ -429,16 +429,16 @@ pack.addFormula({
     // Use the shared parameter created above.
     NumbersParameter,
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([numbers]) {
     // Handle the error case where the list is empty.
     if (numbers.length === 0) {
-      throw new coda.UserVisibleError("The list cannot be empty.");
+      throw new sdk.UserVisibleError("The list cannot be empty.");
     }
 
     // Handle the error case where all the numbers are zeros.
     if (numbers.every(number => number === 0)) {
-      throw new coda.UserVisibleError(
+      throw new sdk.UserVisibleError(
         "The list must contain a non-zero number.");
     }
 
@@ -458,16 +458,16 @@ pack.addFormula({
     // Use the shared parameter created above.
     NumbersParameter,
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([numbers]) {
     // Handle the error case where the list is empty.
     if (numbers.length === 0) {
-      throw new coda.UserVisibleError("The list cannot be empty.");
+      throw new sdk.UserVisibleError("The list cannot be empty.");
     }
 
     // Handle the error case where the list contains a zero.
     if (numbers.some(number => number === 0)) {
-      throw new coda.UserVisibleError("The list must not contain a zero.");
+      throw new sdk.UserVisibleError("The list must not contain a zero.");
     }
 
     let result = numbers[0];
@@ -494,19 +494,19 @@ A Pack with a sync table that validates parameter values. This sample includes a
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 const PageSize = 100;
 
-const SpellSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
+const SpellSchema = sdk.makeObjectSchema({
+  type: sdk.ValueType.Object,
   properties: {
-    name: { type: coda.ValueType.String },
-    description: { type: coda.ValueType.String },
-    level: { type: coda.ValueType.Number },
-    school: { type: coda.ValueType.String },
-    index: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
+    description: { type: sdk.ValueType.String },
+    level: { type: sdk.ValueType.Number },
+    school: { type: sdk.ValueType.String },
+    index: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "index",
@@ -523,20 +523,20 @@ pack.addSyncTable({
     name: "SyncSpells",
     description: "Sync all the spells.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.Number,
+      sdk.makeParameter({
+        type: sdk.ParameterType.Number,
         name: "level",
         description: "Only include spells with the given level.",
         optional: true,
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "school",
         description: "Only include spells with the given magic school.",
         optional: true,
         autocomplete: async function (context, search) {
           let schools = await getMagicSchools(context);
-          return coda.autocompleteSearchObjects(
+          return sdk.autocompleteSearchObjects(
             search, schools, "name", "index");
         },
       }),
@@ -544,7 +544,7 @@ pack.addSyncTable({
     // Validate the parameter values.
     validateParameters: async function (context, _, args) {
       let { level, school } = args;
-      let errors: coda.ParameterValidationDetail[] = [];
+      let errors: sdk.ParameterValidationDetail[] = [];
       if (level && (level < 0 || level > 9)) {
         errors.push({
           message: "The level must be in the range 0-9.",
@@ -625,7 +625,7 @@ pack.addSyncTable({
   },
 });
 
-async function getMagicSchools(context: coda.ExecutionContext) {
+async function getMagicSchools(context: sdk.ExecutionContext) {
   let response = await context.fetcher.fetch({
     method: "GET",
     url: "https://www.dnd5eapi.co/api/2014/magic-schools",

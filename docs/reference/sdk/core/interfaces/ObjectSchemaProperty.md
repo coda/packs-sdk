@@ -55,7 +55,7 @@ This provides a way to rename fields from API responses without writing code.
 Suppose that you're fetching an object from an API that has a property called "duration".
 But in your pack, you'd like the value to be called "durationSeconds" to be more precise.
 You could write code in your `execute` function to relabel the field, but you could
-also use `fromKey` and Coda will do it for you.
+also use `fromKey` and the platform will do it for you.
 
 Suppose your `execute` function looked like this:
 ```
@@ -68,15 +68,15 @@ execute: async function(context) {
 
 You can define your schema like this:
 ```
-coda.makeObjectSchema({
+sdk.makeObjectSchema({
   properties: {
-    name: {type: coda.ValueType.String},
-    durationSeconds: {type: coda.ValueType.Number, fromKey: "duration"},
+    name: {type: sdk.ValueType.String},
+    durationSeconds: {type: sdk.ValueType.Number, fromKey: "duration"},
   },
 });
 ```
 
-This tells Coda to transform your formula's return value, creating a field "durationSeconds"
+This tells the platform to transform your formula's return value, creating a field "durationSeconds"
 whose value comes another field called "duration".
 
 ***

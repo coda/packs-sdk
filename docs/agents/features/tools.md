@@ -22,7 +22,7 @@ pack.addSkill({
   // ...
   tools: [
     // All the formulas in this Pack.
-    { type: coda.ToolType.Pack },
+    { type: sdk.ToolType.Pack },
   ],
 });
 
@@ -49,7 +49,7 @@ pack.addSkill({
   // ...
   tools: [
     {
-      type: coda.ToolType.Pack,
+      type: sdk.ToolType.Pack,
       formulas: [
         { formulaName: "GCD" },
       ],
@@ -94,8 +94,8 @@ pack.addSkill({
   // ...
   tools: [
     {
-      type: coda.ToolType.Knowledge,
-      source: { type: coda.KnowledgeToolSourceType.Pack },
+      type: sdk.ToolType.Knowledge,
+      source: { type: sdk.KnowledgeToolSourceType.Pack },
     },
   ],
 });
@@ -134,8 +134,8 @@ pack.addSkill({
   `,
   tools: [
     {
-      type: coda.ToolType.ScreenAnnotation,
-      annotation: { type: coda.ScreenAnnotationType.Rewrite },
+      type: sdk.ToolType.ScreenAnnotation,
+      annotation: { type: sdk.ScreenAnnotationType.Rewrite },
     },
   ],
 });
@@ -195,8 +195,8 @@ pack.setChatSkill({
     use the Contact Resolution tool to look up the contact.
   `,
   tools: [
-    { type: coda.ToolType.ContactResolution },
-    { type: coda.ToolType.Pack },
+    { type: sdk.ToolType.ContactResolution },
+    { type: sdk.ToolType.Pack },
   ],
 });
 ```
@@ -213,7 +213,7 @@ pack.addSkill({
   name: "RandomIcon",
   // ...
   tools: [
-    { type: coda.ToolType.MCP },
+    { type: sdk.ToolType.MCP },
   ],
 });
 
@@ -240,7 +240,7 @@ pack.addSkill({
     for Half-life 3.
   `,
   tools: [
-    { type: coda.ToolType.WebSearch },
+    { type: sdk.ToolType.WebSearch },
   ],
 });
 ```
@@ -253,7 +253,7 @@ pack.addSkill({
   // ...
   tools: [
     {
-      type: coda.ToolType.WebSearch,
+      type: sdk.ToolType.WebSearch,
       allowedDomains: ["github.com"],
     },
   ],

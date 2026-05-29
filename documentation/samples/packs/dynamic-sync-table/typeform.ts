@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // When listing forms, the maximum to return.
 const MaxForms = 200;
@@ -66,13 +66,13 @@ pack.addDynamicSyncTable({
     let form = await getForm(context, formUrl);
 
     // These properties are the same for all forms.
-    let properties: coda.ObjectSchemaProperties = {
+    let properties: sdk.ObjectSchemaProperties = {
       submittedAt: {
-        type: coda.ValueType.String,
-        codaType: coda.ValueHintType.DateTime,
+        type: sdk.ValueType.String,
+        codaType: sdk.ValueHintType.DateTime,
       },
       responseId: {
-        type: coda.ValueType.String,
+        type: sdk.ValueType.String,
       },
     };
     // Use them as the display value and ID of the rows.
@@ -91,7 +91,7 @@ pack.addDynamicSyncTable({
     }
 
     // Return the schema for each row.
-    return coda.makeObjectSchema({
+    return sdk.makeObjectSchema({
       properties: properties,
       displayProperty: displayProperty,
       idProperty: idProperty,
@@ -111,7 +111,7 @@ pack.addDynamicSyncTable({
       let pageToken = context.sync.continuation?.token || null;
 
       // Construct the API URL.
-      let url = coda.withQueryParams(formUrl + "/responses", {
+      let url = sdk.withQueryParams(formUrl + "/responses", {
         page_size: PageSize,
         before: pageToken,
       });
@@ -164,8 +164,8 @@ pack.addDynamicSyncTable({
 });
 
 // Gets the available forms, optionally filtered by a search string.
-async function getForms(context: coda.ExecutionContext, search?: string) {
-  let url = coda.withQueryParams("https://api.typeform.com/forms", {
+async function getForms(context: sdk.ExecutionContext, search?: string) {
+  let url = sdk.withQueryParams("https://api.typeform.com/forms", {
     search: search,
     page_size: MaxForms,
   });
@@ -197,7 +197,7 @@ function getPropertyName(field) {
 }
 
 // Generates a property schema based on a Typeform field.
-function getPropertySchema(field): coda.Schema & coda.ObjectSchemaProperty {
+function getPropertySchema(field): sdk.Schema & sdk.ObjectSchemaProperty {
   let schema: any = {
     // Use the field's full title as the column name.
     displayName: field.title,
@@ -208,31 +208,31 @@ function getPropertySchema(field): coda.Schema & coda.ObjectSchemaProperty {
   // Set the schema type depending on the field type.
   switch (field.type) {
     case "yes_no":
-      schema.type = coda.ValueType.Boolean;
+      schema.type = sdk.ValueType.Boolean;
       break;
     case "number":
     case "opinion_scale":
     case "rating":
-      schema.type = coda.ValueType.Number;
+      schema.type = sdk.ValueType.Number;
       break;
     case "date":
-      schema.type = coda.ValueType.String;
-      schema.codaType = coda.ValueHintType.Date;
+      schema.type = sdk.ValueType.String;
+      schema.codaType = sdk.ValueHintType.Date;
       break;
     case "multiple_choice":
       let isMultiselect = field.properties.allow_multiple_selection;
       if (isMultiselect) {
-        schema.type = coda.ValueType.Array;
+        schema.type = sdk.ValueType.Array;
         schema.items = {
-          type: coda.ValueType.String,
+          type: sdk.ValueType.String,
         };
       } else {
-        schema.type = coda.ValueType.String;
+        schema.type = sdk.ValueType.String;
       }
       break;
     default:
       // Default to strings.
-      schema.type = coda.ValueType.String;
+      schema.type = sdk.ValueType.String;
   }
 
   return schema;
@@ -260,7 +260,7 @@ function getPropertyValue(answer) {
 
 // Configure per-user authentication, using OAuth2.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // See: https://developer.typeform.com/get-started/applications/
   authorizationUrl: "https://api.typeform.com/oauth/authorize",
   tokenUrl: "https://api.typeform.com/oauth/token",

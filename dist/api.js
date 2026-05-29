@@ -37,7 +37,7 @@ const schema_7 = require("./schema");
  * @example
  * ```
  * if (!url.startsWith("https://")) {
- *   throw new coda.UserVisibleError("Please provide a valid url.");
+ *   throw new sdk.UserVisibleError("Please provide a valid url.");
  * }
  * ```
  *
@@ -79,13 +79,13 @@ exports.UserVisibleError = UserVisibleError;
  *   });
  * } catch (error) {
  *   // If the request failed because the server returned a 300+ status code.
- *   if (coda.StatusCodeError.isStatusCodeError(error)) {
+ *   if (sdk.StatusCodeError.isStatusCodeError(error)) {
  *     // Cast the error as a StatusCodeError, for better intellisense.
- *     let statusError = error as coda.StatusCodeError;
+ *     let statusError = error as sdk.StatusCodeError;
  *     // If the API returned an error message in the body, show it to the user.
  *     let message = statusError.body?.detail;
  *     if (message) {
- *       throw new coda.UserVisibleError(message);
+ *       throw new sdk.UserVisibleError(message);
  *     }
  *   }
  *   // The request failed for some other reason. Re-throw the error so that it
@@ -126,10 +126,10 @@ exports.StatusCodeError = StatusCodeError;
 /**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added
  * to the pack since their connection was created, or scopes that are specific to a certain formula.
- * This is useful because Coda will always attempt to execute a formula even if a user has not yet
+ * This is useful because the platform will always attempt to execute a formula even if a user has not yet
  * re-authenticated with all relevant scopes.
  *
- * You don't *always* need to throw this specific error, as Coda will interpret a 403 (Forbidden)
+ * You don't *always* need to throw this specific error, as the platform will interpret a 403 (Forbidden)
  * status code error as a MissingScopesError when the user's connection was made without all
  * currently relevant scopes. This error exists because that default behavior is insufficient if
  * the OAuth service does not set a 403 status code (the OAuth spec doesn't specifically require
@@ -144,7 +144,7 @@ exports.StatusCodeError = StatusCodeError;
  * } catch (error) {
  *   // Determine if the error is due to missing scopes.
  *   if (error.statusCode == 400 && error.body?.message.includes("permission")) {
- *     throw new coda.MissingScopesError();
+ *     throw new sdk.MissingScopesError();
  *   }
  *   // Else handle or throw the error as normal.
  * }
@@ -268,6 +268,12 @@ function makeParameter(paramDefinition) {
     const actualType = api_types_4.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
+        // The conditional `autocomplete?` field on ParameterOptions guarantees
+        // that whenever `autocompleteDefOrItems` is an array, the outer T is in
+        // AutocompleteParameterTypes. Pass the union explicitly so the call
+        // type-checks under stricter generic inference (e.g. tsgo / TS6 native
+        // compiler) — TypeScript's older inference quietly distributed the
+        // generic over makeParameter's union, but the native compiler doesn't.
         const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
         autocomplete = wrapMetadataFunction(autocompleteDef);
     }
@@ -606,7 +612,7 @@ exports.normalizePropertyOptionsResults = normalizePropertyOptionsResults;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
- * function implementation, and Coda will wrap it with this to generate a full metadata formula
+ * function implementation, and the platform will wrap it with this to generate a full metadata formula
  * definition.
  *
  * All function-like behavior in a pack is ultimately implemented using formulas, like you would
@@ -701,7 +707,7 @@ exports.makePropertyOptionsFormula = makePropertyOptionsFormula;
  * autocomplete: async function(context, search) {
  *   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
  *   const allOptions = response.body.entities.map(entity => entity.name);
- *   return coda.simpleAutocomplete(search, allOptions);
+ *   return sdk.simpleAutocomplete(search, allOptions);
  * }
  * ```
  */
@@ -746,7 +752,7 @@ exports.simpleAutocomplete = simpleAutocomplete;
  *
  * @example
  * ```
- * coda.makeParameter({
+ * sdk.makeParameter({
  *   type: ParameterType.Number,
  *   name: "userId",
  *   description: "The ID of a user.",
@@ -758,7 +764,7 @@ exports.simpleAutocomplete = simpleAutocomplete;
  *     // those that match. Then it will transform the matching objects into the form
  *     // `{display: "Jane Doe", value: 123}` which is what is required to render
  *     // autocomplete responses.
- *     return coda.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
+ *     return sdk.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
  *   }
  * });
  * ```
@@ -849,12 +855,12 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * This wrapper does a variety of helpful things, including
  * * Doing basic validation of the provided definition.
- * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Normalizing the schema definition to conform to recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
+function makeSyncTable({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, indexing, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions, onError, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
@@ -990,6 +996,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
         defaultAddDynamicColumns,
         namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
         role,
+        indexing,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -1000,7 +1007,7 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
         throw new Error('Legacy sync tables must specify identity.name');
     }
     if (schema.__packId) {
-        throw new Error('Do not use the __packId field, it is only for internal Coda use.');
+        throw new Error('Do not use the __packId field, it is only for internal use.');
     }
     return makeSyncTable({
         name,
@@ -1018,7 +1025,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  *
  * @example
  * ```
- * coda.makeDynamicSyncTable({
+ * sdk.makeDynamicSyncTable({
  *   name: "MySyncTable",
  *   getName: async function(context) => {
  *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
@@ -1032,7 +1039,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }) {
+function makeDynamicSyncTable({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, indexing, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_3.makeObjectSchema)({
@@ -1058,6 +1065,7 @@ function makeDynamicSyncTable({ name, displayName, description, getName: getName
         formula,
         connectionRequirement,
         dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns, propertyOptions },
+        indexing,
     });
     return {
         ...table,
@@ -1132,7 +1140,7 @@ exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
  *
  * @example
  * ```
- * coda.makeEmptyFormula({
+ * sdk.makeEmptyFormula({
     name: "GetWidget",
     description: "Gets a widget.",
     request: {
@@ -1140,7 +1148,7 @@ exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
       method: "GET",
     },
     parameters: [
-      coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
+      sdk.makeParameter({type: sdk.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
     ],
   }),
  * ```

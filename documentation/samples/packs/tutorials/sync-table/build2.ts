@@ -1,42 +1,42 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addNetworkDomain("gutendex.com");
 
-const AuthorSchema = coda.makeObjectSchema({
+const AuthorSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
     born: {
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
       fromKey: "birth_year",
     },
     died: {
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
       fromKey: "death_year",
     },
   },
   displayProperty: "name",
 });
 
-const BookSchema = coda.makeObjectSchema({
+const BookSchema = sdk.makeObjectSchema({
   properties: {
-    title: { type: coda.ValueType.String },
-    id: { type: coda.ValueType.Number },
+    title: { type: sdk.ValueType.String },
+    id: { type: sdk.ValueType.Number },
     subjects: {
-      type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      type: sdk.ValueType.Array,
+      items: { type: sdk.ValueType.String },
     },
     authors: {
-      type: coda.ValueType.Array,
+      type: sdk.ValueType.Array,
       items: AuthorSchema,
     },
     thumbnail: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageAttachment,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageAttachment,
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
   },
   displayProperty: "title",
@@ -55,8 +55,8 @@ pack.addSyncTable({
     name: "SyncBooks",
     description: "Syncs the books.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "topic",
         description: "Limit books to this topic.",
         optional: true,
@@ -65,7 +65,7 @@ pack.addSyncTable({
     execute: async function (args, context) {
       let [topic] = args;
       let baseUrl = "https://gutendex.com/books";
-      let url = coda.withQueryParams(baseUrl, {
+      let url = sdk.withQueryParams(baseUrl, {
         topic: topic,
       });
       let response = await context.fetcher.fetch({

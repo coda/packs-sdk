@@ -33,7 +33,7 @@ export enum PackCategory {
 }
 
 /**
- * Authentication types supported by Coda Packs.
+ * Authentication types supported by Packs.
  *
  * @see [Authenticating with other services](https://coda.io/packs/build/latest/guides/basics/authentication/)
  * @see [Authentication samples](https://coda.io/packs/build/latest/samples/topic/authentication/)
@@ -100,7 +100,7 @@ export enum AuthenticationType {
   WebBasic = 'WebBasic',
   /**
    * Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
-   * headers, or the form data using template replacement. Approval from Coda is required.
+   * headers, or the form data using template replacement. Approval from Superhuman is required.
    *
    * @see {@link CustomAuthentication}
    */
@@ -124,7 +124,7 @@ export enum AuthenticationType {
    */
   CodaApiHeaderBearerToken = 'CodaApiHeaderBearerToken',
   /**
-   * Only for use by Coda-authored packs.
+   * Only for use by Superhuman-authored packs.
    *
    * @see {@link GoogleDomainWideDelegationAuthentication}
    * TODO(neal): Unhide.
@@ -132,7 +132,7 @@ export enum AuthenticationType {
    */
   GoogleDomainWideDelegation = 'GoogleDomainWideDelegation',
   /**
-   * Only for use by Coda-authored packs.
+   * Only for use by Superhuman-authored packs.
    *
    * @see {@link GoogleServiceAccountAuthentication}
    * TODO(neal): Unhide.
@@ -140,7 +140,7 @@ export enum AuthenticationType {
    */
   GoogleServiceAccount = 'GoogleServiceAccount',
   /**
-   * Only for use by Coda-authored packs.
+   * Only for use by Superhuman-authored packs.
    *
    * @see {@link VariousAuthentication}
    * @hidden
@@ -292,7 +292,7 @@ export interface BaseAuthentication {
    * Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
    * Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
    *
-   * Using multiple authenticated network domains is uncommon and requires Coda approval.
+   * Using multiple authenticated network domains is uncommon and requires Superhuman approval.
    */
   networkDomain?: string | string[];
 }
@@ -303,7 +303,7 @@ export interface BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.HeaderBearerToken,
+ *   type: sdk.AuthenticationType.HeaderBearerToken,
  * });
  * ```
  *
@@ -322,13 +322,13 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
- * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
+ * This is primarily for use by Superhuman-authored packs, as it is only relevant for interacting with the
  * Coda REST API.
  *
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+ *   type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
  * });
  * ```
  *
@@ -357,7 +357,7 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.CustomHeaderToken,
+ *   type: sdk.AuthenticationType.CustomHeaderToken,
  *   headerName: "X-API-Key",
  * });
  * ```
@@ -389,7 +389,7 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.MultiHeaderToken,
+ *   type: sdk.AuthenticationType.MultiHeaderToken,
  *   headers: [
  *     {name: 'Header1', description: 'Enter the value for Header1',  tokenPrefix: 'prefix1'},
  *     {name: 'Header2', description: 'Enter value for Header2'},
@@ -431,7 +431,7 @@ export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.QueryParamToken,
+ *   type: sdk.AuthenticationType.QueryParamToken,
  *   paramName: "key",
  * });
  * ```
@@ -458,7 +458,7 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.MultiQueryParamToken,
+ *   type: sdk.AuthenticationType.MultiQueryParamToken,
  *   params: [
  *     { name: "key", description: "The key." },
  *     { name: "secret", description: "The secret." },
@@ -503,12 +503,12 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
   /**
    * The delimiter to use when joining {@link scopes} when generating authorization URLs.
    *
-   * The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+   * The OAuth2 standard is to use spaces to delimit scopes, and the platform will do that by default.
    * If the API you are using requires a different delimiter, say a comma, specify it here.
    */
   scopeDelimiter?: ' ' | ',' | ';';
   /**
-   * The URL that Coda will hit in order to exchange the temporary code for an access token.
+   * The URL that the platform will hit in order to exchange the temporary code for an access token.
    */
   tokenUrl?: string;
   /**
@@ -588,7 +588,7 @@ interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.OAuth2,
+ *   type: sdk.AuthenticationType.OAuth2,
  *   // These URLs come from the API's developer documentation.
  *   authorizationUrl: "https://example.com/authorize",
  *   tokenUrl: "https://api.example.com/token",
@@ -601,12 +601,12 @@ interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
 export interface OAuth2StaticCodeAuthentication extends BaseOAuth2CodeAuthentication {
   /**
    * The URL to which the user will be redirected in order to authorize this pack.
-   * This is typically just a base url with no parameters. Coda will append the `scope`
+   * This is typically just a base url with no parameters. The platform will append the `scope`
    * parameter automatically. If the authorization flow requires additional parameters,
    * they may be specified using {@link additionalParams}.
    */
   authorizationUrl: string;
-  /** The URL that Coda will hit in order to exchange the temporary code for an access token. */
+  /** The URL that the platform will hit in order to exchange the temporary code for an access token. */
   tokenUrl: string;
   /**
    * Indicates that Dynamic Client Registration is not used.
@@ -621,8 +621,6 @@ export interface OAuth2StaticCodeAuthentication extends BaseOAuth2CodeAuthentica
  * OAuth2 authentication with Dynamic Client Registration (DCR) enabled.
  * `authorizationUrl` and `tokenUrl` are optional because they are automatically
  * discovered using the pack's declared MCP servers and network domains.
- *
- * @hidden
  */
 export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentication {
   /**
@@ -634,13 +632,11 @@ export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentic
   tokenUrl?: string;
   /**
    * Indicates that this OAuth provider supports Dynamic Client Registration.
-   * When enabled, the Coda platform will automatically discover authorization endpoints
+   * When enabled, the platform will automatically discover authorization endpoints
    * and dynamically register OAuth client credentials (client ID and secret) using the
    * pack's declared MCP servers and network domains.
    *
    * See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
-   *
-   * @hidden
    */
   useDynamicClientRegistration: true;
 }
@@ -669,7 +665,7 @@ export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2Dynami
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.OAuth2ClientCredentials,
+ *   type: sdk.AuthenticationType.OAuth2ClientCredentials,
  *   // This URL comes from the API's developer documentation.
  *   tokenUrl: "https://api.example.com/token",
  * });
@@ -678,7 +674,7 @@ export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2Dynami
 export interface OAuth2ClientCredentialsAuthentication extends BaseOAuthAuthentication {
   /** Identifies this as OAuth2 client credentials authentication. */
   type: AuthenticationType.OAuth2ClientCredentials;
-  /** The URL that Coda will hit in order to exchange credentials for an access token. */
+  /** The URL that the platform will hit in order to exchange credentials for an access token. */
   tokenUrl: string;
 }
 
@@ -688,7 +684,7 @@ export interface OAuth2ClientCredentialsAuthentication extends BaseOAuthAuthenti
  */
 export enum TokenExchangeCredentialsLocation {
   /**
-   * Allow Coda to determine this automatically. Currently that means Coda tries passing the
+   * Allow the platform to determine this automatically. Currently that means the platform tries passing the
    * credentials in the body first, and if that fails then tries passing them in the Authorization
    * header.
    */
@@ -713,7 +709,7 @@ export enum TokenExchangeCredentialsLocation {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.WebBasic,
+ *   type: sdk.AuthenticationType.WebBasic,
  * });
  * ```
  *
@@ -762,7 +758,8 @@ export interface CustomAuthParameter {
 
 /**
  * Authenticate for custom, non-standard API authentication schemes by inserting one or more arbitrary secret values
- * into the request (the body, URL, headers, or form data) using template replacement. Approval from Coda is required.
+ * into the request (the body, URL, headers, or form data) using template replacement. Approval from Superhuman is
+ * required.
  *
  * Some APIs use non-standard authentication schemes which often require secret credentials to be put in specific places
  * in the request URL or request body. Custom authentication supports many of these cases by allowing you as the pack
@@ -858,7 +855,7 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
 }
 
 /**
- * Only for use by Coda-authored packs.
+ * Only for use by Superhuman-authored packs.
  *
  * TODO(neal): Unhide.
  * @hidden
@@ -870,7 +867,7 @@ export interface GoogleDomainWideDelegationAuthentication extends BaseAuthentica
 }
 
 /**
- * Only for use by Coda-authored packs.
+ * Only for use by Superhuman-authored packs.
  *
  * TODO(neal): Unhide.
  * @hidden
@@ -882,7 +879,7 @@ export interface GoogleServiceAccountAuthentication extends BaseAuthentication {
 }
 
 /**
- * Only for use by Coda-authored packs.
+ * Only for use by Superhuman-authored packs.
  *
  * @hidden
  */
@@ -894,7 +891,7 @@ export interface VariousAuthentication {
 /**
  * The union of authentication types that all pack makers are allowed to use.
  *
- * The only types excluded here are Various (only for use by Coda) and NoAuthentication,
+ * The only types excluded here are Various (only for internal use) and NoAuthentication,
  * which should never need to be used by pack makers.
  *
  * These authentication types all extend BaseAuthentication.
@@ -974,7 +971,7 @@ export type AllowedAuthenticationDef =
  * The union of supported authentication definitions. These represent simplified configurations
  * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
  * a pack definition builder. The builder massages these definitions into the form of
- * an {@link Authentication} value, which is the value Coda ultimately cares about.
+ * an {@link Authentication} value, which is the value the platform ultimately cares about.
  */
 export type AuthenticationDef = NoAuthentication | VariousAuthentication | AllowedAuthenticationDef;
 
@@ -999,7 +996,7 @@ export type SystemAuthentication =
  * The union of supported system authentication definitions. These represent simplified
  * configurations a pack developer can specify when calling {@link PackDefinitionBuilder.setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
- * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
+ * an {@link SystemAuthentication} value, which is the value the platform ultimately cares about.
  */
 export type SystemAuthenticationDef =
   | AsAuthDef<HeaderBearerTokenAuthentication>
@@ -1066,7 +1063,7 @@ export interface AdminAuthentication {
   authentication: AllowedAuthentication;
 
   /**
-   * A unique identifier for this authentication configuration. Coda will pass it into formulas via
+   * A unique identifier for this authentication configuration. The platform will pass it into formulas via
    * the execution context. Users will not see this value.
    *
    * Names must use only alphanumeric characters and underscores, and must *not*
@@ -1222,7 +1219,7 @@ export interface RateLimits {
 
 /**
  * A pack definition without an author-defined semantic version, for use in the web
- * editor where Coda will manage versioning on behalf of the pack author.
+ * editor where the platform will manage versioning on behalf of the pack author.
  */
 export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 
@@ -1242,11 +1239,6 @@ export enum ToolType {
    * Allows screen annotations to be used as tools.
    */
   ScreenAnnotation = 'ScreenAnnotation',
-  /**
-   * Allows assistant messages to be used as tools.
-   * @internal
-   */
-  AssistantMessage = 'AssistantMessage',
   /**
    * Tool that provides access to MCP capabilities.
    * @internal
@@ -1416,12 +1408,6 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
 }
 
 /**
- * Tool that provides access to assistant messages.
- * @internal
- */
-export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {}
-
-/**
  * Tool that provides access to MCP capabilities.
  */
 export interface MCPTool extends BaseTool<ToolType.MCP> {
@@ -1467,7 +1453,7 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
    *   // ...
    *   tools: [
    *     {
-   *       type: coda.ToolType.WebSearch,
+   *       type: sdk.ToolType.WebSearch,
    *       allowedDomains: ["docs.google.com", "stackoverflow.com"],
    *     },
    *   ],
@@ -1564,7 +1550,6 @@ export interface ToolMap {
   [ToolType.Pack]: PackTool;
   [ToolType.Knowledge]: KnowledgeTool;
   [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
-  [ToolType.AssistantMessage]: AssistantMessageTool;
   [ToolType.MCP]: MCPTool;
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
@@ -1673,8 +1658,8 @@ export interface Skill {
  * // Override tools — replaces the defaults entirely
  * pack.setChatSkill({
  *   tools: [
- *     { type: coda.ToolType.Pack },
- *     { type: coda.ToolType.ContactResolution },
+ *     { type: sdk.ToolType.Pack },
+ *     { type: sdk.ToolType.ContactResolution },
  *   ],
  * });
  * ```
@@ -1743,7 +1728,7 @@ export interface PackVersionDefinition {
    */
   defaultAuthentication?: Authentication;
   /**
-   * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
+   * If specified, this pack requires system credentials to be set up via the admin console in order to work when no
    * explicit connection is specified by the user.
    */
   systemConnectionAuthentication?: SystemAuthentication;
@@ -1761,7 +1746,7 @@ export interface PackVersionDefinition {
    * to a domain not listed here will be rejected.
    *
    * Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
-   * contact Coda support for approval.
+   * contact support for approval.
    */
   networkDomains?: string[];
 
@@ -1800,7 +1785,7 @@ export interface PackVersionDefinition {
    * // Override just the tools
    * pack.setChatSkill({
    *   tools: [
-   *     { type: coda.ToolType.Pack },
+   *     { type: sdk.ToolType.Pack },
    *   ],
    * });
    *
@@ -1838,7 +1823,7 @@ export interface PackVersionDefinition {
  * @deprecated use `#PackVersionDefinition`
  *
  * The legacy complete definition of a Pack including un-versioned metadata.
- * This should only be used by legacy Coda pack implementations.
+ * This should only be used by legacy pack implementations.
  */
 export interface PackDefinition extends PackVersionDefinition {
   id: PackId;
@@ -1854,7 +1839,7 @@ export interface PackDefinition extends PackVersionDefinition {
   quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
   rateLimits?: RateLimits;
   /**
-   * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
+   * Whether this is a pack that will be used internally and not exposed directly to users.
    */
   isSystem?: boolean;
 }

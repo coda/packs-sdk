@@ -4,7 +4,6 @@ import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
-import type {AssistantMessageTool} from '../types';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
@@ -24,6 +23,7 @@ import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
+import {DataIndexing} from '../api_types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
@@ -1429,6 +1429,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     [1013, 'Sync pull requests', ExemptionType.SyncTableGetterName],
     [1013, 'Sync repos', ExemptionType.SyncTableGetterName],
     [1003, 'Event', ExemptionType.FilterablePropertyLimit],
+    [42226, 'Event', ExemptionType.FilterablePropertyLimit],
     [1052, 'Issue', ExemptionType.FilterablePropertyLimit],
     [1054, 'Sync table', ExemptionType.SyncTableGetterName],
     [1062, 'Form responses', ExemptionType.SyncTableGetterName],
@@ -2166,6 +2167,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
+    indexing: z
+      .object({
+        default: z.nativeEnum(DataIndexing),
+      })
+      .optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<
@@ -2289,10 +2295,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     embeddedContent: embeddedContentSchema,
   });
 
-  const assistantMessageToolSchema = zodCompleteStrictObject<AssistantMessageTool>({
-    type: z.literal(ToolType.AssistantMessage),
-  });
-
   const mcpToolSchema = zodCompleteStrictObject<MCPTool>({
     type: z.literal(ToolType.MCP),
     serverNames: z.array(z.string()).optional(),
@@ -2321,7 +2323,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     packToolSchema,
     knowledgeToolSchema,
     screenAnnotationToolSchema,
-    assistantMessageToolSchema,
     mcpToolSchema,
     contactResolutionToolSchema,
     codaDocsToolSchema,
@@ -2600,9 +2601,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
           }
 
-          const codaDomains = ['coda.io', 'localhost'];
+          const codaDomains = ['coda.io', 'localhost', 'superhuman.com'];
+          const isCodaDomain = (domain: string) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
 
-          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !codaDomains.includes(domain));
+          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !isCodaDomain(domain));
           if (!hasNonCodaNetwork) {
             continue;
           }
@@ -2618,7 +2620,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             continue;
           }
 
-          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !codaDomains.includes(domain));
+          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !isCodaDomain(domain));
           if (hasNonCodaAuthDomain) {
             context.addIssue({
               code: 'custom',
@@ -2757,10 +2759,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const {formulas = [], skills = []} = metadata;
         const formulaNames = new Set(formulas.map(f => f.name));
 
-        // Validate each skill's tools
-        skills.forEach((skill, skillIndex) => {
-          // Validate PackTools that reference the current pack
-          skill.tools.forEach((tool, toolIndex) => {
+        function validateSkillTools(skill: {tools?: Tool[]}, basePath: Array<string | number>) {
+          (skill.tools || []).forEach((tool, toolIndex) => {
             // Only validate Pack tools without a packId (i.e., referencing current pack).
             // Cross-pack tool calls (with packId set) are not validated here, though they will
             // fail at runtime for third-party packs since only first-party Coda agents can
@@ -2771,14 +2771,27 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (!formulaNames.has(formulaName)) {
                   context.addIssue({
                     code: 'custom',
-                    path: ['skills', skillIndex, 'tools', toolIndex, 'formulas', formulaIndex, 'formulaName'],
+                    path: [...basePath, 'tools', toolIndex, 'formulas', formulaIndex, 'formulaName'],
                     message: `Formula "${formulaName}" not found. Pack tool formulas must reference formulas defined in this pack.`,
                   });
                 }
               });
             }
           });
+        }
+
+        // Validate each skill's tools
+        skills.forEach((skill, skillIndex) => {
+          validateSkillTools(skill, ['skills', skillIndex]);
         });
+
+        // Validate chatSkill and benchInitializationSkill tools
+        if (metadata.chatSkill) {
+          validateSkillTools(metadata.chatSkill, ['chatSkill']);
+        }
+        if (metadata.benchInitializationSkill) {
+          validateSkillTools(metadata.benchInitializationSkill, ['benchInitializationSkill']);
+        }
       });
   }
 
@@ -2896,6 +2909,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         path: ['networkDomains'],
       },
     )
+    .refine(
+      (data: any) => {
+        if (data.networkDomains?.length || !data.mcpServers?.length) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message:
+          'This pack uses MCP servers but did not declare a network domain. ' +
+          "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+        path: ['networkDomains'],
+      },
+    )
     .superRefine((untypedData, context) => {
       const data = untypedData as PackVersionMetadata;
 
@@ -2965,6 +2992,29 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               return;
             }
           }
+        }
+      }
+    })
+    .superRefine((untypedData, context) => {
+      const data = untypedData as PackVersionMetadata;
+      if (!data.networkDomains || !data.mcpServers) {
+        return;
+      }
+
+      for (const [i, server] of data.mcpServers.entries()) {
+        const usedNetworkDomain = URLParse(server.endpointUrl).hostname;
+        if (!usedNetworkDomain) {
+          continue;
+        }
+        if (
+          !data.networkDomains.some(domain => domain === usedNetworkDomain || usedNetworkDomain.endsWith('.' + domain))
+        ) {
+          context.addIssue({
+            code: 'custom',
+            path: [`mcpServers[${i}].endpointUrl`],
+            message: `Domain ${usedNetworkDomain} is used in MCP server ${server.name} but not declared in the pack's "networkDomains".`,
+          });
+          return;
         }
       }
     })
