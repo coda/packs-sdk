@@ -2616,7 +2616,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             context.addIssue({
               code: 'custom',
               path: [`authentication.${name}.networkDomain`],
-              message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
+              message: `SuperhumanDocsApiHeaderBearerToken can only be used for superhuman.com domains. Restrict ${name}'s "networkDomain" to superhuman.com (coda.io is also supported for legacy packs)`,
             });
             continue;
           }
@@ -2626,7 +2626,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             context.addIssue({
               code: 'custom',
               path: [`authentication.${name}.networkDomain`],
-              message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
+              message: `SuperhumanDocsApiHeaderBearerToken can only be used for superhuman.com domains. Restrict ${name}'s "networkDomain" to superhuman.com (coda.io is also supported for legacy packs)`,
             });
           }
         }
