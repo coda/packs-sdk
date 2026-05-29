@@ -95,12 +95,15 @@
   },
   {
     "triggerTokens": [
+      "setUserAuthentication:SuperhumanDocsApi",
+      "SuperhumanDocsApiHeaderBearerToken",
+      "SuperhumanDocsApiHeaderBearerTokenAuthentication",
       "setUserAuthentication:CodaApi",
       "CodaApiHeaderBearerToken",
       "CodaApiBearerTokenAuthentication"
     ],
-    "content": "Sets per-user authentication for the Pack, using a Coda API token.",
-    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,\n});"
+    "content": "Sets per-user authentication for the Pack, using a Superhuman Docs API token.",
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.SuperhumanDocsApiHeaderBearerToken,\n});"
   },
   {
     "triggerTokens": [

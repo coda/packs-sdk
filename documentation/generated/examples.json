@@ -102,7 +102,7 @@
       {
         "name": "Coda API token",
         "content": "Authentication optimized for connecting to the Coda API, which is a token passed in the Authorization header.",
-        "code": "import * as sdk from \"@codahq/packs-sdk\";\nexport const pack = sdk.newPack();\n\n// Per-user authentication to the Coda API, using a token in the Authorization\n// header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
+        "code": "import * as sdk from \"@codahq/packs-sdk\";\nexport const pack = sdk.newPack();\n\n// Per-user authentication to the Superhuman Docs API, using a token in the\n// Authorization header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: sdk.AuthenticationType.SuperhumanDocsApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
       },
       {
         "name": "AWS Signature Version 4",
@@ -728,7 +728,7 @@
       {
         "name": "Coda API",
         "content": "The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.",
-        "code": "import * as sdk from \"@codahq/packs-sdk\";\nexport const pack = sdk.newPack();\n\n// Per-user authentication to the Coda API, using a token in the Authorization\n// header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
+        "code": "import * as sdk from \"@codahq/packs-sdk\";\nexport const pack = sdk.newPack();\n\n// Per-user authentication to the Superhuman Docs API, using a token in the\n// Authorization header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: sdk.AuthenticationType.SuperhumanDocsApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
       },
       {
         "name": "Copper API",

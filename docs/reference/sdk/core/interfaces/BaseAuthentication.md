@@ -16,13 +16,13 @@ Base interface for authentication definitions.
 
 - [`AWSAccessKeyAuthentication`](AWSAccessKeyAuthentication.md)
 - [`AWSAssumeRoleAuthentication`](AWSAssumeRoleAuthentication.md)
-- [`CodaApiBearerTokenAuthentication`](CodaApiBearerTokenAuthentication.md)
 - [`CustomAuthentication`](CustomAuthentication.md)
 - [`CustomHeaderTokenAuthentication`](CustomHeaderTokenAuthentication.md)
 - [`HeaderBearerTokenAuthentication`](HeaderBearerTokenAuthentication.md)
 - [`MultiHeaderTokenAuthentication`](MultiHeaderTokenAuthentication.md)
 - [`MultiQueryParamTokenAuthentication`](MultiQueryParamTokenAuthentication.md)
 - [`QueryParamTokenAuthentication`](QueryParamTokenAuthentication.md)
+- [`SuperhumanDocsApiHeaderBearerTokenAuthentication`](SuperhumanDocsApiHeaderBearerTokenAuthentication.md)
 - [`WebBasicAuthentication`](WebBasicAuthentication.md)
 
 ## Properties

@@ -337,7 +337,7 @@ class AuthenticatingFetcher {
                 return { headers, body, form, url: parsedUrl.href };
             }
             case types_1.AuthenticationType.HeaderBearerToken:
-            case types_1.AuthenticationType.CodaApiHeaderBearerToken: {
+            case types_1.AuthenticationType.SuperhumanDocsApiHeaderBearerToken: {
                 const { token } = this._credentials;
                 return { url, body, form, headers: { ...headers, Authorization: `Bearer ${token}` } };
             }

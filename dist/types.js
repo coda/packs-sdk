@@ -111,9 +111,18 @@ var AuthenticationType;
      */
     AuthenticationType["AWSAssumeRole"] = "AWSAssumeRole";
     /**
-     * Authenticate using a Coda REST API token, sent as an HTTP header.
+     * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
      *
-     * @see {@link CodaApiBearerTokenAuthentication}
+     * @see {@link SuperhumanDocsApiHeaderBearerTokenAuthentication}
+     */
+    AuthenticationType["SuperhumanDocsApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
+    /**
+     * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
+     *
+     * @deprecated Use {@link AuthenticationType.SuperhumanDocsApiHeaderBearerToken} instead.
+     * This value is supported indefinitely for backwards compatibility.
+     *
+     * @see {@link SuperhumanDocsApiHeaderBearerTokenAuthentication}
      */
     AuthenticationType["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
     /**

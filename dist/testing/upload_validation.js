@@ -549,8 +549,8 @@ function buildMetadataSchema({ sdkVersion }) {
             type: zodDiscriminant(types_1.AuthenticationType.HeaderBearerToken),
             ...baseAuthenticationValidators,
         }),
-        [types_1.AuthenticationType.CodaApiHeaderBearerToken]: zodCompleteStrictObject({
-            type: zodDiscriminant(types_1.AuthenticationType.CodaApiHeaderBearerToken),
+        [types_1.AuthenticationType.SuperhumanDocsApiHeaderBearerToken]: zodCompleteStrictObject({
+            type: zodDiscriminant(types_1.AuthenticationType.SuperhumanDocsApiHeaderBearerToken),
             deferConnectionSetup: z.boolean().optional(),
             shouldAutoAuthSetup: z.boolean().optional(),
             ...baseAuthenticationValidators,
@@ -734,7 +734,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const adminAuthenticationTypes = {
         [types_1.AuthenticationType.AWSAccessKey]: true,
         [types_1.AuthenticationType.AWSAssumeRole]: true,
-        [types_1.AuthenticationType.CodaApiHeaderBearerToken]: true,
+        [types_1.AuthenticationType.SuperhumanDocsApiHeaderBearerToken]: true,
         [types_1.AuthenticationType.Custom]: true,
         [types_1.AuthenticationType.CustomHeaderToken]: true,
         [types_1.AuthenticationType.GoogleServiceAccount]: true,
@@ -2037,7 +2037,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const metadata = untypedMetadata;
             for (const authInfo of getAuthentications(metadata)) {
                 const { name, authentication } = authInfo;
-                if (authentication.type !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
+                if (authentication.type !== types_1.AuthenticationType.SuperhumanDocsApiHeaderBearerToken) {
                     return;
                 }
                 const codaDomains = ['coda.io', 'localhost', 'superhuman.com'];
@@ -2052,7 +2052,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     context.addIssue({
                         code: 'custom',
                         path: [`authentication.${name}.networkDomain`],
-                        message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
+                        message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
                     });
                     continue;
                 }
@@ -2061,7 +2061,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     context.addIssue({
                         code: 'custom',
                         path: [`authentication.${name}.networkDomain`],
-                        message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
+                        message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
                     });
                 }
             }
@@ -2578,7 +2578,7 @@ function getUsedAuthNetworkDomains(authentication, includeOAuthTokenUrls = false
         }
         case types_1.AuthenticationType.AWSAccessKey:
         case types_1.AuthenticationType.AWSAssumeRole:
-        case types_1.AuthenticationType.CodaApiHeaderBearerToken:
+        case types_1.AuthenticationType.SuperhumanDocsApiHeaderBearerToken:
         case types_1.AuthenticationType.Custom:
         case types_1.AuthenticationType.CustomHeaderToken:
         case types_1.AuthenticationType.GoogleDomainWideDelegation:

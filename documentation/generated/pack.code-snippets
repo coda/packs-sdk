@@ -59,10 +59,10 @@
     "body": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
     "scope": "javascript,typescript"
   },
-  "setUserAuthentication:CodaApi": {
-    "prefix": "/setUserAuthentication:CodaApi",
-    "description": "Sets per-user authentication for the Pack, using a Coda API token.",
-    "body": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,\n});",
+  "setUserAuthentication:SuperhumanDocsApi": {
+    "prefix": "/setUserAuthentication:SuperhumanDocsApi",
+    "description": "Sets per-user authentication for the Pack, using a Superhuman Docs API token.",
+    "body": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.SuperhumanDocsApiHeaderBearerToken,\n});",
     "scope": "javascript,typescript"
   },
   "setUserAuthentication:Header": {

@@ -58,8 +58,8 @@ async function setupAuth(manifestDir, packDef, opts = {}) {
         case types_1.AuthenticationType.None:
             return (0, helpers_3.printAndExit)(`This Pack declares AuthenticationType.None and so does not require authentication. ` +
                 `Please declare another AuthenticationType to use authentication with this Pack.`);
-        case types_1.AuthenticationType.CodaApiHeaderBearerToken:
-            (0, ensure_2.ensureExists)(packDef.defaultAuthentication, 'CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.');
+        case types_1.AuthenticationType.SuperhumanDocsApiHeaderBearerToken:
+            (0, ensure_2.ensureExists)(packDef.defaultAuthentication, 'SuperhumanDocsApiHeaderBearerToken only works with defaultAuthentication, not system auth.');
         case types_1.AuthenticationType.CustomHeaderToken:
         case types_1.AuthenticationType.HeaderBearerToken:
             return handler.handleToken();

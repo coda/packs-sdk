@@ -43,15 +43,20 @@ Authenticate to Amazon Web Services by assuming an IAM role.
 
 ***
 
-### CodaApiHeaderBearerToken
+### ~~CodaApiHeaderBearerToken~~
 
 > **CodaApiHeaderBearerToken**: `"CodaApiHeaderBearerToken"`
 
-Authenticate using a Coda REST API token, sent as an HTTP header.
+Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
+
+#### Deprecated
+
+Use [AuthenticationType.SuperhumanDocsApiHeaderBearerToken](#superhumandocsapiheaderbearertoken) instead.
+This value is supported indefinitely for backwards compatibility.
 
 #### See
 
-[CodaApiBearerTokenAuthentication](../interfaces/CodaApiBearerTokenAuthentication.md)
+[SuperhumanDocsApiHeaderBearerTokenAuthentication](../interfaces/SuperhumanDocsApiHeaderBearerTokenAuthentication.md)
 
 ***
 
@@ -163,6 +168,18 @@ Authenticate using a token that is passed as a URL parameter with each request, 
 #### See
 
 [QueryParamTokenAuthentication](../interfaces/QueryParamTokenAuthentication.md)
+
+***
+
+### SuperhumanDocsApiHeaderBearerToken
+
+> **SuperhumanDocsApiHeaderBearerToken**: `"CodaApiHeaderBearerToken"`
+
+Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
+
+#### See
+
+[SuperhumanDocsApiHeaderBearerTokenAuthentication](../interfaces/SuperhumanDocsApiHeaderBearerTokenAuthentication.md)
 
 ***
 

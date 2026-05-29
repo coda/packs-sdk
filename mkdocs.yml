@@ -192,7 +192,7 @@ plugins:
           "reference/sdk/interfaces/core.BaseAuthentication.md": "reference/sdk/core/interfaces/BaseAuthentication.md"
           "reference/sdk/interfaces/core.BaseFormulaDef.md": "reference/sdk/core/interfaces/BaseFormulaDef.md"
           "reference/sdk/interfaces/core.BooleanSchema.md": "reference/sdk/core/interfaces/BooleanSchema.md"
-          "reference/sdk/interfaces/core.CodaApiBearerTokenAuthentication.md": "reference/sdk/core/interfaces/CodaApiBearerTokenAuthentication.md"
+          "reference/sdk/interfaces/core.CodaApiBearerTokenAuthentication.md": "reference/sdk/core/type-aliases/CodaApiBearerTokenAuthentication.md"
           "reference/sdk/interfaces/core.CommonPackFormulaDef.md": "reference/sdk/core/interfaces/CommonPackFormulaDef.md"
           "reference/sdk/interfaces/core.Continuation.md": "reference/sdk/core/interfaces/Continuation.md"
           "reference/sdk/interfaces/core.CurrencySchema.md": "reference/sdk/core/interfaces/CurrencySchema.md"
