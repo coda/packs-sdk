@@ -354,6 +354,18 @@ build: clean lint compile docs
 publish-local: build
 	cp -r dist/* ../packs/node_modules/@codahq/packs-sdk/dist/
 
+# Push the locally-built dist into a sibling coda repo's installed SDK copies,
+# for local debugging. Override CODA_DIR to point elsewhere. This copies into
+# both the main @codahq/packs-sdk install and the packs-sdk-for-web-editor alias
+# used by the web editor. Depends on `compile` (not `build`) so it doesn't
+# require the docs toolchain. Restart the coda dev server afterwards.
+CODA_DIR ?= ../coda
+.PHONY: publish-coda
+publish-coda: compile
+	cp -r dist/* ${CODA_DIR}/node_modules/@codahq/packs-sdk/dist/
+	cp -r dist/* ${CODA_DIR}/node_modules/packs-sdk-for-web-editor/dist/
+	@echo "Published dist to @codahq/packs-sdk and packs-sdk-for-web-editor in ${CODA_DIR}. Restart the coda dev server."
+
 .PHONY: autoformat-ts
 autoformat-ts:
 	(cd ${ROOTDIR}; echo -n "autoformat-ts "; ${PRETTIER} --cache --concurrency $${CIRCLE_CORE_COUNT:-16} $${PRETTIER_COMMAND:---write}  $$(git ls-files '*.ts' '*.tsx'))
