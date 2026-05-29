@@ -14,7 +14,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Markdown,
+  hintType: sdk.ValueHintType.Markdown,
   execute: async function ([repo], context) {
     let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`;
     let result = await context.fetcher.fetch({

@@ -13,7 +13,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Percent,
+  hintType: sdk.ValueHintType.Percent,
   execute: async function ([slices], context) {
     return slices / 8;
   },

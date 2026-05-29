@@ -42,7 +42,7 @@ const MemberSchema = sdk.makeObjectSchema({
     },
     email: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Email,
+      hintType: sdk.ValueHintType.Email,
       description: "The email address of the member.",
     },
   },
@@ -80,7 +80,7 @@ const LawSchema = sdk.makeObjectSchema({
     },
     link: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
       description: "A link to the law on nysenate.gov.",
     },
   },
@@ -113,17 +113,17 @@ const DocumentSchema = sdk.makeObjectSchema({
     },
     pdf: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Attachment,
+      hintType: sdk.ValueHintType.Attachment,
       description: "The contents of the document, as a PDF.",
     },
     link: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
       description: "A link to the document on nysenate.gov.",
     },
     lastModified: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Date,
+      hintType: sdk.ValueHintType.Date,
       description: "When the document was last modified.",
     },
   },

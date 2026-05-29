@@ -7,7 +7,7 @@ pack.addFormula({
   description: "Embeds the video \"Never Gonna Give You Up\".",
   parameters: [],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Embed,
+  hintType: sdk.ValueHintType.Embed,
   execute: async function ([], context) {
     return "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
   },

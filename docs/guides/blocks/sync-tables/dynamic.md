@@ -264,7 +264,7 @@ function getPropertySchema(
     case "date":
       return {
         type: sdk.ValueType.String,
-        codaType: sdk.ValueHintType.Date,
+        hintType: sdk.ValueHintType.Date,
       };
     default:
       // Default to strings.
@@ -295,7 +295,7 @@ Here is a demonstration of this approach, showing some dummy values.
     properties: {
       "Total Cost": {
         type: sdk.ValueType.Number,
-        codaType: sdk.ValueHintType.Currency,
+        hintType: sdk.ValueHintType.Currency,
         fromKey: "abc123",
       },
       // ...

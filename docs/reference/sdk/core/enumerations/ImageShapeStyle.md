@@ -10,7 +10,7 @@ search:
 
 # Enumeration: ImageShapeStyle
 
-Image shape styles supported by [ImageSchema](../interfaces/ImageSchema.md).
+Image shape styles supported by [ImageSchema](../type-aliases/ImageSchema.md).
 
 ## Enumeration Members
 

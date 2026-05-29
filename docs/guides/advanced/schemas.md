@@ -84,12 +84,12 @@ pack.addFormula({
 
 ## Data types
 
-The primary role of a schema is to define the type of data that will be returned. This is done by specifying a value type and optionally a value hint. The value type corresponds to the JavaScript type that will be returned, and the value hint indicates how Coda should interpret that value. These are set using the `type` and `codaType` field respectively.
+The primary role of a schema is to define the type of data that will be returned. This is done by specifying a value type and optionally a value hint. The value type corresponds to the JavaScript type that will be returned, and the value hint indicates how Coda should interpret that value. These are set using the `type` and `hintType` field respectively.
 
 ```ts
 let DateSchema = sdk.makeSchema({
   type: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Date,
+  hintType: sdk.ValueHintType.Date,
 });
 ```
 
@@ -109,7 +109,7 @@ The individual properties of the object are defined using the `properties` field
 let PersonSchema = sdk.makeObjectSchema({
   properties: {
     name: { type: sdk.ValueType.String },
-    born: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Date },
+    born: { type: sdk.ValueType.String, hintType: sdk.ValueHintType.Date },
     age: { type: sdk.ValueType.Number },
   },
   // ...
@@ -150,7 +150,7 @@ let PersonSchema = sdk.makeObjectSchema({
     },
     born: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Date,
+      hintType: sdk.ValueHintType.Date,
       description: "The date when the person was born.",
     },
     age: {
@@ -502,11 +502,11 @@ let PersonReferenceSchema =
     sdk.makeReferenceSchemaFromObjectSchema(PersonSchema, "Person");
 ```
 
-In some instances you may have to create the reference schema manually however, like when you want a row to be able to reference other rows in the same table. A reference schema is an object schema with the `codaType` field set to `Reference`. It must specify both an `idProperty` and `displayProperty`, and those properties must be marked as `required`. It must also have an `identity` set, with the name matching the `identityName` of the target sync table.
+In some instances you may have to create the reference schema manually however, like when you want a row to be able to reference other rows in the same table. A reference schema is an object schema with the `hintType` field set to `Reference`. It must specify both an `idProperty` and `displayProperty`, and those properties must be marked as `required`. It must also have an `identity` set, with the name matching the `identityName` of the target sync table.
 
 ```ts
 let PersonReferenceSchema = sdk.makeObjectSchema({
-  codaType: sdk.ValueHintType.Reference,
+  hintType: sdk.ValueHintType.Reference,
   properties: {
     name: { type: sdk.ValueType.String, required: true },
     id: { type: sdk.ValueType.String, required: true },

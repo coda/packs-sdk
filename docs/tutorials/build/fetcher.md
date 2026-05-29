@@ -99,7 +99,7 @@ Now that we've got our API selected and formula designed we're ready to dive int
         }),
       ],
       resultType: sdk.ValueType.Number,
-      codaType: sdk.ValueHintType.Currency,
+      hintType: sdk.ValueHintType.Currency,
       execute: async function ([amount, from], context) {
         // TODO
         return 0;
@@ -271,7 +271,7 @@ If everything is working correctly you should get back the currency value conver
         }),
       ],
       resultType: sdk.ValueType.Number,
-      codaType: sdk.ValueHintType.Currency,
+      hintType: sdk.ValueHintType.Currency,
       execute: async function ([amount, from], context) {
         let url =
           "https://open.er-api.com/v6/latest/" + from;

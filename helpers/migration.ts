@@ -41,6 +41,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       type,
       attribution,
       codaType,
+      hintType,
       requireForUpdates,
 
       // Properties not needed by ObjectSchemaHelper clients.

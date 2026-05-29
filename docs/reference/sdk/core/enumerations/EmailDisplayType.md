@@ -10,7 +10,7 @@ search:
 
 # Enumeration: EmailDisplayType
 
-Display types that can be used with an [EmailSchema](../interfaces/EmailSchema.md).
+Display types that can be used with an [EmailSchema](../type-aliases/EmailSchema.md).
 
 ## Enumeration Members
 

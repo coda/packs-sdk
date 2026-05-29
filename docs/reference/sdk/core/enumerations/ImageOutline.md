@@ -10,7 +10,7 @@ search:
 
 # Enumeration: ImageOutline
 
-State of outline on images that can be used with a [ImageSchema](../interfaces/ImageSchema.md).
+State of outline on images that can be used with a [ImageSchema](../type-aliases/ImageSchema.md).
 
 ## Enumeration Members
 

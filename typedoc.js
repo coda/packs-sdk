@@ -71,9 +71,16 @@ run "make docs" to regenerate this file.
     // Internal only types.
     'AllowedAuthentication',
     'AllowedAuthenticationDef',
+    // Base/helper schema types referenced by the specialized schema type-aliases (e.g. CurrencySchema).
+    'BaseNumberSchema',
+    'BaseStringSchema',
     'CategorizationIndexDefinition',
     'CodaInternalRichTextSchema',
     'GuideScreenAnnotation',
+    // Internal helpers backing the `hintType`/`codaType` render-hint alias.
+    'HintDiscriminant',
+    'PropertyWithAutocompleteWithOptionalDisplay',
+    'SchemaHintType',
 
     // In development.
     'DetailedIndexedProperty',

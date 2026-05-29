@@ -10,9 +10,9 @@ search:
 
 # Enumeration: ScaleIconSet
 
-Icons that can be used with a [ScaleSchema](../interfaces/ScaleSchema.md).
+Icons that can be used with a [ScaleSchema](../type-aliases/ScaleSchema.md).
 
-For example, to render a star rating, use a [ScaleSchema](../interfaces/ScaleSchema.md) with `icon: sdk.ScaleIconSet.Star`.
+For example, to render a star rating, use a [ScaleSchema](../type-aliases/ScaleSchema.md) with `icon: sdk.ScaleIconSet.Star`.
 
 ## Enumeration Members
 

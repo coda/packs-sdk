@@ -24,7 +24,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Currency,
+  hintType: sdk.ValueHintType.Currency,
   execute: async function ([prices, quantities=[], taxRates=[]], context) {
     if ((quantities.length > 0 && quantities.length !== prices.length) ||
         (taxRates.length > 0 && taxRates.length !== prices.length)) {

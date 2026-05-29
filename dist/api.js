@@ -15,19 +15,20 @@ const api_types_8 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
 const api_types_9 = require("./api_types");
+const schema_3 = require("./schema");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const api_types_10 = require("./api_types");
 const api_types_11 = require("./api_types");
 const object_utils_2 = require("./helpers/object_utils");
-const schema_3 = require("./schema");
 const schema_4 = require("./schema");
 const schema_5 = require("./schema");
 const schema_6 = require("./schema");
+const schema_7 = require("./schema");
 const api_types_12 = require("./api_types");
 const migration_1 = require("./helpers/migration");
 const api_types_13 = require("./api_types");
-const schema_7 = require("./schema");
+const schema_8 = require("./schema");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -287,7 +288,7 @@ function makeParameter(paramDefinition) {
             crawlStrategy = {
                 parentTable: {
                     tableName,
-                    propertyKey: (0, schema_6.normalizeSchemaKey)(propertyKey),
+                    propertyKey: (0, schema_7.normalizeSchemaKey)(propertyKey),
                     inheritPermissions,
                 },
             };
@@ -449,8 +450,8 @@ exports.makeStringFormula = makeStringFormula;
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType` to tell Coda how to interpret a given value. For example, you can return
- * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
+ * `hintType` to tell Coda how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `hintType: ValueType.Date` to tell Coda
  * to interpret as a date in a document.
  *
  * If your formula returns an object, you must provide a `schema` property that describes
@@ -468,7 +469,7 @@ exports.makeStringFormula = makeStringFormula;
  *
  * @example
  * ```
- * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * makeFormula({resultType: ValueType.String, hintType: ValueType.Html, name: 'HelloHtml', ...});
  * ```
  *
  * @example
@@ -505,15 +506,19 @@ function makeFormula(fullDefinition) {
             const def = {
                 ...fullDefinition,
                 codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+                hintType: 'hintType' in fullDefinition ? fullDefinition.hintType : undefined,
                 formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
-            const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
-            (0, ensure_1.assertCondition)(codaType !== schema_1.ValueHintType.SelectList, 'ValueHintType.SelectList is not supported for formula result types.');
+            const { onError: _, resultType: unused, codaType, hintType, formulaSchema, ...rest } = def;
+            // Fold the deprecated `codaType` and preferred `hintType` into a single hint (throws on conflict).
+            const stringHint = (0, schema_3.foldHintType)(codaType, hintType);
+            (0, ensure_1.assertCondition)(stringHint !== schema_1.ValueHintType.SelectList, 'ValueHintType.SelectList is not supported for formula result types.');
+            const hintSchema = stringHint ? { type: schema_2.ValueType.String, codaType: stringHint } : undefined;
             const stringFormula = {
                 ...rest,
                 resultType: api_types_6.Type.string,
-                schema: formulaSchema || (codaType ? { type: schema_2.ValueType.String, codaType } : undefined),
+                schema: formulaSchema || hintSchema,
             };
             formula = stringFormula;
             break;
@@ -522,14 +527,18 @@ function makeFormula(fullDefinition) {
             const def = {
                 ...fullDefinition,
                 codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+                hintType: 'hintType' in fullDefinition ? fullDefinition.hintType : undefined,
                 formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
-            const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
+            const { onError: _, resultType: unused, codaType, hintType, formulaSchema, ...rest } = def;
+            // Fold the deprecated `codaType` and preferred `hintType` into a single hint (throws on conflict).
+            const numberHint = (0, schema_3.foldHintType)(codaType, hintType);
+            const hintSchema = numberHint ? { type: schema_2.ValueType.Number, codaType: numberHint } : undefined;
             const numericFormula = {
                 ...rest,
                 resultType: api_types_6.Type.number,
-                schema: formulaSchema || (codaType ? { type: schema_2.ValueType.Number, codaType } : undefined),
+                schema: formulaSchema || hintSchema,
             };
             formula = numericFormula;
             break;
@@ -551,7 +560,7 @@ function makeFormula(fullDefinition) {
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
                 resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
-                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
+                schema: (0, object_utils_1.deepCopy)((0, schema_6.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = arrayFormula;
@@ -564,7 +573,7 @@ function makeFormula(fullDefinition) {
                 ...rest,
                 resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
-                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)(schema)),
+                schema: (0, object_utils_1.deepCopy)((0, schema_6.normalizeSchema)(schema)),
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = objectFormula;
@@ -812,7 +821,7 @@ function makeObjectFormula({ response, ...definition }) {
         if (isResponseHandlerTemplate(response) && response.schema) {
             // Since the schema may be re-used, make a copy.
             const inputSchema = (0, object_utils_1.deepCopy)(response.schema);
-            response.schema = (0, schema_5.normalizeSchema)(inputSchema);
+            response.schema = (0, schema_6.normalizeSchema)(inputSchema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -895,7 +904,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
         }
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
-    const schema = (0, schema_3.makeObjectSchema)(schemaDef);
+    const schema = (0, schema_4.makeObjectSchema)(schemaDef);
     let namedPropertyOptions = moveJsPropertyOptionsFunctionsToFormulas({
         inputSchema,
         schema,
@@ -905,7 +914,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
         namedPropertyOptions !== null && namedPropertyOptions !== void 0 ? namedPropertyOptions : (namedPropertyOptions = {});
         namedPropertyOptions[api_types_2.OptionsType.Dynamic] = makePropertyOptionsFormula({
             execute: dynamicOptions.propertyOptions,
-            schema: (0, schema_3.makeObjectSchema)({
+            schema: (0, schema_4.makeObjectSchema)({
                 // A dynamic autocomplete formula can return different result types depending
                 // on which property is being autocompleted, so there's no accurate schema
                 // type to set on the formula. We just use an empty object schema, but it could
@@ -915,7 +924,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
             name: `${identityName}.DynamicPropertyOptions`,
         });
     }
-    const normalizedSchema = (0, schema_5.normalizeSchema)(schema);
+    const normalizedSchema = (0, schema_6.normalizeSchema)(schema);
     const formulaSchema = getSchema
         ? undefined
         : { type: schema_2.ValueType.Array, items: normalizedSchema };
@@ -1042,7 +1051,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
 function makeDynamicSyncTable({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, indexing, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
-        (0, schema_3.makeObjectSchema)({
+        (0, schema_4.makeObjectSchema)({
             type: schema_2.ValueType.Object,
             idProperty: 'id',
             displayProperty: 'id',
@@ -1109,7 +1118,7 @@ exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, ...rest } = definition;
     const { parameters } = rest;
-    response.schema = response.schema ? (0, schema_5.normalizeSchema)(response.schema) : undefined;
+    response.schema = response.schema ? (0, schema_6.normalizeSchema)(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
     const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)(response);
@@ -1214,7 +1223,7 @@ exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 function listPropertiesWithOptionsFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {
-        const propertySchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
+        const propertySchema = (0, schema_5.maybeUnwrapArraySchema)(schema.properties[propertyName]);
         if (!propertySchema || !('options' in propertySchema)) {
             continue;
         }
@@ -1242,10 +1251,10 @@ schema, identityName, }) {
         return undefined;
     }
     for (const propertyName of propertiesWithOptionsFunctions) {
-        const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
-        const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
-        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
-        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
+        const inputSchemaWithoutArray = (0, schema_5.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
+        const outputSchema = (0, schema_5.maybeUnwrapArraySchema)(schema.properties[propertyName]);
+        (0, ensure_1.assertCondition)((0, schema_8.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have hintType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
+        (0, ensure_1.assertCondition)((0, schema_8.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
         outputSchema.options = propertyName;
         namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
             execute: inputSchemaWithoutArray.options,

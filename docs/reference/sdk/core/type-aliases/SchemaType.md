@@ -10,7 +10,7 @@ search:
 
 # Type Alias: SchemaType\<T\>
 
-> **SchemaType**\<`T`\> = `T` *extends* [`BooleanSchema`](../interfaces/BooleanSchema.md) ? `boolean` : `T` *extends* [`NumberSchema`](NumberSchema.md) ? `number` : `T` *extends* [`StringSchema`](StringSchema.md) ? `StringHintTypeToSchemaType`\<`T`\[`"codaType"`\]\> : `T` *extends* [`ArraySchema`](../interfaces/ArraySchema.md) ? `SchemaType`\<`T`\[`"items"`\]\>[] : `T` *extends* `GenericObjectSchema` ? `ObjectSchemaType`\<`T`\> : `never`
+> **SchemaType**\<`T`\> = `T` *extends* [`BooleanSchema`](../interfaces/BooleanSchema.md) ? `boolean` : `T` *extends* [`NumberSchema`](NumberSchema.md) ? `number` : `T` *extends* [`StringSchema`](StringSchema.md) ? `StringHintTypeToSchemaType`\<`SchemaHintType`\<`T`\>\> : `T` *extends* [`ArraySchema`](../interfaces/ArraySchema.md) ? `SchemaType`\<`T`\[`"items"`\]\>[] : `T` *extends* `GenericObjectSchema` ? `ObjectSchemaType`\<`T`\> : `never`
 
 A TypeScript helper that parses the expected `execute` function return type from a given schema.
 That is, given a schema, this utility will produce the type that an `execute` function should return

@@ -94,7 +94,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Percent,
+  hintType: sdk.ValueHintType.Percent,
   execute: async function ([slices], context) {
     return slices / 8;
   },
@@ -245,7 +245,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Currency,
+  hintType: sdk.ValueHintType.Currency,
   execute: async function ([prices, quantities=[], taxRates=[]], context) {
     if ((quantities.length > 0 && quantities.length !== prices.length) ||
         (taxRates.length > 0 && taxRates.length !== prices.length)) {

@@ -76,12 +76,12 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         date: {
           description: "The date the task is due.",
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.Date,
+          hintType: sdk.ValueHintType.Date,
         },
         time: {
           description: "The specific moment the task is due.",
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.DateTime,
+          hintType: sdk.ValueHintType.DateTime,
           fromKey: "datetime",
         },
         display: {
@@ -104,7 +104,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         url: {
           description: "A link to the project in the Todoist app.",
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.Url,
+          hintType: sdk.ValueHintType.Url,
         },
         shared: {
           description: "Is the project is shared.",
@@ -157,13 +157,13 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         description: {
           description: "A detailed description of the task.",
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.Markdown,
+          hintType: sdk.ValueHintType.Markdown,
           mutable: true,
         },
         url: {
           description: "A link to the task in the Todoist app.",
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.Url,
+          hintType: sdk.ValueHintType.Url,
         },
         completed: {
           description: "If the task has been completed.",
@@ -179,7 +179,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         priority: {
           description: "The priority of the task.",
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.SelectList,
+          hintType: sdk.ValueHintType.SelectList,
           options: ["P1", "P2", "P3", "P4"],
           mutable: true,
         },

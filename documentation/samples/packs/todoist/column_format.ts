@@ -35,7 +35,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",

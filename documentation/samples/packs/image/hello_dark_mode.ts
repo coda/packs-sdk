@@ -8,7 +8,7 @@ pack.addFormula({
   description: "Generates an image that adapts to the dark mode setting.",
   parameters: [],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
     // When loading your image in dark mode, Coda will append the URL fragment
     // "#DarkMode". Instead of hard-coding that value, it's safer to retrieve

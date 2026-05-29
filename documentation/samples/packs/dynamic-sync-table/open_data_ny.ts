@@ -51,11 +51,11 @@ const TypeSchemaMap: Record<string, sdk.Schema> = {
   checkbox: { type: sdk.ValueType.Boolean },
   calendar_date: {
     type: sdk.ValueType.String,
-    codaType: sdk.ValueHintType.Date,
+    hintType: sdk.ValueHintType.Date,
   },
   location: LocationSchema,
   point: LocationSchema,
-  url: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Url },
+  url: { type: sdk.ValueType.String, hintType: sdk.ValueHintType.Url },
 };
 
 // A base row schema, extended for each dataset.

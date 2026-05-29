@@ -19,11 +19,15 @@ should be provided as a string like "3 days" or "40 minutes 30 seconds".
 
 ## Properties
 
-### codaType?
+### ~~codaType?~~
 
 > `optional` **codaType**: [`Duration`](../enumerations/ValueHintType.md#duration)
 
 An optional type hint instructing Coda about how to interpret or render this value.
+
+#### Deprecated
+
+Use [hintType](#hinttype) instead. Supported indefinitely for backwards compatibility.
 
 #### Inherited from
 
@@ -43,6 +47,18 @@ explain the purpose or contents of any property that is not self-evident.
 #### Inherited from
 
 `BaseStringSchema.description`
+
+***
+
+### hintType?
+
+> `optional` **hintType**: [`Duration`](../enumerations/ValueHintType.md#duration)
+
+An optional type hint instructing Coda about how to interpret or render this value.
+
+#### Inherited from
+
+`BaseStringSchema.hintType`
 
 ***
 

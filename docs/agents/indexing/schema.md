@@ -55,7 +55,7 @@ The property should contain a deep link to the record in the source application,
 const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
-    link: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Url },
+    link: { type: sdk.ValueType.String, hintType: sdk.ValueHintType.Url },
   },
   // ...
   linkProperty: "link",
@@ -73,7 +73,7 @@ const ProductSchema = sdk.makeObjectSchema({
     // ...
     description: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Html,
+      hintType: sdk.ValueHintType.Html,
     },
   },
   // ...
@@ -109,7 +109,7 @@ const ProductSchema = sdk.makeObjectSchema({
     // ...
     specSheetLink: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Attachment,
+      hintType: sdk.ValueHintType.Attachment,
       description: "Link the PDF spec sheet for the product.",
     },
   },
@@ -255,7 +255,7 @@ To enable contact indexing, you need to annotate the related object schema:
 const AuthorSchema = sdk.makeObjectSchema({
   properties: {
     name: { type: sdk.ValueType.String },
-    email: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Email },
+    email: { type: sdk.ValueType.String, hintType: sdk.ValueHintType.Email },
     // Other properties ...
   },
   displayProperty: "name",

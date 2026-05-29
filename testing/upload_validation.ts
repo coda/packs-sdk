@@ -645,11 +645,20 @@ type ZodCompleteShape<T> = {
   [k in keyof T]: z.ZodType<any>;
 };
 
-function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
+// `hintType` is the user-facing alias for `codaType`; it is folded onto `codaType` and stripped
+// during normalization, so it never reaches zod validation and is excluded from the completeness
+// check (validators only ever see the canonical `codaType`).
+function zodCompleteObject<
+  O,
+  T extends ZodCompleteShape<Omit<O, 'hintType'>> = ZodCompleteShape<Required<Omit<O, 'hintType'>>>,
+>(shape: T) {
   return z.object<T>(shape);
 }
 
-function zodCompleteStrictObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
+function zodCompleteStrictObject<
+  O,
+  T extends ZodCompleteShape<Omit<O, 'hintType'>> = ZodCompleteShape<Required<Omit<O, 'hintType'>>>,
+>(shape: T) {
   return z.strictObject<T>(shape);
 }
 
@@ -1689,7 +1698,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               [ValueHintType.ImageAttachment, ValueHintType.ImageReference].includes(
                 imagePropertySchema.codaType as ValueHintType,
               ),
-            `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`,
+            `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "hintType".`,
           );
         };
         const validateSnippetProperty = () => {
@@ -1706,7 +1715,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             'linkProperty',
             linkPropertySchema =>
               linkPropertySchema.type === ValueType.String && linkPropertySchema.codaType === ValueHintType.Url,
-            `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`,
+            `must refer to a "ValueType.String" property with a "ValueHintType.Url" "hintType".`,
           );
         };
 
@@ -1747,7 +1756,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                   ensureUnreachable(subtitlePropertySchema.codaType);
               }
             },
-            `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`,
+            `must refer to a value that does not have a hintType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`,
           );
         };
 
@@ -1759,7 +1768,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 createdAtPropertySchema.type === ValueType.Number) &&
               (createdAtPropertySchema.codaType === ValueHintType.DateTime ||
                 createdAtPropertySchema.codaType === ValueHintType.Date),
-            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
+            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "hintType".`,
           );
         };
         const validateModifiedAtProperty = () => {
@@ -1770,7 +1779,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 modifiedAtPropertySchema.type === ValueType.Number) &&
               (modifiedAtPropertySchema.codaType === ValueHintType.DateTime ||
                 modifiedAtPropertySchema.codaType === ValueHintType.Date),
-            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
+            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "hintType".`,
           );
         };
         const validateCreatedByProperty = () => {
@@ -1781,7 +1790,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 createdByPropertySchema.type === ValueType.String) &&
               (createdByPropertySchema.codaType === ValueHintType.Person ||
                 createdByPropertySchema.codaType === ValueHintType.Email),
-            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "hintType".`,
           );
         };
         const validateModifiedByProperty = () => {
@@ -1792,7 +1801,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 modifiedByPropertySchema.type === ValueType.String) &&
               (modifiedByPropertySchema.codaType === ValueHintType.Person ||
                 modifiedByPropertySchema.codaType === ValueHintType.Email),
-            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "hintType".`,
           );
         };
 
@@ -1802,7 +1811,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             userEmail =>
               (userEmail.type === ValueType.String && userEmail.codaType === ValueHintType.Email) ||
               (userEmail.type === ValueType.Object && userEmail.codaType === ValueHintType.Person),
-            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "hintType".`,
           );
         };
 
@@ -1866,7 +1875,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: 'custom',
             path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
-            message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
+            message: 'Invalid hintType. CodaInternalRichText is not a supported value.',
           });
           return;
         }
@@ -2063,7 +2072,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         unwrappedSchemaSupportsOptions(schemaForOptions) ||
         !('options' in schemaForOptions && schemaForOptions.options);
       return result;
-    }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
+    }, 'You must set "hintType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
   const objectPackFormulaSchema = zodCompleteObject<Omit<FormulaOptions<any, ObjectPackFormula<any, any>>, 'execute'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.object),

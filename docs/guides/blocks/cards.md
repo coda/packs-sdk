@@ -84,7 +84,7 @@ const ProductSchema = sdk.makeObjectSchema({
     quantity: { type: sdk.ValueType.Number },
     price: {
       type: sdk.ValueType.Number,
-      codaType: sdk.ValueHintType.Currency,
+      hintType: sdk.ValueHintType.Currency,
     },
   },
   // ...
@@ -132,7 +132,7 @@ const ProductSchema = sdk.makeObjectSchema({
     // ...
     photo: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
   },
   // ...
@@ -158,7 +158,7 @@ const ProductSchema = sdk.makeObjectSchema({
     // ...
     websiteLink: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
   },
   // ...

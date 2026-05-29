@@ -75,7 +75,7 @@ describe('Schema', () => {
           identity: {name: 'Test'},
         };
         makeObjectSchema(missingIdSchema);
-      }).to.throw('Objects with codaType "reference" require a "idProperty" property in the schema definition.');
+      }).to.throw('Objects with hintType "reference" require a "idProperty" property in the schema definition.');
 
       expect(() => {
         const missingPrimarySchema: any = {
@@ -84,7 +84,7 @@ describe('Schema', () => {
           identity: {name: 'Test'},
         };
         makeObjectSchema(missingPrimarySchema);
-      }).to.throw('Objects with codaType "reference" require a "displayProperty" property in the schema definition.');
+      }).to.throw('Objects with hintType "reference" require a "displayProperty" property in the schema definition.');
 
       expect(() => {
         const missingIdentitySchema: any = {
@@ -93,7 +93,7 @@ describe('Schema', () => {
           displayProperty: 'reference',
         };
         makeObjectSchema(missingIdentitySchema);
-      }).to.throw('Objects with codaType "reference" require a "identity" property in the schema definition.');
+      }).to.throw('Objects with hintType "reference" require a "identity" property in the schema definition.');
 
       expect(() => {
         const referenceNotRequiredSchema: any = {
@@ -104,7 +104,7 @@ describe('Schema', () => {
           properties: {...baseReferenceSchema.properties, required: false},
         };
         makeObjectSchema(referenceNotRequiredSchema);
-      }).to.throw('Field "reference" must be marked as required in schema with codaType "reference".');
+      }).to.throw('Field "reference" must be marked as required in schema with hintType "reference".');
 
       makeObjectSchema({
         type: ValueType.Object,
@@ -137,7 +137,7 @@ describe('Schema', () => {
             name: {type: ValueType.String, required: true},
           },
         });
-      }).to.throw('Objects with codaType "person" require a "idProperty" property in the schema definition.');
+      }).to.throw('Objects with hintType "person" require a "idProperty" property in the schema definition.');
 
       expect(() => {
         makeObjectSchema({
@@ -150,7 +150,7 @@ describe('Schema', () => {
             name: {type: ValueType.String, required: true},
           },
         });
-      }).to.throw('Field "email" must be marked as required in schema with codaType "person".');
+      }).to.throw('Field "email" must be marked as required in schema with hintType "person".');
 
       makeObjectSchema({
         type: ValueType.Object,
@@ -439,6 +439,119 @@ describe('Schema', () => {
         options: undefined,
         requireForUpdates: undefined,
       });
+    });
+  });
+
+  describe('hintType (codaType alias)', () => {
+    it('folds hintType onto codaType for a string date property and strips hintType', () => {
+      const objectSchema = schema.makeObjectSchema({
+        type: ValueType.Object,
+        displayProperty: 'when',
+        properties: {
+          when: {type: ValueType.String, hintType: ValueHintType.Date},
+        },
+      });
+      const normalized = schema.normalizeSchema(objectSchema) as any;
+      assert.equal(normalized.properties.When.codaType, ValueHintType.Date);
+      assert.isFalse('hintType' in normalized.properties.When);
+    });
+
+    it('folds hintType for number, boolean and object-level hints', () => {
+      const objectSchema = schema.makeObjectSchema({
+        type: ValueType.Object,
+        hintType: ValueHintType.Person,
+        idProperty: 'email',
+        displayProperty: 'name',
+        properties: {
+          email: {type: ValueType.String, required: true},
+          name: {type: ValueType.String, required: true},
+          pct: {type: ValueType.Number, hintType: ValueHintType.Percent},
+          flag: {type: ValueType.Boolean, hintType: ValueHintType.Toggle},
+        },
+      });
+      const normalized = schema.normalizeSchema(objectSchema) as any;
+      assert.equal(normalized.codaType, ValueHintType.Person);
+      assert.isFalse('hintType' in normalized);
+      assert.equal(normalized.properties.Pct.codaType, ValueHintType.Percent);
+      assert.equal(normalized.properties.Flag.codaType, ValueHintType.Toggle);
+    });
+
+    it('folds hintType on a discriminant schema (Currency)', () => {
+      const currencySchema = schema.makeSchema({
+        type: ValueType.Number,
+        hintType: ValueHintType.Currency,
+        precision: 2,
+      });
+      const normalized = schema.normalizeSchema(currencySchema) as any;
+      assert.equal(normalized.codaType, ValueHintType.Currency);
+      assert.isFalse('hintType' in normalized);
+    });
+
+    it('folds hintType inside array items', () => {
+      const objectSchema = schema.makeObjectSchema({
+        type: ValueType.Object,
+        displayProperty: 'tags',
+        properties: {
+          tags: {
+            type: ValueType.Array,
+            items: {type: ValueType.String, hintType: ValueHintType.Email},
+          },
+        },
+      });
+      const normalized = schema.normalizeSchema(objectSchema) as any;
+      assert.equal(normalized.properties.Tags.items.codaType, ValueHintType.Email);
+      assert.isFalse('hintType' in normalized.properties.Tags.items);
+    });
+
+    it('accepts matching hintType and codaType', () => {
+      const objectSchema: any = {
+        type: ValueType.Object,
+        displayProperty: 'when',
+        properties: {
+          when: {type: ValueType.String, hintType: ValueHintType.Date, codaType: ValueHintType.Date},
+        },
+      };
+      const normalized = schema.normalizeSchema(objectSchema) as any;
+      assert.equal(normalized.properties.When.codaType, ValueHintType.Date);
+    });
+
+    it('throws when hintType and codaType conflict', () => {
+      const objectSchema: any = {
+        type: ValueType.Object,
+        displayProperty: 'when',
+        properties: {
+          when: {type: ValueType.String, hintType: ValueHintType.Date, codaType: ValueHintType.Time},
+        },
+      };
+      expect(() => schema.normalizeSchema(objectSchema)).to.throw(/cannot specify both "hintType".*"codaType"/);
+    });
+
+    it('makeObjectSchema validates a Reference declared via hintType', () => {
+      // hintType is folded before validateObjectSchema runs, so the Reference id checks apply.
+      expect(() => {
+        makeObjectSchema({
+          type: ValueType.Object,
+          hintType: ValueHintType.Reference,
+          displayProperty: 'name',
+          identity: {name: 'Test'},
+          properties: {
+            name: {type: ValueType.String, required: true},
+          },
+        } as any);
+      }).to.throw('Objects with hintType "reference" require a "idProperty" property in the schema definition.');
+
+      const referenceSchema = makeObjectSchema({
+        type: ValueType.Object,
+        hintType: ValueHintType.Reference,
+        idProperty: 'name',
+        displayProperty: 'name',
+        identity: {name: 'Test'},
+        properties: {
+          name: {type: ValueType.String, required: true},
+        },
+      } as any) as any;
+      assert.equal(referenceSchema.codaType, ValueHintType.Reference);
+      assert.isFalse('hintType' in referenceSchema);
     });
   });
 });

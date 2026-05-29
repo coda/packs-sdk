@@ -7,14 +7,14 @@ const FileSchema = sdk.makeObjectSchema({
     name: { type: sdk.ValueType.String },
     url: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
       fromKey: "webViewLink",
     },
     thumbnail: {
       type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc.
-      codaType: sdk.ValueHintType.ImageAttachment,
+      hintType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },
   },

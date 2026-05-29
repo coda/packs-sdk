@@ -18,11 +18,15 @@ A schema representing a return value or object property that is a boolean.
 
 ## Properties
 
-### codaType?
+### ~~codaType?~~
 
 > `optional` **codaType**: [`Toggle`](../enumerations/ValueHintType.md#toggle)
 
 Indicates how to render values in a table. If not specified, renders a checkbox.
+
+#### Deprecated
+
+Use [hintType](#hinttype) instead. Supported indefinitely for backwards compatibility.
 
 ***
 
@@ -38,6 +42,14 @@ explain the purpose or contents of any property that is not self-evident.
 #### Inherited from
 
 `BaseSchema.description`
+
+***
+
+### hintType?
+
+> `optional` **hintType**: [`Toggle`](../enumerations/ValueHintType.md#toggle)
+
+Indicates how to render values in a table. If not specified, renders a checkbox.
 
 ***
 

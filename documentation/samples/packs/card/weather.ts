@@ -10,11 +10,11 @@ const WeatherSchema = sdk.makeObjectSchema({
     wind: { type: sdk.ValueType.String, fromKey: "windSpeed" },
     icon: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
     link: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
   },
   displayProperty: "summary",

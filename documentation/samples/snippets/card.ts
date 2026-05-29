@@ -14,11 +14,11 @@ const $1$Thing$Schema = sdk.makeObjectSchema({
     $3$description$: { type: sdk.ValueType.String },
     $4$picture$: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
     $5$link$: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     // TODO: Add more properties.
   },

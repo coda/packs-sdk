@@ -9,17 +9,17 @@ const SunSchema = sdk.makeObjectSchema({
     daylight: {
       description: "How much daylight there will be.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Duration,
+      hintType: sdk.ValueHintType.Duration,
     },
     sunriseUTC: {
       description: "When the sun will rise (in UTC).",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Time,
+      hintType: sdk.ValueHintType.Time,
     },
     sunsetUTC: {
       description: "When the sun will set (in UTC).",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Time,
+      hintType: sdk.ValueHintType.Time,
     },
   },
   // Which of the properties defined above will be shown inside the chip.

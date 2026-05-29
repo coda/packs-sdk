@@ -14,7 +14,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageAttachment,
+  hintType: sdk.ValueHintType.ImageAttachment,
   execute: async function ([size], context) {
     let resp = await context.fetcher.fetch({
       method: "GET",

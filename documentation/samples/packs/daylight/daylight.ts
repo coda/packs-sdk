@@ -18,22 +18,22 @@ pack.addNetworkDomain("sunrise-sunset.org");
 // our formula will return. In the Coda doc this will be displayed as a chip.
 const SunSchema = sdk.makeObjectSchema({
   properties: {
-    // The values we return are simple strings, but we use the codaType field to
+    // The values we return are simple strings, but we use the hintType field to
     // to tell Coda to interpret them as durations and time values.
     daylight: {
       description: "How much daylight there will be.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Duration,
+      hintType: sdk.ValueHintType.Duration,
     },
     sunrise: {
       description: "When the sun will rise (in the document's timezone).",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Time,
+      hintType: sdk.ValueHintType.Time,
     },
     sunset: {
       description: "When the sun will set (in the document's timezone).",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Time,
+      hintType: sdk.ValueHintType.Time,
     },
   },
   // Which of the properties defined above will be shown inside the chip.

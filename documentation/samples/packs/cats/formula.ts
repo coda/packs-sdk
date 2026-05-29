@@ -21,7 +21,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text, filter] = args;
     let url = "https://cataas.com/cat";

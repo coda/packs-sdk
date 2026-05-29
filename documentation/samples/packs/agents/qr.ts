@@ -34,7 +34,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text] = args;
     return sdk.withQueryParams("https://api.qrserver.com/v1/create-qr-code/", {

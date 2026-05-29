@@ -10,7 +10,7 @@ search:
 
 # Enumeration: LinkDisplayType
 
-Display types that can be used with a [LinkSchema](../interfaces/LinkSchema.md).
+Display types that can be used with a [LinkSchema](../type-aliases/LinkSchema.md).
 
 ## Enumeration Members
 

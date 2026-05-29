@@ -24,7 +24,7 @@ pack.addFormula({
   resultType: sdk.ValueType.Array,
   items: {
     type: sdk.ValueType.String,
-    codaType: sdk.ValueHintType.Url,
+    hintType: sdk.ValueHintType.Url,
   },
   isAction: true,
   execute: async function ([imageUrls], context) {

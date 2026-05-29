@@ -85,7 +85,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text, filter] = args;
     let url = "https://cataas.com/cat";
@@ -130,7 +130,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageAttachment,
+  hintType: sdk.ValueHintType.ImageAttachment,
   execute: async function ([size], context) {
     let resp = await context.fetcher.fetch({
       method: "GET",
@@ -179,7 +179,7 @@ pack.addFormula({
   resultType: sdk.ValueType.Array,
   items: {
     type: sdk.ValueType.String,
-    codaType: sdk.ValueHintType.Url,
+    hintType: sdk.ValueHintType.Url,
   },
   isAction: true,
   execute: async function ([imageUrls], context) {
@@ -334,14 +334,14 @@ const FileSchema = sdk.makeObjectSchema({
     path: { type: sdk.ValueType.String, fromKey: "path_display" },
     url: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     thumbnail: {
       type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc. This is required, since the thumbnail image URLs returned by
       // TemporaryBlobStorage expire.
-      codaType: sdk.ValueHintType.ImageAttachment,
+      hintType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },
   },
@@ -536,14 +536,14 @@ const FileSchema = sdk.makeObjectSchema({
     name: { type: sdk.ValueType.String },
     url: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
       fromKey: "webViewLink",
     },
     thumbnail: {
       type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc.
-      codaType: sdk.ValueHintType.ImageAttachment,
+      hintType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },
   },
@@ -669,7 +669,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function ([text, color = "black"], context) {
     // Calculate the width of the generated image required to fit the text.
     // Using a fixed-width font to make this easy.
@@ -705,7 +705,7 @@ pack.addFormula({
   description: "Generates an image that adapts to the dark mode setting.",
   parameters: [],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
     // When loading your image in dark mode, Coda will append the URL fragment
     // "#DarkMode". Instead of hard-coding that value, it's safer to retrieve

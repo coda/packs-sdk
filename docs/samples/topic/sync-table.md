@@ -59,7 +59,7 @@ const EmojiSchema = sdk.makeObjectSchema({
     group: { type: sdk.ValueType.String },
     image: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
   },
   displayProperty: "name",
@@ -298,7 +298,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
@@ -396,7 +396,7 @@ const ProjectSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the project in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the project.",
@@ -430,7 +430,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     // Reference a project from the Projects sync table.
     project: ProjectReferenceSchema,

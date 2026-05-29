@@ -9,7 +9,7 @@ const EmojiSchema = sdk.makeObjectSchema({
     group: { type: sdk.ValueType.String },
     image: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
   },
   displayProperty: "name",

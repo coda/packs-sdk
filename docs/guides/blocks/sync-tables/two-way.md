@@ -312,7 +312,7 @@ Similar to [parameter autocomplete][parameters_autocomplete], you can provide a 
 
 !!! info "The hint `SelectList` or `Reference` is required"
 
-    Suggested options is only available for properties that have the `codaType` set to `SelectList` or `Reference`. These will cause the property to render as a Coda Select List or Relation column respectively.
+    Suggested options is only available for properties that have the `hintType` set to `SelectList` or `Reference`. These will cause the property to render as a Coda Select List or Relation column respectively.
 
  The possible choices are defined in the `options` field of the property, which can be either an array of static values or a function that generates them dynamically. An options function can access the value of other properties in the row via `context.propertyValues` and the current search string typed by the user via `context.search`.
 
@@ -321,13 +321,13 @@ const ShirtSchema = sdk.makeObjectSchema({
   properties: {
     size: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       mutable: true,
       options: ["S", "M", "L", "XL"],
     },
     color: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       mutable: true,
       options: async function (context) {
         let size = context.propertyValues.size;
@@ -337,7 +337,7 @@ const ShirtSchema = sdk.makeObjectSchema({
     },
     pattern: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       mutable: true,
       options: async function (context) {
         let search = context.search;
@@ -366,7 +366,7 @@ For sync tables with dynamic schemas, you aren't able to define the options func
         for (let attr of attributes) {
           properties[attr] = {
             // ...
-            codaType: sdk.ValueHintType.SelectList,
+            hintType: sdk.ValueHintType.SelectList,
             mutable: true,
             options: sdk.OptionsType.Dynamic,
           }
@@ -393,7 +393,7 @@ For sync tables with dynamic schemas, you aren't able to define the options func
           for (let attr of attributes) {
             properties[attr] = {
               // ...
-              codaType: sdk.ValueHintType.SelectList,
+              hintType: sdk.ValueHintType.SelectList,
               mutable: true,
               options: sdk.OptionsType.Dynamic,
             }
@@ -421,7 +421,7 @@ const TaskSchema = sdk.makeObjectSchema({
       type: sdk.ValueType.Array,
       items: {
         type: sdk.ValueType.String,
-        codaType: sdk.ValueHintType.SelectList,
+        hintType: sdk.ValueHintType.SelectList,
         options: async function (context) {
           let tags = await getTags(context);
           return tags;

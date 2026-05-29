@@ -166,14 +166,14 @@ pack.addFormula({
 
 ## Value hints
 
-To indicate that Coda should display your value in a more meaningful way you can set a value hint. The enumeration [`ValueHintType`][ValueHintType] defines the set of supported value hints, which correspond to the [column formats][column_formats] in Coda. The value hint is set one using the `codaType` property of a formula or schema. Hints can only be used with certain value types, for example the `Percent` value hint can only be used with the `Number` value type.
+To indicate that Coda should display your value in a more meaningful way you can set a value hint. The enumeration [`ValueHintType`][ValueHintType] defines the set of supported value hints, which correspond to the [column formats][column_formats] in Coda. The value hint is set one using the `hintType` property of a formula or schema. Hints can only be used with certain value types, for example the `Percent` value hint can only be used with the `Number` value type.
 
 ```ts
 pack.addFormula({
   name: "HalfWayThere",
   // ...
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Percent,
+  hintType: sdk.ValueHintType.Percent,
   execute: async function ([], context) {
     return 50;
   },
@@ -191,7 +191,7 @@ The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the 
 pack.addFormula({
   // ...
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Markdown,
+  hintType: sdk.ValueHintType.Markdown,
   execute: async function ([], context) {
     return "This is _so_ **cool**!";
   },
@@ -210,7 +210,7 @@ The [`Html`][hint_html] value hint indicates that Coda should parse the returned
 pack.addFormula({
   // ...
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Html,
+  hintType: sdk.ValueHintType.Html,
   execute: async function ([], context) {
     return "This is <i>so</i> <b>cool</b>!";
   },
@@ -235,7 +235,7 @@ When used with a number value, the number should contain the number of seconds s
     pack.addFormula({
       // ...
       resultType: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.DateTime,
+      hintType: sdk.ValueHintType.DateTime,
       execute: async function ([], context) {
         let now = new Date();
         return now.toISOString();
@@ -249,7 +249,7 @@ When used with a number value, the number should contain the number of seconds s
     pack.addFormula({
       // ...
       resultType: sdk.ValueType.Number,
-      codaType: sdk.ValueHintType.DateTime,
+      hintType: sdk.ValueHintType.DateTime,
       execute: async function ([], context) {
         let now = new Date();
         return now.getTime() / 1000;
@@ -279,7 +279,7 @@ The [`Duration`][Duration] value hint represents an amount of time, rather than 
 pack.addFormula({
   // ...
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Duration,
+  hintType: sdk.ValueHintType.Duration,
   execute: async function ([], context) {
     return "525600 minutes";
   },
@@ -294,7 +294,7 @@ Formulas that return a result as a percentage can use the value type `Number` an
 pack.addFormula({
   // ...
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Percent,
+  hintType: sdk.ValueHintType.Percent,
   execute: async function ([], context) {
     return 0.5; // Displayed as "50%" in the doc.
   },
@@ -312,7 +312,7 @@ Image attachments should be used in most cases. An image reference may make more
 pack.addFormula({
   // ...
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
     return "https://via.placeholder.com/150";
   },
@@ -333,7 +333,7 @@ const DealSchema = sdk.makeObjectSchema({
     // ...
     contract: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Attachment,
+      hintType: sdk.ValueHintType.Attachment,
     },
   },
   // ...
@@ -358,7 +358,7 @@ const ShirtSchema = sdk.makeObjectSchema({
   properties: {
     size: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       options: ["S", "M", "L", "XL"],
     },
     // ...
@@ -376,7 +376,7 @@ const OrderSchema = sdk.makeObjectSchema({
       type: sdk.ValueType.Array,
       items: {
         type: sdk.ValueType.String,
-        codaType: sdk.ValueHintType.SelectList,
+        hintType: sdk.ValueHintType.SelectList,
         options: ["S", "M", "L", "XL"],
       },
     },
@@ -397,7 +397,7 @@ The [`Embed`][Embed] value hint can be used to embed external content in the Cod
 pack.addFormula({
   // ...
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Embed,
+  hintType: sdk.ValueHintType.Embed,
   execute: async function ([], context) {
     return "https://www.youtube.com/watch?v=oLYZv68M3Kg";
   },
@@ -413,7 +413,7 @@ The [`Person`][Person] value hint can be used to @-reference a Coda user account
 
 ```ts
 const MyPersonSchema = sdk.makeObjectSchema({
-  codaType: sdk.ValueHintType.Person,
+  hintType: sdk.ValueHintType.Person,
   properties: {
     name: { type: sdk.ValueType.String },
     email: { type: sdk.ValueType.String, required: true },
@@ -487,7 +487,7 @@ Some value types and hints support additional formatting options. For example, `
       resultType: sdk.ValueType.Number,
       schema: {
         type: sdk.ValueType.Number,
-        codaType: sdk.ValueHintType.Currency,
+        hintType: sdk.ValueHintType.Currency,
         currencyCode: "EUR",
         precision: 2,
       },
@@ -500,7 +500,7 @@ Some value types and hints support additional formatting options. For example, `
     ```ts
     const PriceSchema = sdk.makeSchema({
       type: sdk.ValueType.Number,
-      codaType: sdk.ValueHintType.Currency,
+      hintType: sdk.ValueHintType.Currency,
       currencyCode: "EUR",
       precision: 2,
     });
@@ -547,25 +547,25 @@ The full set of formatting options for a given value type and hint can be found 
 [column_formats]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
 [actions]: ../blocks/actions.md
 [precision]: ../../reference/sdk/core/interfaces/NumericSchema.md#precision
-[currencyCode]: ../../reference/sdk/core/interfaces/CurrencySchema.md#currencycode
+[currencyCode]: ../../reference/sdk/core/type-aliases/CurrencySchema.md#currencycode
 [NumericSchema]: ../../reference/sdk/core/interfaces/NumericSchema.md
-[CurrencySchema]: ../../reference/sdk/core/interfaces/CurrencySchema.md
-[SliderSchema]: ../../reference/sdk/core/interfaces/SliderSchema.md
-[ScaleSchema]: ../../reference/sdk/core/interfaces/ScaleSchema.md
-[NumericDateSchema]: ../../reference/sdk/core/interfaces/NumericDateSchema.md
-[NumericTimeSchema]: ../../reference/sdk/core/interfaces/NumericTimeSchema.md
-[NumericDateTimeSchema]: ../../reference/sdk/core/interfaces/NumericDateTimeSchema.md
-[StringDateSchema]: ../../reference/sdk/core/interfaces/StringDateSchema.md
-[StringTimeSchema]: ../../reference/sdk/core/interfaces/StringTimeSchema.md
-[StringDateTimeSchema]: ../../reference/sdk/core/interfaces/StringDateTimeSchema.md
+[CurrencySchema]: ../../reference/sdk/core/type-aliases/CurrencySchema.md
+[SliderSchema]: ../../reference/sdk/core/type-aliases/SliderSchema.md
+[ScaleSchema]: ../../reference/sdk/core/type-aliases/ScaleSchema.md
+[NumericDateSchema]: ../../reference/sdk/core/type-aliases/NumericDateSchema.md
+[NumericTimeSchema]: ../../reference/sdk/core/type-aliases/NumericTimeSchema.md
+[NumericDateTimeSchema]: ../../reference/sdk/core/type-aliases/NumericDateTimeSchema.md
+[StringDateSchema]: ../../reference/sdk/core/type-aliases/StringDateSchema.md
+[StringTimeSchema]: ../../reference/sdk/core/type-aliases/StringTimeSchema.md
+[StringDateTimeSchema]: ../../reference/sdk/core/type-aliases/StringDateTimeSchema.md
 [DurationSchema]: ../../reference/sdk/core/interfaces/DurationSchema.md
-[StringEmbedSchema]: ../../reference/sdk/core/interfaces/StringEmbedSchema.md
-[ImageSchema]: ../../reference/sdk/core/interfaces/ImageSchema.md
-[NumericDurationSchema]: ../../reference/sdk/core/interfaces/NumericDurationSchema.md
-[LinkSchema]: ../../reference/sdk/core/interfaces/LinkSchema.md
-[ProgressBarSchema]: ../../reference/sdk/core/interfaces/ProgressBarSchema.md
-[EmailSchema]: ../../reference/sdk/core/interfaces/EmailSchema.md
-[StringWithOptionsSchema]: ../../reference/sdk/core/interfaces/StringWithOptionsSchema.md
+[StringEmbedSchema]: ../../reference/sdk/core/type-aliases/StringEmbedSchema.md
+[ImageSchema]: ../../reference/sdk/core/type-aliases/ImageSchema.md
+[NumericDurationSchema]: ../../reference/sdk/core/type-aliases/NumericDurationSchema.md
+[LinkSchema]: ../../reference/sdk/core/type-aliases/LinkSchema.md
+[ProgressBarSchema]: ../../reference/sdk/core/type-aliases/ProgressBarSchema.md
+[EmailSchema]: ../../reference/sdk/core/type-aliases/EmailSchema.md
+[StringWithOptionsSchema]: ../../reference/sdk/core/type-aliases/StringWithOptionsSchema.md
 [ObjectSchemaDefinition]: ../../reference/sdk/core/interfaces/ObjectSchemaDefinition.md
 [formula_list]: https://coda.io/formulas#List
 [embeds]: ../advanced/embeds.md

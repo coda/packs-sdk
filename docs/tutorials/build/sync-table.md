@@ -651,7 +651,7 @@ Now that you have the basics working, extend the schema to include the full set 
 
     These fields don't exist in the row data exactly as needed, but you can define "synthetic" properties that you populate manually in the `execute` function (you'll do that in the next step).
 
-    Define a `thumbnail` and `link` property, setting the `codaType` field to instruct Coda to display these as Image URL and Link columns respectively.
+    Define a `thumbnail` and `link` property, setting the `hintType` field to instruct Coda to display these as Image URL and Link columns respectively.
 
     </div>
     <div markdown>
@@ -674,11 +674,11 @@ Now that you have the basics working, extend the schema to include the full set 
         },
         thumbnail: {
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.ImageAttachment,
+          hintType: sdk.ValueHintType.ImageAttachment,
         },
         link: {
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.Url,
+          hintType: sdk.ValueHintType.Url,
         },
       },
       // ...

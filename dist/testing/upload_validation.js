@@ -492,6 +492,9 @@ function zodPathToPathString(zodPath) {
     });
     return parts.join('');
 }
+// `hintType` is the user-facing alias for `codaType`; it is folded onto `codaType` and stripped
+// during normalization, so it never reaches zod validation and is excluded from the completeness
+// check (validators only ever see the canonical `codaType`).
 function zodCompleteObject(shape) {
     return z.object(shape);
 }
@@ -1357,14 +1360,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         };
         const validateImageProperty = () => {
             return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_18.ValueType.String &&
-                [schema_17.ValueHintType.ImageAttachment, schema_17.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
+                [schema_17.ValueHintType.ImageAttachment, schema_17.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "hintType".`);
         };
         const validateSnippetProperty = () => {
             return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === schema_18.ValueType.String ||
                 (snippetPropertySchema.type === schema_18.ValueType.Array && snippetPropertySchema.items.type === schema_18.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
         };
         const validateLinkProperty = () => {
-            return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_18.ValueType.String && linkPropertySchema.codaType === schema_17.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
+            return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_18.ValueType.String && linkPropertySchema.codaType === schema_17.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "hintType".`);
         };
         const validateSubtitleProperties = () => {
             return validateProperty('subtitleProperties', subtitlePropertySchema => {
@@ -1399,35 +1402,35 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     default:
                         (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
                 }
-            }, `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`);
+            }, `must refer to a value that does not have a hintType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`);
         };
         const validateCreatedAtProperty = () => {
             return validateProperty('createdAtProperty', createdAtPropertySchema => (createdAtPropertySchema.type === schema_18.ValueType.String ||
                 createdAtPropertySchema.type === schema_18.ValueType.Number) &&
                 (createdAtPropertySchema.codaType === schema_17.ValueHintType.DateTime ||
-                    createdAtPropertySchema.codaType === schema_17.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
+                    createdAtPropertySchema.codaType === schema_17.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "hintType".`);
         };
         const validateModifiedAtProperty = () => {
             return validateProperty('modifiedAtProperty', modifiedAtPropertySchema => (modifiedAtPropertySchema.type === schema_18.ValueType.String ||
                 modifiedAtPropertySchema.type === schema_18.ValueType.Number) &&
                 (modifiedAtPropertySchema.codaType === schema_17.ValueHintType.DateTime ||
-                    modifiedAtPropertySchema.codaType === schema_17.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
+                    modifiedAtPropertySchema.codaType === schema_17.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "hintType".`);
         };
         const validateCreatedByProperty = () => {
             return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_18.ValueType.Object ||
                 createdByPropertySchema.type === schema_18.ValueType.String) &&
                 (createdByPropertySchema.codaType === schema_17.ValueHintType.Person ||
-                    createdByPropertySchema.codaType === schema_17.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+                    createdByPropertySchema.codaType === schema_17.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "hintType".`);
         };
         const validateModifiedByProperty = () => {
             return validateProperty('modifiedByProperty', modifiedByPropertySchema => (modifiedByPropertySchema.type === schema_18.ValueType.Object ||
                 modifiedByPropertySchema.type === schema_18.ValueType.String) &&
                 (modifiedByPropertySchema.codaType === schema_17.ValueHintType.Person ||
-                    modifiedByPropertySchema.codaType === schema_17.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+                    modifiedByPropertySchema.codaType === schema_17.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "hintType".`);
         };
         const validateUserEmailProperty = () => {
             return validateProperty('userEmailProperty', userEmail => (userEmail.type === schema_18.ValueType.String && userEmail.codaType === schema_17.ValueHintType.Email) ||
-                (userEmail.type === schema_18.ValueType.Object && userEmail.codaType === schema_17.ValueHintType.Person), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+                (userEmail.type === schema_18.ValueType.Object && userEmail.codaType === schema_17.ValueHintType.Person), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "hintType".`);
         };
         const validateUserIdProperty = () => {
             return validateProperty('userIdProperty', userIdPropertySchema => userIdPropertySchema.type === schema_18.ValueType.String || userIdPropertySchema.type === schema_18.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
@@ -1465,7 +1468,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             context.addIssue({
                 code: 'custom',
                 path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
-                message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
+                message: 'Invalid hintType. CodaInternalRichText is not a supported value.',
             });
             return;
         }
@@ -1579,7 +1582,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             (0, schema_26.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
             !('options' in schemaForOptions && schemaForOptions.options);
         return result;
-    }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
+    }, 'You must set "hintType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
     const objectPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
         resultType: zodDiscriminant(api_types_8.Type.object),

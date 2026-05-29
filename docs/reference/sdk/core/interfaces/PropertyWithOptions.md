@@ -37,13 +37,13 @@ edits this property.
 properties: {
   color: {
      type: sdk.ValueType.String,
-     codaType: sdk.ValueHintType.SelectList,
+     hintType: sdk.ValueHintType.SelectList,
      mutable: true,
      options: ['red', 'green', 'blue'],
   },
   user: {
      type: sdk.ValueType.String,
-     codaType: sdk.ValueHintType.SelectList,
+     hintType: sdk.ValueHintType.SelectList,
      mutable: true,
      options: async function (context) {
        let url = sdk.withQueryParams("https://example.com/userSearch", { name: context.search });

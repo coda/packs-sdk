@@ -140,7 +140,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Percent,
+  hintType: sdk.ValueHintType.Percent,
   execute: async function ([slices], context) {
     return slices / 8;
   },
@@ -175,7 +175,7 @@ pack.addFormula({
   resultType: sdk.ValueType.Number,
   schema: {
     type: sdk.ValueType.Number,
-    codaType: sdk.ValueHintType.Currency,
+    hintType: sdk.ValueHintType.Currency,
     // Ensure the currency symbol displayed with the result is "$".
     currencyCode: "USD",
     // Only show two decimal places (no fractional pennies).
@@ -217,7 +217,7 @@ pack.addFormula({
   ],
   // Return the result as the number of seconds since the epoch.
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Time,
+  hintType: sdk.ValueHintType.Time,
   execute: async function ([input], context) {
     let seconds = input.getTime() / 1000;
     seconds += 5 * 60; // Add five minutes, as seconds.
@@ -247,7 +247,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Markdown,
+  hintType: sdk.ValueHintType.Markdown,
   execute: async function ([repo], context) {
     let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`;
     let result = await context.fetcher.fetch({
@@ -281,7 +281,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Html,
+  hintType: sdk.ValueHintType.Html,
   execute: async function ([text], context) {
     let words = text.split(" ");
     for (let i = 0; i < words.length; i++) {
@@ -308,7 +308,7 @@ pack.addFormula({
   description: "Embeds the video \"Never Gonna Give You Up\".",
   parameters: [],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Embed,
+  hintType: sdk.ValueHintType.Embed,
   execute: async function ([], context) {
     return "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
   },
@@ -343,7 +343,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text, filter] = args;
     let url = "https://cataas.com/cat";

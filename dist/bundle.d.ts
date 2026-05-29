@@ -1317,7 +1317,7 @@ export declare enum ValueHintType {
 	 * ```
 	 * makeObjectSchema({
 	 *   type: ValueType.Object,
-	 *   codaType: ValueHintType.Person,
+	 *   hintType: ValueHintType.Person,
 	 *   properties: {
 	 *     email: {type: ValueType.String, required: true},
 	 *     name: {type: ValueType.String, required: true},
@@ -1378,7 +1378,7 @@ export declare enum ValueHintType {
 	 * ```
 	 * makeObjectSchema({
 	 *   type: ValueType.Object,
-	 *   codaType: ValueHintType.Reference,
+	 *   hintType: ValueHintType.Reference,
 	 *   identity: {
 	 *     name: "SomeSyncTableIdentity"
 	 *   },
@@ -1480,13 +1480,13 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
 	 * properties: {
 	 *   color: {
 	 *      type: sdk.ValueType.String,
-	 *      codaType: sdk.ValueHintType.SelectList,
+	 *      hintType: sdk.ValueHintType.SelectList,
 	 *      mutable: true,
 	 *      options: ['red', 'green', 'blue'],
 	 *   },
 	 *   user: {
 	 *      type: sdk.ValueType.String,
-	 *      codaType: sdk.ValueHintType.SelectList,
+	 *      hintType: sdk.ValueHintType.SelectList,
 	 *      mutable: true,
 	 *      options: async function (context) {
 	 *        let url = sdk.withQueryParams("https://example.com/userSearch", { name: context.search });
@@ -1518,12 +1518,31 @@ export interface BaseSchema {
 	description?: string;
 }
 /**
+ * Internal helper enforcing that a specialized schema specifies its render hint via exactly one
+ * of the preferred `hintType` field or the deprecated `codaType` field. If both are provided they
+ * must be equal (enforced at runtime during normalization).
+ */
+export type HintDiscriminant<THint extends ValueHintType> = {
+	hintType: THint;
+	/** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
+	codaType?: THint;
+} | {
+	/** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
+	codaType: THint;
+	hintType?: THint;
+};
+/**
  * A schema representing a return value or object property that is a boolean.
  */
 export interface BooleanSchema extends BaseSchema {
 	/** Identifies this schema as relating to a boolean value. */
 	type: ValueType.Boolean;
 	/** Indicates how to render values in a table. If not specified, renders a checkbox. */
+	hintType?: BooleanHintTypes;
+	/**
+	 * Indicates how to render values in a table. If not specified, renders a checkbox.
+	 * @deprecated Use {@link hintType} instead. Supported indefinitely for backwards compatibility.
+	 */
 	codaType?: BooleanHintTypes;
 }
 /**
@@ -1534,6 +1553,11 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
 	/** Identifies this schema as relating to a number value. */
 	type: ValueType.Number;
 	/** An optional type hint instructing Coda about how to interpret or render this value. */
+	hintType?: T;
+	/**
+	 * An optional type hint instructing Coda about how to interpret or render this value.
+	 * @deprecated Use {@link hintType} instead. Supported indefinitely for backwards compatibility.
+	 */
 	codaType?: T;
 }
 /**
@@ -1542,6 +1566,11 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
  */
 export interface NumericSchema extends BaseNumberSchema {
 	/** If specified, instructs Coda to render this value as a percentage. */
+	hintType?: ValueHintType.Percent;
+	/**
+	 * If specified, instructs Coda to render this value as a percentage.
+	 * @deprecated Use {@link NumericSchema.hintType} instead. Supported indefinitely for backwards compatibility.
+	 */
 	codaType?: ValueHintType.Percent;
 	/** The decimal precision. The number will be rounded to this precision when rendered. */
 	precision?: number;
@@ -1552,9 +1581,7 @@ export interface NumericSchema extends BaseNumberSchema {
  * A schema representing a return value or object property that is provided as a number,
  * which Coda should interpret as a date. The given number should be in seconds since the Unix epoch.
  */
-export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
-	/** Instructs Coda to render this value as a date. */
-	codaType: ValueHintType.Date;
+export type NumericDateSchema = BaseNumberSchema<ValueHintType.Date> & HintDiscriminant<ValueHintType.Date> & {
 	/**
 	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
 	 * used when rendering the value.
@@ -1562,15 +1589,13 @@ export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> 
 	 * Only applies when this is used as a sync table property.
 	 */
 	format?: string;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a number,
  * which Coda should interpret as a time. The given number should be in seconds since the Unix epoch.
  * While this is a full datetime, only the time component will be rendered, so the date used is irrelevant.
  */
-export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
-	/** Instructs Coda to render this value as a time. */
-	codaType: ValueHintType.Time;
+export type NumericTimeSchema = BaseNumberSchema<ValueHintType.Time> & HintDiscriminant<ValueHintType.Time> & {
 	/**
 	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
 	 * used when rendering the value.
@@ -1578,14 +1603,12 @@ export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> 
 	 * Only applies when this is used as a sync table property.
 	 */
 	format?: string;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a number,
  * which Coda should interpret as a datetime. The given number should be in seconds since the Unix epoch.
  */
-export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
-	/** Instructs Coda to render this value as a datetime. */
-	codaType: ValueHintType.DateTime;
+export type NumericDateTimeSchema = BaseNumberSchema<ValueHintType.DateTime> & HintDiscriminant<ValueHintType.DateTime> & {
 	/**
 	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
 	 *
@@ -1599,15 +1622,13 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
 	 * Only applies when this is used as a sync table property.
 	 */
 	timeFormat?: string;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a number,
  * which Coda should interpret as a duration. The given number should be an amount of days
  * (fractions allowed).
  */
-export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Duration> {
-	/** Instructs Coda to render this value as a duration. */
-	codaType: ValueHintType.Duration;
+export type NumericDurationSchema = BaseNumberSchema<ValueHintType.Duration> & HintDiscriminant<ValueHintType.Duration> & {
 	/**
 	 * A refinement of {@link DurationSchema.maxUnit} to use for rounding the duration when rendering.
 	 * Currently only `1` is supported, which is the same as omitting a value.
@@ -1618,7 +1639,7 @@ export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Du
 	 * and a value of 273600 is provided (3 days 4 hours) is provided, it will be rendered as "3 days".
 	 */
 	maxUnit?: DurationUnit;
-}
+};
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
  *
@@ -1647,9 +1668,7 @@ export declare enum CurrencyFormat {
 /**
  * A schema representing a return value or object property that is an amount of currency.
  */
-export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
-	/** Instructs Coda to render this value as a currency amount. */
-	codaType: ValueHintType.Currency;
+export type CurrencySchema = BaseNumberSchema<ValueHintType.Currency> & HintDiscriminant<ValueHintType.Currency> & {
 	/** The decimal precision. The value is rounded to this precision when rendered. */
 	precision?: number;
 	/**
@@ -1659,14 +1678,12 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
 	currencyCode?: string;
 	/** A render format for further refining how the value is rendered. */
 	format?: CurrencyFormat;
-}
+};
 /**
  * A schema representing a return value or object property that is a number that should
  * be rendered as a slider.
  */
-export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
-	/** Instructs Coda to render this value as a slider. */
-	codaType: ValueHintType.Slider;
+export type SliderSchema = BaseNumberSchema<ValueHintType.Slider> & HintDiscriminant<ValueHintType.Slider> & {
 	/** The minimum value selectable by this slider (supports number or formula). */
 	minimum?: number | string;
 	/** The maximum value selectable by this slider (supports number or formula). */
@@ -1675,14 +1692,12 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
 	step?: number | string;
 	/** Whether to display the underlying numeric value in addition to the slider. */
 	showValue?: boolean;
-}
+};
 /**
  * A schema representing a return value or object property that is a number that should
  * be rendered as a progress bar.
  */
-export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.ProgressBar> {
-	/** Instructs Coda to render this value as a progress bar. */
-	codaType: ValueHintType.ProgressBar;
+export type ProgressBarSchema = BaseNumberSchema<ValueHintType.ProgressBar> & HintDiscriminant<ValueHintType.ProgressBar> & {
 	/** The minimum value selectable by this progress bar (supports number or formula). */
 	minimum?: number | string;
 	/** The maximum value selectable by this progress bar (supports number or formula). */
@@ -1691,7 +1706,7 @@ export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.Progre
 	step?: number | string;
 	/** Whether to display the underlying numeric value in addition to the progress bar. */
 	showValue?: boolean;
-}
+};
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
@@ -1727,14 +1742,12 @@ export declare enum ScaleIconSet {
  * a numeric value. The canonical example of a scale is a star rating, which might show
  * 5 star icons, with 3 of them shaded, indicating a value of 3.
  */
-export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
-	/** Instructs Coda to render this value as a scale. */
-	codaType: ValueHintType.Scale;
+export type ScaleSchema = BaseNumberSchema<ValueHintType.Scale> & HintDiscriminant<ValueHintType.Scale> & {
 	/** The number of icons to render. */
 	maximum?: number;
 	/** The icon to render. */
 	icon?: ScaleIconSet;
-}
+};
 /**
  * Display types that can be used with an {@link EmailSchema}.
  */
@@ -1759,12 +1772,10 @@ export declare enum EmailDisplayType {
  * the just the email address.  Autocomplete against previously typed domain names is
  * also an option in the user interface.
  */
-export interface EmailSchema extends BaseStringSchema<ValueHintType.Email> {
-	/** Instructs Coda to render this value as an email address. */
-	codaType: ValueHintType.Email;
+export type EmailSchema = BaseStringSchema<ValueHintType.Email> & HintDiscriminant<ValueHintType.Email> & {
 	/** How the email should be displayed in the UI. */
 	display?: EmailDisplayType;
-}
+};
 /**
  * Display types that can be used with a {@link LinkSchema}.
  */
@@ -1795,23 +1806,19 @@ export declare enum LinkDisplayType {
  *
  * The link can be displayed in the UI in multiple ways, as per the above enumeration.
  */
-export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
-	/** Instructs Coda to render this value as a hyperlink. */
-	codaType: ValueHintType.Url;
+export type LinkSchema = BaseStringSchema<ValueHintType.Url> & HintDiscriminant<ValueHintType.Url> & {
 	/** How the URL should be displayed in the UI. */
 	display?: LinkDisplayType;
 	/** Whether to force client embedding (only for LinkDisplayType.Embed) - for example, if user login required. */
 	force?: boolean;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
  */
-export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
-	/** Instructs Coda to render this value as a date. */
-	codaType: ValueHintType.Date;
+export type StringDateSchema = BaseStringSchema<ValueHintType.Date> & HintDiscriminant<ValueHintType.Date> & {
 	/**
 	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
 	 * used when rendering the value.
@@ -1819,16 +1826,14 @@ export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
 	 * Only applies when this is used as a sync table property.
 	 */
 	format?: string;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as an embed value (e.g. a URL). Coda uses an external provider (iframely)
  * to handle all embeds by default. If there is no support for a given embed that you want to use,
  * you will need to use the `force` option which falls back to a generic iframe.
  */
-export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed> {
-	/** Instructs Coda to render this value as an embed. */
-	codaType: ValueHintType.Embed;
+export type StringEmbedSchema = BaseStringSchema<ValueHintType.Embed> & HintDiscriminant<ValueHintType.Embed> & {
 	/**
 	 * Toggle whether to try to force embed the content in Coda. Should be kept to false for most cases.
 	 *
@@ -1838,31 +1843,24 @@ export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed>
 	 * but requires user consent per-domain to actually display the embed.
 	 */
 	force?: boolean;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a string, which Coda should
  * interpret as its internal rich text value. For "canvas column" types, `isCanvas` should be set to `true`.
  * @hidden
  */
-export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintType.CodaInternalRichText> {
-	/**
-	 * Instructs Coda to render this value as internal rich text.
-	 * @hidden
-	 */
-	codaType: ValueHintType.CodaInternalRichText;
+export type CodaInternalRichTextSchema = BaseStringSchema<ValueHintType.CodaInternalRichText> & HintDiscriminant<ValueHintType.CodaInternalRichText> & {
 	/**
 	 * Whether this is a embedded canvas column type vs. a "normal" text column type.
 	 * @hidden
 	 */
 	isCanvas?: boolean;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a time.
  */
-export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
-	/** Instructs Coda to render this value as a date. */
-	codaType: ValueHintType.Time;
+export type StringTimeSchema = BaseStringSchema<ValueHintType.Time> & HintDiscriminant<ValueHintType.Time> & {
 	/**
 	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
 	 * used when rendering the value.
@@ -1870,16 +1868,14 @@ export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
 	 * Only applies when this is used as a sync table property.
 	 */
 	format?: string;
-}
+};
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a datetime. Coda is able to flexibly a parse number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 datetime string (e.g. 2021-11-03T19:43:58): https://en.wikipedia.org/wiki/ISO_8601.
  */
-export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
-	/** Instructs Coda to render this value as a date. */
-	codaType: ValueHintType.DateTime;
+export type StringDateTimeSchema = BaseStringSchema<ValueHintType.DateTime> & HintDiscriminant<ValueHintType.DateTime> & {
 	/**
 	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
 	 * used when rendering the value.
@@ -1894,7 +1890,7 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 	 * Only applies when this is used as a sync table property.
 	 */
 	timeFormat?: string;
-}
+};
 /**
  * State of outline on images that can be used with a {@link ImageSchema}.
  */
@@ -1926,9 +1922,7 @@ export declare enum ImageShapeStyle {
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as an image.
  */
-export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
-	/** Instructs Coda to render this value as an Image. */
-	codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
+export type ImageSchema = BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> & HintDiscriminant<ValueHintType.ImageReference | ValueHintType.ImageAttachment> & {
 	/** ImageOutline type specifying style of outline on images. If unspecified, default is Solid. */
 	imageOutline?: ImageOutline;
 	/** ImageCornerStyle type specifying style of corners on images. If unspecified, default is Rounded. */
@@ -1939,7 +1933,7 @@ export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReferen
 	width?: number | string;
 	/** How tall to render the image (supports number or formula). Use 0 for default. */
 	height?: number | string;
-}
+};
 /**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
@@ -1980,16 +1974,19 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
 /**
  * A schema representing a value with selectable options.
  */
-export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
-	/** Instructs Coda to render this value as a select list. */
-	codaType: ValueHintType.SelectList;
+export type StringWithOptionsSchema = BaseStringSchema<ValueHintType.SelectList> & PropertyWithAutocompleteWithOptionalDisplay<string> & HintDiscriminant<ValueHintType.SelectList> & {
 	/** Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. */
 	allowNewValues?: boolean;
-}
+};
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
 	/** Identifies this schema as a string. */
 	type: ValueType.String;
 	/** An optional type hint instructing Coda about how to interpret or render this value. */
+	hintType?: T;
+	/**
+	 * An optional type hint instructing Coda about how to interpret or render this value.
+	 * @deprecated Use {@link hintType} instead. Supported indefinitely for backwards compatibility.
+	 */
 	codaType?: T;
 }
 declare const SimpleStringHintValueTypes: readonly [
@@ -2297,7 +2294,7 @@ export interface CustomIndexDefinition extends BaseIndexDefinition {
 	 *     // ...
 	 *     specSheetLink: {
 	 *       type: sdk.ValueType.String,
-	 *       codaType: sdk.ValueHintType.Attachment,
+	 *       hintType: sdk.ValueHintType.Attachment,
 	 *       description: "Link the PDF spec sheet for the product.",
 	 *     },
 	 *   },
@@ -2459,6 +2456,17 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * email address of the person and their name. Using `ValueHintType.Person` tells Coda to
 	 * render such a value as an @-reference to that person, rather than a basic object chip.
 	 */
+	hintType?: ObjectHintTypes;
+	/**
+	 * A hint for how Coda should interpret and render this object value.
+	 *
+	 * For example, an object can represent a person (user) in a Coda doc, with properties for the
+	 * email address of the person and their name. Using `ValueHintType.Person` tells Coda to
+	 * render such a value as an @-reference to that person, rather than a basic object chip.
+	 *
+	 * @deprecated Use {@link ObjectSchemaDefinition.hintType} instead. Supported indefinitely for backwards
+	 * compatibility.
+	 */
 	codaType?: ObjectHintTypes;
 	/** @deprecated Use {@link ObjectSchemaDefinition.featuredProperties} */
 	featured?: L[];
@@ -2513,7 +2521,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * navigate users to more details about this object
 	 *
 	 * Must be a {@link ValueType.String} property with a {@link ValueHintType.Url}
-	 * {@link ObjectSchemaDefinition.codaType}.
+	 * {@link ObjectSchemaDefinition.hintType}.
 	 */
 	linkProperty?: PropertyIdentifier<K>;
 	/**
@@ -2889,7 +2897,15 @@ export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema |
 export interface StringHintTypeToSchemaTypeMap {
 	[ValueHintType.Date]: Date | string | number;
 }
-export type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
+export type StringHintTypeToSchemaType<T> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
+/**
+ * Resolves the effective render hint of a schema, preferring the {@link hintType} field and
+ * falling back to the deprecated `codaType` field.
+ */
+export type SchemaHintType<T extends {
+	codaType?: any;
+	hintType?: any;
+}> = NonNullable<T["hintType"]> extends never ? T["codaType"] : NonNullable<T["hintType"]>;
 export type ObjectSchemaFromKey<T extends ObjectSchemaProperties<any>, K extends keyof T> = T[K]["fromKey"] extends string ? T[K]["fromKey"] : K;
 export type ObjectSchemaPropertiesSchemaType<T extends ObjectSchemaProperties<any>> = {
 	-readonly [K in keyof T as ObjectSchemaFromKey<T, K>]: SchemaType<T[K]>;
@@ -2916,7 +2932,7 @@ export type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = Objec
  * It can be helpful for adding type-checking for the return value of an `execute` function
  * to ensure that it matches the schema you have declared for that formula.
  */
-export type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T["codaType"]> : T extends ArraySchema ? Array<SchemaType<T["items"]>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
+export type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<SchemaHintType<T>> : T extends ArraySchema ? Array<SchemaType<T["items"]>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
 /** Primitive types for which {@link generateSchema} can infer a schema. */
 export type InferrableTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 /**
@@ -3859,8 +3875,8 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType` to tell Coda how to interpret a given value. For example, you can return
- * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
+ * `hintType` to tell Coda how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `hintType: ValueType.Date` to tell Coda
  * to interpret as a date in a document.
  *
  * If your formula returns an object, you must provide a `schema` property that describes
@@ -3878,7 +3894,7 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
  *
  * @example
  * ```
- * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * makeFormula({resultType: ValueType.String, hintType: ValueType.Html, name: 'HelloHtml', ...});
  * ```
  *
  * @example
@@ -3970,10 +3986,16 @@ export type FormulaOptions<ParamDefsT extends ParamDefs, DefT extends CommonPack
 export type FormulaDefinitionOptions<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> & ({
 	schema?: StringSchema;
 } | {
+	hintType?: StringHintTypes;
+} | {
+	/** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
 	codaType?: StringHintTypes;
 }) : ResultT extends ValueType.Number ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> & ({
 	schema?: NumberSchema;
 } | {
+	hintType?: NumberHintTypes;
+} | {
+	/** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
 	codaType?: NumberHintTypes;
 }) : ResultT extends ValueType.Boolean ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>> : ResultT extends ValueType.Array ? FormulaOptions<ParamDefsT, ArrayFormulaDef<ParamDefsT, SchemaT>> : FormulaOptions<ParamDefsT, ObjectFormulaDef<ParamDefsT, SchemaT>>;
 /**
@@ -4410,7 +4432,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 *       properties: {
 	 *         dynamicPropertyName: {
 	 *           type: sdk.ValueType.String,
-	 *           codaType: sdk.ValueHintType.SelectList,
+	 *           hintType: sdk.ValueHintType.SelectList,
 	 *           mutable: true,
 	 *           options: sdk.OptionsType.Dynamic,
 	 *         },

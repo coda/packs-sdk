@@ -189,7 +189,7 @@ sdk.makeDynamicSyncTable({
       properties: {
         dynamicPropertyName: {
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.SelectList,
+          hintType: sdk.ValueHintType.SelectList,
           mutable: true,
           options: sdk.OptionsType.Dynamic,
         },

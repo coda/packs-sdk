@@ -915,8 +915,8 @@ export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definiti
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType` to tell Coda how to interpret a given value. For example, you can return
- * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
+ * `hintType` to tell Coda how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `hintType: ValueType.Date` to tell Coda
  * to interpret as a date in a document.
  *
  * If your formula returns an object, you must provide a `schema` property that describes
@@ -934,7 +934,7 @@ export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definiti
  *
  * @example
  * ```
- * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * makeFormula({resultType: ValueType.String, hintType: ValueType.Html, name: 'HelloHtml', ...});
  * ```
  *
  * @example
@@ -1026,10 +1026,16 @@ export type FormulaOptions<ParamDefsT extends ParamDefs, DefT extends CommonPack
 export type FormulaDefinitionOptions<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> & ({
     schema?: StringSchema;
 } | {
+    hintType?: StringHintTypes;
+} | {
+    /** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
     codaType?: StringHintTypes;
 }) : ResultT extends ValueType.Number ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> & ({
     schema?: NumberSchema;
 } | {
+    hintType?: NumberHintTypes;
+} | {
+    /** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
     codaType?: NumberHintTypes;
 }) : ResultT extends ValueType.Boolean ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>> : ResultT extends ValueType.Array ? FormulaOptions<ParamDefsT, ArrayFormulaDef<ParamDefsT, SchemaT>> : FormulaOptions<ParamDefsT, ObjectFormulaDef<ParamDefsT, SchemaT>>;
 /**
@@ -1501,7 +1507,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      *       properties: {
      *         dynamicPropertyName: {
      *           type: sdk.ValueType.String,
-     *           codaType: sdk.ValueHintType.SelectList,
+     *           hintType: sdk.ValueHintType.SelectList,
      *           mutable: true,
      *           options: sdk.OptionsType.Dynamic,
      *         },

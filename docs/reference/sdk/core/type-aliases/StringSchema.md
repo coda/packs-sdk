@@ -10,6 +10,6 @@ search:
 
 # Type Alias: StringSchema
 
-> **StringSchema** = [`StringDateSchema`](../interfaces/StringDateSchema.md) \| [`StringTimeSchema`](../interfaces/StringTimeSchema.md) \| [`StringDateTimeSchema`](../interfaces/StringDateTimeSchema.md) \| `CodaInternalRichTextSchema` \| [`DurationSchema`](../interfaces/DurationSchema.md) \| [`EmailSchema`](../interfaces/EmailSchema.md) \| [`ImageSchema`](../interfaces/ImageSchema.md) \| [`LinkSchema`](../interfaces/LinkSchema.md) \| [`StringEmbedSchema`](../interfaces/StringEmbedSchema.md) \| [`SimpleStringSchema`](../interfaces/SimpleStringSchema.md) \| [`StringWithOptionsSchema`](../interfaces/StringWithOptionsSchema.md)
+> **StringSchema** = [`StringDateSchema`](StringDateSchema.md) \| [`StringTimeSchema`](StringTimeSchema.md) \| [`StringDateTimeSchema`](StringDateTimeSchema.md) \| `CodaInternalRichTextSchema` \| [`DurationSchema`](../interfaces/DurationSchema.md) \| [`EmailSchema`](EmailSchema.md) \| [`ImageSchema`](ImageSchema.md) \| [`LinkSchema`](LinkSchema.md) \| [`StringEmbedSchema`](StringEmbedSchema.md) \| [`SimpleStringSchema`](../interfaces/SimpleStringSchema.md) \| [`StringWithOptionsSchema`](StringWithOptionsSchema.md)
 
 The union of schema definition types whose underlying value is a string.

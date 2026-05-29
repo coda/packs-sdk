@@ -148,7 +148,7 @@ pack.addDynamicSyncTable({
     let properties: sdk.ObjectSchemaProperties = {
       submittedAt: {
         type: sdk.ValueType.String,
-        codaType: sdk.ValueHintType.DateTime,
+        hintType: sdk.ValueHintType.DateTime,
       },
       responseId: {
         type: sdk.ValueType.String,
@@ -296,7 +296,7 @@ function getPropertySchema(field): sdk.Schema & sdk.ObjectSchemaProperty {
       break;
     case "date":
       schema.type = sdk.ValueType.String;
-      schema.codaType = sdk.ValueHintType.Date;
+      schema.hintType = sdk.ValueHintType.Date;
       break;
     case "multiple_choice":
       let isMultiselect = field.properties.allow_multiple_selection;
@@ -420,11 +420,11 @@ const TypeSchemaMap: Record<string, sdk.Schema> = {
   checkbox: { type: sdk.ValueType.Boolean },
   calendar_date: {
     type: sdk.ValueType.String,
-    codaType: sdk.ValueHintType.Date,
+    hintType: sdk.ValueHintType.Date,
   },
   location: LocationSchema,
   point: LocationSchema,
-  url: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Url },
+  url: { type: sdk.ValueType.String, hintType: sdk.ValueHintType.Url },
 };
 
 // A base row schema, extended for each dataset.

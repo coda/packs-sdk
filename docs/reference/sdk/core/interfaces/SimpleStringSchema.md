@@ -25,11 +25,15 @@ should interpret that string.
 
 ## Properties
 
-### codaType?
+### ~~codaType?~~
 
 > `optional` **codaType**: `T`
 
 An optional type hint instructing Coda about how to interpret or render this value.
+
+#### Deprecated
+
+Use [hintType](#hinttype) instead. Supported indefinitely for backwards compatibility.
 
 #### Inherited from
 
@@ -49,6 +53,18 @@ explain the purpose or contents of any property that is not self-evident.
 #### Inherited from
 
 `BaseStringSchema.description`
+
+***
+
+### hintType?
+
+> `optional` **hintType**: `T`
+
+An optional type hint instructing Coda about how to interpret or render this value.
+
+#### Inherited from
+
+`BaseStringSchema.hintType`
 
 ***
 

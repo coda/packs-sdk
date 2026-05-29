@@ -39,23 +39,23 @@ const TaskSchema = sdk.makeObjectSchema({
     description: {
       description: "A detailed description of the task.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Markdown,
+      hintType: sdk.ValueHintType.Markdown,
     },
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     priority: {
       description: "The priority of the task.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       options: ["P1", "P2", "P3", "P4"],
     },
     due: {
       description: "When the task is due.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.DateTime,
+      hintType: sdk.ValueHintType.DateTime,
     },
     id: {
       description: "The ID of the task.",

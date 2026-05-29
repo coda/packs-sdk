@@ -10,6 +10,6 @@ search:
 
 # Type Alias: NumberSchema
 
-> **NumberSchema** = [`CurrencySchema`](../interfaces/CurrencySchema.md) \| [`SliderSchema`](../interfaces/SliderSchema.md) \| [`ProgressBarSchema`](../interfaces/ProgressBarSchema.md) \| [`ScaleSchema`](../interfaces/ScaleSchema.md) \| [`NumericSchema`](../interfaces/NumericSchema.md) \| [`NumericDateSchema`](../interfaces/NumericDateSchema.md) \| [`NumericTimeSchema`](../interfaces/NumericTimeSchema.md) \| [`NumericDateTimeSchema`](../interfaces/NumericDateTimeSchema.md) \| [`NumericDurationSchema`](../interfaces/NumericDurationSchema.md)
+> **NumberSchema** = [`CurrencySchema`](CurrencySchema.md) \| [`SliderSchema`](SliderSchema.md) \| [`ProgressBarSchema`](ProgressBarSchema.md) \| [`ScaleSchema`](ScaleSchema.md) \| [`NumericSchema`](../interfaces/NumericSchema.md) \| [`NumericDateSchema`](NumericDateSchema.md) \| [`NumericTimeSchema`](NumericTimeSchema.md) \| [`NumericDateTimeSchema`](NumericDateTimeSchema.md) \| [`NumericDurationSchema`](NumericDurationSchema.md)
 
 The union of all schemas that can represent number values.

@@ -52,6 +52,7 @@ import {dateArray} from './api_types';
 import {deepCopy} from './helpers/object_utils';
 import {ensureUnreachable} from './helpers/ensure';
 import {fileArray} from './api_types';
+import {foldHintType} from './schema';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
 import {htmlArray} from './api_types';
@@ -1536,8 +1537,8 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType` to tell Coda how to interpret a given value. For example, you can return
- * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
+ * `hintType` to tell Coda how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `hintType: ValueType.Date` to tell Coda
  * to interpret as a date in a document.
  *
  * If your formula returns an object, you must provide a `schema` property that describes
@@ -1555,7 +1556,7 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
  *
  * @example
  * ```
- * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * makeFormula({resultType: ValueType.String, hintType: ValueType.Html, name: 'HelloHtml', ...});
  * ```
  *
  * @example
@@ -1591,39 +1592,55 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
     case ValueType.String: {
       // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
       // fullDefinition is StringFormulaDefV2.
-      const def: StringFormulaDef<ParamDefsT> & {codaType?: StringHintTypes; formulaSchema?: StringSchema} = {
+      const def: StringFormulaDef<ParamDefsT> & {
+        codaType?: StringHintTypes;
+        hintType?: StringHintTypes;
+        formulaSchema?: StringSchema;
+      } = {
         ...fullDefinition,
         codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+        hintType: 'hintType' in fullDefinition ? fullDefinition.hintType : undefined,
         formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
         validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
       };
-      const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
+      const {onError: _, resultType: unused, codaType, hintType, formulaSchema, ...rest} = def;
 
+      // Fold the deprecated `codaType` and preferred `hintType` into a single hint (throws on conflict).
+      const stringHint = foldHintType(codaType, hintType) as StringHintTypes | undefined;
       assertCondition(
-        codaType !== ValueHintType.SelectList,
+        stringHint !== ValueHintType.SelectList,
         'ValueHintType.SelectList is not supported for formula result types.',
       );
 
+      const hintSchema = stringHint ? ({type: ValueType.String, codaType: stringHint} as StringSchema) : undefined;
       const stringFormula: StringPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.string,
-        schema: formulaSchema || (codaType ? {type: ValueType.String, codaType} : undefined),
+        schema: formulaSchema || hintSchema,
       };
       formula = stringFormula;
       break;
     }
     case ValueType.Number: {
-      const def: NumericFormulaDef<ParamDefsT> & {codaType?: NumberHintTypes; formulaSchema?: NumberSchema} = {
+      const def: NumericFormulaDef<ParamDefsT> & {
+        codaType?: NumberHintTypes;
+        hintType?: NumberHintTypes;
+        formulaSchema?: NumberSchema;
+      } = {
         ...fullDefinition,
         codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+        hintType: 'hintType' in fullDefinition ? fullDefinition.hintType : undefined,
         formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
         validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
       };
-      const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
+      const {onError: _, resultType: unused, codaType, hintType, formulaSchema, ...rest} = def;
+      // Fold the deprecated `codaType` and preferred `hintType` into a single hint (throws on conflict).
+      const numberHint = foldHintType(codaType, hintType) as NumberHintTypes | undefined;
+      const hintSchema = numberHint ? ({type: ValueType.Number, codaType: numberHint} as NumberSchema) : undefined;
       const numericFormula: NumericPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.number,
-        schema: formulaSchema || (codaType ? {type: ValueType.Number, codaType} : undefined),
+        schema: formulaSchema || hintSchema,
       };
       formula = numericFormula;
       break;
@@ -1785,10 +1802,25 @@ export type FormulaDefinitionOptions<
   ResultT extends ValueType,
   SchemaT extends Schema,
 > = ResultT extends ValueType.String
-  ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> & ({schema?: StringSchema} | {codaType?: StringHintTypes})
+  ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> &
+      (
+        | {schema?: StringSchema}
+        | {hintType?: StringHintTypes}
+        | {
+            /** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
+            codaType?: StringHintTypes;
+          }
+      )
   : ResultT extends ValueType.Number
     ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> &
-        ({schema?: NumberSchema} | {codaType?: NumberHintTypes})
+        (
+          | {schema?: NumberSchema}
+          | {hintType?: NumberHintTypes}
+          | {
+              /** @deprecated Use `hintType` instead. Supported indefinitely for backwards compatibility. */
+              codaType?: NumberHintTypes;
+            }
+        )
     : ResultT extends ValueType.Boolean
       ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>>
       : ResultT extends ValueType.Array
@@ -2533,7 +2565,7 @@ export interface DynamicSyncTableOptions<
    *       properties: {
    *         dynamicPropertyName: {
    *           type: sdk.ValueType.String,
-   *           codaType: sdk.ValueHintType.SelectList,
+   *           hintType: sdk.ValueHintType.SelectList,
    *           mutable: true,
    *           options: sdk.OptionsType.Dynamic,
    *         },
@@ -3110,7 +3142,7 @@ function moveJsPropertyOptionsFunctionsToFormulas({
     assertCondition(
       unwrappedSchemaSupportsOptions(inputSchemaWithoutArray),
 
-      `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`,
+      `Property "${propertyName}" must have hintType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`,
     );
     assertCondition(
       unwrappedSchemaSupportsOptions(outputSchema),

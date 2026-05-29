@@ -89,7 +89,7 @@ const ProductSchema = sdk.makeObjectSchema({
     // ...
     specSheetLink: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Attachment,
+      hintType: sdk.ValueHintType.Attachment,
       description: "Link the PDF spec sheet for the product.",
     },
   },

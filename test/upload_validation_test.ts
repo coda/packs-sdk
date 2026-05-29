@@ -77,6 +77,7 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
+import {normalizeSchema} from '../schema';
 import {normalizeTool} from '../testing/upload_validation';
 import {numberArray} from '../api_types';
 import {validateCrawlHierarchy} from '../testing/upload_validation';
@@ -1145,12 +1146,12 @@ describe('Pack metadata Validation', async () => {
         assert.deepEqual(err.validationErrors, [
           {
             message:
-              'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
+              'You must set "hintType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
             path: 'syncTables[0].schema.properties.Baz',
           },
           {
             message:
-              'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
+              'You must set "hintType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
             path: 'syncTables[0].getter.schema.items.properties.Baz',
           },
           {
@@ -1318,7 +1319,7 @@ describe('Pack metadata Validation', async () => {
         const optionsError = validationErrors.find(
           e =>
             e.message ===
-            'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
+            'You must set "hintType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
         );
         assert.isDefined(optionsError, 'Expected options validation error not found');
         assert.include(optionsError!.path, 'syncTables[0].schema.properties.');
@@ -1328,7 +1329,7 @@ describe('Pack metadata Validation', async () => {
         const olderHasOptionsError = olderErrors.some(
           e =>
             e.message ===
-            'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
+            'You must set "hintType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
         );
         assert.isFalse(olderHasOptionsError);
       });
@@ -3103,7 +3104,7 @@ describe('Pack metadata Validation', async () => {
         assert.deepEqual(err.validationErrors, [
           {
             message:
-              'The "imageProperty" path "NestedObject.Name" must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".',
+              'The "imageProperty" path "NestedObject.Name" must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "hintType".',
             path: 'formulas[0].schema.imageProperty',
           },
         ]);
@@ -5954,6 +5955,29 @@ describe('Pack metadata Validation', async () => {
       assert.ok(objectSchemaResult);
       // It should be changed into an Array schema automatically.
       assert.equal(objectSchemaResult.type, ValueType.Array);
+    });
+
+    it('accepts a schema authored with hintType once normalized, emitting only codaType', () => {
+      // Mirrors the server flow (get_schema_helpers.ts): normalize before validating. Normalization
+      // folds `hintType` onto `codaType`, so the strict zod validators only ever see `codaType`.
+      const itemSchema = makeObjectSchema({
+        type: ValueType.Object,
+        id: 'id',
+        primary: 'name',
+        identity: {packId: 123, name: 'Item'},
+        properties: {
+          id: {type: ValueType.Number, required: true},
+          name: {type: ValueType.String, required: true},
+          when: {type: ValueType.String, hintType: ValueHintType.Date},
+        },
+      } as any);
+      const normalized = normalizeSchema(makeSchema({type: ValueType.Array, items: itemSchema})) as any;
+      assert.equal(normalized.items.properties.When.codaType, ValueHintType.Date);
+      assert.isFalse('hintType' in normalized.items.properties.When);
+
+      const result = validateSyncTableSchema(normalized, {sdkVersion: codaPacksSDKVersion});
+      assert.ok(result);
+      assert.equal((result.items as any).properties.When.codaType, ValueHintType.Date);
     });
 
     it('fails', () => {

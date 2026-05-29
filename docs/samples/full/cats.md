@@ -65,7 +65,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
         }),
       ],
       resultType: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
       execute: async function (args, context) {
         let [text, size, color, width, height, filter] = args;
         let url = "https://cataas.com/cat";

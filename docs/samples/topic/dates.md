@@ -238,7 +238,7 @@ pack.addFormula({
   ],
   // Return the result as the number of seconds since the epoch.
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Time,
+  hintType: sdk.ValueHintType.Time,
   execute: async function ([input], context) {
     let seconds = input.getTime() / 1000;
     seconds += 5 * 60; // Add five minutes, as seconds.

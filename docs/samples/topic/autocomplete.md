@@ -77,7 +77,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.Number,
-  codaType: sdk.ValueHintType.Currency,
+  hintType: sdk.ValueHintType.Currency,
   execute: async function ([gameId], context) {
     let response = await context.fetcher.fetch({
       method: "GET",

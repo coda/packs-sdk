@@ -38,7 +38,7 @@ See the sections below to learn more.
 
 ### Annotated formula result
 
-When using a formula as a tool, ensure any image URLs returned are correctly annotated with either the [`ImageAttachment`][hinttype_imageattachment] or [`ImageReference`][hinttype_imagereference] hint. This is done by specifying the `codaType` of the formula or schema property.
+When using a formula as a tool, ensure any image URLs returned are correctly annotated with either the [`ImageAttachment`][hinttype_imageattachment] or [`ImageReference`][hinttype_imagereference] hint. This is done by specifying the `hintType` of the formula or schema property.
 
 === "Returning an image"
 
@@ -51,7 +51,7 @@ When using a formula as a tool, ensure any image URLs returned are correctly ann
       description: "Gets a random photo of a dog.",
       parameters: [],
       resultType: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
       cacheTtlSecs: 0,
       execute: async function (args, context) {
         let response = await context.fetcher.fetch({
@@ -75,7 +75,7 @@ When using a formula as a tool, ensure any image URLs returned are correctly ann
         name: { type: sdk.ValueType.String },
         sprite: {
           type: sdk.ValueType.String,
-          codaType: sdk.ValueHintType.ImageReference,
+          hintType: sdk.ValueHintType.ImageReference,
         },
       },
       displayProperty: "name",

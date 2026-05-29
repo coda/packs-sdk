@@ -19,11 +19,15 @@ i.e. a raw number with an optional decimal precision.
 
 ## Properties
 
-### codaType?
+### ~~codaType?~~
 
 > `optional` **codaType**: [`Percent`](../enumerations/ValueHintType.md#percent)
 
 If specified, instructs Coda to render this value as a percentage.
+
+#### Deprecated
+
+Use [NumericSchema.hintType](#hinttype) instead. Supported indefinitely for backwards compatibility.
 
 #### Overrides
 
@@ -43,6 +47,18 @@ explain the purpose or contents of any property that is not self-evident.
 #### Inherited from
 
 `BaseNumberSchema.description`
+
+***
+
+### hintType?
+
+> `optional` **hintType**: [`Percent`](../enumerations/ValueHintType.md#percent)
+
+If specified, instructs Coda to render this value as a percentage.
+
+#### Overrides
+
+`BaseNumberSchema.hintType`
 
 ***
 

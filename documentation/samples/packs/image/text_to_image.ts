@@ -20,7 +20,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.ImageReference,
+  hintType: sdk.ValueHintType.ImageReference,
   execute: async function ([text, color = "black"], context) {
     // Calculate the width of the generated image required to fit the text.
     // Using a fixed-width font to make this easy.

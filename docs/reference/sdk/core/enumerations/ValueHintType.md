@@ -130,7 +130,7 @@ and render an @-reference to the user.
 ```
 makeObjectSchema({
   type: ValueType.Object,
-  codaType: ValueHintType.Person,
+  hintType: ValueHintType.Person,
   properties: {
     email: {type: ValueType.String, required: true},
     name: {type: ValueType.String, required: true},
@@ -166,7 +166,7 @@ Normally a reference schema is constructed from the schema object being referenc
 ```
 makeObjectSchema({
   type: ValueType.Object,
-  codaType: ValueHintType.Reference,
+  hintType: ValueHintType.Reference,
   identity: {
     name: "SomeSyncTableIdentity"
   },

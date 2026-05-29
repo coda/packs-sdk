@@ -13,7 +13,7 @@ pack.addFormula({
     }),
   ],
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Html,
+  hintType: sdk.ValueHintType.Html,
   execute: async function ([text], context) {
     let words = text.split(" ");
     for (let i = 0; i < words.length; i++) {

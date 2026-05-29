@@ -13,11 +13,11 @@ const ProductSchema = sdk.makeObjectSchema({
     description: { type: sdk.ValueType.String },
     image: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageAttachment,
+      hintType: sdk.ValueHintType.ImageAttachment,
     },
     link: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
       fromKey: "onlineStoreUrl",
     },
     id: { type: sdk.ValueType.String },

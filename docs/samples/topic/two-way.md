@@ -38,7 +38,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
@@ -147,7 +147,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
@@ -276,7 +276,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
@@ -417,7 +417,7 @@ const CategorySchema = sdk.makeObjectSchema({
     icon: {
       description: "An icon representing the category.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
   },
   displayProperty: "name",
@@ -437,13 +437,13 @@ const ExpenseSchema = sdk.makeObjectSchema({
     date: {
       description: "The date the expense was made.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Date,
+      hintType: sdk.ValueHintType.Date,
       mutable: true,
     },
     cost: {
       description: "The total cost of the expense.",
       type: sdk.ValueType.Number,
-      codaType: sdk.ValueHintType.Currency,
+      hintType: sdk.ValueHintType.Currency,
       mutable: true,
     },
     notes: {
@@ -455,7 +455,7 @@ const ExpenseSchema = sdk.makeObjectSchema({
     repeat: {
       description: "How often the expense automatically repeats.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       fromKey: "repeat_interval",
       mutable: true,
       // Static list of options.
@@ -464,7 +464,7 @@ const ExpenseSchema = sdk.makeObjectSchema({
     currency: {
       description: "The code of the currency of the expense.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       fromKey: "currency_code",
       mutable: true,
       // Dynamic list of options.
@@ -479,7 +479,7 @@ const ExpenseSchema = sdk.makeObjectSchema({
     },
     category: {
       ...CategorySchema,
-      codaType: sdk.ValueHintType.SelectList,
+      hintType: sdk.ValueHintType.SelectList,
       mutable: true,
       // Dynamic list of options, as objects.
       options: async function (context) {

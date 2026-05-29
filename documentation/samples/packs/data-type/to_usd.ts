@@ -21,7 +21,7 @@ pack.addFormula({
   resultType: sdk.ValueType.Number,
   schema: {
     type: sdk.ValueType.Number,
-    codaType: sdk.ValueHintType.Currency,
+    hintType: sdk.ValueHintType.Currency,
     // Ensure the currency symbol displayed with the result is "$".
     currencyCode: "USD",
     // Only show two decimal places (no fractional pennies).

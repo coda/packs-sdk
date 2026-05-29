@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.foldHintType = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -75,7 +75,7 @@ var ValueHintType;
      * ```
      * makeObjectSchema({
      *   type: ValueType.Object,
-     *   codaType: ValueHintType.Person,
+     *   hintType: ValueHintType.Person,
      *   properties: {
      *     email: {type: ValueType.String, required: true},
      *     name: {type: ValueType.String, required: true},
@@ -136,7 +136,7 @@ var ValueHintType;
      * ```
      * makeObjectSchema({
      *   type: ValueType.Object,
-     *   codaType: ValueHintType.Reference,
+     *   hintType: ValueHintType.Reference,
      *   identity: {
      *     name: "SomeSyncTableIdentity"
      *   },
@@ -493,7 +493,11 @@ function isArray(val) {
 }
 exports.isArray = isArray;
 function unwrappedSchemaSupportsOptions(schema) {
-    return Boolean(schema === null || schema === void 0 ? void 0 : schema.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema.codaType);
+    var _a;
+    // Prefer the new `hintType` field, falling back to the deprecated `codaType`. This may run on
+    // un-normalized authoring schemas, so we can't assume the hint has been folded onto `codaType`.
+    const hint = (_a = schema === null || schema === void 0 ? void 0 : schema.codaType) !== null && _a !== void 0 ? _a : schema === null || schema === void 0 ? void 0 : schema.hintType;
+    return Boolean(hint) && [ValueHintType.SelectList, ValueHintType.Reference].includes(hint);
 }
 exports.unwrappedSchemaSupportsOptions = unwrappedSchemaSupportsOptions;
 function maybeSchemaOptionsValue(schema) {
@@ -608,7 +612,9 @@ exports.makeSchema = makeSchema;
  * ```
  */
 function makeObjectSchema(schemaDef) {
-    const schema = { ...schemaDef, type: ValueType.Object };
+    // Fold any object-level `hintType` onto the canonical `codaType` field up front, since
+    // validateObjectSchema (below) reads the raw top-level `codaType` for Reference/Person checks.
+    const schema = resolveHintType({ ...schemaDef, type: ValueType.Object });
     // In case a single schema object was used for multiple properties, make copies for each of them.
     for (const key of Object.keys(schema.properties)) {
         // 'type' was just created from scratch above
@@ -657,12 +663,12 @@ function validateObjectSchema(schema) {
     }
 }
 function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
-    (0, ensure_2.ensureExists)(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
+    (0, ensure_2.ensureExists)(field, `Objects with hintType "${codaType}" require a "${fieldName}" property in the schema definition.`);
 }
 function checkSchemaPropertyIsRequired(field, schema, referencedByPropertyName) {
     const { properties, codaType } = schema;
     (0, ensure_1.assertCondition)(properties[field], `${referencedByPropertyName} set to undefined field "${field}"`);
-    (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
+    (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with hintType "${codaType}".`);
 }
 /**
  * Normalizes a schema key into PascalCase.
@@ -814,6 +820,38 @@ function normalizePropertyValuePathIntoSchemaPath(propertyValue) {
     return normalizedValue;
 }
 exports.normalizePropertyValuePathIntoSchemaPath = normalizePropertyValuePathIntoSchemaPath;
+/**
+ * Folds the preferred `hintType` render-hint field and the deprecated `codaType` alias into the
+ * single canonical `codaType` value used on the wire. If both are set to different values, throws
+ * so the developer disambiguates.
+ */
+function foldHintType(codaType, hintType) {
+    if (hintType === undefined) {
+        return codaType;
+    }
+    if (codaType !== undefined && codaType !== hintType) {
+        throw new Error(`A schema cannot specify both "hintType" (${hintType}) and the deprecated "codaType" (${codaType}) with ` +
+            `different values. Use "hintType".`);
+    }
+    return hintType;
+}
+exports.foldHintType = foldHintType;
+/**
+ * Returns a copy of the schema with the deprecated `codaType` and its preferred alias `hintType`
+ * folded into a single `codaType` field. The result never contains a `hintType` key. Used as the
+ * single resolution point during normalization so downstream consumers only ever see `codaType`.
+ */
+function resolveHintType(schema) {
+    if (!('hintType' in schema)) {
+        return schema;
+    }
+    const { hintType, ...rest } = schema;
+    const codaType = foldHintType(rest.codaType, hintType);
+    if (codaType === undefined) {
+        return rest;
+    }
+    return { ...rest, codaType };
+}
 function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {
@@ -827,13 +865,14 @@ function normalizeSchema(schema) {
         // sufficient to define T === GenericObjectSchema?
         return normalizeObjectSchema(schema);
     }
-    // We always make a copy of the input schema so we never accidentally mutate it.
-    return { ...schema };
+    // We always make a copy of the input schema so we never accidentally mutate it, and fold any
+    // `hintType` render hint onto the canonical `codaType` field.
+    return resolveHintType({ ...schema });
 }
 exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
-    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+    const { attribution, options, requireForUpdates, codaType, hintType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, versionProperty, index, parent, ..._rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
@@ -859,7 +898,7 @@ function normalizeObjectSchema(schema) {
         attribution,
         options,
         requireForUpdates,
-        codaType,
+        codaType: foldHintType(codaType, hintType),
         description,
         displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
         featured: featured ? featured.map(normalizeSchemaKey) : undefined,

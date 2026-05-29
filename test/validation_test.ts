@@ -296,21 +296,21 @@ describe('Property validation in objects', () => {
   it('rejects http url', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Url', ['http://google.com']),
-      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTPS or data url, but got "http:\/\/google.com"./,
+      /The following errors were found when validating the result of the formula "Url":\nProperty with hintType "url" must be a valid HTTPS or data url, but got "http:\/\/google.com"./,
     );
   });
 
   it('rejects improperly formatted url', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Url', ['mailto:http://google.com']),
-      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTPS or data url, but got "mailto:http:\/\/google.com"./,
+      /The following errors were found when validating the result of the formula "Url":\nProperty with hintType "url" must be a valid HTTPS or data url, but got "mailto:http:\/\/google.com"./,
     );
   });
 
   it('rejects garbage url', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Url', ['jasiofjsdofjiaof']),
-      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTPS or data url, but got "jasiofjsdofjiaof"./,
+      /The following errors were found when validating the result of the formula "Url":\nProperty with hintType "url" must be a valid HTTPS or data url, but got "jasiofjsdofjiaof"./,
     );
   });
 
@@ -321,7 +321,7 @@ describe('Property validation in objects', () => {
   it('rejects improperly formatted email', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Email', ['derp']),
-      /The following errors were found when validating the result of the formula "Email":\nProperty with codaType "email" must be a valid email address, but got "derp"./,
+      /The following errors were found when validating the result of the formula "Email":\nProperty with hintType "email" must be a valid email address, but got "derp"./,
     );
   });
 

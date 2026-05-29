@@ -39,7 +39,7 @@ const RepoSchema = sdk.makeObjectSchema({
     description: { type: sdk.ValueType.String },
     url: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
       fromKey: "html_url",
     },
     watchers: { type: sdk.ValueType.Number, fromKey: "watchers_count" },

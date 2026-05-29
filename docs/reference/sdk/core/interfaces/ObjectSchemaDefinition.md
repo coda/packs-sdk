@@ -35,7 +35,7 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 ***
 
-### codaType?
+### ~~codaType?~~
 
 > `optional` **codaType**: [`Person`](../enumerations/ValueHintType.md#person) \| [`Reference`](../enumerations/ValueHintType.md#reference) \| [`SelectList`](../enumerations/ValueHintType.md#selectlist)
 
@@ -44,6 +44,11 @@ A hint for how Coda should interpret and render this object value.
 For example, an object can represent a person (user) in a Coda doc, with properties for the
 email address of the person and their name. Using `ValueHintType.Person` tells Coda to
 render such a value as an @-reference to that person, rather than a basic object chip.
+
+#### Deprecated
+
+Use [ObjectSchemaDefinition.hintType](#hinttype) instead. Supported indefinitely for backwards
+compatibility.
 
 ***
 
@@ -129,6 +134,18 @@ projections have been created for them.
 
 ***
 
+### hintType?
+
+> `optional` **hintType**: [`Person`](../enumerations/ValueHintType.md#person) \| [`Reference`](../enumerations/ValueHintType.md#reference) \| [`SelectList`](../enumerations/ValueHintType.md#selectlist)
+
+A hint for how Coda should interpret and render this object value.
+
+For example, an object can represent a person (user) in a Coda doc, with properties for the
+email address of the person and their name. Using `ValueHintType.Person` tells Coda to
+render such a value as an @-reference to that person, rather than a basic object chip.
+
+***
+
 ### ~~id?~~
 
 > `optional` **id**: `K`
@@ -199,7 +216,7 @@ The name of a property within [ObjectSchemaDefinition.properties](#properties) t
 navigate users to more details about this object
 
 Must be a [ValueType.String](../enumerations/ValueType.md#string) property with a [ValueHintType.Url](../enumerations/ValueHintType.md#url)
-[ObjectSchemaDefinition.codaType](#codatype).
+[ObjectSchemaDefinition.hintType](#hinttype).
 
 ***
 
@@ -240,13 +257,13 @@ edits this property.
 properties: {
   color: {
      type: sdk.ValueType.String,
-     codaType: sdk.ValueHintType.SelectList,
+     hintType: sdk.ValueHintType.SelectList,
      mutable: true,
      options: ['red', 'green', 'blue'],
   },
   user: {
      type: sdk.ValueType.String,
-     codaType: sdk.ValueHintType.SelectList,
+     hintType: sdk.ValueHintType.SelectList,
      mutable: true,
      options: async function (context) {
        let url = sdk.withQueryParams("https://example.com/userSearch", { name: context.search });

@@ -23,11 +23,11 @@ const ThingSchema = sdk.makeObjectSchema({
     description: { type: sdk.ValueType.String },
     picture: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
     link: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     // TODO: Add more properties.
   },
@@ -254,11 +254,11 @@ const WeatherSchema = sdk.makeObjectSchema({
     wind: { type: sdk.ValueType.String, fromKey: "windSpeed" },
     icon: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageReference,
+      hintType: sdk.ValueHintType.ImageReference,
     },
     link: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
   },
   displayProperty: "summary",
@@ -368,7 +368,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     priority: {
       description: "The priority of the task.",

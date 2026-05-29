@@ -220,7 +220,7 @@ function tryParseDateTimeString(result, schema) {
 }
 function tryParseUrl(result, schema) {
     const invalidUrlError = {
-        message: `Property with codaType "${schema.codaType}" must be a valid HTTPS or data url, but got "${result}".`,
+        message: `Property with hintType "${schema.codaType}" must be a valid HTTPS or data url, but got "${result}".`,
     };
     try {
         const url = (0, url_parse_1.default)(result);
@@ -234,7 +234,7 @@ function tryParseUrl(result, schema) {
 }
 function tryParseEmail(result, schema) {
     const invalidEmailError = {
-        message: `Property with codaType "${schema.codaType}" must be a valid email address, but got "${result}".`,
+        message: `Property with hintType "${schema.codaType}" must be a valid email address, but got "${result}".`,
     };
     if (!(0, string_1.isEmail)(result)) {
         return invalidEmailError;

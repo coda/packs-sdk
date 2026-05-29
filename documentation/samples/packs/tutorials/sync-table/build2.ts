@@ -32,11 +32,11 @@ const BookSchema = sdk.makeObjectSchema({
     },
     thumbnail: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.ImageAttachment,
+      hintType: sdk.ValueHintType.ImageAttachment,
     },
     link: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
   },
   displayProperty: "title",

@@ -41,17 +41,17 @@ const SunSchema = sdk.makeObjectSchema({
     daylight: {
       description: "How much daylight there will be.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Duration,
+      hintType: sdk.ValueHintType.Duration,
     },
     sunriseUTC: {
       description: "When the sun will rise (in UTC).",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Time,
+      hintType: sdk.ValueHintType.Time,
     },
     sunsetUTC: {
       description: "When the sun will set (in UTC).",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Time,
+      hintType: sdk.ValueHintType.Time,
     },
   },
   // Which of the properties defined above will be shown inside the chip.
@@ -139,7 +139,7 @@ export const pack = sdk.newPack();
 // schema, but that doesn't work in this case since a task itself can contain
 // a reference to a parent task.
 const TaskReferenceSchema = sdk.makeObjectSchema({
-  codaType: sdk.ValueHintType.Reference,
+  hintType: sdk.ValueHintType.Reference,
   properties: {
     name: { type: sdk.ValueType.String, required: true },
     id: { type: sdk.ValueType.String, required: true },
@@ -168,7 +168,7 @@ const TaskSchema = sdk.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",

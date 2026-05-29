@@ -69,7 +69,7 @@ pack.addDynamicSyncTable({
     let properties: sdk.ObjectSchemaProperties = {
       submittedAt: {
         type: sdk.ValueType.String,
-        codaType: sdk.ValueHintType.DateTime,
+        hintType: sdk.ValueHintType.DateTime,
       },
       responseId: {
         type: sdk.ValueType.String,
@@ -217,7 +217,7 @@ function getPropertySchema(field): sdk.Schema & sdk.ObjectSchemaProperty {
       break;
     case "date":
       schema.type = sdk.ValueType.String;
-      schema.codaType = sdk.ValueHintType.Date;
+      schema.hintType = sdk.ValueHintType.Date;
       break;
     case "multiple_choice":
       let isMultiselect = field.properties.allow_multiple_selection;

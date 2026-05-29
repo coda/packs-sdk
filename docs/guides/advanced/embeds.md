@@ -26,7 +26,7 @@ Pack formulas can generate an embed by returning a URL with the `Embed` value hi
 pack.addFormula({
   // ...
   resultType: sdk.ValueType.String,
-  codaType: sdk.ValueHintType.Embed,
+  hintType: sdk.ValueHintType.Embed,
   execute: async function ([], context) {
     // TODO: Build or fetch embed URL.
     return embedUrl;
@@ -44,7 +44,7 @@ pack.addFormula({
   resultType: sdk.ValueType.String,
   schema: {
     type: sdk.ValueType.String,
-    codaType: sdk.ValueHintType.Embed,
+    hintType: sdk.ValueHintType.Embed,
     force: true,
   },
   execute: async function ([], context) {

@@ -8,14 +8,14 @@ const FileSchema = sdk.makeObjectSchema({
     path: { type: sdk.ValueType.String, fromKey: "path_display" },
     url: {
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Url,
+      hintType: sdk.ValueHintType.Url,
     },
     thumbnail: {
       type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc. This is required, since the thumbnail image URLs returned by
       // TemporaryBlobStorage expire.
-      codaType: sdk.ValueHintType.ImageAttachment,
+      hintType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },
   },

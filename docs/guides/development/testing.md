@@ -171,7 +171,7 @@ The validator will check for things like:
 - Does the type of the return value match the type declared in the schema? For example, if you declared that your formula returns a number but it returns a string.
 - If your formula returns an object (like all sync formulas), do all of the child properties in that object match the types declared in the schema?
 - Are all properties that are declared as `required` in the schema present and non-empty?
-- If the schema for a property declares a `codaType` type hint, can the value actually be interpreted as the hinted type? For example, if you declare a property as a string and give a hint type of `ValueType.DateTime`, the validator will try to parse the value as a datetime and give an error if that fails.
+- If the schema for a property declares a `hintType` type hint, can the value actually be interpreted as the hinted type? For example, if you declare a property as a string and give a hint type of `ValueType.DateTime`, the validator will try to parse the value as a datetime and give an error if that fails.
 
 The validator does not perfectly represent how the platform will process your return values at runtime but is intended to help catch the most common bugs so that you can fix them before uploading your Pack.
 

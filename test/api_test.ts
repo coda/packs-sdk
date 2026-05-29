@@ -13,6 +13,7 @@ import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
 import type {SyncExecutionContext} from '../api_types';
 import type {Type} from '../api_types';
+import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {ensureExists} from '../helpers/ensure';
 import {makeDynamicSyncTable} from '../api';
@@ -558,6 +559,56 @@ describe('API test', () => {
       });
       const result = await formula.execute([] as any, {} as any);
       assert.deepEqual(result, [{foo: 'blah'}]);
+    });
+
+    it('hoists hintType onto a string result schema as codaType', () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [],
+        hintType: ValueHintType.Markdown,
+        execute: () => 'blah',
+      });
+      assert.deepEqual((formula as any).schema, {type: ValueType.String, codaType: ValueHintType.Markdown});
+    });
+
+    it('hoists hintType onto a numeric result schema as codaType', () => {
+      const formula = makeFormula({
+        resultType: ValueType.Number,
+        name: 'Test',
+        description: '',
+        parameters: [],
+        hintType: ValueHintType.Percent,
+        execute: () => 0.5,
+      });
+      assert.deepEqual((formula as any).schema, {type: ValueType.Number, codaType: ValueHintType.Percent});
+    });
+
+    it('still hoists the deprecated codaType onto a string result schema', () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [],
+        codaType: ValueHintType.Markdown,
+        execute: () => 'blah',
+      });
+      assert.deepEqual((formula as any).schema, {type: ValueType.String, codaType: ValueHintType.Markdown});
+    });
+
+    it('throws when a formula sets conflicting hintType and codaType', () => {
+      expect(() =>
+        makeFormula({
+          resultType: ValueType.String,
+          name: 'Test',
+          description: '',
+          parameters: [],
+          hintType: ValueHintType.Markdown,
+          codaType: ValueHintType.Html,
+          execute: () => 'blah',
+        } as any),
+      ).to.throw(/cannot specify both "hintType".*"codaType"/);
     });
   });
 
