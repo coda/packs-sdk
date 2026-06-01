@@ -31,7 +31,7 @@ It may take a few minutes for the repl to fully initialize. When it's complete y
 
 ## Test the Pack
 
-To finish the setup and test the Pack, click the **Run** button in the Replit UI. This will install the Node dependencies and run following command in the console:
+To finish the setup and test the Pack, open the **Console** tab and click the Run button :material-play: in the Replit UI. This will install the Node dependencies and run following command in the console:
 
 ```shell
 npx packs execute pack.ts Hello "World"
