@@ -353,6 +353,9 @@ plugins:
           "reference/sdk/variables/core.SvgConstants.DataUrlPrefixWithDarkModeSupport.md": "reference/sdk/core/namespaces/SvgConstants/variables/DataUrlPrefixWithDarkModeSupport.md"
           "reference/sdk/variables/core.ValidFetchMethods.md": "reference/sdk/core/variables/ValidFetchMethods.md"
 
+          # 2026-06-01: Delete the Gitpod tutorial.
+          "tutorials/get-started/gitpod.md": "tutorials/get-started/cli.md"
+
     # Generate an RSS feed for the blog.
     # See: https://guts.github.io/mkdocs-rss-plugin/
     - rss:

@@ -39,7 +39,7 @@ Using the Pack Studio you can write, build, and deploy your Pack all from your b
 
 [Get started][get_started]{ .md-button .md-button--primary }
 
-Or for you power users, build a Pack using the `packs` command line tool on your [local machine][tutorial_cli], [GitHub :octicons-mark-github-16:][tutorial_github], [Gitpod :simple-gitpod:][tutorial_gitpod], or [Replit :simple-replit:][tutorial_replit].
+Or for you power users, build a Pack using the `packs` command line tool on your [local machine][tutorial_cli], [GitHub :octicons-mark-github-16:][tutorial_github], or [Replit :simple-replit:][tutorial_replit].
 
 </div>
 
@@ -124,5 +124,4 @@ Makers have been busy building Packs of all types, and many have published their
 [videos]: tutorials/videos.md
 [tutorial_cli]: tutorials/get-started/cli.md
 [tutorial_github]: tutorials/get-started/github.md
-[tutorial_gitpod]: tutorials/get-started/gitpod.md
 [tutorial_replit]: tutorials/get-started/replit.md
