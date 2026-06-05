@@ -14,17 +14,6 @@ We are enabling developers like you to leverage our 16+ years of investment in A
 - **Enterprise-readiness** - The platform provides the security, compliance, and controls that Enterprise companies require, leaving you more time to focus on delivering value.
 
 
-## Apply to build with us
-
-The full agent developer experience is currently in a closed beta, with only select partners able to publish agents. If you are interested in developing a solution with us, fill out the application form.
-
-[Partner Application Form][partner_form]{ .md-button .md-button--primary }
-
-If you are interested in building a solution for internal use at your company, please contact sales to be added to the Early Access Program for customers.
-
-[Customer Early Access Form][early_access_form]{ .md-button }
-
-
 ## Agents extend Packs
 
 Agents are built on the Packs platform. Packs are a plugin system originally built for Coda. While most of the features in the Packs platform were initially created to enhance Coda docs, they turned out to be an excellent foundation for building agents as well.
