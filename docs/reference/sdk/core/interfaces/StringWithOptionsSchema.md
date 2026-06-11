@@ -30,7 +30,7 @@ Allow custom, user-entered strings in addition to [PropertyWithOptions.options](
 
 > **codaType**: [`SelectList`](../enumerations/ValueHintType.md#selectlist)
 
-Instructs Coda to render this value as a select list.
+Instructs Superhuman Docs to render this value as a select list.
 
 #### Overrides
 

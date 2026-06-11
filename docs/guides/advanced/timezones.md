@@ -4,9 +4,9 @@ description: Work with dates and times across the various timezone contexts in a
 cSpell:words: Luxon
 ---
 
-# Timezones in Coda
+# Timezones in Superhuman Docs
 
-Every Coda document has a **Timezone** setting in the **Region** section of the settings menu, that defaults to the timezone of the device that created it. All dates and times entered in the document are interpreted in the context of that timezone. Users often don't need to be aware this, since all of their interactions with the dates and times take place in the context of that doc.
+Every document has a **Timezone** setting in the **Region** section of the settings menu, that defaults to the timezone of the device that created it. All dates and times entered in the document are interpreted in the context of that timezone. Users often don't need to be aware this, since all of their interactions with the dates and times take place in the context of that doc.
 
 Packs don't have a configurable timezone however, and all date and time operations in Pack code run in [Coordinated Universal Time (UTC)][wikipedia_utc]. The timezone of the document is passed to Pack formulas as [`context.timezone`][ExecutionContext_timezone], containing an [IANA timezone identifier][wikipedia_tz] (ex: `America/New_York`).
 
@@ -18,7 +18,7 @@ Any date or time values passed into a Pack are shifted from the doc's timezone t
 !!! info
     Timezone shifting of parameters happens even for date-only (ex: `11/12/1955`) and time-only (`10:04 PM`) values. As per the [Parameters guide][parameters_date], these values are passed to Packs as full `Date` objects.
 
-Likewise when returning a date or time value Coda will shift the value back. When the value represents an exact moment in time (either a number of seconds since the epoch or a full date and time string with a timezone identifier) it will be shifted to that equivalent moment in the document's timezone. However, if the Pack returns a string which represents a relative date or time (it's just a date or time, or has no timezone identifier) it will be assumed that it's already in the timezone of the document and won't be shifted.
+Likewise when returning a date or time value Superhuman Docs will shift the value back. When the value represents an exact moment in time (either a number of seconds since the epoch or a full date and time string with a timezone identifier) it will be shifted to that equivalent moment in the document's timezone. However, if the Pack returns a string which represents a relative date or time (it's just a date or time, or has no timezone identifier) it will be assumed that it's already in the timezone of the document and won't be shifted.
 
 
 ## Working with timezones {: #working}

@@ -5,7 +5,7 @@ description: Configure your Pack to request credentials from the user and pass t
 
 # Authenticating with other services
 
-One of the key use cases for Packs is integrating Coda with other apps and services, which often involves some form of authentication. When building a Pack you specify the type of authentication required by the API and the platform handles the credentials exchange, token storage, and account management.
+One of the key use cases for Packs is integrating Superhuman with other apps and services, which often involves some form of authentication. When building a Pack you specify the type of authentication required by the API and the platform handles the credentials exchange, token storage, and account management.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -14,7 +14,7 @@ One of the key use cases for Packs is integrating Coda with other apps and servi
 
 Packs that use system-wide authentication (all users use the Pack makers's credentials) don't require any additional setup by the user, and can be used just like Packs without any authentication.
 
-Packs that support per-user authentication require some additional setup. Users must sign in to their accounts and connect them to Coda, as well as choose which account to authenticate with when using the building blocks from that Pack.
+Packs that support per-user authentication require some additional setup. Users must sign in to their accounts and connect them to Superhuman Docs, as well as choose which account to authenticate with when using the building blocks from that Pack.
 
 
 ### Connecting an account
@@ -323,13 +323,13 @@ pack.setUserAuthentication({
 Some APIs use short-lived tokens which must be obtained through an credential exchange or approval process. The industry-wide standard for this is OAuth 2.0, which is supported in the Pack SDK. You can read more about it in the [OAuth guide][oauth_guide]. Other forms of token exchange are not currently supported.
 
 
-### Coda API token
+### Superhuman Docs API token
 
-Packs that connect to the Coda API should use [`CodaApiHeaderBearerToken`][CodaApiHeaderBearerToken] authentication, which works much like `HeaderBearerToken` but is optimized for the Coda API. It allows the user to easily create new Coda API tokens directly from the sign-in flow, passing them in the `Authorization` header of outgoing requests. For example:
+Packs that connect to the Superhuman Docs API should use [`CodaApiHeaderBearerToken`][CodaApiHeaderBearerToken] authentication, which works much like `HeaderBearerToken` but is optimized for the Superhuman Docs API. It allows the user to easily create new Superhuman Docs API tokens directly from the sign-in flow, passing them in the `Authorization` header of outgoing requests. For example:
 
 ```
 GET /apis/v1/whoami
-Host: coda.io
+Host: docs.superhuman.com
 Authorization: Bearer <token>
 ```
 
@@ -341,7 +341,7 @@ pack.setUserAuthentication({
 });
 ```
 
-Enabling the option `shouldAutoAuthSetup: true` further simplifies the sign-in experience, automatically creating the Coda API token with default settings.
+Enabling the option `shouldAutoAuthSetup: true` further simplifies the sign-in experience, automatically creating the Superhuman Docs API token with default settings.
 
 [View Sample Code][sample_coda_api]{ .md-button }
 
@@ -396,7 +396,7 @@ pack.addFormula({
 
 ## Setting account names {: #name}
 
-By default the accounts that users connect to will be given the same name as their Coda account. While this works fine the majority of the time, if they are connecting to a team account or multiple accounts it is not very helpful. Therefore we strongly recommend that you implement a [`getConnectionName`][getConnectionName] function in your authentication configuration to set a more meaningful account name. This is typically done by making a Fetcher request to a user information endpoint in the API and then returning the name of the account.
+By default the accounts that users connect to will be given the same name as their Superhuman account. While this works fine the majority of the time, if they are connecting to a team account or multiple accounts it is not very helpful. Therefore we strongly recommend that you implement a [`getConnectionName`][getConnectionName] function in your authentication configuration to set a more meaningful account name. This is typically done by making a Fetcher request to a user information endpoint in the API and then returning the name of the account.
 
 ```ts
 pack.setUserAuthentication({
@@ -556,10 +556,10 @@ There are services however where each account is associated with a distinct doma
 [sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
 [sample_multiple_headers]: ../../../samples/topic/authentication.md#multiple-headers
 
-[account_settings]: https://coda.io/account
+[account_settings]: https://docs.superhuman.com/account
 [AuthenticationType]: ../../../reference/sdk/core/enumerations/AuthenticationType.md
 [support]: ../../../support/index.md
-[coda_api_auth]: https://coda.io/developers/apis/v1#section/Authentication
+[coda_api_auth]: https://docs.superhuman.com/developers/apis/v1#section/Authentication
 [HeaderBearerToken]: ../../../reference/sdk/core/enumerations/AuthenticationType.md#headerbearertoken
 [CustomHeaderToken]: ../../../reference/sdk/core/enumerations/AuthenticationType.md#customheadertoken
 [QueryParamToken]: ../../../reference/sdk/core/enumerations/AuthenticationType.md#queryparamtoken

@@ -62,48 +62,49 @@ exports.fileArray = {
     items: Type.file,
 };
 /**
- * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+ * Enumeration of types of formula parameters. These describe semantic value types (as opposed to
+ * JavaScript value types).
  */
 var ParameterType;
 (function (ParameterType) {
     /**
-     * Indicates a parameter that is a Coda text value.
+     * Indicates a parameter that is a text value.
      */
     ParameterType["String"] = "string";
     /**
-     * Indicates a parameter that is a Coda number value.
+     * Indicates a parameter that is a number value.
      */
     ParameterType["Number"] = "number";
     /**
-     * Indicates a parameter that is a Coda boolean value.
+     * Indicates a parameter that is a boolean value.
      */
     ParameterType["Boolean"] = "boolean";
     /**
-     * Indicates a parameter that is a Coda date value (which includes time and datetime values).
+     * Indicates a parameter that is a date value (which includes time and datetime values).
      */
     ParameterType["Date"] = "date";
     /**
-     * Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+     * Indicates a parameter that is a rich text value that should be passed to the pack as HTML.
      */
     ParameterType["Html"] = "html";
     /**
-     * Indicates a parameter that is a Coda image. The pack is passed an image URL.
+     * Indicates a parameter that is an image. The pack is passed an image URL.
      */
     ParameterType["Image"] = "image";
     /**
-     * Indicates a parameter that is a Coda file. The pack is passed a file URL.
+     * Indicates a parameter that is a file. The pack is passed a file URL.
      */
     ParameterType["File"] = "file";
     /**
-     * Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+     * Indicates a parameter that is a rich text value that should be passed to the pack as Markdown.
      */
     ParameterType["Markdown"] = "markdown";
     /**
-     * Indicates a parameter that is a Coda email value.
+     * Indicates a parameter that is an email value.
      */
     ParameterType["Email"] = "email";
     /**
-     * Indicates a parameter that is a list of Coda text values.
+     * Indicates a parameter that is a list of text values.
      */
     ParameterType["StringArray"] = "stringArray";
     /**
@@ -111,7 +112,7 @@ var ParameterType;
      */
     ParameterType["SparseStringArray"] = "sparseStringArray";
     /**
-     * Indicates a parameter that is a list of Coda number values.
+     * Indicates a parameter that is a list of Superhuman Docs number values.
      */
     ParameterType["NumberArray"] = "numberArray";
     /**
@@ -119,7 +120,7 @@ var ParameterType;
      */
     ParameterType["SparseNumberArray"] = "sparseNumberArray";
     /**
-     * Indicates a parameter that is a list of Coda boolean values.
+     * Indicates a parameter that is a list of boolean values.
      */
     ParameterType["BooleanArray"] = "booleanArray";
     /**
@@ -127,7 +128,7 @@ var ParameterType;
      */
     ParameterType["SparseBooleanArray"] = "sparseBooleanArray";
     /**
-     * Indicates a parameter that is a list of Coda email values.
+     * Indicates a parameter that is a list of email values.
      */
     ParameterType["EmailArray"] = "emailArray";
     /**
@@ -135,7 +136,7 @@ var ParameterType;
      */
     ParameterType["SparseEmailArray"] = "sparseEmailArray";
     /**
-     * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+     * Indicates a parameter that is a list of date values (which includes time and datetime values).
      *
      * Currently, when such a parameter is used with a sync table formula or an action formula
      * ({@link BaseFormulaDef.isAction}), which will generate a builder UI for selecting parameters, a date array
@@ -148,7 +149,7 @@ var ParameterType;
      */
     ParameterType["SparseDateArray"] = "sparseDateArray";
     /**
-     * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+     * Indicates a parameter that is a list of rich text values that should be passed to the pack as HTML.
      */
     ParameterType["HtmlArray"] = "htmlArray`";
     /**
@@ -156,7 +157,7 @@ var ParameterType;
      */
     ParameterType["SparseHtmlArray"] = "sparseHtmlArray";
     /**
-     * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
+     * Indicates a parameter that is a list of image values. The pack is passed a list of image URLs.
      */
     ParameterType["ImageArray"] = "imageArray";
     /**
@@ -164,7 +165,7 @@ var ParameterType;
      */
     ParameterType["SparseImageArray"] = "sparseImageArray";
     /**
-     * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
+     * Indicates a parameter that is a list of file values. The pack is passed a list of file URLs.
      */
     ParameterType["FileArray"] = "fileArray";
     /**
@@ -172,7 +173,8 @@ var ParameterType;
      */
     ParameterType["SparseFileArray"] = "sparseFileArray";
     /**
-     * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+     * Indicates a parameter that is a list of rich text values that should be passed to the
+     * pack as Markdown.
      */
     ParameterType["MarkdownArray"] = "markdownArray`";
     /**
@@ -307,7 +309,7 @@ var InvocationSource;
      */
     InvocationSource["Brain"] = "Brain";
     /**
-     * A Coda doc.
+     * A doc.
      */
     InvocationSource["Doc"] = "Doc";
     /**

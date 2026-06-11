@@ -11,7 +11,7 @@ search:
 # Interface: ImageSchema
 
 A schema representing a return value or object property that is provided as a string,
-which Coda should interpret as an image.
+which Superhuman Docs should interpret as an image.
 
 ## Extends
 
@@ -23,7 +23,7 @@ which Coda should interpret as an image.
 
 > **codaType**: [`ImageReference`](../enumerations/ValueHintType.md#imagereference) \| [`ImageAttachment`](../enumerations/ValueHintType.md#imageattachment)
 
-Instructs Coda to render this value as an Image.
+Instructs Superhuman Docs to render this value as an Image.
 
 #### Overrides
 

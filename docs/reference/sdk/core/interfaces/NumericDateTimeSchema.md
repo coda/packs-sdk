@@ -11,7 +11,7 @@ search:
 # Interface: NumericDateTimeSchema
 
 A schema representing a return value or object property that is provided as a number,
-which Coda should interpret as a datetime. The given number should be in seconds since the Unix epoch.
+which Superhuman Docs should interpret as a datetime. The given number should be in seconds since the Unix epoch.
 
 ## Extends
 
@@ -23,7 +23,7 @@ which Coda should interpret as a datetime. The given number should be in seconds
 
 > **codaType**: [`DateTime`](../enumerations/ValueHintType.md#datetime)
 
-Instructs Coda to render this value as a datetime.
+Instructs Superhuman Docs to render this value as a datetime.
 
 #### Overrides
 
@@ -35,7 +35,8 @@ Instructs Coda to render this value as a datetime.
 
 > `optional` **dateFormat**: `string`
 
-A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+format.
 
 Only applies when this is used as a sync table property.
 
@@ -60,8 +61,8 @@ explain the purpose or contents of any property that is not self-evident.
 
 > `optional` **timeFormat**: `string`
 
-A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-used when rendering the value.
+A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+format, used when rendering the value.
 
 Only applies when this is used as a sync table property.
 

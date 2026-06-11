@@ -18,7 +18,7 @@ The source applications that can invoke a Pack.
 
 > **Doc**: `"Doc"`
 
-A Coda doc.
+A doc.
 
 ***
 

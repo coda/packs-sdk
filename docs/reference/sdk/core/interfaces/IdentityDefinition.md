@@ -14,7 +14,7 @@ An identifier for a schema, allowing other schemas to reference it.
 
 You may optionally specify an [ObjectSchemaDefinition.identity](ObjectSchemaDefinition.md#identity) when defining an object schema.
 This signals that this schema represents an important named entity in the context of your pack.
-Schemas with identities may be referenced by other schemas, in which case Coda
+Schemas with identities may be referenced by other schemas, in which case Superhuman Docs
 will render such values as @-references in the doc, allowing you to create relationships
 between entities.
 

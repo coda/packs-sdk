@@ -16,24 +16,24 @@ or are too large to return inline.
 When syncing data from certain APIs, a response object may include the URL of a file or
 image that can only be downloaded with the user's authentication credentials. Normally,
 you can just return an image or file URL from a formula invocation, and if the schema
-indicates that the value represents an attachment, Coda will ingest the data at that URL
-and host it from Coda. However, if the URL requires authentication, Coda will be unable
+indicates that the value represents an attachment, Superhuman Docs will ingest the data at that URL
+and host it from Superhuman Docs. However, if the URL requires authentication, Superhuman Docs will be unable
 to download the data since this ingestion does not happen within the packs execution
 environment.
 
 The solution is for your pack code to fetch the data at the URL, since the pack
 execution environment will apply the user's authentication, and then you can
 stash the downloaded value in `TemporaryBlobStorage`, which will return a temporary
-URL that you can return from the pack. Coda will be able to ingest the data from
+URL that you can return from the pack. Superhuman Docs will be able to ingest the data from
 that temporary URL.
 
 Similarly, suppose your formula generates a very large value like a dynamically-generated
-image that you wish to return and have Coda render. Pack return values are meant to be
+image that you wish to return and have Superhuman Docs render. Pack return values are meant to be
 fairly small, representing human-readable data. Large values like images are meant to
 be returned as URLs referencing that data. So rather than return the raw image data,
 your pack should use [storeBlob](#storeblob) to upload that large data to temporary storage.
 You will be returned a URL that you can then return with your formula response, and
-Coda will ingest the data from that URL into permanent storage.
+Superhuman Docs will ingest the data from that URL into permanent storage.
 
 ## Methods
 
@@ -41,11 +41,11 @@ Coda will ingest the data from that URL into permanent storage.
 
 > **storeBlob**(`blobData`, `contentType`, `opts?`): `Promise`\<`string`\>
 
-Stores the given data as a file with the given content type in Coda-hosted temporary storage.
+Stores the given data as a file with the given content type in Superhuman-hosted temporary storage.
 Returns a URL for the temporary file that you should return in your formula response.
 
 The URL expires after 15 minutes by default, but you may pass a custom expiry, however
-Coda reserves the right to ignore long expirations.
+the platform reserves the right to ignore long expirations.
 
 If the `downloadFilename` parameter is specified, when opened in the browser the file will
 be downloaded with the file name provided.
@@ -71,11 +71,11 @@ be downloaded with the file name provided.
 > **storeUrl**(`url`, `opts?`, `fetchOpts?`): `Promise`\<`string`\>
 
 Fetches the data at the given URL, applying user authentication credentials as appropriate,
-and stores it in Coda-hosted temporary storage. Returns a URL for the temporary file
+and stores it in Superhuman-hosted temporary storage. Returns a URL for the temporary file
 that you should return in your formula response.
 
 The URL expires after 15 minutes by default, but you may pass a custom expiry, however
-Coda reserves the right to ignore long expirations.
+the platform reserves the right to ignore long expirations.
 
 If the `downloadFilename` parameter is specified, when opened in the browser the file will
 be downloaded with the file name provided.

@@ -26,7 +26,7 @@ also an option in the user interface.
 
 > **codaType**: [`Email`](../enumerations/ValueHintType.md#email)
 
-Instructs Coda to render this value as an email address.
+Instructs Superhuman Docs to render this value as an email address.
 
 #### Overrides
 

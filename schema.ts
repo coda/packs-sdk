@@ -67,8 +67,8 @@ export enum ValueHintType {
    */
   Email = 'email',
   /**
-   * Indicates to interpret and render the value as a Coda person reference. The provided value should be
-   * an object whose `idProperty` property is an email address, which Coda will try to resolve to a user
+   * Indicates to interpret and render the value as a Superhuman Docs person reference. The provided value should be
+   * an object whose `idProperty` property is an email address, which Superhuman Docs will try to resolve to a user
    * and render an @-reference to the user.
    *
    * @example
@@ -96,7 +96,7 @@ export enum ValueHintType {
   Currency = 'currency',
   /**
    * Indicates to interpret and render the value as an image. The provided value should be a URL that
-   * points to an image. Coda will hotlink to the image when rendering it a doc.
+   * points to an image. Superhuman Docs will hotlink to the image when rendering it a doc.
    *
    * Using {@link ImageAttachment} is recommended instead, so that the image is always accessible
    * and won't appear as broken if the source image is later deleted.
@@ -104,7 +104,7 @@ export enum ValueHintType {
   ImageReference = 'image',
   /**
    * Indicates to interpret and render the value as an image. The provided value should be a URL that
-   * points to an image. Coda will ingest the image and host it from Coda infrastructure.
+   * points to an image. Superhuman Docs will ingest the image and host it from Superhuman infrastructure.
    */
   ImageAttachment = 'imageAttachment',
   /**
@@ -112,11 +112,11 @@ export enum ValueHintType {
    */
   Url = 'url',
   /**
-   * Indicates to interpret a text value as Markdown, which will be converted and rendered as Coda rich text.
+   * Indicates to interpret a text value as Markdown, which will be converted and rendered as rich text.
    */
   Markdown = 'markdown',
   /**
-   * Indicates to interpret a text value as HTML, which will be converted and rendered as Coda rich text.
+   * Indicates to interpret a text value as HTML, which will be converted and rendered as rich text.
    */
   Html = 'html',
   /**
@@ -125,8 +125,8 @@ export enum ValueHintType {
    */
   Embed = 'embed',
   /**
-   * Indicates to interpret and render the value as a Coda @-reference to a table row. The provided value should
-   * be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
+   * Indicates to interpret and render the value as a Superhuman Docs @-reference to a table row. The provided value
+   * should be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
    * used must specify an identity that specifies the desired sync table.
    *
    * Normally a reference schema is constructed from the schema object being referenced using the helper
@@ -152,7 +152,8 @@ export enum ValueHintType {
   Reference = 'reference',
   /**
    * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
-   * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+   * pointing to a file of a supported type. Superhuman Docs will ingest the file and host it from
+   * Superhuman infrastructure.
    */
   Attachment = 'attachment',
   /**
@@ -312,7 +313,7 @@ export type NumberSchema =
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   /** Identifies this schema as relating to a number value. */
   type: ValueType.Number;
-  /** An optional type hint instructing Coda about how to interpret or render this value. */
+  /** An optional type hint instructing Superhuman Docs about how to interpret or render this value. */
   codaType?: T;
 }
 
@@ -321,7 +322,7 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
  * i.e. a raw number with an optional decimal precision.
  */
 export interface NumericSchema extends BaseNumberSchema {
-  /** If specified, instructs Coda to render this value as a percentage. */
+  /** If specified, instructs Superhuman Docs to render this value as a percentage. */
   codaType?: ValueHintType.Percent; // Can also be undefined if it's a vanilla number
   /** The decimal precision. The number will be rounded to this precision when rendered. */
   precision?: number;
@@ -331,14 +332,14 @@ export interface NumericSchema extends BaseNumberSchema {
 
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a date. The given number should be in seconds since the Unix epoch.
+ * which Superhuman Docs should interpret as a date. The given number should be in seconds since the Unix epoch.
  */
 export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
-  /** Instructs Coda to render this value as a date. */
+  /** Instructs Superhuman Docs to render this value as a date. */
   codaType: ValueHintType.Date;
   /**
-   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
-   * used when rendering the value.
+   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+   * format, used when rendering the value.
    *
    * Only applies when this is used as a sync table property.
    */
@@ -347,15 +348,15 @@ export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> 
 
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a time. The given number should be in seconds since the Unix epoch.
+ * which Superhuman Docs should interpret as a time. The given number should be in seconds since the Unix epoch.
  * While this is a full datetime, only the time component will be rendered, so the date used is irrelevant.
  */
 export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
-  /** Instructs Coda to render this value as a time. */
+  /** Instructs Superhuman Docs to render this value as a time. */
   codaType: ValueHintType.Time;
   /**
-   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-   * used when rendering the value.
+   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+   * format, used when rendering the value.
    *
    * Only applies when this is used as a sync table property.
    */
@@ -364,20 +365,21 @@ export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> 
 
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a datetime. The given number should be in seconds since the Unix epoch.
+ * which Superhuman Docs should interpret as a datetime. The given number should be in seconds since the Unix epoch.
  */
 export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
-  /** Instructs Coda to render this value as a datetime. */
+  /** Instructs Superhuman Docs to render this value as a datetime. */
   codaType: ValueHintType.DateTime;
   /**
-   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+   * format.
    *
    * Only applies when this is used as a sync table property.
    */
   dateFormat?: string;
   /**
-   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-   * used when rendering the value.
+   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+   * format, used when rendering the value.
    *
    * Only applies when this is used as a sync table property.
    */
@@ -386,11 +388,11 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
 
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a duration. The given number should be an amount of days
+ * which Superhuman Docs should interpret as a duration. The given number should be an amount of days
  * (fractions allowed).
  */
 export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Duration> {
-  /** Instructs Coda to render this value as a duration. */
+  /** Instructs Superhuman Docs to render this value as a duration. */
   codaType: ValueHintType.Duration;
   /**
    * A refinement of {@link DurationSchema.maxUnit} to use for rounding the duration when rendering.
@@ -434,13 +436,13 @@ export enum CurrencyFormat {
  * A schema representing a return value or object property that is an amount of currency.
  */
 export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
-  /** Instructs Coda to render this value as a currency amount. */
+  /** Instructs Superhuman Docs to render this value as a currency amount. */
   codaType: ValueHintType.Currency;
   /** The decimal precision. The value is rounded to this precision when rendered. */
   precision?: number;
   /**
    * A three-letter ISO 4217 currency code, e.g. USD or EUR.
-   * If the currency code is not supported by Coda, the value will be rendered using USD.
+   * If the currency code is not supported by Superhuman Docs, the value will be rendered using USD.
    */
   currencyCode?: string;
   /** A render format for further refining how the value is rendered. */
@@ -452,7 +454,7 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
  * be rendered as a slider.
  */
 export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
-  /** Instructs Coda to render this value as a slider. */
+  /** Instructs Superhuman Docs to render this value as a slider. */
   codaType: ValueHintType.Slider;
   /** The minimum value selectable by this slider (supports number or formula). */
   minimum?: number | string;
@@ -469,7 +471,7 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
  * be rendered as a progress bar.
  */
 export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.ProgressBar> {
-  /** Instructs Coda to render this value as a progress bar. */
+  /** Instructs Superhuman Docs to render this value as a progress bar. */
   codaType: ValueHintType.ProgressBar;
   /** The minimum value selectable by this progress bar (supports number or formula). */
   minimum?: number | string;
@@ -518,7 +520,7 @@ export enum ScaleIconSet {
  * 5 star icons, with 3 of them shaded, indicating a value of 3.
  */
 export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
-  /** Instructs Coda to render this value as a scale. */
+  /** Instructs Superhuman Docs to render this value as a scale. */
   codaType: ValueHintType.Scale;
   /** The number of icons to render. */
   maximum?: number;
@@ -554,7 +556,7 @@ export enum EmailDisplayType {
  * also an option in the user interface.
  */
 export interface EmailSchema extends BaseStringSchema<ValueHintType.Email> {
-  /** Instructs Coda to render this value as an email address. */
+  /** Instructs Superhuman Docs to render this value as an email address. */
   codaType: ValueHintType.Email;
   /** How the email should be displayed in the UI. */
   display?: EmailDisplayType;
@@ -596,7 +598,7 @@ export enum LinkDisplayType {
  * The link can be displayed in the UI in multiple ways, as per the above enumeration.
  */
 export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
-  /** Instructs Coda to render this value as a hyperlink. */
+  /** Instructs Superhuman Docs to render this value as a hyperlink. */
   codaType: ValueHintType.Url;
   /** How the URL should be displayed in the UI. */
   display?: LinkDisplayType;
@@ -606,16 +608,16 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
 
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
+ * which Superhuman Docs should interpret as a date. Superhuman Docs is able to flexibly parse a number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
  */
 export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
-  /** Instructs Coda to render this value as a date. */
+  /** Instructs Superhuman Docs to render this value as a date. */
   codaType: ValueHintType.Date;
   /**
-   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
-   * used when rendering the value.
+   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+   * format, used when rendering the value.
    *
    * Only applies when this is used as a sync table property.
    */
@@ -624,32 +626,32 @@ export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
 
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as an embed value (e.g. a URL). Coda uses an external provider (iframely)
- * to handle all embeds by default. If there is no support for a given embed that you want to use,
+ * which Superhuman Docs should interpret as an embed value (e.g. a URL). Superhuman Docs uses an external provider
+ * (iframely) to handle all embeds by default. If there is no support for a given embed that you want to use,
  * you will need to use the `force` option which falls back to a generic iframe.
  */
 export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed> {
-  /** Instructs Coda to render this value as an embed. */
+  /** Instructs Superhuman Docs to render this value as an embed. */
   codaType: ValueHintType.Embed;
   /**
-   * Toggle whether to try to force embed the content in Coda. Should be kept to false for most cases.
+   * Toggle whether to try to force embed the content in Superhuman Docs. Should be kept to false for most cases.
    *
    * By default, we use an external provider (iframely) that supports and normalizes embeds for different sites.
    * If you are trying to embed an uncommon site or one that is not supported by them,
-   * you can set this to `true` to tell Coda to force render the embed. This renders a sandboxed iframe for the embed
-   * but requires user consent per-domain to actually display the embed.
+   * you can set this to `true` to tell Superhuman Docs to force render the embed. This renders a sandboxed iframe
+   * for the embed but requires user consent per-domain to actually display the embed.
    */
   force?: boolean;
 }
 
 /**
- * A schema representing a return value or object property that is provided as a string, which Coda should
+ * A schema representing a return value or object property that is provided as a string, which Superhuman Docs should
  * interpret as its internal rich text value. For "canvas column" types, `isCanvas` should be set to `true`.
  * @hidden
  */
 export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintType.CodaInternalRichText> {
   /**
-   * Instructs Coda to render this value as internal rich text.
+   * Instructs Superhuman Docs to render this value as internal rich text.
    * @hidden
    */
   codaType: ValueHintType.CodaInternalRichText;
@@ -662,14 +664,14 @@ export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintTy
 
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a time.
+ * which Superhuman Docs should interpret as a time.
  */
 export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
-  /** Instructs Coda to render this value as a date. */
+  /** Instructs Superhuman Docs to render this value as a date. */
   codaType: ValueHintType.Time;
   /**
-   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-   * used when rendering the value.
+   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+   * format, used when rendering the value.
    *
    * Only applies when this is used as a sync table property.
    */
@@ -678,23 +680,23 @@ export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
 
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a datetime. Coda is able to flexibly a parse number of formal
+ * which Superhuman Docs should interpret as a datetime. Superhuman Docs is able to flexibly a parse number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 datetime string (e.g. 2021-11-03T19:43:58): https://en.wikipedia.org/wiki/ISO_8601.
  */
 export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
-  /** Instructs Coda to render this value as a date. */
+  /** Instructs Superhuman Docs to render this value as a date. */
   codaType: ValueHintType.DateTime;
   /**
-   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
-   * used when rendering the value.
+   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+   * format, used when rendering the value.
    *
    * Only applies when this is used as a sync table property.
    */
   dateFormat?: string;
   /**
-   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-   * used when rendering the value.
+   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+   * format, used when rendering the value.
    *
    * Only applies when this is used as a sync table property.
    */
@@ -733,10 +735,10 @@ export enum ImageShapeStyle {
 
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as an image.
+ * which Superhuman Docs should interpret as an image.
  */
 export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
-  /** Instructs Coda to render this value as an Image. */
+  /** Instructs Superhuman Docs to render this value as an Image. */
   codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
   /** ImageOutline type specifying style of outline on images. If unspecified, default is Solid. */
   imageOutline?: ImageOutline;
@@ -795,7 +797,7 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
 export interface StringWithOptionsSchema
   extends BaseStringSchema<ValueHintType.SelectList>,
     PropertyWithAutocompleteWithOptionalDisplay<string> {
-  /** Instructs Coda to render this value as a select list. */
+  /** Instructs Superhuman Docs to render this value as a select list. */
   codaType: ValueHintType.SelectList;
 
   /** Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. */
@@ -805,7 +807,7 @@ export interface StringWithOptionsSchema
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
   /** Identifies this schema as a string. */
   type: ValueType.String;
-  /** An optional type hint instructing Coda about how to interpret or render this value. */
+  /** An optional type hint instructing Superhuman Docs about how to interpret or render this value. */
   codaType?: T;
 }
 
@@ -823,7 +825,7 @@ export const SimpleStringHintValueTypes = [
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 
 /**
- * A schema whose underlying value is a string, along with an optional hint about how Coda
+ * A schema whose underlying value is a string, along with an optional hint about how Superhuman Docs
  * should interpret that string.
  */
 export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes>
@@ -896,7 +898,7 @@ export interface ObjectSchemaProperty {
 
   /**
    * Without a `displayName`, a property's key will become the user-visible name. This isn't ideal
-   * because the key must also be used by the Coda formula language to refer to the property, requiring
+   * because the key must also be used by the Superhuman formula language to refer to the property, requiring
    * lossy transformation.
    *
    * You probably want to set displayName if:
@@ -934,7 +936,7 @@ export interface ObjectSchemaProperty {
   /**
    * For internal use only, Pack makers cannot set this. It is auto-populated at build time
    * and if somehow there were a value here it would be overwritten.
-   * Coda table schemas use a normalized version of a property key, so this field is used
+   * Superhuman Docs table schemas use a normalized version of a property key, so this field is used
    * internally to track what the Pack maker used as the property key, verbatim.
    * E.g., if a sync table schema had `properties: { 'foo-bar': {type: sdk.ValueType.String} }`,
    * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
@@ -964,7 +966,7 @@ export type GenericObjectSchema = ObjectSchema<string, string>;
  *
  * You may optionally specify an {@link ObjectSchemaDefinition.identity} when defining an object schema.
  * This signals that this schema represents an important named entity in the context of your pack.
- * Schemas with identities may be referenced by other schemas, in which case Coda
+ * Schemas with identities may be referenced by other schemas, in which case Superhuman Docs
  * will render such values as @-references in the doc, allowing you to create relationships
  * between entities.
  *
@@ -1027,7 +1029,7 @@ export interface PropertyIdentifierDetails {
   /**
    * An optional placeholder value, which will be rendered when the property value is an empty value
    * (null, undefined, "", [], \{\}). This will be used in the Pack card title, subtitle, and snippet.
-   * Not accessible within the Coda formula language.
+   * Not accessible within the Superhuman formula language.
    */
   placeholder?: string;
   /**
@@ -1367,16 +1369,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   /**
    * The name of a property within {@link ObjectSchemaDefinition.properties} that be used to label this object in the
    * UI.
-   * Object values can contain many properties and the Coda UI will display them as a "chip"
+   * Object values can contain many properties and the Superhuman Docs UI will display them as a "chip"
    * with only the value of the "displayProperty" property used as the chip's display label.
    * The other properties can be seen when hovering over the chip.
    */
   displayProperty?: K;
   /**
-   * A hint for how Coda should interpret and render this object value.
+   * A hint for how Superhuman Docs should interpret and render this object value.
    *
-   * For example, an object can represent a person (user) in a Coda doc, with properties for the
-   * email address of the person and their name. Using `ValueHintType.Person` tells Coda to
+   * For example, an object can represent a person (user) in a doc, with properties for the
+   * email address of the person and their name. Using `ValueHintType.Person` tells Superhuman Docs to
    * render such a value as an @-reference to that person, rather than a basic object chip.
    */
   codaType?: ObjectHintTypes;
@@ -1415,8 +1417,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * in the schema, and that the packs infrastructure should retain these unknown properties
    * rather than stripping them.
    *
-   * Properties not declared in the schema will not work properly in Coda: they cannot be
-   * used natively in the formula language and will not have correct types in Coda. But, in certain
+   * Properties not declared in the schema will not work properly in Superhuman Docs: they cannot be
+   * used natively in the formula language and will not have correct types in Superhuman Docs. But, in certain
    * scenarios they can be useful.
    */
   includeUnknownProperties?: boolean;
@@ -1745,7 +1747,7 @@ export interface ObjectSchema<K extends string, L extends string> extends Object
   identity?: Identity;
 
   /**
-   * Pack makers should never need to interact with this, it's just present for Coda's internal plumbing.
+   * Pack makers should never need to interact with this, it's just present for Superhuman Docs' internal plumbing.
    */
   __packId?: number;
 }
@@ -1756,7 +1758,7 @@ export interface ObjectSchema<K extends string, L extends string> extends Object
  * Multiple attribution nodes can be rendered all together, for example to have
  * attribution that contains both text and a logo image.
  *
- * @see [Structuring data with schemas - Data attribution](https://coda.io/packs/build/latest/guides/advanced/schemas/#attribution)
+ * @see [Structuring data with schemas - Data attribution](https://docs.superhuman.com/packs/build/latest/guides/advanced/schemas/#attribution)
  */
 export enum AttributionNodeType {
   /**

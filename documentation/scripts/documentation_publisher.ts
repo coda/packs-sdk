@@ -50,7 +50,7 @@ function getS3Bucket(env: string): string {
 }
 
 function getOriginDomainName(env: string): string {
-  const domainName = env !== 'prod' ? `${env}.coda.io` : 'coda.io';
+  const domainName = env !== 'prod' ? `${env}.coda.io` : 'docs.superhuman.com';
   return `origin.${domainName}`;
 }
 

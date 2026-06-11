@@ -129,7 +129,7 @@ const ProductSchema = sdk.makeObjectSchema({
 
 Optionally set `index.contextProperties` to a list of properties that contain short-form text that should be duplicated in each chunk of indexed text. Context properties help with retrieval, increasing the likelihood that the LLM will find the desired records.
 
-Select properties of type `String`. If you select a property of type `Array<String>`, it will be flattened into a string, comma-separated. You can use [property paths](https://coda.io/packs/build/latest/guides/advanced/schemas/#property-paths) to reference data in nested objects.
+Select properties of type `String`. If you select a property of type `Array<String>`, it will be flattened into a string, comma-separated. You can use [property paths](../../guides/advanced/schemas.md#property-paths) to reference data in nested objects.
 
 The `titleProperty` will automatically be included as a context property in each chunk.
 
@@ -223,7 +223,7 @@ const ProductSchema = sdk.makeObjectSchema({
 });
 ```
 
-In addition to helping the LLM, these descriptions will be shown to users in the Coda Formula Language editor and as initial values for column descriptions. See the [Schemas guide][schemas] for more information.
+In addition to helping the LLM, these descriptions will be shown to users in the Superhuman Formula Language editor and as initial values for column descriptions. See the [Schemas guide][schemas] for more information.
 
 ## Schema descriptions
 
@@ -267,7 +267,7 @@ Schemas annotated this way can be the top-level schema of a sync table, or neste
 
 !!! warning "`Person` objects supported, but not recommended"
 
-    Instead of setting the `userEmailProperty`, you can instead apply the value hint [`Person`][person] and set the required fields. These person schemas are treated specially when used in a Coda doc, but come with some downsides when the referenced person isn't a member of the organization or when the schema contains additional properties. Most agents should prefer the `userEmailProperty` approach mentioned above.
+    Instead of setting the `userEmailProperty`, you can instead apply the value hint [`Person`][person] and set the required fields. These person schemas are treated specially when used in a doc, but come with some downsides when the referenced person isn't a member of the organization or when the schema contains additional properties. Most agents should prefer the `userEmailProperty` approach mentioned above.
 
 
 ## Known limitations

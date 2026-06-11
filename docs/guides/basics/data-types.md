@@ -117,14 +117,14 @@ Objects are displayed in the doc as a "chip", a small rectangle with rounded cor
 
 <img src="site:images/data_types_object_hover.png" srcset="site:images/data_types_object_hover_2x.png 2x" class="screenshot" alt="Hovering over an object chip">
 
-Like Coda tables, the fields within an object can be accessed using dot notation.
+Like Superhuman Docs tables, the fields within an object can be accessed using dot notation.
 
 <img src="site:images/data_types_object_dot.png" srcset="site:images/data_types_object_dot_2x.png 2x" class="screenshot" alt="Using dot notation to access the properties of the object">
 
 
 ### Arrays
 
-Lists of data can be returned as [JavaScript arrays][mdn_array] using the [`Array`][Array] value type. The resulting array is represented as a [`List`][formula_list] in the Coda formula language.
+Lists of data can be returned as [JavaScript arrays][mdn_array] using the [`Array`][Array] value type. The resulting array is represented as a [`List`][formula_list] in the Superhuman formula language.
 
 You must also specify the [schema][schemas] of the items in the array, using the `items` property. For arrays of simple data you can define the schema inline, supplying only the `type` key.
 
@@ -166,7 +166,7 @@ pack.addFormula({
 
 ## Value hints
 
-To indicate that Coda should display your value in a more meaningful way you can set a value hint. The enumeration [`ValueHintType`][ValueHintType] defines the set of supported value hints, which correspond to the [column formats][column_formats] in Coda. The value hint is set one using the `codaType` property of a formula or schema. Hints can only be used with certain value types, for example the `Percent` value hint can only be used with the `Number` value type.
+To indicate that Superhuman Docs should display your value in a more meaningful way you can set a value hint. The enumeration [`ValueHintType`][ValueHintType] defines the set of supported value hints, which correspond to the [column formats][column_formats] in Superhuman Docs. The value hint is set one using the `codaType` property of a formula or schema. Hints can only be used with certain value types, for example the `Percent` value hint can only be used with the `Number` value type.
 
 ```ts
 pack.addFormula({
@@ -185,7 +185,7 @@ pack.addFormula({
 
 ### Markdown {. #markdown}
 
-The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the returned string as markdown and render it as rich text. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
+The [`Markdown`][hint_markdown] value hint indicates that Superhuman Docs should parse the returned string as markdown and render it as rich text. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
 
 ```ts
 pack.addFormula({
@@ -199,12 +199,12 @@ pack.addFormula({
 ```
 
 ??? example "Rendering examples"
-    <iframe src="https://coda.io/embed/Yh3vyeakVr/_subS4" width=900 height=500 style="max-width: 100%;" allow="fullscreen" loading="lazy"></iframe>
+    <iframe src="https://docs.superhuman.com/embed/Yh3vyeakVr/_subS4" width=900 height=500 style="max-width: 100%;" allow="fullscreen" loading="lazy"></iframe>
 
 
 ### HTML
 
-The [`Html`][hint_html] value hint indicates that Coda should parse the returned string as HTML and render it as rich text. Code only supports a small subset of HTML markup, limited to the basic formatting you can accomplish in [markdown](#markdown).
+The [`Html`][hint_html] value hint indicates that Superhuman Docs should parse the returned string as HTML and render it as rich text. Code only supports a small subset of HTML markup, limited to the basic formatting you can accomplish in [markdown](#markdown).
 
 ```ts
 pack.addFormula({
@@ -218,14 +218,14 @@ pack.addFormula({
 ```
 
 ??? example "Rendering examples"
-    <iframe src="https://coda.io/embed/Yh3vyeakVr/_sudor" width=900 height=500 style="max-width: 100%;" allow="fullscreen" loading="lazy"></iframe>
+    <iframe src="https://docs.superhuman.com/embed/Yh3vyeakVr/_sudor" width=900 height=500 style="max-width: 100%;" allow="fullscreen" loading="lazy"></iframe>
 
 
 ### Dates and times {: #dates}
 
 The [`Date`][Date], [`Time`][Time], and [`DateTime`][DateTime] value hints can be applied to either `String` or `Number` values.
 
-When used with a string value, Coda attempts to parse the value, and is able to parse a wide variety of date and time formats. For maximum compatibility however use the [ISO 8601][ISO_8601] format. When using a JavaScript `Date` object this can be obtained by calling `toISOString()`. If the string doesn't include a timezone identifier or offset then Coda will assume it's already in the timezone of the document. See the [Timezones guide][timezones] for more information about how timezones affect return values.
+When used with a string value, Superhuman Docs attempts to parse the value, and is able to parse a wide variety of date and time formats. For maximum compatibility however use the [ISO 8601][ISO_8601] format. When using a JavaScript `Date` object this can be obtained by calling `toISOString()`. If the string doesn't include a timezone identifier or offset then Superhuman Docs will assume it's already in the timezone of the document. See the [Timezones guide][timezones] for more information about how timezones affect return values.
 
 When used with a number value, the number should contain the number of seconds since the [Unix epoch][unix_epoch] (00:00:00 UTC on 1 January 1970). When using a JavaScript `Date` object this can be obtained by calling `getTime()` and dividing by 1000.
 
@@ -273,7 +273,7 @@ The [`Duration`][Duration] value hint represents an amount of time, rather than 
 | 0.25 days, 1 min, 15 secs   | 6 hrs 1 min 15 secs | Fractional amounts allowed.     |
 | 72000 minutes               | 50 days             | Don't use thousands separators. |
 
- Any duration value your Pack returns will be automatically converted into its most user-friendly form by Coda. For example, `3600 seconds` will be shown to the user as **1 hr**.
+ Any duration value your Pack returns will be automatically converted into its most user-friendly form by Superhuman Docs. For example, `3600 seconds` will be shown to the user as **1 hr**.
 
 ```ts
 pack.addFormula({
@@ -304,7 +304,7 @@ pack.addFormula({
 
 ### Images {: #images}
 
-There are two different value hints for image: [`ImageReference`][ImageReference] and [`ImageAttachment`][ImageAttachment]. Both of these are applied to string values, where the string contains the URL of the image. For image references, the image is always loaded from the source URL. For image attachments, Coda copies the image from the source URL into the document and shows that local copy.
+There are two different value hints for image: [`ImageReference`][ImageReference] and [`ImageAttachment`][ImageAttachment]. Both of these are applied to string values, where the string contains the URL of the image. For image references, the image is always loaded from the source URL. For image attachments, Superhuman Docs copies the image from the source URL into the document and shows that local copy.
 
 Image attachments should be used in most cases. An image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest copy, or when contractually obligated to hotlink to the image.
 
@@ -325,7 +325,7 @@ pack.addFormula({
 
 ### Files {: #files}
 
-Similar to `ImageAttachment` mentioned above, you can return other file types using the value hint `Attachment`. This hint is also applied to string values, where the string contains the URL of the file. Coda copies the file from the source URL into the document and uses that local copy.
+Similar to `ImageAttachment` mentioned above, you can return other file types using the value hint `Attachment`. This hint is also applied to string values, where the string contains the URL of the file. Superhuman Docs copies the file from the source URL into the document and uses that local copy.
 
 ```ts
 const DealSchema = sdk.makeObjectSchema({
@@ -391,7 +391,7 @@ See the [Two-way Sync guide][two_way_options] for more information about propert
 
 ### Embedded content
 
-The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content.
+The [`Embed`][Embed] value hint can be used to embed external content in the doc. This value hint can be applied to `String` values, where the string contains the URL to the external content.
 
 ```ts
 pack.addFormula({
@@ -409,7 +409,7 @@ Read the [Embedding content][embeds] guide to learn more.
 
 ### People
 
-The [`Person`][Person] value hint can be used to @-reference a Coda user account. This hint can be applied to `Object` values, where the object has a property that specifies the user's email address. The email address must be contained within the property of the object that is listed as its `idProperty` within the schema definition, and that property must be marked as `required`.
+The [`Person`][Person] value hint can be used to @-reference a Superhuman Docs user account. This hint can be applied to `Object` values, where the object has a property that specifies the user's email address. The email address must be contained within the property of the object that is listed as its `idProperty` within the schema definition, and that property must be marked as `required`.
 
 ```ts
 const MyPersonSchema = sdk.makeObjectSchema({
@@ -423,7 +423,7 @@ const MyPersonSchema = sdk.makeObjectSchema({
 });
 ```
 
-When no Coda user with the given email address is found the object will render as a normal object chip.
+When no Superhuman Docs user with the given email address is found the object will render as a normal object chip.
 
 !!! warning
     This value hint currently only work correctly within a sync table. When used outside of a sync table it will render as a normal object chip, as if no value hint was applied.
@@ -439,7 +439,7 @@ The [`Reference`][Reference] value hint can be used to reference a row in a sync
 
 ## Corresponding column types {:#column-types}
 
-The columns of a Coda table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the value type and value hint that corresponds to a each column type.
+The columns of a Superhuman Docs table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the value type and value hint that corresponds to a each column type.
 
 | Column type   | Supported  | Value type               | Value hint        | Options                                                                                                       |
 | ------------- | ---------- | ------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------- |
@@ -469,7 +469,7 @@ The columns of a Coda table are strongly typed, and the data types in the Pack S
 | File          | ✅ Yes     | `String`                 | `Attachment`      |                                                                                                               |
 | Relation      | ✅ Yes     | `Object`                 | `Reference`       |                                                                                                               |
 
-[^1]: Embed isn't a column type in Coda, but it can be used in a table or on the canvas to embed content.
+[^1]: Embed isn't a column type in Superhuman Docs, but it can be used in a table or on the canvas to embed content.
 [^2]: Control column types will only render correctly in a sync table, and will not be interactive.
 [^3]: While a Pack can't return a button directly, it can provide [actions][actions] that a user can use to power their buttons.
 
@@ -567,7 +567,7 @@ The full set of formatting options for a given value type and hint can be found 
 [EmailSchema]: ../../reference/sdk/core/interfaces/EmailSchema.md
 [StringWithOptionsSchema]: ../../reference/sdk/core/interfaces/StringWithOptionsSchema.md
 [ObjectSchemaDefinition]: ../../reference/sdk/core/interfaces/ObjectSchemaDefinition.md
-[formula_list]: https://coda.io/formulas#List
+[formula_list]: https://docs.superhuman.com/formulas#List
 [embeds]: ../advanced/embeds.md
 [timezones]: ../advanced/timezones.md
 [mdn_string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String

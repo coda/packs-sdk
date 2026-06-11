@@ -18,7 +18,7 @@ To enable two-way sync on a sync table that supports it you need to toggle on th
 
 <img src="site:images/two_way_enable.png" srcset="site:images/two_way_enable_2x.png 2x" class="screenshot" alt="Enabling edits on a sync table.">
 
-Certain columns of the table will now be editable, and you can change cell values them as you would for a normal Coda table. Use the **Update rows** link to push the changes back to the data source.
+Certain columns of the table will now be editable, and you can change cell values them as you would for a normal Superhuman Docs table. Use the **Update rows** link to push the changes back to the data source.
 
 <video style="width:auto" loop muted autoplay alt="Recording of editing a sync table." class="screenshot"><source src="site:images/two_way.mp4" type="video/mp4"></source></video>
 
@@ -149,7 +149,7 @@ executeUpdate: async function (args, updates, context) {
 
 ## Transforming row values
 
-While needed for all sync tables, when implementing two-way sync you need to pay extra attention to how you transform row values between the form used by the API and that used by the table. This is not an issue if your sync table schema exactly matches the items returned by the API, but often you want or need a different representation of the data in Coda.
+While needed for all sync tables, when implementing two-way sync you need to pay extra attention to how you transform row values between the form used by the API and that used by the table. This is not an issue if your sync table schema exactly matches the items returned by the API, but often you want or need a different representation of the data in Superhuman Docs.
 
 When possible, utilize the `fromKey` field of property schemas to allow the platform to automatically map between the API results and the table columns. This works not only when syncing in rows in the `execute` function, but also in reverse when sending updates in the `executeUpdate` function. Specifically, the [`SyncUpdate`][reference_sync_update] object's `newValue`, `previousValue`, and `updatedFields` will all be keyed using the `fromKey` value if set.
 
@@ -312,7 +312,7 @@ Similar to [parameter autocomplete][parameters_autocomplete], you can provide a 
 
 !!! info "The hint `SelectList` or `Reference` is required"
 
-    Suggested options is only available for properties that have the `codaType` set to `SelectList` or `Reference`. These will cause the property to render as a Coda Select List or Relation column respectively.
+    Suggested options is only available for properties that have the `codaType` set to `SelectList` or `Reference`. These will cause the property to render as a Superhuman Docs Select List or Relation column respectively.
 
  The possible choices are defined in the `options` field of the property, which can be either an array of static values or a function that generates them dynamically. An options function can access the value of other properties in the row via `context.propertyValues` and the current search string typed by the user via `context.search`.
 
@@ -439,7 +439,7 @@ The `allowNewValues` setting can only be enabled for `String` properties, as the
 
 ## Handling errors
 
-When a row fails to update Coda will show an error message attached to that row. The pending edits will be retained, so that users can adjust them and try again.
+When a row fails to update Superhuman Docs will show an error message attached to that row. The pending edits will be retained, so that users can adjust them and try again.
 
 <img src="site:images/two_way_error.png" srcset="site:images/two_way_error_2x.png 2x" class="screenshot" alt="Error attached to a row.">
 

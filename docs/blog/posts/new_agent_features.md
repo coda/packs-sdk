@@ -20,7 +20,7 @@ Since the initial launch of Superhuman Go in late October, we've been busy impro
 We've also worked to make it easier for legacy Packs to be upgraded to agents, with these new features:
 
 - [Ingestion suggested values][suggested_values] - Provide an alternate suggestion value for a parameter to be used in the agent setup screen.
-- [Invocation source][invocation_source] - Determine if your sync table is being run in Superhuman Go vs Coda, to adjust the logic, etc.
+- [Invocation source][invocation_source] - Determine if your sync table is being run in Superhuman Go vs Superhuman Docs, to adjust the logic, etc.
 
 
 [mcp]: ../../agents/features/mcp.md

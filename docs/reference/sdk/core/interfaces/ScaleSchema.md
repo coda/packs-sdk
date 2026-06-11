@@ -27,7 +27,7 @@ a numeric value. The canonical example of a scale is a star rating, which might 
 
 > **codaType**: [`Scale`](../enumerations/ValueHintType.md#scale)
 
-Instructs Coda to render this value as a scale.
+Instructs Superhuman Docs to render this value as a scale.
 
 #### Overrides
 

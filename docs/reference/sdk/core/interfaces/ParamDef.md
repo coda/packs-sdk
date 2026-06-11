@@ -99,7 +99,7 @@ The suggested value to be prepopulated for this parameter when used in an ingest
 This value overrides [ParamDef.suggestedValue](#suggestedvalue) if set.
 
 Useful in situations where the existing suggested value is used to scope down the synced data to what would fit
-within Coda's row limits, but during indexing you'd want to include a larger scope of data.
+within Superhuman Docs's row limits, but during indexing you'd want to include a larger scope of data.
 
 ***
 

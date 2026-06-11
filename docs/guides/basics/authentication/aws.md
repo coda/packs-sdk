@@ -59,7 +59,7 @@ In addition to supplying the role and external ID, the user authenticating the P
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "GrantCodaPackAssumeRole",
+      "Sid": "GrantSuperhumanPackAssumeRole",
       "Effect": "Allow",
       "Principal": {
         "AWS": [
@@ -93,7 +93,7 @@ First update your policy to include the ID of the user you created.
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "GrantCodaPackAssumeRole",
+      "Sid": "GrantSuperhumanPackAssumeRole",
       "Effect": "Allow",
       "Principal": {
         "AWS": [

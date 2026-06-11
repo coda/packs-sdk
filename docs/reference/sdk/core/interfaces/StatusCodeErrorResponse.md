@@ -26,7 +26,7 @@ The raw body of the HTTP error response.
 
 > `optional` **headers**: `object`
 
-The headers from the HTTP error response. Many header values are redacted by Coda.
+The headers from the HTTP error response. Many header values are redacted by the platform.
 
 #### Index Signature
 

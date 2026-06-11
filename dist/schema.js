@@ -67,8 +67,8 @@ var ValueHintType;
      */
     ValueHintType["Email"] = "email";
     /**
-     * Indicates to interpret and render the value as a Coda person reference. The provided value should be
-     * an object whose `idProperty` property is an email address, which Coda will try to resolve to a user
+     * Indicates to interpret and render the value as a Superhuman Docs person reference. The provided value should be
+     * an object whose `idProperty` property is an email address, which Superhuman Docs will try to resolve to a user
      * and render an @-reference to the user.
      *
      * @example
@@ -96,7 +96,7 @@ var ValueHintType;
     ValueHintType["Currency"] = "currency";
     /**
      * Indicates to interpret and render the value as an image. The provided value should be a URL that
-     * points to an image. Coda will hotlink to the image when rendering it a doc.
+     * points to an image. Superhuman Docs will hotlink to the image when rendering it a doc.
      *
      * Using {@link ImageAttachment} is recommended instead, so that the image is always accessible
      * and won't appear as broken if the source image is later deleted.
@@ -104,7 +104,7 @@ var ValueHintType;
     ValueHintType["ImageReference"] = "image";
     /**
      * Indicates to interpret and render the value as an image. The provided value should be a URL that
-     * points to an image. Coda will ingest the image and host it from Coda infrastructure.
+     * points to an image. Superhuman Docs will ingest the image and host it from Superhuman infrastructure.
      */
     ValueHintType["ImageAttachment"] = "imageAttachment";
     /**
@@ -112,11 +112,11 @@ var ValueHintType;
      */
     ValueHintType["Url"] = "url";
     /**
-     * Indicates to interpret a text value as Markdown, which will be converted and rendered as Coda rich text.
+     * Indicates to interpret a text value as Markdown, which will be converted and rendered as rich text.
      */
     ValueHintType["Markdown"] = "markdown";
     /**
-     * Indicates to interpret a text value as HTML, which will be converted and rendered as Coda rich text.
+     * Indicates to interpret a text value as HTML, which will be converted and rendered as rich text.
      */
     ValueHintType["Html"] = "html";
     /**
@@ -125,8 +125,8 @@ var ValueHintType;
      */
     ValueHintType["Embed"] = "embed";
     /**
-     * Indicates to interpret and render the value as a Coda @-reference to a table row. The provided value should
-     * be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
+     * Indicates to interpret and render the value as a Superhuman Docs @-reference to a table row. The provided value
+     * should be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
      * used must specify an identity that specifies the desired sync table.
      *
      * Normally a reference schema is constructed from the schema object being referenced using the helper
@@ -152,7 +152,8 @@ var ValueHintType;
     ValueHintType["Reference"] = "reference";
     /**
      * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
-     * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+     * pointing to a file of a supported type. Superhuman Docs will ingest the file and host it from
+     * Superhuman infrastructure.
      */
     ValueHintType["Attachment"] = "attachment";
     /**
@@ -453,7 +454,7 @@ var PermissionType;
  * Multiple attribution nodes can be rendered all together, for example to have
  * attribution that contains both text and a logo image.
  *
- * @see [Structuring data with schemas - Data attribution](https://coda.io/packs/build/latest/guides/advanced/schemas/#attribution)
+ * @see [Structuring data with schemas - Data attribution](https://docs.superhuman.com/packs/build/latest/guides/advanced/schemas/#attribution)
  */
 var AttributionNodeType;
 (function (AttributionNodeType) {

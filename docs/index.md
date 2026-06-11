@@ -8,7 +8,7 @@ hide:
 
 # Build Packs for Superhuman
 
-A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Coda, so you can customize how your doc looks, works, and integrates.
+A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Superhuman Docs, so you can customize how your doc looks, works, and integrates.
 
 <section class="landing-row" markdown>
 
@@ -119,8 +119,8 @@ Makers have been busy building Packs of all types, and many have published their
 [cli]: guides/development/cli.md
 [samples]: samples/index.md
 [changelog]: reference/changes.md
-[community]: https://community.coda.io/c/developers-central/making-packs/15
-[gallery]: https://coda.io/gallery?filter=packs
+[community]: https://connect.superhuman.com/c/developers-central/making-packs/15
+[gallery]: https://docs.superhuman.com/gallery?filter=packs
 [videos]: tutorials/videos.md
 [tutorial_cli]: tutorials/get-started/cli.md
 [tutorial_github]: tutorials/get-started/github.md

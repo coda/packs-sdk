@@ -5,7 +5,7 @@ description: Design schemas to represent rich data, for use in formulas and sync
 
 # Structuring data with schemas
 
-To return structured data in a Pack you must first define the shape of that data using a schema. Schemas describe the type of data that will be returned, as well as metadata about how Coda should render it, but not the data itself. Pack formulas and sync tables specify which schema they are using and return data that matches it.
+To return structured data in a Pack you must first define the shape of that data using a schema. Schemas describe the type of data that will be returned, as well as metadata about how Superhuman Docs should render it, but not the data itself. Pack formulas and sync tables specify which schema they are using and return data that matches it.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -84,7 +84,7 @@ pack.addFormula({
 
 ## Data types
 
-The primary role of a schema is to define the type of data that will be returned. This is done by specifying a value type and optionally a value hint. The value type corresponds to the JavaScript type that will be returned, and the value hint indicates how Coda should interpret that value. These are set using the `type` and `codaType` field respectively.
+The primary role of a schema is to define the type of data that will be returned. This is done by specifying a value type and optionally a value hint. The value type corresponds to the JavaScript type that will be returned, and the value hint indicates how Superhuman Docs should interpret that value. These are set using the `type` and `codaType` field respectively.
 
 ```ts
 let DateSchema = sdk.makeSchema({
@@ -162,7 +162,7 @@ let PersonSchema = sdk.makeObjectSchema({
 });
 ```
 
-These descriptions are shown in various places in the Coda UI.
+These descriptions are shown in various places in the Superhuman Docs UI.
 
 === "Formula editor"
 
@@ -357,7 +357,7 @@ pack.addFormula({
 
 ### Property name normalization {: #normalization}
 
-To ensure compatibility with the Coda Formula Language and consistency across Packs, all property names are normalized to a standard format before they are shown to the user. This process removes all punctuation and whitespace and reformats the name to upper camel case (AKA PascalCase). For example, `fooBar`, `foo_bar`, and `foo bar` will all be normalized to `FooBar`. This normalization happens after your Pack is run, and you should refer to the non-normalized property names throughout your code.
+To ensure compatibility with the Superhuman formula language and consistency across Packs, all property names are normalized to a standard format before they are shown to the user. This process removes all punctuation and whitespace and reformats the name to upper camel case (AKA PascalCase). For example, `fooBar`, `foo_bar`, and `foo bar` will all be normalized to `FooBar`. This normalization happens after your Pack is run, and you should refer to the non-normalized property names throughout your code.
 
 The normalized name of a property is shown in the formula editor, but it also impacts the display name of that property elsewhere in the doc. In the hover dialog and in sync table columns the normalized name is again converted, this time from upper camel case to space-separated. For example, the normalized property `FooBar` will be displayed as "Foo Bar". See the section [Column Names](#column-names) to learn how to explicitly set column names and preserve special characters.
 
@@ -421,7 +421,7 @@ let MovieSchema = sdk.makeObjectSchema({
     let MovieSchema = sdk.makeObjectSchema({
       properties: {
         id: { type: sdk.ValueType.String, description: "External ID of the record." },
-        rowId: { type: sdk.ValueType.String, description: "Internal ID of the Coda row." },
+        rowId: { type: sdk.ValueType.String, description: "Internal ID of the row." },
       },
       idProperty: "rowId",
       // ...
@@ -664,7 +664,7 @@ let MovieSchema = sdk.makeObjectSchema({
 
 <img src="site:images/schemas_placeholders.png" srcset="site:images/schemas_placeholders_2x.png 2x" class="screenshot" alt="Placeholders for subtitle properties">
 
-A property will be considered empty and fallback to the placeholder when its value is one of the following: `null`, `undefined`, `""`, `[]`, `{}`. The placeholder is only used to render the card, and when using the Coda Formula Language to access the property it will still return the original value. Placeholders are currently only supported on the following fields:
+A property will be considered empty and fallback to the placeholder when its value is one of the following: `null`, `undefined`, `""`, `[]`, `{}`. The placeholder is only used to render the card, and when using the Superhuman formula language to access the property it will still return the original value. Placeholders are currently only supported on the following fields:
 
 - [`titleProperty`][titleProperty]
 - [`subtitleProperties`][subtitleProperties]
@@ -710,7 +710,7 @@ The following property Paths are all valid:
 If you need to further customize the value, such as combining the value of multiple properties or doing some other transformation, you'll need to create a new property to hold that value and manually populate it in your `execute` function. See the [Display value](#display) for an example of this.
 
 !!! info "Set property labels in card subtitle"
-    When using property paths to specify a card's subtitle, it's recommended that you manually set the [labels for those properties](#labels). Coda will generate a label based off of the property path, but the result is often not desirable.
+    When using property paths to specify a card's subtitle, it's recommended that you manually set the [labels for those properties](#labels). Superhuman Docs will generate a label based off of the property path, but the result is often not desirable.
 
     ```
     let MovieSchema = sdk.makeObjectSchema({

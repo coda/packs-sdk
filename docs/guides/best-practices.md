@@ -51,7 +51,7 @@ While it's easy to get started building a Pack, there are lots of options to exp
 ## General
 
 - [x] Throw a [`UserVisibleError`][UserVisibleError] for bad input or when an expected type of error occurs. This allows you to provide a more informative error message to the user.
-- [x] If accepting or returning an index value, start counting at 1. Although JavaScript is 0-based, Coda formula language is 1-based.
+- [x] If accepting or returning an index value, start counting at 1. Although JavaScript is 0-based, Superhuman formula language is 1-based.
 
 
 ## Launching
@@ -77,8 +77,8 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [instructionsUrl]: ../reference/sdk/core/interfaces/BaseAuthentication.md#instructionsurl
 [UserVisibleError]: ../reference/sdk/core/classes/UserVisibleError.md
 [SyncTableOptions.description]: ../reference/sdk/core/interfaces/SyncTableOptions.md#description
-[launching]: https://coda.io/@bri-strauss/best-practices-for-launching-your-pack
-[promotion]: https://coda.io/@hector/promotion-best-practices
+[launching]: https://docs.superhuman.com/@bri-strauss/best-practices-for-launching-your-pack
+[promotion]: https://docs.superhuman.com/@hector/promotion-best-practices
 [schemas_row_identifier]: advanced/schemas.md#row-identifier
 [schemas_featured_columns]: advanced/schemas.md#featured-columns
 [auth_name]: basics/authentication/index.md#name

@@ -8,7 +8,7 @@ description: The various caching layers and how to configure them.
 For performance reasons the platform uses a variety of caching techniques to store previous results and reuse them later. This guide discusses the various caching layers and how to configure them.
 
 !!! info "Recalculation"
-    The caching discussed below comes into play once the Coda formula engine decides to execute your formula. For more information about when formulas are recalculated, see the [Recalculation][formulas_recalculation] section of the Formulas guide.
+    The caching discussed below comes into play once the Superhuman formula engine decides to execute your formula. For more information about when formulas are recalculated, see the [Recalculation][formulas_recalculation] section of the Formulas guide.
 
 
 ## Formula cache {: #formula}

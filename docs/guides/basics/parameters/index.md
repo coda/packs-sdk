@@ -80,9 +80,9 @@ When defining a parameter you must specify what type of data the parameter will 
 
 ### Plain text
 
-Use the `String` parameter to pass a plain text value to your formula. Coda will automatically apply the [`ToText()`][ToText] formula to the input and pass it to the `execute` function as a [JavaScript String][mdn_string].
+Use the `String` parameter to pass a plain text value to your formula. Superhuman Docs will automatically apply the [`ToText()`][ToText] formula to the input and pass it to the `execute` function as a [JavaScript String][mdn_string].
 
-String parameters are compatible with almost every column type in Coda, as most have a text representation. At times a string parameter may be better than a more semantically accurate type, as it allows you to access the value as shown to the user.
+String parameters are compatible with almost every column type in Superhuman Docs, as most have a text representation. At times a string parameter may be better than a more semantically accurate type, as it allows you to access the value as shown to the user.
 
 ??? example "Example: Hello world formula"
     ```ts
@@ -92,9 +92,9 @@ String parameters are compatible with almost every column type in Coda, as most 
 
 ### Rich text {: #rich}
 
-Use the `Html` or `Markdown` parameter type to pass text values with formatting included. Coda will convert the formatting to an equivalent block of HTML or Markdown markup, and pass it to the `execute` function as a [JavaScript String][mdn_string].
+Use the `Html` or `Markdown` parameter type to pass text values with formatting included. Superhuman Docs will convert the formatting to an equivalent block of HTML or Markdown markup, and pass it to the `execute` function as a [JavaScript String][mdn_string].
 
-These parameter types don't provide perfect fidelity, and the converted HTML or Markdown may be quite different than how the value displays in Coda. Often it is closer to what you'd get if you pasted that value into another rich text editor.
+These parameter types don't provide perfect fidelity, and the converted HTML or Markdown may be quite different than how the value displays in Superhuman Docs. Often it is closer to what you'd get if you pasted that value into another rich text editor.
 
 !!! warning "HTML markup may change"
     The generated HTML for a given value is not a stable API surface that you should rely on. We may change it at any time without warning, so we don't recommend that you parse it to extract information. Use it for display purposes only.
@@ -102,7 +102,7 @@ These parameter types don't provide perfect fidelity, and the converted HTML or 
 
 ### Numbers
 
-Use the `Number` parameter type to pass a number to your formula. Coda will automatically apply the [`ToNumber()`][ToNumber] formula to the input and pass it to the `execute` function as a [JavaScript Number][mdn_number].
+Use the `Number` parameter type to pass a number to your formula. Superhuman Docs will automatically apply the [`ToNumber()`][ToNumber] formula to the input and pass it to the `execute` function as a [JavaScript Number][mdn_number].
 
 The number equivalent for some column types may not be obvious. Specifically:
 
@@ -118,20 +118,20 @@ The number equivalent for some column types may not be obvious. Specifically:
 
 ### Booleans
 
-Use the `Boolean` parameter type to pass a boolean (true/false) to your formula. Coda will pass the value to the `execute` function as a [JavaScript Boolean][mdn_boolean].
+Use the `Boolean` parameter type to pass a boolean (true/false) to your formula. Superhuman Docs will pass the value to the `execute` function as a [JavaScript Boolean][mdn_boolean].
 
 
 ### Dates {: #dates}
 
-Use the `Date` parameter type to pass a date value to your formula. Coda will automatically apply the [`ToDateTime()`][ToDateTime] formula to the input and pass it to the `execute` function as a [JavaScript Date][mdn_date].
+Use the `Date` parameter type to pass a date value to your formula. Superhuman Docs will automatically apply the [`ToDateTime()`][ToDateTime] formula to the input and pass it to the `execute` function as a [JavaScript Date][mdn_date].
 
-JavaScript Date objects can only represent a specific moment in time. This means that they can't easily represent less specific concepts like a day (regardless of time), a time (regardless of day), or duration. Coda handles those column types using the following logic:
+JavaScript Date objects can only represent a specific moment in time. This means that they can't easily represent less specific concepts like a day (regardless of time), a time (regardless of day), or duration. Superhuman Docs handles those column types using the following logic:
 
 - **Date** values will be converted into a datetime representing midnight on that day in the document's timezone.
 - **Time** and **Duration** values will be converted a datetime that is that much time past midnight on 1899-12-30[^1], in the document's timezone. For example, the duration "12 hours" in a document set to "America/New York" will be passed as `Sat Dec 30 1899 12:00:00 GMT-0500 (Eastern Standard Time)`.
 
 !!! warning "Timezone shifting"
-    Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information.
+    Because of how timezones work in Superhuman Docs and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information.
 
 ??? example "Example: Good New Years Eve glasses formula"
     ```ts
@@ -185,7 +185,7 @@ Passing a table column into an array parameter can be error prone, because if th
 
 ### Pages
 
-Coda documents can contain many pages, and it's possible to pass the contents of a page to a Coda formula using the `Html` parameter type. Users will be presented with the pages they can select from in the autocomplete options, and once selected the formula will receive an HTML version of that page's content. Some features of the page may not be included in the HTML markup, and it should not be considered a complete or stable API surface.
+Docs can contain many pages, and it's possible to pass the contents of a page to a Superhuman formula using the `Html` parameter type. Users will be presented with the pages they can select from in the autocomplete options, and once selected the formula will receive an HTML version of that page's content. Some features of the page may not be included in the HTML markup, and it should not be considered a complete or stable API surface.
 
 !!! warning "Formulas not recalculated when page content changes"
     Unlike with other data sources, when passing a page as a parameter the formula will not be automatically recalculated when the content of the page changes. For this reason we recommend only passing pages for action formulas, which are calculated on each button press or automation run.
@@ -193,14 +193,14 @@ Coda documents can contain many pages, and it's possible to pass the contents of
 
 ### Objects
 
-Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass them as parameters. Users can't construct objects in the Coda formula language, so in general they don't make for a great input type.
+Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass them as parameters. Users can't construct objects in the Superhuman formula language, so in general they don't make for a great input type.
 
 If your Pack returns an object in one formula that you'd like to use an input to another formula, instead of passing the entire object you can just pass its unique ID. For example, the [Todoist Pack][samples_todoist] contains a `Tasks` sync table which returns `Task` objects. The `MarkAsComplete()` formula only takes the task's ID as input instead of the entire object.
 
 
 ## Optional parameters
 
-By default all parameters you define are required. To make a parameter optional simply add `optional: true` to your parameter definition. Optional parameters are shown to the user but not required in order for the formula to execute.  Optional parameters must be defined after all of the required parameters, and like required parameters their order is reflected in the Coda formula editor and the array of values passed to the `execute` function.
+By default all parameters you define are required. To make a parameter optional simply add `optional: true` to your parameter definition. Optional parameters are shown to the user but not required in order for the formula to execute.  Optional parameters must be defined after all of the required parameters, and like required parameters their order is reflected in the Superhuman formula editor and the array of values passed to the `execute` function.
 
 
 ```ts
@@ -485,7 +485,7 @@ sdk.makeParameter({
 
 ## Recommended parameter types
 
-The table below shows the recommended parameter type to use with various types of Coda columns and values.
+The table below shows the recommended parameter type to use with various types of Superhuman Docs columns and values.
 
 | Type          | Supported | Recommended   | Notes                                                            |
 | ------------- | --------- | ------------- | ---------------------------------------------------------------- |
@@ -526,11 +526,11 @@ The table below shows the recommended parameter type to use with various types o
 [mdn_rest]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#assigning_the_rest_of_an_array_to_a_variable
 [autocomplete]: autocomplete.md
 [PrecannedDateRange]: ../../../reference/sdk/core/enumerations/PrecannedDateRange.md
-[calendar_pack]: https://coda.io/packs/google-calendar-1003/documentation
+[calendar_pack]: https://docs.superhuman.com/packs/google-calendar-1003/documentation
 [ParameterType]: ../../../reference/sdk/core/enumerations/ParameterType.md
-[ToText]: https://coda.io/formulas#ToText
-[ToNumber]: https://coda.io/formulas#ToNumber
-[ToDateTime]: https://coda.io/formulas#ToDateTime
+[ToText]: https://docs.superhuman.com/formulas#ToText
+[ToNumber]: https://docs.superhuman.com/formulas#ToNumber
+[ToDateTime]: https://docs.superhuman.com/formulas#ToDateTime
 [mdn_string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 [mdn_number]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number
 [mdn_boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean

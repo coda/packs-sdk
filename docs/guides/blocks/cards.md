@@ -171,14 +171,14 @@ const ProductSchema = sdk.makeObjectSchema({
 
 One of the most common uses for cards is to display information about an item from an external application, usually identified by a URL. For example, the Slack Pack's contains a `Message` card takes in a message URL and displays the text, author, etc.
 
-To make it easier to discover these cards, when a user pastes a link into a doc Coda will show a list of compatible Packs. Clicking one of these will install the Pack and display the link as a card.
+To make it easier to discover these cards, when a user pastes a link into a doc Superhuman Docs will show a list of compatible Packs. Clicking one of these will install the Pack and display the link as a card.
 
 <img src="site:images/cards_link_prompt.png" srcset="site:images/cards_link_prompt_2x.png 2x" class="screenshot" alt="Dialog showing cards that can be used to display a link">
 
 !!! info "Built-in card option"
     The link "Display as" menu may include an option for "Card", which displays a fix set of metadata for public URLs. This is distinct from Pack cards, which are shown as additional options below that.
 
-Coda will automatically display a link as a card if it matches a Pack already installed in the doc, or for certain Superhuman-authored Packs.
+Superhuman Docs will automatically display a link as a card if it matches a Pack already installed in the doc, or for certain Superhuman-authored Packs.
 
 To enable this feature for your Pack, add a [column format][column_format] pointing to a formula that accepts a URL and returns a card. Then add [`matchers`][column_format_matchers] (regular expressions) to the column format that determine which URLs the prompt should appear on.
 

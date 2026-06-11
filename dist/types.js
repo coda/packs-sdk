@@ -27,8 +27,8 @@ var PackCategory;
 /**
  * Authentication types supported by Packs.
  *
- * @see [Authenticating with other services](https://coda.io/packs/build/latest/guides/basics/authentication/)
- * @see [Authentication samples](https://coda.io/packs/build/latest/samples/topic/authentication/)
+ * @see [Authenticating with other services](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/)
+ * @see [Authentication samples](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/)
  */
 var AuthenticationType;
 (function (AuthenticationType) {
@@ -111,7 +111,7 @@ var AuthenticationType;
      */
     AuthenticationType["AWSAssumeRole"] = "AWSAssumeRole";
     /**
-     * Authenticate using a Coda REST API token, sent as an HTTP header.
+     * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
      *
      * @see {@link CodaApiBearerTokenAuthentication}
      */
@@ -246,7 +246,7 @@ var ToolType;
      */
     ToolType["ContactResolution"] = "ContactResolution";
     /**
-     * Tool that provides access to Coda docs and tables capabilities.
+     * Tool that provides access to Superhuman Docs documents and tables capabilities.
      * @internal
      */
     ToolType["CodaDocsAndTables"] = "CodaDocsAndTables";

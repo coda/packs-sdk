@@ -23,7 +23,7 @@ should be provided as a string like "3 days" or "40 minutes 30 seconds".
 
 > `optional` **codaType**: [`Duration`](../enumerations/ValueHintType.md#duration)
 
-An optional type hint instructing Coda about how to interpret or render this value.
+An optional type hint instructing Superhuman Docs about how to interpret or render this value.
 
 #### Inherited from
 

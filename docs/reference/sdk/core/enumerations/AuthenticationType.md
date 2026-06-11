@@ -47,7 +47,7 @@ Authenticate to Amazon Web Services by assuming an IAM role.
 
 > **CodaApiHeaderBearerToken**: `"CodaApiHeaderBearerToken"`
 
-Authenticate using a Coda REST API token, sent as an HTTP header.
+Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
 
 #### See
 

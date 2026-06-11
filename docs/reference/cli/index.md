@@ -239,7 +239,7 @@ Set a persistent build option for the pack. This will store the option alongside
 Supported options:<br>
   - timerStrategy: Valid values are "none", "error", or "fake".<br>
   - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.<br>
-  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.<br>
+  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.superhuman.com"). When set, all commands will use this endpoint by default.<br>
 <br>
 Usage: packs setOption path/to/pack.ts timerStrategy fake
 

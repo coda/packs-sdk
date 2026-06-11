@@ -15,9 +15,9 @@ However, for production work, we recommend developing locally with the CLI, as i
 
 The CLI can run your code locally, but only an individual building block (formula, action, or sync table). It is not possible to run LLM-based functionality, like skills. For that, you'll need to upload a new version of your agent to the server and test it using Superhuman Go.
 
-## Testing in a Coda doc
+## Testing in a doc
 
-If your agent contains formulas or sync tables, it can be helpful to test them in a Coda doc. Testing allows you to:
+If your agent contains formulas or sync tables, it can be helpful to test them in a doc. Testing allows you to:
 
 - Directly control parameter values, vs letting the LLM decide
 - View the raw output from formulas and sync tables
@@ -25,9 +25,9 @@ If your agent contains formulas or sync tables, it can be helpful to test them i
 
 You won't be able to test your agent skills in the doc, however, as those can only be used in Superhuman Go.
 
-To test your agent's formulas and syncs in a Coda doc:
+To test your agent's formulas and syncs in a doc:
 
-1. Visit [coda.new](https://coda.new) to create a new doc.
+1. Visit [superdoc.new](https://superdoc.new) to create a new doc.
 2. Click the **Insert** button in the upper right of the screen.
 3. Search for your agent by name and then click it.
 4. Click the button **Add to doc for free**.
@@ -38,7 +38,7 @@ To test your agent's formulas and syncs in a Coda doc:
 
 If your Pack has previously been [released][releases], the agent will default to the released version of your code when installed. To test a newer, unreleased version of your code:
 
-1.  Open the settings screen for the agent (`https://coda.grammarly.com/brain/agent/setup/{PACK_ID}/debug`).
+1.  Open the settings screen for the agent (`https://docs.superhuman.com/go/agent/setup/{PACK_ID}/debug`).
 1.  Click the gear icon :octicons-gear-16:.
 1.  Change the **Pack version** option to **Latest version**.
 
@@ -53,7 +53,7 @@ When an agent contains sync tables, the agent installation screen includes addit
 The status of the indexing job is visible on the agent's settings screen. You can access the settings screen by either:
 
 - Clicking on your initials at the bottom of the agent bench, selecting **Manage Agents**, and then the gear icon :octicons-gear-16: next to the agent.
-- Opening the URL `https://coda.grammarly.com/brain/agent/setup/{PACK_ID}/debug`.
+- Opening the URL `https://docs.superhuman.com/go/agent/setup/{PACK_ID}/debug`.
 
 Click the **Sync status** tab to see whether the sync is complete and how many records were found.
 

@@ -26,11 +26,11 @@ pack.addFormula({
     }),
   ],
 
-  // The resultType defines what will be returned in your Coda doc. Here, we're
+  // The resultType defines what will be returned in your doc. Here, we're
   // returning a simple text string.
   resultType: sdk.ValueType.String,
 
-  // Everything inside this execute statement will happen anytime your Coda
+  // Everything inside this execute statement will happen anytime your
   // formula is called in a doc. An array of all user inputs is always the 1st
   // parameter.
   execute: async function ([name], context) {

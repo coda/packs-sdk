@@ -5,7 +5,7 @@ description: Use actions to create, update, or delete records in APIs and extern
 
 # Add custom actions for buttons and automations
 
-In Coda users can take actions directly within their documents, using native [buttons][help_buttons] and [automations][help_automations]. Packs can provide custom actions which users can use when building out their doc. These actions often use the [fetcher][fetcher] to send data to an external API, but they can also be used for other one-time calculations.
+In Superhuman Docs, users can take actions directly within their documents, using native [buttons][help_buttons] and [automations][help_automations]. Packs can provide custom actions which users can use when building out their doc. These actions often use the [fetcher][fetcher] to send data to an external API, but they can also be used for other one-time calculations.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -180,7 +180,7 @@ pack.addFormula({
 ```
 
 !!! warning "Remove unused fields"
-    When you enable the `includeUnknownProperties` feature, all of the data returned by the formula or sync table ends up in the object chip, even when it doesn't match any schema property in the sync table. Only the fields corresponding to properties will be available to "dot" into in the Coda formula language however. You should therefore remove any data from the API response that you don't intend the user to see.
+    When you enable the `includeUnknownProperties` feature, all of the data returned by the formula or sync table ends up in the object chip, even when it doesn't match any schema property in the sync table. Only the fields corresponding to properties will be available to "dot" into in the Superhuman formula language however. You should therefore remove any data from the API response that you don't intend the user to see.
 
 
 ### Handling dynamic URLs

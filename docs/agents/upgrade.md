@@ -5,7 +5,7 @@ description: Information on how to update an existing Pack to work with Superhum
 
 # Upgrade an existing Pack to an agent
 
-If you've already built a Pack for Coda, the good news is that it can be easily upgraded to a Superhuman Go agent. All agents are Packs under the hood, and with some minor tweaks, your existing Pack can be one too.
+If you've already built a Pack for Superhuman Docs, the good news is that it can be easily upgraded to a Superhuman Go agent. All agents are Packs under the hood, and with some minor tweaks, your existing Pack can be one too.
 
 You don't need to be an AI expert to do this, as we provide the LLM and hook it up to your Pack. It's done automatically, so you can install your Pack in Superhuman Go and start chatting with it right away.
 
@@ -73,7 +73,7 @@ During the upgrade process, you may need to adjust your Pack to work better with
 
 ### Hidden formulas {: #hidden}
 
-You can add a new formula just for the LLM to use by adding `isExperimental: true` to the definition. These won't be displayed to users in Coda docs, but will be made available to the LLM to call.
+You can add a new formula just for the LLM to use by adding `isExperimental: true` to the definition. These won't be displayed to users in docs, but will be made available to the LLM to call.
 
 ```{.ts hl_lines="6-7"}
 pack.addFormula({
@@ -81,7 +81,7 @@ pack.addFormula({
   description: "Gets the ID of the user's workspace.",
   parameters: [],
   resultType: sdk.ValueType.String,
-  // Hide this in Coda docs, but allow the LLM to use it.
+  // Hide this in docs, but allow the LLM to use it.
   isExperimental: true,
   execute: async function (args, context) {
     // ...
@@ -168,7 +168,7 @@ pack.addFormula({
     let source = context.invocationLocation.source;
     switch (source) {
       case sdk.InvocationSource.Doc:
-        emailFooter = "Sent from Coda.";
+        emailFooter = "Sent from Superhuman Docs.";
         break;
       case sdk.InvocationSource.Go:
         emailFooter = "Sent from Superhuman Go.";
@@ -202,7 +202,7 @@ Currently, some Pack features don't work in agents.
 [actions]: ../guides/blocks/actions.md
 [autocomplete]: ../guides/basics/parameters/autocomplete.md
 [connection_requirement_optional]: ../reference/sdk/core/enumerations/ConnectionRequirement.md#optional
-[weather_pack]: https://coda.io/packs/weather-1015
+[weather_pack]: https://docs.superhuman.com/packs/weather-1015
 [invocationsource]: ../reference/sdk/core/enumerations/InvocationSource.md
 [source]: ../reference/sdk/core/interfaces/InvocationLocation.md#source
 [ingestionsuggestedvalue]: ../reference/sdk/core/interfaces/ParamDef.md#ingestionsuggestedvalue

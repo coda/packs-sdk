@@ -24,7 +24,7 @@ The link can be displayed in the UI in multiple ways, as per the above enumerati
 
 > **codaType**: [`Url`](../enumerations/ValueHintType.md#url)
 
-Instructs Coda to render this value as a hyperlink.
+Instructs Superhuman Docs to render this value as a hyperlink.
 
 #### Overrides
 

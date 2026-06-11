@@ -8,7 +8,7 @@ hide:
 
 # Learn to build a formula
 
-Formulas are one of the most basic building blocks in Coda; used to calculate values, filter tables, and so much more. In this tutorial you'll learn how to build a basic formula that takes in parameters and returns a new value.
+Formulas are one of the most basic building blocks in Superhuman Docs; used to calculate values, filter tables, and so much more. In this tutorial you'll learn how to build a basic formula that takes in parameters and returns a new value.
 
 !!! abstract "Goal"
     Build a `Reverse` formula that reverses a string of text.
@@ -84,7 +84,7 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    The first key-value pairs to set are the name and description of the formula. The name determines how users will call it in the Coda formula language, and the description is help text users can refer to.
+    The first key-value pairs to set are the name and description of the formula. The name determines how users will call it in the Superhuman formula language, and the description is help text users can refer to.
 
     </div>
     <div markdown>

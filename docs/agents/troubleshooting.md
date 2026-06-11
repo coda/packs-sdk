@@ -13,7 +13,7 @@ The agent logs provide detailed information that can be used to troubleshoot an 
 
 To access the agent logs:
 
-1.  Open the settings screen for the agent (`https://coda.grammarly.com/brain/agent/setup/{PACK_ID}/debug`).
+1.  Open the settings screen for the agent (`https://docs.superhuman.com/go/agent/setup/{PACK_ID}/debug`).
 1.  Click the **Agent logs** button.
 
 The drawer that opens lets you view logs from your recent sessions with the agent.
@@ -29,7 +29,7 @@ Agents that use [Indexing][indexing] and include sync tables will generate addit
 
 To access the ingestion logs:
 
-1.  Open the settings screen for the agent (`https://coda.grammarly.com/brain/agent/setup/{PACK_ID}/debug`).
+1.  Open the settings screen for the agent (`https://docs.superhuman.com/go/agent/setup/{PACK_ID}/debug`).
 1.  Click the **Ingestion logs** button.
 
 Select a table from the **Datasource** dropdown to see the logs for that sync table. You can see the recent syncs for the table, and drill down into individual executions of the sync table and any associated logs.

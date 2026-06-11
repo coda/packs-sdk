@@ -12,8 +12,8 @@ const FileSchema = sdk.makeObjectSchema({
     },
     thumbnail: {
       type: sdk.ValueType.String,
-      // ImageAttachments instructs Coda to ingest the image and store it in the
-      // doc.
+      // ImageAttachments instructs Superhuman Docs to ingest the image and
+      // store it in the doc.
       codaType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },

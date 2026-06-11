@@ -19,7 +19,7 @@ A formula that takes an image as a parameter. This sample returns the file size 
 import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
-// Regular expression that matches Coda-hosted images.
+// Regular expression that matches Superhuman-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
 
 // Formula that calculates the file size of an image.
@@ -36,9 +36,9 @@ pack.addFormula({
   ],
   resultType: sdk.ValueType.Number,
   execute: async function ([imageUrl], context) {
-    // Throw an error if the image isn't Coda-hosted. Image URL columns can
-    // contain images on any domain, but by default Packs can only access image
-    // attachments hosted on codahosted.io.
+    // Throw an error if the image isn't Superhuman-hosted. Image URL
+    // columns can contain images on any domain, but by default Packs can only
+    // access image attachments hosted on codahosted.io.
     if (!imageUrl.match(HostedImageUrlRegex)) {
       throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }
@@ -149,14 +149,14 @@ pack.addFormula({
 {% endraw %}
 ```
 ## Upload images
-An action that downloads images from Coda and uploads them to another service. This sample uploads a list of files to Google Photos.
+An action that downloads images from Superhuman Docs and uploads them to another service. This sample uploads a list of files to Google Photos.
 
 ```ts
 {% raw %}
 import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
-// Regular expression that matches Coda-hosted images.
+// Regular expression that matches Superhuman-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
 
 // A custom type that bundles together the image buffer and content type.
@@ -183,7 +183,7 @@ pack.addFormula({
   },
   isAction: true,
   execute: async function ([imageUrls], context) {
-    // Download the images from Coda.
+    // Download the images from Superhuman Docs.
     let images = await downloadImages(imageUrls, context);
     // Upload the images to Google Photos, getting temporary tokens.
     let uploadTokens = await uploadImages(images, context);
@@ -194,13 +194,14 @@ pack.addFormula({
   },
 });
 
-// Download the images from Coda, in parallel. For each image it returns a
-// buffer of image data and the MIME type of the image.
+// Download the images from Superhuman Docs, in parallel. For each image it
+// returns a buffer of image data and the MIME type of the image.
 async function downloadImages(imageUrls, context: sdk.ExecutionContext):
     Promise<ImageData[]> {
   let requests = [];
   for (let imageUrl of imageUrls) {
-    // Reject images not hosted in Coda, since we can't download them.
+    // Reject images not hosted in Superhuman Docs, since we can't download
+    // them.
     if (!imageUrl.match(HostedImageUrlRegex)) {
       throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }
@@ -338,9 +339,9 @@ const FileSchema = sdk.makeObjectSchema({
     },
     thumbnail: {
       type: sdk.ValueType.String,
-      // ImageAttachments instructs Coda to ingest the image and store it in the
-      // doc. This is required, since the thumbnail image URLs returned by
-      // TemporaryBlobStorage expire.
+      // ImageAttachments instructs Superhuman Docs to ingest the image and
+      // store it in the doc. This is required, since the thumbnail image URLs
+      // returned by TemporaryBlobStorage expire.
       codaType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },
@@ -541,8 +542,8 @@ const FileSchema = sdk.makeObjectSchema({
     },
     thumbnail: {
       type: sdk.ValueType.String,
-      // ImageAttachments instructs Coda to ingest the image and store it in the
-      // doc.
+      // ImageAttachments instructs Superhuman Docs to ingest the image and
+      // store it in the doc.
       codaType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },
@@ -699,7 +700,7 @@ import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
 // A formula that demonstrates how to generate an SVG that adapts to the user's
-// dark mode setting in Coda.
+// dark mode setting in Superhuman Docs.
 pack.addFormula({
   name: "HelloDarkMode",
   description: "Generates an image that adapts to the dark mode setting.",
@@ -707,9 +708,9 @@ pack.addFormula({
   resultType: sdk.ValueType.String,
   codaType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
-    // When loading your image in dark mode, Coda will append the URL fragment
-    // "#DarkMode". Instead of hard-coding that value, it's safer to retrieve
-    // it from the SDK.
+    // When loading your image in dark mode, Superhuman Docs will append the URL
+    // fragment "#DarkMode". Instead of hard-coding that value, it's safer to
+    // retrieve it from the SDK.
     let darkModeId = sdk.SvgConstants.DarkModeFragmentId;
     // Generate the SVG markup. Prefer using a library for this when possible.
     let svg = `

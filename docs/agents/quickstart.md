@@ -108,7 +108,7 @@ Superhuman Go agents are built using Packs. Follow the steps below to create a P
 
     When prompted to **Create a test doc**, dismiss the dialog with the **X** icon in the upper right.
 
-    It can be useful to test your agent's tools in a Coda doc, where you can more precisely control the inputs and view the outputs, but this agent doesn't have any tools.
+    It can be useful to test your agent's tools in a doc, where you can more precisely control the inputs and view the outputs, but this agent doesn't have any tools.
 
     </div>
     <div markdown>

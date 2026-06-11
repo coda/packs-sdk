@@ -8,19 +8,19 @@ icon: octicons/browser-16
 
 The fastest and easiest way to create a Pack is to use our web-based Pack Studio. You don't need to download any code or tools, just make sure you have:
 
-1. A Coda account, with
+1. A Superhuman account, with
 2. [Doc Maker access][hc_doc_maker] in your workspace.
 
-If you're new to Coda, [sign up][coda_sign_up] for a free account and you'll automatically be made a Doc Maker in your personal workspace.
+If you're new to Superhuman Docs, [sign up][coda_sign_up] for a free account and you'll automatically be made a Doc Maker in your personal workspace.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nZVb8w77yqY" title="YouTube video player: Get started in the browser" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 ## Navigate to the Pack Studio
 
-The Pack Studio is built right in to the Coda application. To get there:
+The Pack Studio is built right in to the Superhuman Docs application. To get there:
 
-1. Open [Coda][coda_home] in your browser.
+1. Open [Superhuman Docs][coda_home] in your browser.
 1. Click on **Packs** in the navigation menu on the left. If you are a member of multiple workspaces you will need to select a workspace first.
 1. Click the **Create a Pack** button in the upper right.
 
@@ -44,7 +44,7 @@ Next we'll use the Pack Studio to build that code and get it ready to use:
 
 1. Click the **Build** button in the bottom left.
 
-    This checks your Pack for errors and Packages it up for use in a Coda doc. It can take a few seconds for the build to complete.
+    This checks your Pack for errors and Packages it up for use in a doc. It can take a few seconds for the build to complete.
 
 1. When the confirmation screen appears, click **Create a test doc**.
 
@@ -90,9 +90,9 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 - Check out the [code samples][samples] to see examples of specific Pack features as well as complete sample Packs.
 
 
-[coda_sign_up]: https://coda.io/signup
+[coda_sign_up]: https://docs.superhuman.com/signup
 [hc_doc_maker]: https://help.coda.io/hc/en-us/articles/39556004184077-Roles-in-Coda-Doc-Makers-Admins-and-Editors
-[coda_home]: https://coda.io/docs
+[coda_home]: https://docs.superhuman.com/docs
 [samples_hello_world]: ../../samples/full/hello-world.md
 [samples]: ../../samples/topic/formula.md
 [guides]: ../../guides/blocks/formulas.md

@@ -11,8 +11,8 @@ search:
 # Interface: StringEmbedSchema
 
 A schema representing a return value or object property that is provided as a string,
-which Coda should interpret as an embed value (e.g. a URL). Coda uses an external provider (iframely)
-to handle all embeds by default. If there is no support for a given embed that you want to use,
+which Superhuman Docs should interpret as an embed value (e.g. a URL). Superhuman Docs uses an external provider
+(iframely) to handle all embeds by default. If there is no support for a given embed that you want to use,
 you will need to use the `force` option which falls back to a generic iframe.
 
 ## Extends
@@ -25,7 +25,7 @@ you will need to use the `force` option which falls back to a generic iframe.
 
 > **codaType**: [`Embed`](../enumerations/ValueHintType.md#embed)
 
-Instructs Coda to render this value as an embed.
+Instructs Superhuman Docs to render this value as an embed.
 
 #### Overrides
 
@@ -52,12 +52,12 @@ explain the purpose or contents of any property that is not self-evident.
 
 > `optional` **force**: `boolean`
 
-Toggle whether to try to force embed the content in Coda. Should be kept to false for most cases.
+Toggle whether to try to force embed the content in Superhuman Docs. Should be kept to false for most cases.
 
 By default, we use an external provider (iframely) that supports and normalizes embeds for different sites.
 If you are trying to embed an uncommon site or one that is not supported by them,
-you can set this to `true` to tell Coda to force render the embed. This renders a sandboxed iframe for the embed
-but requires user consent per-domain to actually display the embed.
+you can set this to `true` to tell Superhuman Docs to force render the embed. This renders a sandboxed iframe
+for the embed but requires user consent per-domain to actually display the embed.
 
 ***
 

@@ -15,10 +15,10 @@ To connect to a Google API from a Pack you need to use OAuth2 authentication. Ma
 One of the checks is that Google must verify you own the domain name for all of the domains used by the integration. This includes the redirect URI that users are sent to after they complete the approval screen. For Packs this redirect URL follows the pattern:
 
 ```
-https://coda.io/packsAuth/oauth2/{PACK ID}
+https://docs.superhuman.com/packsAuth/oauth2/{PACK ID}
 ```
 
-To meet Google's verification requirements you would need to verify ownership of the `coda.io` domain, which isn't possible. However [Google's FAQ][google_verification_line] includes this line:
+To meet Google's verification requirements you would need to verify ownership of the `docs.superhuman.com` domain, which isn't possible. However [Google's FAQ][google_verification_line] includes this line:
 
 >  Note: If you are using a third party service provider and your domain is owned by them, then you need to provide a detailed justification for us to validate it.
 
@@ -28,7 +28,7 @@ Although Google includes an exception for apps that don't own the domain of thei
 - Ensure you have a privacy policy published, even if it's just a minimal one. It can live in the published doc mentioned above.
 - Record a video showing the installation and usage of the Pack.
 - In the verification form there is a field that asks for a similar app that has been verified, and you can refer them to the previously approved [Apps Script Pack][packs_apps_script], with project number 367090187070.
-- If they insist on proof of ownership of `coda.io`, quote the clause from the FAQ and mention that the platform requires that everyone uses a redirect URL hosted on `coda.io`. You can link them to [this section][oauth_redirect] of the OAuth documentation.
+- If they insist on proof of ownership of `docs.superhuman.com`, quote the clause from the FAQ and mention that the platform requires that everyone uses a redirect URL hosted on `docs.superhuman.com`. You can link them to [this section][oauth_redirect] of the OAuth documentation.
 - If they insist that a branded "Google Sign-in" button be used to start the OAuth flow, mention that the platform controls these buttons and that you can't change them.
 
 With enough persistence you should be able to get your Pack verified. The process may take a week or more to complete, so plan accordingly.
@@ -68,7 +68,7 @@ Although we don't display it in the Pack Studio, each Pack belongs to a specific
 To determine which workspace your Pack belongs to open the following URL in your browser:
 
 ```
-https://coda.io/apis/v1/packs/{PACK_ID}
+https://docs.superhuman.com/apis/v1/packs/{PACK_ID}
 ```
 
 Replace `{PACK_ID}` with the ID of your Pack. The response includes a `workspaceId` field with the ID of the workspace it belongs to. You can compare this ID with the one shown in the URL bar as you switch between workspaces in the doc list section of the UI.
@@ -83,7 +83,7 @@ Only the [support][support_email] team can transfer a Pack to another workspace,
 [google_verification_exceptions]: https://support.google.com/cloud/answer/9110914#exceptions-ver-reqts&zippy=%2Cexceptions-to-verification-requirements
 [google_verification_line]: https://support.google.com/cloud/answer/9110914?hl=en#zippy=%2Chow-can-i-make-sure-the-verification-process-is-as-streamlined-as-possible
 [oauth_redirect]: ../guides/basics/authentication/oauth2.md#redirect-url
-[packs_apps_script]: https://coda.io/packs/apps-script-14470
+[packs_apps_script]: https://docs.superhuman.com/packs/apps-script-14470
 [dynamic_sync_tables]: ../guides/blocks/sync-tables/dynamic.md
-[support_email]: mailto:support+packstudio@coda.io
+[support_email]: mailto:care@superhuman.com
 [hc_selling]: https://help.coda.io/hc/en-us/articles/39555971447053-Sell-your-Packs-on-Coda

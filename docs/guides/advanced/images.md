@@ -5,14 +5,14 @@ description: Use images and files as parameters and return types.
 
 # Working with images and files
 
-You can upload images and files to a Coda doc, including in a table using dedicated column types. Packs likewise have the ability to work with binary data.
+You can upload images and files to a doc, including in a table using dedicated column types. Packs likewise have the ability to work with binary data.
 
 [View Sample Code][samples]{ .md-button }
 
 
 ## Parameters and result types
 
-Formulas can accept an image as a parameter using the parameter type `Image`, which is then passed to the `execute` function as a URL. Likewise, formulas can return images as URLs, using the hint type `ImageReference` or `ImageAttachment`. When using an image reference the image is always loaded from the source URL, while for attachments Coda copies the image from the source URL into the document and shows that local copy.
+Formulas can accept an image as a parameter using the parameter type `Image`, which is then passed to the `execute` function as a URL. Likewise, formulas can return images as URLs, using the hint type `ImageReference` or `ImageAttachment`. When using an image reference the image is always loaded from the source URL, while for attachments Superhuman Docs copies the image from the source URL into the document and shows that local copy.
 
 Image attachments should be used in most cases. An image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest copy, or when contractually obligated to hotlink to the image.
 
@@ -23,9 +23,9 @@ See the [Parameters][parameters_images] and [Data types][data_types_images] guid
 
 ## Expiring images {: #expiring}
 
-Some APIs provide access to images using URLs that expire after a short amount of time. In these cases, return the URL with the hint type `ImageAttachment`, which instructs Coda to ingest the image and store a copy in the document.
+Some APIs provide access to images using URLs that expire after a short amount of time. In these cases, return the URL with the hint type `ImageAttachment`, which instructs Superhuman Docs to ingest the image and store a copy in the document.
 
-Ingesting an image can take a few seconds, and Coda will show a paperclip icon for the image until it is complete. This delay can be more noticeable for sync tables, since they can return many images at once and they are ingested sequentially.
+Ingesting an image can take a few seconds, and Superhuman Docs will show a paperclip icon for the image until it is complete. This delay can be more noticeable for sync tables, since they can return many images at once and they are ingested sequentially.
 
 !!! bug
     Image attachments currently only work correctly within a sync table. When used outside of a sync table they behave like image references and load the image from the source URL.
@@ -33,7 +33,7 @@ Ingesting an image can take a few seconds, and Coda will show a paperclip icon f
 
 ## Private images {: #private}
 
-Some APIs return links to private images, that require authentication credentials to be provided in order to access their content. Before Coda can ingest these images you must first copy them to a location that is publicly accessible. The Pack SDK provides a utility for this, known as [`TemporaryBlobStorage`][reference_temporaryblobstorage]. It is made available at `context.temporaryBlobStorage`, and the `storeUrl()` method fetches the image (with authentication credentials), stores the data in a temporary location, and returns the resulting URL. This temporary URL can then be returned as an `ImageAttachment` as [discussed above](#expiring).
+Some APIs return links to private images, that require authentication credentials to be provided in order to access their content. Before Superhuman Docs can ingest these images you must first copy them to a location that is publicly accessible. The Pack SDK provides a utility for this, known as [`TemporaryBlobStorage`][reference_temporaryblobstorage]. It is made available at `context.temporaryBlobStorage`, and the `storeUrl()` method fetches the image (with authentication credentials), stores the data in a temporary location, and returns the resulting URL. This temporary URL can then be returned as an `ImageAttachment` as [discussed above](#expiring).
 
 ```ts
 let privateImageUrl = response.body.imageUrl;
@@ -47,7 +47,7 @@ return temporaryImageUrl;
 
 Some APIs return the raw image data directly in the response object, typically as a base64-encoded string. Additionally, JavaScript libraries used to generate or manipulate images may also return raw image data.
 
-Similar to [private images](#private) discussed above, you can use `TemporaryBlobStorage` to store the image data in a temporary location and get a URL which Coda can then ingest. The `storeBlob()` method accepts a [Node.js `Buffer`][buffer] containing the data and the content type of the image.
+Similar to [private images](#private) discussed above, you can use `TemporaryBlobStorage` to store the image data in a temporary location and get a URL which Superhuman Docs can then ingest. The `storeBlob()` method accepts a [Node.js `Buffer`][buffer] containing the data and the content type of the image.
 
 ```ts
 let imageBase64 = response.body.image;
@@ -107,5 +107,5 @@ return sdk.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
 [buffer]: https://nodejs.org/api/buffer.html#buffer
 [mdn_data_urls]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 [mdn_svg]: https://developer.mozilla.org/en-US/docs/Web/SVG
-[pack_latex]: https://coda.io/packs/latex-1058
+[pack_latex]: https://docs.superhuman.com/packs/latex-1058
 [mdn_target]: https://developer.mozilla.org/en-US/docs/Web/CSS/:target

@@ -72,7 +72,7 @@ Run `npx packs init` to initialize an empty project with the recommended setting
 
 ## Running code locally
 
-Once published, your Pack functionality will be executed on the platform's servers after being invoked from a Coda doc. During the development process, you can call your formulas directly from the command line, to simulate this process for rapid development. When you're nearing the end of authoring your Pack, you can upload your Pack and run it in a real doc to verify it works as intended.
+Once published, your Pack functionality will be executed on the platform's servers after being invoked from a doc. During the development process, you can call your formulas directly from the command line, to simulate this process for rapid development. When you're nearing the end of authoring your Pack, you can upload your Pack and run it in a real doc to verify it works as intended.
 
 
 ### Running formulas
@@ -94,7 +94,7 @@ This will execute the formula and print the output to the terminal.
 
 ### Passing parameters
 
-To pass parameters to a formula when using `packs execute`, include them as separate arguments after the formula name. Like with all Coda formulas, parameters are passed positionally.
+To pass parameters to a formula when using `packs execute`, include them as separate arguments after the formula name. Like with all Superhuman formulas, parameters are passed positionally.
 
 ```sh
 npx packs execute src/pack.ts MyFormula "one" "two" "three"
@@ -250,7 +250,7 @@ All of the commands shown so far have only affected your local machine. To get t
 
 ### Registering an API token {: #register}
 
-All of the Pack upload commands work with the Coda API to upload your Pack, and hence require an API token to identify you as the user. Simply run this command, and you'll be given a link to the Account page to create an API token, which you can then paste in the terminal. You API token will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
+All of the Pack upload commands work with the Superhuman Docs API to upload your Pack, and hence require an API token to identify you as the user. Simply run this command, and you'll be given a link to the Account page to create an API token, which you can then paste in the terminal. You API token will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
 
 ```sh
 npx packs register
@@ -265,7 +265,7 @@ When you've implemented your Pack and are ready to upload it for the first time,
 npx packs create path/to/pack.ts
 ```
 
-This will create a new empty Pack on the platform's servers. It will print out the url of the Pack Studio page in the Coda UI, and store the newly-assigned Pack ID in a hidden file `.coda-pack.json` in the same directory as your Pack definition. (This allows you to put multiple Pack definitions in the same repo, as long as they're in different directories.) The ID in this file will be used in subsequent CLI commands for managing your Pack.
+This will create a new empty Pack on the platform's servers. It will print out the url of the Pack Studio page in the Superhuman Docs UI, and store the newly-assigned Pack ID in a hidden file `.coda-pack.json` in the same directory as your Pack definition. (This allows you to put multiple Pack definitions in the same repo, as long as they're in different directories.) The ID in this file will be used in subsequent CLI commands for managing your Pack.
 
 This command accepts optional flags for specifying a name and description for the Pack. You can always set or update the name and description in the Pack management UI later.
 
@@ -339,7 +339,7 @@ It's possible to start development of a Pack in the Pack Studio web editor and l
 To migrate, first make sure you have the [required software](#requirements) installed. Then create a new directory for the Pack, [install the SDK](#install), and [register an API token](#register). Finally run `packs clone` passing in the URL of the Pack.
 
 ```sh
-npx packs clone "https://coda.io/p/123456"
+npx packs clone "https://docs.superhuman.com/p/123456"
 ```
 
 This will initialize the directory with the recommended settings and dependencies, download your existing Pack code into `pack.ts`, and create a `.coda-pack.json` file that links them together.
@@ -348,7 +348,7 @@ This will initialize the directory with the recommended settings and dependencie
     If you've already setup your local project and just need to link it to the existing Pack use the `packs link` command instead. It will create the `.coda-pack.json` file and nothing else.
 
     ```sh
-    npx packs link "https://coda.io/p/123456"
+    npx packs link . "https://docs.superhuman.com/p/123456"
     ```
 
 The next time you run `packs upload` your Pack will be updated to use the local code. You can always get back to the previous code you wrote in the Pack Studio by visiting the [**History** tab][versions_history].

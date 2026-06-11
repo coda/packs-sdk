@@ -84,47 +84,48 @@ export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormula
 export type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 /**
- * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+ * Enumeration of types of formula parameters. These describe semantic value types (as opposed to
+ * JavaScript value types).
  */
 export declare enum ParameterType {
     /**
-     * Indicates a parameter that is a Coda text value.
+     * Indicates a parameter that is a text value.
      */
     String = "string",
     /**
-     * Indicates a parameter that is a Coda number value.
+     * Indicates a parameter that is a number value.
      */
     Number = "number",
     /**
-     * Indicates a parameter that is a Coda boolean value.
+     * Indicates a parameter that is a boolean value.
      */
     Boolean = "boolean",
     /**
-     * Indicates a parameter that is a Coda date value (which includes time and datetime values).
+     * Indicates a parameter that is a date value (which includes time and datetime values).
      */
     Date = "date",
     /**
-     * Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+     * Indicates a parameter that is a rich text value that should be passed to the pack as HTML.
      */
     Html = "html",
     /**
-     * Indicates a parameter that is a Coda image. The pack is passed an image URL.
+     * Indicates a parameter that is an image. The pack is passed an image URL.
      */
     Image = "image",
     /**
-     * Indicates a parameter that is a Coda file. The pack is passed a file URL.
+     * Indicates a parameter that is a file. The pack is passed a file URL.
      */
     File = "file",
     /**
-     * Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+     * Indicates a parameter that is a rich text value that should be passed to the pack as Markdown.
      */
     Markdown = "markdown",
     /**
-     * Indicates a parameter that is a Coda email value.
+     * Indicates a parameter that is an email value.
      */
     Email = "email",
     /**
-     * Indicates a parameter that is a list of Coda text values.
+     * Indicates a parameter that is a list of text values.
      */
     StringArray = "stringArray",
     /**
@@ -132,7 +133,7 @@ export declare enum ParameterType {
      */
     SparseStringArray = "sparseStringArray",
     /**
-     * Indicates a parameter that is a list of Coda number values.
+     * Indicates a parameter that is a list of Superhuman Docs number values.
      */
     NumberArray = "numberArray",
     /**
@@ -140,7 +141,7 @@ export declare enum ParameterType {
      */
     SparseNumberArray = "sparseNumberArray",
     /**
-     * Indicates a parameter that is a list of Coda boolean values.
+     * Indicates a parameter that is a list of boolean values.
      */
     BooleanArray = "booleanArray",
     /**
@@ -148,7 +149,7 @@ export declare enum ParameterType {
      */
     SparseBooleanArray = "sparseBooleanArray",
     /**
-     * Indicates a parameter that is a list of Coda email values.
+     * Indicates a parameter that is a list of email values.
      */
     EmailArray = "emailArray",
     /**
@@ -156,7 +157,7 @@ export declare enum ParameterType {
      */
     SparseEmailArray = "sparseEmailArray",
     /**
-     * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+     * Indicates a parameter that is a list of date values (which includes time and datetime values).
      *
      * Currently, when such a parameter is used with a sync table formula or an action formula
      * ({@link BaseFormulaDef.isAction}), which will generate a builder UI for selecting parameters, a date array
@@ -169,7 +170,7 @@ export declare enum ParameterType {
      */
     SparseDateArray = "sparseDateArray",
     /**
-     * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+     * Indicates a parameter that is a list of rich text values that should be passed to the pack as HTML.
      */
     HtmlArray = "htmlArray`",
     /**
@@ -177,7 +178,7 @@ export declare enum ParameterType {
      */
     SparseHtmlArray = "sparseHtmlArray",
     /**
-     * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
+     * Indicates a parameter that is a list of image values. The pack is passed a list of image URLs.
      */
     ImageArray = "imageArray",
     /**
@@ -185,7 +186,7 @@ export declare enum ParameterType {
      */
     SparseImageArray = "sparseImageArray",
     /**
-     * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
+     * Indicates a parameter that is a list of file values. The pack is passed a list of file URLs.
      */
     FileArray = "fileArray",
     /**
@@ -193,7 +194,8 @@ export declare enum ParameterType {
      */
     SparseFileArray = "sparseFileArray",
     /**
-     * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+     * Indicates a parameter that is a list of rich text values that should be passed to the
+     * pack as Markdown.
      */
     MarkdownArray = "markdownArray`",
     /**
@@ -280,7 +282,7 @@ export interface ParamDef<T extends UnionType> {
      * This value overrides {@link ParamDef.suggestedValue} if set.
      *
      * Useful in situations where the existing suggested value is used to scope down the synced data to what would fit
-     * within Coda's row limits, but during indexing you'd want to include a larger scope of data.
+     * within Superhuman Docs's row limits, but during indexing you'd want to include a larger scope of data.
      */
     ingestionSuggestedValue?: SuggestedValueType<T>;
     /**
@@ -303,7 +305,7 @@ export interface ParamDef<T extends UnionType> {
      *
      * Pack code cannot completely assume it will never see other values, though. For example, if this
      * parameter's value is being set via a formula (instead of a user manually picking a value from
-     * Coda's UI), the platform will do nothing to validate that input before passing it to the pack.
+     * the Superhuman Docs UI), the platform will do nothing to validate that input before passing it to the pack.
      *
      * Defaults to true.
      *
@@ -335,7 +337,7 @@ export interface ParamDef<T extends UnionType> {
      * }),
      * ```
      *
-     * @see [Crawling guide](https://coda.io/packs/build/latest/agents/indexing/crawling/)
+     * @see [Crawling guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/crawling/)
      */
     crawlStrategy?: CrawlStrategy;
     /**
@@ -452,7 +454,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
     }>;
     /**
      * Does this formula take an action (vs retrieve data or make a calculation)?
-     * Actions are presented as buttons in the Coda UI.
+     * Actions are presented as buttons in the Superhuman Docs UI.
      */
     readonly isAction?: boolean;
     /**
@@ -734,33 +736,33 @@ export interface Fetcher {
  * When syncing data from certain APIs, a response object may include the URL of a file or
  * image that can only be downloaded with the user's authentication credentials. Normally,
  * you can just return an image or file URL from a formula invocation, and if the schema
- * indicates that the value represents an attachment, Coda will ingest the data at that URL
- * and host it from Coda. However, if the URL requires authentication, Coda will be unable
+ * indicates that the value represents an attachment, Superhuman Docs will ingest the data at that URL
+ * and host it from Superhuman Docs. However, if the URL requires authentication, Superhuman Docs will be unable
  * to download the data since this ingestion does not happen within the packs execution
  * environment.
  *
  * The solution is for your pack code to fetch the data at the URL, since the pack
  * execution environment will apply the user's authentication, and then you can
  * stash the downloaded value in `TemporaryBlobStorage`, which will return a temporary
- * URL that you can return from the pack. Coda will be able to ingest the data from
+ * URL that you can return from the pack. Superhuman Docs will be able to ingest the data from
  * that temporary URL.
  *
  * Similarly, suppose your formula generates a very large value like a dynamically-generated
- * image that you wish to return and have Coda render. Pack return values are meant to be
+ * image that you wish to return and have Superhuman Docs render. Pack return values are meant to be
  * fairly small, representing human-readable data. Large values like images are meant to
  * be returned as URLs referencing that data. So rather than return the raw image data,
  * your pack should use {@link storeBlob} to upload that large data to temporary storage.
  * You will be returned a URL that you can then return with your formula response, and
- * Coda will ingest the data from that URL into permanent storage.
+ * Superhuman Docs will ingest the data from that URL into permanent storage.
  */
 export interface TemporaryBlobStorage {
     /**
      * Fetches the data at the given URL, applying user authentication credentials as appropriate,
-     * and stores it in Coda-hosted temporary storage. Returns a URL for the temporary file
+     * and stores it in Superhuman-hosted temporary storage. Returns a URL for the temporary file
      * that you should return in your formula response.
      *
      * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
-     * Coda reserves the right to ignore long expirations.
+     * the platform reserves the right to ignore long expirations.
      *
      * If the `downloadFilename` parameter is specified, when opened in the browser the file will
      * be downloaded with the file name provided.
@@ -774,11 +776,11 @@ export interface TemporaryBlobStorage {
         contentType?: string;
     }, fetchOpts?: Pick<FetchRequest, 'disableAuthentication' | 'headers' | 'cacheTtlSecs'>): Promise<string>;
     /**
-     * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
+     * Stores the given data as a file with the given content type in Superhuman-hosted temporary storage.
      * Returns a URL for the temporary file that you should return in your formula response.
      *
      * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
-     * Coda reserves the right to ignore long expirations.
+     * the platform reserves the right to ignore long expirations.
      *
      * If the `downloadFilename` parameter is specified, when opened in the browser the file will
      * be downloaded with the file name provided.
@@ -1000,7 +1002,7 @@ export declare enum InvocationSource {
      */
     Brain = "Brain",
     /**
-     * A Coda doc.
+     * A doc.
      */
     Doc = "Doc",
     /**

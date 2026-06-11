@@ -2,7 +2,7 @@ import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
 // A formula that demonstrates how to generate an SVG that adapts to the user's
-// dark mode setting in Coda.
+// dark mode setting in Superhuman Docs.
 pack.addFormula({
   name: "HelloDarkMode",
   description: "Generates an image that adapts to the dark mode setting.",
@@ -10,9 +10,9 @@ pack.addFormula({
   resultType: sdk.ValueType.String,
   codaType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
-    // When loading your image in dark mode, Coda will append the URL fragment
-    // "#DarkMode". Instead of hard-coding that value, it's safer to retrieve
-    // it from the SDK.
+    // When loading your image in dark mode, Superhuman Docs will append the URL
+    // fragment "#DarkMode". Instead of hard-coding that value, it's safer to
+    // retrieve it from the SDK.
     let darkModeId = sdk.SvgConstants.DarkModeFragmentId;
     // Generate the SVG markup. Prefer using a library for this when possible.
     let svg = `

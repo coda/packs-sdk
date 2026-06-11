@@ -11,7 +11,7 @@ search:
 # Interface: NumericDurationSchema
 
 A schema representing a return value or object property that is provided as a number,
-which Coda should interpret as a duration. The given number should be an amount of days
+which Superhuman Docs should interpret as a duration. The given number should be an amount of days
 (fractions allowed).
 
 ## Extends
@@ -24,7 +24,7 @@ which Coda should interpret as a duration. The given number should be an amount 
 
 > **codaType**: [`Duration`](../enumerations/ValueHintType.md#duration)
 
-Instructs Coda to render this value as a duration.
+Instructs Superhuman Docs to render this value as a duration.
 
 #### Overrides
 

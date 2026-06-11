@@ -1,11 +1,11 @@
 ---
 nav: Formulas
-description: Formulas are one of the most basic building blocks in Coda, and using Packs you can add your own custom ones.
+description: Formulas are one of the most basic building blocks in Superhuman Docs, and using Packs you can add your own custom ones.
 ---
 
 # Add custom formulas
 
-Formulas are one of the most basic building blocks in Coda; used to calculate values, filter tables, and so much more. Coda provides a wide array of [built-in formulas][formulas], and using Packs you can add your own custom formulas. Once your Pack is installed in a doc you can use those custom formulas anywhere, intermingling them with built-in formulas or those from other Packs.
+Formulas are one of the most basic building blocks in Superhuman Docs; used to calculate values, filter tables, and so much more. Superhuman Docs provides a wide array of [built-in formulas][formulas], and using Packs you can add your own custom formulas. Once your Pack is installed in a doc you can use those custom formulas anywhere, intermingling them with built-in formulas or those from other Packs.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -18,12 +18,12 @@ Formulas are one of the most basic building blocks in Coda; used to calculate va
 
 A formula definition consists of a set of key-value pairs, which specify the various settings for the formula. Most of these settings are metadata, such as the name, description, parameters and result type. The actual code that is run each time the formula recalculated is specified using in the `execute` key.
 
-<img src="site:images/formula_structure.png" srcset="site:images/formula_structure_2x.png 2x" class="screenshot" alt="Mapping of formula coda to formula editor.">
+<img src="site:images/formula_structure.png" srcset="site:images/formula_structure_2x.png 2x" class="screenshot" alt="Mapping of formula code to formula editor.">
 
 
 ## Naming
 
-The name of a formula can only contain letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. We also recommend following these conventions:
+The name of a formula can only contain letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Superhuman formula language. We also recommend following these conventions:
 
 - For formulas that fetch or generate data, select a noun that corresponds to the output, using a plural if multiple can be returned. For example, `Chart` or `Tasks`.
   {: .yes}
@@ -87,7 +87,7 @@ Formulas can use [authentication][authentication] to fetch private data. When us
 
 By default if a Pack defines an authentication method then all formulas will require a connected account. You can change this behavior using the [`connectionRequirement`][connectionRequirement] property of the formula definition. Setting it to `Optional` makes the user account optional, and `None` removes the account parameter completely.
 
-While it's possible to use multiple accounts within a document, each instance of the formula must use a specific account. It isn't possible to have a formula that uses the account of whichever user is currently viewing the document. It's important for collaboration that all users in a Coda doc have access to the same data.
+While it's possible to use multiple accounts within a document, each instance of the formula must use a specific account. It isn't possible to have a formula that uses the account of whichever user is currently viewing the document. It's important for collaboration that all users in a doc have access to the same data.
 
 
 ## Caching
@@ -97,7 +97,7 @@ For performance reasons formula results are cached by default. See the [caching 
 
 ## Recalculation
 
-After a formula is run its value is stored in the Coda document model. Reloading the document will not cause the formula to be run again. Instead the formula engine monitors for changes to the formula inputs and determines if the result needs to be recalculated.
+After a formula is run its value is stored in the document model. Reloading the document will not cause the formula to be run again. Instead the formula engine monitors for changes to the formula inputs and determines if the result needs to be recalculated.
 
 Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the **Settings** tab of the Pack's side panel there is a "Refresh now" button (**⟳**) that allows users to recalculate all formulas using the Pack, as well as options to cause them to recalculate on a regular schedule.
 
@@ -108,12 +108,12 @@ Pack makers also have access to additional options in the Pack Maker Tools:
 - In the three dots menu at the top right of the Pack Maker Tools panel, click the option **Refresh Pack formulas and tables**. [Learn more][pmt_options].
 - In the settings of the Pack Maker tools, toggle on the setting **Auto-refresh formulas & tables**. [Learn more][pmt_settings].
 
-Coda has complex logic that determines when formula results need to be recalculated. Formulas will always recalculate when the parameter values change, but it will also happen periodically for other reasons including routine maintenance. In general you shouldn't make any assumptions about how often your formula will be run. If running your formula is expensive in some way (API cost, etc) make sure to use [caching](#caching) and [rate limits][fetcher_rate_limits] to limit the impact of recalculation.
+Superhuman Docs has complex logic that determines when formula results need to be recalculated. Formulas will always recalculate when the parameter values change, but it will also happen periodically for other reasons including routine maintenance. In general you shouldn't make any assumptions about how often your formula will be run. If running your formula is expensive in some way (API cost, etc) make sure to use [caching](#caching) and [rate limits][fetcher_rate_limits] to limit the impact of recalculation.
 
 
 ## Examples
 
-Coda automatically generates user documentation for your formulas based on the names and descriptions you assign. To demonstrate how the formula should be used you can add entries to the `examples` array. Each example is a structured object containing a set of parameters and the corresponding result, with the types matching those defined in your formula.
+Superhuman Docs automatically generates user documentation for your formulas based on the names and descriptions you assign. To demonstrate how the formula should be used you can add entries to the `examples` array. Each example is a structured object containing a set of parameters and the corresponding result, with the types matching those defined in your formula.
 
 === "Formula documentation"
 
@@ -159,7 +159,7 @@ examples: [
 
 
 [samples]: ../../samples/topic/formula.md
-[formulas]: https://coda.io/formulas
+[formulas]: https://docs.superhuman.com/formulas
 [parameters]: ../basics/parameters/index.md
 [actions]: actions.md
 [data-types]: ../basics/data-types.md
