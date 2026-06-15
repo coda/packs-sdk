@@ -5073,13 +5073,9 @@ describe('Pack metadata Validation', async () => {
         },
       });
       await validateJson(metadata);
-
-      assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2);
-      metadata.defaultAuthentication.resource = ['https://api.example.com', 'https://api2.example.com'];
-      await validateJson(metadata);
     });
 
-    it('OAuth2, resource must be an absolute URL', async () => {
+    it('OAuth2, resource must be an absolute URL when requiresEndpointUrl is not set', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
@@ -5091,43 +5087,39 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'resource must be an absolute URL starting with https://',
+          message: 'resource must be an absolute URL when requiresEndpointUrl is not true',
           path: 'defaultAuthentication.resource',
         },
       ]);
     });
 
-    it('OAuth2, resource array elements must be absolute URLs', async () => {
+    it('OAuth2, resource may be relative when requiresEndpointUrl is set', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
-          authorizationUrl: 'https://example.com/authUrl',
-          tokenUrl: 'https://example.com/tokenUrl',
-          resource: ['https://api.example.com', '/relative'],
+          authorizationUrl: '/authUrl',
+          tokenUrl: '/tokenUrl',
+          requiresEndpointUrl: true,
+          resource: '/resource',
         },
       });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'resource must be an absolute URL starting with https://',
-          path: 'defaultAuthentication.resource[1]',
-        },
-      ]);
+      await validateJson(metadata);
     });
 
-    it('OAuth2, resource array must be non-empty', async () => {
+    it('OAuth2, resource must be relative when requiresEndpointUrl is set', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
-          authorizationUrl: 'https://example.com/authUrl',
-          tokenUrl: 'https://example.com/tokenUrl',
-          resource: [],
+          authorizationUrl: '/authUrl',
+          tokenUrl: '/tokenUrl',
+          requiresEndpointUrl: true,
+          resource: 'https://api.example.com',
         },
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Too small: expected array to have >=1 items',
+          message: 'resource must be a relative URL when requiresEndpointUrl is true',
           path: 'defaultAuthentication.resource',
         },
       ]);

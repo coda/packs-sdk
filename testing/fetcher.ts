@@ -234,7 +234,7 @@ export class AuthenticatingFetcher implements Fetcher {
       throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
     }
 
-    const params: {[key: string]: string | string[] | undefined} = {
+    const params: {[key: string]: string | undefined} = {
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
       client_id: clientId,
@@ -252,11 +252,8 @@ export class AuthenticatingFetcher implements Fetcher {
       if (value === undefined) {
         continue;
       }
-      // `resource` (per RFC 8707) may have multiple values, which are passed as repeated form parameters.
-      for (const singleValue of Array.isArray(value) ? value : [value]) {
-        formParams.append(key, singleValue.toString());
-        formParamsWithSecret.append(key, singleValue.toString());
-      }
+      formParams.append(key, value.toString());
+      formParamsWithSecret.append(key, value.toString());
     }
     formParamsWithSecret.append('client_secret', clientSecret);
 

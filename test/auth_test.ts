@@ -1787,23 +1787,6 @@ describe('Auth', () => {
           assert.deepEqual(params.getAll('resource'), ['https://api.example.com']);
         });
 
-        it('passes multiple resources as repeated token exchange params', async () => {
-          await oauthHelpers.requestOAuthAccessToken(
-            {
-              grant_type: 'authorization_code',
-              code: 'some-code',
-              client_id: 'some-client-id',
-              client_secret: 'some-client-secret',
-              redirect_uri: 'http://localhost:3000/oauth',
-              resource: ['https://api.example.com', 'https://files.example.com'],
-            },
-            {tokenUrl: 'https://token-url.com'},
-          );
-
-          const params = new URLSearchParams(capturedBodies[0]);
-          assert.deepEqual(params.getAll('resource'), ['https://api.example.com', 'https://files.example.com']);
-        });
-
         it('omits the resource param when not configured', async () => {
           await oauthHelpers.requestOAuthAccessToken(
             {
@@ -1820,7 +1803,7 @@ describe('Auth', () => {
           assert.deepEqual(params.getAll('resource'), []);
         });
 
-        it('appends a single resource as a repeated authorization URL param', () => {
+        it('appends the resource as an authorization URL param', () => {
           const url = oauthServer.makeAuthorizationUrl({
             authorizationUrl: 'https://auth-url.com',
             clientId: 'some-client-id',
@@ -1831,21 +1814,6 @@ describe('Auth', () => {
 
           const params = new URL(url).searchParams;
           assert.deepEqual(params.getAll('resource'), ['https://api.example.com']);
-        });
-
-        it('appends multiple resources as repeated authorization URL params', () => {
-          const url = oauthServer.makeAuthorizationUrl({
-            authorizationUrl: 'https://auth-url.com',
-            clientId: 'some-client-id',
-            redirectUri: 'http://localhost:3000/oauth',
-            resource: ['https://api.example.com', 'https://files.example.com'],
-            state: 12345,
-          });
-
-          const params = new URL(url).searchParams;
-          assert.deepEqual(params.getAll('resource'), ['https://api.example.com', 'https://files.example.com']);
-          // qs (used by withQueryParams) would encode arrays using indexed keys, which OAuth providers don't expect.
-          assert.notInclude(url, 'resource%5B0%5D');
         });
 
         it('omits the resource param from the authorization URL when not configured', () => {
@@ -1865,7 +1833,7 @@ describe('Auth', () => {
             type: AuthenticationType.OAuth2,
             authorizationUrl: 'https://auth-url.com',
             tokenUrl: 'https://token-url.com',
-            resource: ['https://api.example.com', 'https://files.example.com'],
+            resource: 'https://api.example.com',
           });
           storeCredential(MANIFEST_PATH, {
             clientId: 'some-client-id',
@@ -1902,7 +1870,7 @@ describe('Auth', () => {
           sinon.assert.calledOnce(fetchStub);
           const params = new URLSearchParams(capturedBodies[0]);
           assert.equal(params.get('grant_type'), 'refresh_token');
-          assert.deepEqual(params.getAll('resource'), ['https://api.example.com', 'https://files.example.com']);
+          assert.deepEqual(params.getAll('resource'), ['https://api.example.com']);
         });
       });
     });

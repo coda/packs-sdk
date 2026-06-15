@@ -195,11 +195,8 @@ class AuthenticatingFetcher {
             if (value === undefined) {
                 continue;
             }
-            // `resource` (per RFC 8707) may have multiple values, which are passed as repeated form parameters.
-            for (const singleValue of Array.isArray(value) ? value : [value]) {
-                formParams.append(key, singleValue.toString());
-                formParamsWithSecret.append(key, singleValue.toString());
-            }
+            formParams.append(key, value.toString());
+            formParamsWithSecret.append(key, value.toString());
         }
         formParamsWithSecret.append('client_secret', clientSecret);
         let oauthResponse = await fetch(tokenUrl, {

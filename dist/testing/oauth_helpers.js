@@ -18,15 +18,10 @@ async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, sc
         if (key === 'scope' && scopeParamName) {
             paramKey = scopeParamName;
         }
-        // Some params (e.g. `resource`, per RFC 8707) can have multiple values, which are passed as repeated
-        // form parameters rather than a single comma-joined value.
-        const values = Array.isArray(value) ? value : [value];
-        for (const singleValue of values) {
-            if (paramKey !== 'client_secret') {
-                formParams.append(paramKey, singleValue.toString());
-            }
-            formParamsWithSecret.append(paramKey, singleValue.toString());
+        if (paramKey !== 'client_secret') {
+            formParams.append(paramKey, value.toString());
         }
+        formParamsWithSecret.append(paramKey, value.toString());
     }
     let oauthResponse = await fetch(tokenUrl, {
         method: 'POST',

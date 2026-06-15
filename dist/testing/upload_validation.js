@@ -541,11 +541,6 @@ function buildMetadataSchema({ sdkVersion }) {
         postSetup: z.array(setEndpointPostSetupValidator).optional(),
         networkDomain: z.union([singleAuthDomainSchema, z.array(singleAuthDomainSchema).nonempty()]).optional(),
     };
-    const singleResourceSchema = z
-        .string()
-        .refine(isAbsoluteUrl, { message: 'resource must be an absolute URL starting with https://' })
-        .refine(validateUrlParsesIfAbsolute);
-    const resourceSchema = z.union([singleResourceSchema, z.array(singleResourceSchema).nonempty()]).optional();
     const defaultAuthenticationValidators = {
         [types_1.AuthenticationType.None]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.None),
@@ -612,13 +607,15 @@ function buildMetadataSchema({ sdkVersion }) {
             tokenQueryParam: z.string().optional(),
             useProofKeyForCodeExchange: z.boolean().optional(),
             pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
-            resource: resourceSchema,
+            /** Accepts a relative URL when requiresEndpointUrl is true; enforced in the superRefine below. */
+            resource: z.string().refine(validateUrlParsesIfAbsolute).optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
             useDynamicClientRegistration: z.boolean().optional(),
             ...baseAuthenticationValidators,
-        }).superRefine(({ requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl, useDynamicClientRegistration }, context) => {
+        }).superRefine((authDef, context) => {
+            const { requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl, resource, useDynamicClientRegistration } = authDef;
             if (useDynamicClientRegistration !== true) {
                 if (!authorizationUrl) {
                     context.addIssue({
@@ -635,32 +632,29 @@ function buildMetadataSchema({ sdkVersion }) {
                     });
                 }
             }
-            if (authorizationUrl) {
-                const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
-                const isRelativeUrl = (url) => url.startsWith('/');
-                if ((expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
-                    (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))) {
+            // When requiresEndpointUrl is set (and no endpointKey resolves the endpoint), these URLs are expected to be
+            // relative and resolved against the user-provided endpoint; otherwise they must be absolute.
+            const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
+            const isRelativeUrl = (url) => url.startsWith('/');
+            const validateUrlIsRelativeOrAbsolute = (fieldName, url) => {
+                if ((expectsRelativeUrl && !isRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
                     const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
                     context.addIssue({
                         code: 'custom',
-                        path: ['authorizationUrl'],
-                        message: `authorizationUrl must be ${expectedType} URL when \
+                        path: [fieldName],
+                        message: `${fieldName} must be ${expectedType} URL when \
 ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
                     });
                 }
+            };
+            if (authorizationUrl) {
+                validateUrlIsRelativeOrAbsolute('authorizationUrl', authorizationUrl);
             }
             if (tokenUrl) {
-                const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
-                const isRelativeUrl = (url) => url.startsWith('/');
-                if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
-                    const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
-                    context.addIssue({
-                        code: 'custom',
-                        path: ['tokenUrl'],
-                        message: `tokenUrl must be ${expectedType} URL when \
-${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
-                    });
-                }
+                validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl);
+            }
+            if (resource) {
+                validateUrlIsRelativeOrAbsolute('resource', resource);
             }
         }),
         [types_1.AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject({
@@ -670,7 +664,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             scopeDelimiter: z.enum([' ', ',', ';']).optional(),
             tokenPrefix: z.string().optional(),
             tokenQueryParam: z.string().optional(),
-            resource: resourceSchema,
+            /** Unlike the authorization code flow, this flow's tokenUrl is absolute-only, so resource must be too. */
+            resource: z.string().url().refine(validateUrlParsesIfAbsolute).optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),

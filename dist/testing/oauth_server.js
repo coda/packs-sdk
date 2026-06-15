@@ -72,17 +72,11 @@ function makeAuthorizationUrl({ authorizationUrl, clientId, redirectUri, scope, 
     };
     const scopeKey = scopeParamName || 'scope';
     queryParams[scopeKey] = scope;
-    let authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, queryParams);
-    // `resource` (per RFC 8707) may have multiple values, which are passed as repeated query parameters.
-    // qs (used by withQueryParams) would instead encode arrays using indexed keys, so append them here directly.
+    // `resource` per RFC 8707.
     if (resource !== undefined) {
-        const parsedUri = new URL(authorizationUri);
-        for (const singleResource of Array.isArray(resource) ? resource : [resource]) {
-            parsedUri.searchParams.append('resource', singleResource);
-        }
-        authorizationUri = parsedUri.toString();
+        queryParams.resource = resource;
     }
-    return authorizationUri;
+    return (0, url_1.withQueryParams)(authorizationUrl, queryParams);
 }
 exports.makeAuthorizationUrl = makeAuthorizationUrl;
 class OAuthServerContainer {

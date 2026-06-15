@@ -6,7 +6,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Added
 
-- Added a `resource` option for OAuth2 authentication, allowing Packs to specify one or more target resources (per [RFC 8707](https://datatracker.ietf.org/doc/html/rfc8707)) when requesting access.
+- Added a `resource` option for OAuth2 authentication, allowing Packs to specify the target resource (per [RFC 8707](https://datatracker.ietf.org/doc/html/rfc8707)) when requesting access.
 
 ## [1.15.0] - 2026-05-29
 

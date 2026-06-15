@@ -30,7 +30,7 @@ export declare function makeAuthorizationUrl({ authorizationUrl, clientId, redir
     additionalParams?: {
         [key: string]: any;
     };
-    resource?: string | string[];
+    resource?: string;
     state: string | number;
 }): string;
 export {};
