@@ -514,6 +514,11 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
      * that should contain the token.
      */
     tokenQueryParam?: string;
+    /**
+     * One or more absolute URIs identifying the target services or resources to which access is being requested.
+     * See https://datatracker.ietf.org/doc/html/rfc8707 for more details.
+     */
+    resource?: string | string[];
 }
 /**
  * Fields shared by the OAuth2 Authorization Code variants (static and dynamic client).

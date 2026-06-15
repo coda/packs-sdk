@@ -147,6 +147,19 @@ when creating a new account.
 
 ***
 
+### resource?
+
+> `optional` **resource**: `string` \| `string`[]
+
+One or more absolute URIs identifying the target services or resources to which access is being requested.
+See https://datatracker.ietf.org/doc/html/rfc8707 for more details.
+
+#### Inherited from
+
+`BaseOAuthAuthentication.resource`
+
+***
+
 ### scopeDelimiter?
 
 > `optional` **scopeDelimiter**: `" "` \| `","` \| `";"`

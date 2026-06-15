@@ -541,6 +541,13 @@ function buildMetadataSchema({ sdkVersion }) {
         postSetup: z.array(setEndpointPostSetupValidator).optional(),
         networkDomain: z.union([singleAuthDomainSchema, z.array(singleAuthDomainSchema).nonempty()]).optional(),
     };
+    const singleResourceSchema = z
+        .string()
+        .refine(isAbsoluteUrl, { message: 'resource must be an absolute URL starting with https://' })
+        .refine(validateUrlParsesIfAbsolute);
+    const resourceSchema = z
+        .union([singleResourceSchema, z.array(singleResourceSchema).nonempty()])
+        .optional();
     const defaultAuthenticationValidators = {
         [types_1.AuthenticationType.None]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.None),
@@ -607,6 +614,7 @@ function buildMetadataSchema({ sdkVersion }) {
             tokenQueryParam: z.string().optional(),
             useProofKeyForCodeExchange: z.boolean().optional(),
             pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
+            resource: resourceSchema,
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
@@ -664,6 +672,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             scopeDelimiter: z.enum([' ', ',', ';']).optional(),
             tokenPrefix: z.string().optional(),
             tokenQueryParam: z.string().optional(),
+            resource: resourceSchema,
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
