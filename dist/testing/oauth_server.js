@@ -13,7 +13,7 @@ const oauth_helpers_2 = require("./oauth_helpers");
 const url_1 = require("../helpers/url");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
     // TODO: Handle PKCE.
-    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName } = authDef;
+    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName, resource } = authDef;
     if (!authorizationUrl || !tokenUrl) {
         throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
     }
@@ -28,6 +28,7 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
             client_id: clientId,
             client_secret: clientSecret,
             redirect_uri: redirectUri,
+            resource,
         };
         return (0, oauth_helpers_2.requestOAuthAccessToken)(params, {
             tokenUrl,
@@ -45,7 +46,16 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
     };
     const scopeKey = scopeParamName || 'scope';
     queryParams[scopeKey] = scope;
-    const authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, queryParams);
+    let authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, queryParams);
+    // `resource` (per RFC 8707) may have multiple values, which are passed as repeated query parameters.
+    // qs (used by withQueryParams) would instead encode arrays using indexed keys, so append them here directly.
+    if (resource !== undefined) {
+        const parsedUri = new URL(authorizationUri);
+        for (const singleResource of Array.isArray(resource) ? resource : [resource]) {
+            parsedUri.searchParams.append('resource', singleResource);
+        }
+        authorizationUri = parsedUri.toString();
+    }
     const launchCallback = () => {
         (0, helpers_1.print)(`OAuth server running at http://localhost:${port}.\n` +
             `Complete the auth flow in your browser. If it does not open automatically, visit ${authorizationUri}`);

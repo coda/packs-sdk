@@ -545,9 +545,7 @@ function buildMetadataSchema({ sdkVersion }) {
         .string()
         .refine(isAbsoluteUrl, { message: 'resource must be an absolute URL starting with https://' })
         .refine(validateUrlParsesIfAbsolute);
-    const resourceSchema = z
-        .union([singleResourceSchema, z.array(singleResourceSchema).nonempty()])
-        .optional();
+    const resourceSchema = z.union([singleResourceSchema, z.array(singleResourceSchema).nonempty()]).optional();
     const defaultAuthenticationValidators = {
         [types_1.AuthenticationType.None]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.None),

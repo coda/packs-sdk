@@ -1752,6 +1752,159 @@ describe('Auth', () => {
           });
         });
       });
+
+      describe('resource parameter (RFC 8707)', () => {
+        let fetchStub: sinon.SinonStub;
+        let capturedBodies: string[];
+
+        beforeEach(() => {
+          capturedBodies = [];
+          fetchStub = sinon.stub(global, 'fetch').callsFake(async (_url: any, opts: any) => {
+            capturedBodies.push(opts.body.toString());
+            return {
+              status: 200,
+              ok: true,
+              json: async () => ({access_token: 'some-access-token'}),
+            } as any;
+          });
+        });
+
+        it('passes a single resource as a token exchange param', async () => {
+          await oauthHelpers.requestOAuthAccessToken(
+            {
+              grant_type: 'authorization_code',
+              code: 'some-code',
+              client_id: 'some-client-id',
+              client_secret: 'some-client-secret',
+              redirect_uri: 'http://localhost:3000/oauth',
+              resource: 'https://api.example.com',
+            },
+            {tokenUrl: 'https://token-url.com'},
+          );
+
+          sinon.assert.calledOnce(fetchStub);
+          const params = new URLSearchParams(capturedBodies[0]);
+          assert.deepEqual(params.getAll('resource'), ['https://api.example.com']);
+        });
+
+        it('passes multiple resources as repeated token exchange params', async () => {
+          await oauthHelpers.requestOAuthAccessToken(
+            {
+              grant_type: 'authorization_code',
+              code: 'some-code',
+              client_id: 'some-client-id',
+              client_secret: 'some-client-secret',
+              redirect_uri: 'http://localhost:3000/oauth',
+              resource: ['https://api.example.com', 'https://files.example.com'],
+            },
+            {tokenUrl: 'https://token-url.com'},
+          );
+
+          const params = new URLSearchParams(capturedBodies[0]);
+          assert.deepEqual(params.getAll('resource'), ['https://api.example.com', 'https://files.example.com']);
+        });
+
+        it('omits the resource param when not configured', async () => {
+          await oauthHelpers.requestOAuthAccessToken(
+            {
+              grant_type: 'authorization_code',
+              code: 'some-code',
+              client_id: 'some-client-id',
+              client_secret: 'some-client-secret',
+              redirect_uri: 'http://localhost:3000/oauth',
+            },
+            {tokenUrl: 'https://token-url.com'},
+          );
+
+          const params = new URLSearchParams(capturedBodies[0]);
+          assert.deepEqual(params.getAll('resource'), []);
+        });
+
+        it('appends a single resource as a repeated authorization URL param', () => {
+          const url = oauthServer.makeAuthorizationUrl({
+            authorizationUrl: 'https://auth-url.com',
+            clientId: 'some-client-id',
+            redirectUri: 'http://localhost:3000/oauth',
+            resource: 'https://api.example.com',
+            state: 12345,
+          });
+
+          const params = new URL(url).searchParams;
+          assert.deepEqual(params.getAll('resource'), ['https://api.example.com']);
+        });
+
+        it('appends multiple resources as repeated authorization URL params', () => {
+          const url = oauthServer.makeAuthorizationUrl({
+            authorizationUrl: 'https://auth-url.com',
+            clientId: 'some-client-id',
+            redirectUri: 'http://localhost:3000/oauth',
+            resource: ['https://api.example.com', 'https://files.example.com'],
+            state: 12345,
+          });
+
+          const params = new URL(url).searchParams;
+          assert.deepEqual(params.getAll('resource'), ['https://api.example.com', 'https://files.example.com']);
+          // qs (used by withQueryParams) would encode arrays using indexed keys, which OAuth providers don't expect.
+          assert.notInclude(url, 'resource%5B0%5D');
+        });
+
+        it('omits the resource param from the authorization URL when not configured', () => {
+          const url = oauthServer.makeAuthorizationUrl({
+            authorizationUrl: 'https://auth-url.com',
+            clientId: 'some-client-id',
+            redirectUri: 'http://localhost:3000/oauth',
+            state: 12345,
+          });
+
+          const params = new URL(url).searchParams;
+          assert.deepEqual(params.getAll('resource'), []);
+        });
+
+        it('passes the resource param when refreshing with a refresh token', async () => {
+          const pack = createPackWithDefaultAuth({
+            type: AuthenticationType.OAuth2,
+            authorizationUrl: 'https://auth-url.com',
+            tokenUrl: 'https://token-url.com',
+            resource: ['https://api.example.com', 'https://files.example.com'],
+          });
+          storeCredential(MANIFEST_PATH, {
+            clientId: 'some-client-id',
+            clientSecret: 'some-client-secret',
+            accessToken: 'expired-access-token',
+            refreshToken: 'some-refresh-token',
+          });
+
+          // The first request fails with a 401, triggering a token refresh; the retried request succeeds.
+          const unauthorizedError: any = new Error('Unauthorized');
+          unauthorizedError.statusCode = 401;
+          mockMakeRequest.onFirstCall().rejects(unauthorizedError);
+          mockMakeRequest.onSecondCall().resolves({
+            url: 'https://example.com',
+            statusCode: 200,
+            statusMessage: 'OK',
+            body: JSON.stringify({result: 'hello'}),
+            headers: {'content-type': 'application/json'},
+          } as any);
+          fetchStub.callsFake(async (_url: any, opts: any) => {
+            capturedBodies.push(opts.body.toString());
+            return {
+              status: 200,
+              ok: true,
+              json: async () => ({access_token: 'new-access-token', expires_in: 3600}),
+            } as any;
+          });
+
+          await executeFormulaFromPackDef(pack, 'Fetch', ['https://example.com'], undefined, undefined, {
+            useRealFetcher: true,
+            manifestPath: MANIFEST_PATH,
+          });
+
+          sinon.assert.calledOnce(fetchStub);
+          const params = new URLSearchParams(capturedBodies[0]);
+          assert.equal(params.get('grant_type'), 'refresh_token');
+          assert.deepEqual(params.getAll('resource'), ['https://api.example.com', 'https://files.example.com']);
+        });
+      });
     });
   });
 });

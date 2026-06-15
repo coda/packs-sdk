@@ -18,10 +18,15 @@ async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, sc
         if (key === 'scope' && scopeParamName) {
             paramKey = scopeParamName;
         }
-        if (paramKey !== 'client_secret') {
-            formParams.append(paramKey, value.toString());
+        // Some params (e.g. `resource`, per RFC 8707) can have multiple values, which are passed as repeated
+        // form parameters rather than a single comma-joined value.
+        const values = Array.isArray(value) ? value : [value];
+        for (const singleValue of values) {
+            if (paramKey !== 'client_secret') {
+                formParams.append(paramKey, singleValue.toString());
+            }
+            formParamsWithSecret.append(paramKey, singleValue.toString());
         }
-        formParamsWithSecret.append(paramKey, value.toString());
     }
     let oauthResponse = await fetch(tokenUrl, {
         method: 'POST',
@@ -52,7 +57,7 @@ async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, sc
 }
 exports.requestOAuthAccessToken = requestOAuthAccessToken;
 async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret, authDef, scopes, }) {
-    const { tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter } = authDef;
+    const { tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter, resource } = authDef;
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
     const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
@@ -61,6 +66,7 @@ async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret,
         client_id: clientId,
         client_secret: clientSecret,
         scope,
+        resource,
     };
     const { accessToken, data } = await requestOAuthAccessToken(params, {
         tokenUrl,

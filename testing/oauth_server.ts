@@ -42,7 +42,8 @@ export function launchOAuthServerFlow({
   scopes?: string[];
 }) {
   // TODO: Handle PKCE.
-  const {authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName} = authDef;
+  const {authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName, resource} =
+    authDef;
   if (!authorizationUrl || !tokenUrl) {
     throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
   }
@@ -57,6 +58,7 @@ export function launchOAuthServerFlow({
       client_id: clientId,
       client_secret: clientSecret,
       redirect_uri: redirectUri,
+      resource,
     };
 
     return requestOAuthAccessToken(params, {
@@ -66,18 +68,17 @@ export function launchOAuthServerFlow({
   };
   const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
 
-  const queryParams: {[key: string]: any} = {
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    response_type: 'code',
+  const authorizationUri = makeAuthorizationUrl({
+    authorizationUrl,
+    clientId,
+    redirectUri,
+    scope,
+    scopeParamName,
+    additionalParams,
+    resource,
     // Some OAuth providers require a state parameter, so we add one with an arbitrary value.
     state: new Date().getTime(),
-    ...(additionalParams || {}),
-  };
-  const scopeKey = scopeParamName || 'scope';
-  queryParams[scopeKey] = scope;
-
-  const authorizationUri = withQueryParams(authorizationUrl, queryParams);
+  });
 
   const launchCallback = () => {
     print(
@@ -92,6 +93,51 @@ export function launchOAuthServerFlow({
 
 export function makeRedirectUrl(port: number): string {
   return `http://localhost:${port}/oauth`;
+}
+
+/**
+ * Builds the authorization URL the user is redirected to in order to begin the OAuth handshake.
+ */
+export function makeAuthorizationUrl({
+  authorizationUrl,
+  clientId,
+  redirectUri,
+  scope,
+  scopeParamName,
+  additionalParams,
+  resource,
+  state,
+}: {
+  authorizationUrl: string;
+  clientId: string;
+  redirectUri: string;
+  scope?: string;
+  scopeParamName?: string;
+  additionalParams?: {[key: string]: any};
+  resource?: string | string[];
+  state: string | number;
+}): string {
+  const queryParams: {[key: string]: any} = {
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: 'code',
+    state,
+    ...(additionalParams || {}),
+  };
+  const scopeKey = scopeParamName || 'scope';
+  queryParams[scopeKey] = scope;
+
+  let authorizationUri = withQueryParams(authorizationUrl, queryParams);
+  // `resource` (per RFC 8707) may have multiple values, which are passed as repeated query parameters.
+  // qs (used by withQueryParams) would instead encode arrays using indexed keys, so append them here directly.
+  if (resource !== undefined) {
+    const parsedUri = new URL(authorizationUri);
+    for (const singleResource of Array.isArray(resource) ? resource : [resource]) {
+      parsedUri.searchParams.append('resource', singleResource);
+    }
+    authorizationUri = parsedUri.toString();
+  }
+  return authorizationUri;
 }
 
 class OAuthServerContainer {
