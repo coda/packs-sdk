@@ -653,8 +653,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             if (tokenUrl) {
                 validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl);
             }
-            if (resource) {
-                validateUrlIsRelativeOrAbsolute('resource', resource);
+            // Unlike authorizationUrl/tokenUrl, an absolute resource is always allowed. A relative resource is only
+            // permitted when there is a user-provided endpoint to resolve it against (i.e. expectsRelativeUrl).
+            if (resource && !expectsRelativeUrl && !isAbsoluteUrl(resource)) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['resource'],
+                    message: `resource must be an absolute URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
+                });
             }
         }),
         [types_1.AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject({
