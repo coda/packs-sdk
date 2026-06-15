@@ -5106,7 +5106,7 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
-    it('OAuth2, resource must be relative when requiresEndpointUrl is set', async () => {
+    it('OAuth2, resource may be absolute when requiresEndpointUrl is set', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
@@ -5116,13 +5116,7 @@ describe('Pack metadata Validation', async () => {
           resource: 'https://api.example.com',
         },
       });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'resource must be a relative URL when requiresEndpointUrl is true',
-          path: 'defaultAuthentication.resource',
-        },
-      ]);
+      await validateJson(metadata);
     });
 
     it('OAuth2ClientCredentials, with resource', async () => {
