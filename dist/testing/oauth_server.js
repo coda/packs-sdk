@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeRedirectUrl = exports.launchOAuthServerFlow = void 0;
+exports.makeAuthorizationUrl = exports.makeRedirectUrl = exports.launchOAuthServerFlow = void 0;
 require("cross-fetch/polyfill");
 const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
@@ -36,12 +36,38 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         });
     };
     const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
+    const authorizationUri = makeAuthorizationUrl({
+        authorizationUrl,
+        clientId,
+        redirectUri,
+        scope,
+        scopeParamName,
+        additionalParams,
+        resource,
+        // Some OAuth providers require a state parameter, so we add one with an arbitrary value.
+        state: new Date().getTime(),
+    });
+    const launchCallback = () => {
+        (0, helpers_1.print)(`OAuth server running at http://localhost:${port}.\n` +
+            `Complete the auth flow in your browser. If it does not open automatically, visit ${authorizationUri}`);
+        (0, child_process_1.exec)(`open "${authorizationUri}"`);
+    };
+    serverContainer.start(launchCallback);
+}
+exports.launchOAuthServerFlow = launchOAuthServerFlow;
+function makeRedirectUrl(port) {
+    return `http://localhost:${port}/oauth`;
+}
+exports.makeRedirectUrl = makeRedirectUrl;
+/**
+ * Builds the authorization URL the user is redirected to in order to begin the OAuth handshake.
+ */
+function makeAuthorizationUrl({ authorizationUrl, clientId, redirectUri, scope, scopeParamName, additionalParams, resource, state, }) {
     const queryParams = {
         client_id: clientId,
         redirect_uri: redirectUri,
         response_type: 'code',
-        // Some OAuth providers require a state parameter, so we add one with an arbitrary value.
-        state: new Date().getTime(),
+        state,
         ...(additionalParams || {}),
     };
     const scopeKey = scopeParamName || 'scope';
@@ -56,18 +82,9 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         }
         authorizationUri = parsedUri.toString();
     }
-    const launchCallback = () => {
-        (0, helpers_1.print)(`OAuth server running at http://localhost:${port}.\n` +
-            `Complete the auth flow in your browser. If it does not open automatically, visit ${authorizationUri}`);
-        (0, child_process_1.exec)(`open "${authorizationUri}"`);
-    };
-    serverContainer.start(launchCallback);
+    return authorizationUri;
 }
-exports.launchOAuthServerFlow = launchOAuthServerFlow;
-function makeRedirectUrl(port) {
-    return `http://localhost:${port}/oauth`;
-}
-exports.makeRedirectUrl = makeRedirectUrl;
+exports.makeAuthorizationUrl = makeAuthorizationUrl;
 class OAuthServerContainer {
     constructor(tokenCallback, afterTokenExchange, port) {
         this._tokenCallback = tokenCallback;
