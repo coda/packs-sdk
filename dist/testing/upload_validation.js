@@ -1821,7 +1821,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         defaultChat: skillEntrypointConfigSchema.optional(),
     });
     const mcpServerSchema = zodCompleteStrictObject({
-        endpointUrl: z.string().url('MCP server endpointUrl must be a valid URL.'),
+        // Accepts a relative path when the pack's auth sets requiresEndpointUrl (validated against the
+        // auth config below); otherwise an absolute https URL. Mirrors authorizationUrl / tokenUrl.
+        endpointUrl: z.string().refine(validateUrlParsesIfAbsolute, 'MCP server endpointUrl must be a valid URL.'),
         name: z
             .string()
             .min(1)
@@ -1961,26 +1963,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
-        })
-            .superRefine((data, context) => {
-            if ((data || [])
-                .map(server => server.endpointUrl)
-                .every(url => {
-                try {
-                    const protocol = new URL(url).protocol;
-                    return protocol === 'https:';
-                }
-                catch (error) {
-                    return false;
-                }
-            })) {
-                return;
-            }
-            context.addIssue({
-                code: 'custom',
-                path: ['mcpServers'],
-                message: 'MCP server endpointUrl must be HTTPS URLs only.',
-            });
         }),
         skillEntrypoints: skillEntrypointsSchema.optional(),
         suggestedPrompts: z
@@ -2402,6 +2384,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         for (const [i, server] of data.mcpServers.entries()) {
+            // A relative endpointUrl yields an empty hostname here and is skipped; its host comes from
+            // the user's connection endpoint and is validated against networkDomains at request time.
             const usedNetworkDomain = (0, url_parse_1.default)(server.endpointUrl).hostname;
             if (!usedNetworkDomain) {
                 continue;
@@ -2415,6 +2399,35 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 return;
             }
         }
+    })
+        .superRefine((untypedData, context) => {
+        var _a;
+        const data = untypedData;
+        if (!((_a = data.mcpServers) === null || _a === void 0 ? void 0 : _a.length)) {
+            return;
+        }
+        // Mirror authorizationUrl / tokenUrl: a relative endpointUrl is expected when the auth
+        // collects a per-user endpoint (requiresEndpointUrl) and doesn't extract one (endpointKey);
+        // otherwise an absolute https URL is required.
+        const auth = data.defaultAuthentication;
+        const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
+        const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
+        const expectsRelativeUrl = Boolean(requiresEndpointUrl && !endpointKey);
+        const isRelativeUrl = (url) => url.startsWith('/');
+        data.mcpServers.forEach((server, i) => {
+            if (!server.endpointUrl) {
+                return;
+            }
+            if ((expectsRelativeUrl && !isRelativeUrl(server.endpointUrl)) ||
+                (!expectsRelativeUrl && !isAbsoluteUrl(server.endpointUrl))) {
+                const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+                context.addIssue({
+                    code: 'custom',
+                    path: [`mcpServers[${i}].endpointUrl`],
+                    message: `MCP server endpointUrl must be ${expectedType} URL when ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
+                });
+            }
+        });
     })
         .superRefine((untypedData, context) => {
         const data = untypedData;
