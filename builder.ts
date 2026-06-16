@@ -318,6 +318,13 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * ```
    * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
    * ```
+   *
+   * @example
+   * ```
+   * // A relative endpointUrl is resolved against the user's connection endpoint when the pack's
+   * // authentication sets requiresEndpointUrl:
+   * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: '/my/mcp'});
+   * ```
    */
   addMCPServer(server: MCPServer): this {
     this.mcpServers.push(server);

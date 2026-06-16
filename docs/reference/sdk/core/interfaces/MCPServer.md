@@ -18,7 +18,10 @@ Definition of an MCP server that the pack can connect to.
 
 > **endpointUrl**: `string`
 
-The MCP endpoint URL (e.g. https://example.com/mcp).
+The MCP server URL — typically an absolute URL (e.g. https://example.com/mcp). When the pack's
+authentication collects a per-account endpoint via `requiresEndpointUrl`, provide a relative
+path (e.g. "/mcp") instead; it is resolved against the user's endpoint, the same convention as
+`authorizationUrl` and `tokenUrl`.
 
 ***
 
