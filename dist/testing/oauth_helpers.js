@@ -52,7 +52,7 @@ async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, sc
 }
 exports.requestOAuthAccessToken = requestOAuthAccessToken;
 async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret, authDef, scopes, }) {
-    const { tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter } = authDef;
+    const { tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter, resource } = authDef;
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
     const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
@@ -61,6 +61,7 @@ async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret,
         client_id: clientId,
         client_secret: clientSecret,
         scope,
+        resource,
     };
     const { accessToken, data } = await requestOAuthAccessToken(params, {
         tokenUrl,

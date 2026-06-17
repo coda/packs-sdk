@@ -81,7 +81,7 @@ export async function performOAuthClientCredentialsServerFlow({
   authDef: OAuth2ClientCredentialsAuthentication;
   scopes?: string[];
 }): Promise<AfterTokenOAuthClientCredentialsExchangeParams> {
-  const {tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter} = authDef;
+  const {tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter, resource} = authDef;
   // Use the manifest's scopes as a default.
   const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
   const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
@@ -90,6 +90,7 @@ export async function performOAuthClientCredentialsServerFlow({
     client_id: clientId,
     client_secret: clientSecret,
     scope,
+    resource,
   };
 
   const {accessToken, data} = await requestOAuthAccessToken(params, {

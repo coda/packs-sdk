@@ -73,6 +73,7 @@ export type Credentials =
 interface BaseOauth2RequestAccessTokenParams {
   client_id: string;
   client_secret: string;
+  resource?: string;
 }
 
 export interface OAuth2RequestAccessTokenParams extends BaseOauth2RequestAccessTokenParams {
