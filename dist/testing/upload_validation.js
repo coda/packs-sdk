@@ -2422,8 +2422,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: 'custom',
                     path: [`mcpServers[${i}].endpointUrl`],
-                    message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path ' +
-                        '(e.g. "/mcp").',
+                    message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path ' + '(e.g. "/mcp").',
                 });
                 return;
             }
