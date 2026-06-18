@@ -1385,9 +1385,7 @@ export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> 
  */
 export interface MCPServer {
     /**
-     * The MCP server URL — typically an absolute URL (e.g. https://example.com/mcp). When the pack's
-     * authentication collects a per-account endpoint via `requiresEndpointUrl`, provide a relative
-     * path (e.g. "/mcp") instead; it is resolved against the user's endpoint.
+     * The MCP endpoint URL (e.g. https://example.com/mcp).
      */
     endpointUrl: string;
     /**
