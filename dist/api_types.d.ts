@@ -1027,6 +1027,12 @@ export interface InvocationLocation {
      * @deprecated This will be removed in a future version of the SDK.
      */
     docId?: string;
+    /**
+     * The id of the user this invocation runs on behalf of. Populated by Coda only for first-party
+     * packs, never for third-party ones. Coda internal use only.
+     * @internal
+     */
+    userId?: string;
 }
 /**
  * An object passed to the `execute` function of every formula invocation
