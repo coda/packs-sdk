@@ -6304,8 +6304,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message:
-            "MCP server endpointUrl must be an absolute URL unless the pack's authentication sets requiresEndpointUrl (requiresEndpointUrl is not true).",
+          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
     });
@@ -6323,8 +6322,47 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message:
-            "MCP server endpointUrl must be an absolute URL unless the pack's authentication sets requiresEndpointUrl (requiresEndpointUrl is not true).",
+          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
+        },
+      ]);
+    });
+
+    it('fails when MCP server endpointUrl is http even though auth sets requiresEndpointUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['attacker.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'attacker.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: 'http://attacker.com/mcp'}],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
+        },
+      ]);
+    });
+
+    it('fails when MCP server endpointUrl is protocol-relative even though auth sets requiresEndpointUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['attacker.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'attacker.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '//attacker.com/mcp'}],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
     });
