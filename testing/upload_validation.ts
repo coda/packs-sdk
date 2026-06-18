@@ -3016,16 +3016,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       if (!data.mcpServers?.length) {
         return;
       }
-      // endpointUrl may be an absolute URL or a root-relative path. A relative path is only valid
-      // when the authentication collects a per-account endpoint to resolve it against
+      // endpointUrl may be an absolute https URL or a root-relative path. A relative path is only
+      // valid when the authentication collects a per-account endpoint to resolve it against
       // (requiresEndpointUrl set, and no endpointKey extracting one); without one there is nothing
-      // to resolve against. Absolute URLs are always allowed.
+      // to resolve against. Absolute https URLs are always allowed.
       const auth = data.defaultAuthentication;
       const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
       const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
       const canResolveRelativeUrl = Boolean(requiresEndpointUrl && !endpointKey);
       data.mcpServers.forEach((server, i) => {
         if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
+          return;
+        }
+        if (!isRootRelativeUrl(server.endpointUrl)) {
+          context.addIssue({
+            code: 'custom',
+            path: [`mcpServers[${i}].endpointUrl`],
+            message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path ' + '(e.g. "/mcp").',
+          });
           return;
         }
         // A relative path with no per-account endpoint to resolve against.
@@ -3415,6 +3423,10 @@ function validateDeprecatedParameterFields<T extends UnionType>(
 
 function isAbsoluteUrl(url: string): boolean {
   return url.startsWith('https://');
+}
+
+function isRootRelativeUrl(url: string): boolean {
+  return url.startsWith('/') && url[1] !== '/' && url[1] !== '\\';
 }
 
 function parseDomainName(url: string): string | undefined {
