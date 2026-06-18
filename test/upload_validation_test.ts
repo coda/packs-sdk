@@ -6304,7 +6304,8 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be an absolute URL when requiresEndpointUrl is not true',
+          message:
+            "MCP server endpointUrl must be an absolute URL unless the pack's authentication sets requiresEndpointUrl (requiresEndpointUrl is not true).",
         },
       ]);
     });
@@ -6322,7 +6323,8 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be an absolute URL when requiresEndpointUrl is not true',
+          message:
+            "MCP server endpointUrl must be an absolute URL unless the pack's authentication sets requiresEndpointUrl (requiresEndpointUrl is not true).",
         },
       ]);
     });
@@ -6350,12 +6352,15 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be an absolute URL when requiresEndpointUrl is not true',
+          message:
+            "MCP server endpointUrl must be an absolute URL unless the pack's authentication sets requiresEndpointUrl (requiresEndpointUrl is not true).",
         },
       ]);
     });
 
-    it('fails when MCP server endpointUrl is absolute but auth sets requiresEndpointUrl', async () => {
+    it('passes when MCP server endpointUrl is absolute even though auth sets requiresEndpointUrl', async () => {
+      // A pack may collect a per-account endpoint for some calls while still pointing an MCP server
+      // at a fixed/global absolute host — same as fetcher requests. Absolute URLs are always allowed.
       const metadata = createFakePackVersionMetadata({
         networkDomains: ['example.com'],
         defaultAuthentication: {
@@ -6366,13 +6371,7 @@ describe('Pack metadata Validation', async () => {
         },
         mcpServers: [{name: 'Example', endpointUrl: 'https://mcp.example.com/mcp'}],
       });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be a relative URL when requiresEndpointUrl is true',
-        },
-      ]);
+      await validateJson(metadata);
     });
 
     // skipped because currently we do not allow more than one MCP server per pack
