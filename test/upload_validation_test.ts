@@ -6304,7 +6304,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
     });
@@ -6322,7 +6322,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
     });
@@ -6342,7 +6342,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
     });
@@ -6362,7 +6362,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path (e.g. "/mcp").',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
     });
@@ -6391,7 +6391,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'mcpServers[0].endpointUrl',
           message:
-            "MCP server endpointUrl must be an absolute URL unless the pack's authentication sets requiresEndpointUrl (requiresEndpointUrl is not true).",
+            "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication sets requiresEndpointUrl.",
         },
       ]);
     });
