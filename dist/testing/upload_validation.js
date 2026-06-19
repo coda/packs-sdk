@@ -1823,7 +1823,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const mcpServerSchema = zodCompleteStrictObject({
         // Ensures an absolute URL parses; relative paths pass here and are checked against the auth
         // config in a later refinement.
-        endpointUrl: z.string().refine(validateUrlParsesIfAbsolute, 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").'),
+        endpointUrl: z
+            .string()
+            .refine(validateUrlParsesIfAbsolute, 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").'),
         name: z
             .string()
             .min(1)
