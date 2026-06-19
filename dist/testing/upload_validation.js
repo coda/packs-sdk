@@ -1831,8 +1831,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     });
     const mcpServerSchema = zodCompleteStrictObject({
         // Ensures an absolute URL parses; relative paths pass here and are checked against the auth
-        // config in a later refinement. Mirrors authorizationUrl / tokenUrl.
-        endpointUrl: z.string().refine(validateUrlParsesIfAbsolute, 'MCP server endpointUrl must be a valid URL.'),
+        // config in a later refinement.
+        endpointUrl: z.string().refine(validateUrlParsesIfAbsolute, 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").'),
         name: z
             .string()
             .min(1)
@@ -2417,12 +2417,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         // endpointUrl may be an absolute https URL or a root-relative path. A relative path is only
         // valid when the authentication collects a per-account endpoint to resolve it against
-        // (requiresEndpointUrl set, and no endpointKey extracting one); without one there is nothing
-        // to resolve against. Absolute https URLs are always allowed.
+        // (requiresEndpointUrl is set); without one there is nothing to resolve against. Absolute
+        // HTTPS URLs are always allowed.
         const auth = data.defaultAuthentication;
         const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
-        const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
-        const canResolveRelativeUrl = Boolean(requiresEndpointUrl && !endpointKey);
+        const canResolveRelativeUrl = Boolean(requiresEndpointUrl);
         data.mcpServers.forEach((server, i) => {
             if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
                 return;
@@ -2431,7 +2430,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: 'custom',
                     path: [`mcpServers[${i}].endpointUrl`],
-                    message: 'MCP server endpointUrl must be an absolute https URL or a root-relative path ' + '(e.g. "/mcp").',
+                    message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
                 });
                 return;
             }
@@ -2440,7 +2439,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: 'custom',
                     path: [`mcpServers[${i}].endpointUrl`],
-                    message: `MCP server endpointUrl must be an absolute URL unless the pack's authentication sets requiresEndpointUrl (${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}).`,
+                    message: "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication sets requiresEndpointUrl.",
                 });
             }
         });
