@@ -126,6 +126,9 @@
       "prettier --write"
     ]
   },
+  "overrides": {
+    "tmp": ">=0.2.4"
+  },
   "pnpm": {
     "overrides": {
       "@types/estree": "1.0.8",
