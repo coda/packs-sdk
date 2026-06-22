@@ -2049,7 +2049,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (authentication.type !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
                     return;
                 }
-                const codaDomains = ['coda.io', 'localhost', 'superhuman.com'];
+                const codaDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
                 const isCodaDomain = (domain) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
                 const hasNonCodaNetwork = (_a = metadata.networkDomains) === null || _a === void 0 ? void 0 : _a.some((domain) => !isCodaDomain(domain));
                 if (!hasNonCodaNetwork) {
