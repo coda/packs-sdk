@@ -2047,17 +2047,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             for (const authInfo of getAuthentications(metadata)) {
                 const { name, authentication } = authInfo;
                 if (authentication.type !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
-                    return;
+                    continue;
                 }
-                const codaDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
-                const isCodaDomain = (domain) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
-                const hasNonCodaNetwork = (_a = metadata.networkDomains) === null || _a === void 0 ? void 0 : _a.some((domain) => !isCodaDomain(domain));
-                if (!hasNonCodaNetwork) {
+                const allowedFirstPartyDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
+                const isFirstPartyDomain = (domain) => allowedFirstPartyDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
+                const hasNonFirstPartyNetwork = (_a = metadata.networkDomains) === null || _a === void 0 ? void 0 : _a.some((domain) => !isFirstPartyDomain(domain));
+                if (!hasNonFirstPartyNetwork) {
                     continue;
                 }
                 const authDomains = getDeclaredAuthNetworkDomains(authentication);
                 if (!(authDomains === null || authDomains === void 0 ? void 0 : authDomains.length)) {
-                    // A non-Coda network domain without auth domain restriction isn't allowed.
+                    // A non-first-party network domain without auth domain restriction isn't allowed.
                     context.addIssue({
                         code: 'custom',
                         path: [`authentication.${name}.networkDomain`],
@@ -2065,8 +2065,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     });
                     continue;
                 }
-                const hasNonCodaAuthDomain = authDomains.some((domain) => !isCodaDomain(domain));
-                if (hasNonCodaAuthDomain) {
+                const hasNonFirstPartyAuthDomain = authDomains.some((domain) => !isFirstPartyDomain(domain));
+                if (hasNonFirstPartyAuthDomain) {
                     context.addIssue({
                         code: 'custom',
                         path: [`authentication.${name}.networkDomain`],

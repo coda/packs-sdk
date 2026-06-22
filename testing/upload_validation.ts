@@ -2605,20 +2605,23 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         for (const authInfo of getAuthentications(metadata)) {
           const {name, authentication} = authInfo;
           if (authentication.type !== AuthenticationType.CodaApiHeaderBearerToken) {
-            return;
+            continue;
           }
 
-          const codaDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
-          const isCodaDomain = (domain: string) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
+          const allowedFirstPartyDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
+          const isFirstPartyDomain = (domain: string) =>
+            allowedFirstPartyDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
 
-          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !isCodaDomain(domain));
-          if (!hasNonCodaNetwork) {
+          const hasNonFirstPartyNetwork = metadata.networkDomains?.some(
+            (domain: string) => !isFirstPartyDomain(domain),
+          );
+          if (!hasNonFirstPartyNetwork) {
             continue;
           }
 
           const authDomains = getDeclaredAuthNetworkDomains(authentication);
           if (!authDomains?.length) {
-            // A non-Coda network domain without auth domain restriction isn't allowed.
+            // A non-first-party network domain without auth domain restriction isn't allowed.
             context.addIssue({
               code: 'custom',
               path: [`authentication.${name}.networkDomain`],
@@ -2627,8 +2630,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             continue;
           }
 
-          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !isCodaDomain(domain));
-          if (hasNonCodaAuthDomain) {
+          const hasNonFirstPartyAuthDomain = authDomains.some((domain: string) => !isFirstPartyDomain(domain));
+          if (hasNonFirstPartyAuthDomain) {
             context.addIssue({
               code: 'custom',
               path: [`authentication.${name}.networkDomain`],
