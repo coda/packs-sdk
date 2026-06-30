@@ -6081,41 +6081,21 @@ export interface SuggestedPrompt {
 	prompt: string;
 }
 /**
- * Declares the author-vetted default ingestion configuration for a pack, opting it in to simplified
- * setup flows (and `useDefaultConfiguration`) when the pack is used to power an agent in Superhuman Go.
+ * Declares the default ingestion configuration for a Pack, opting it in to simplified agent setup
+ * when used to power an agent in Superhuman Go. When present, the platform can configure the agent's
+ * knowledge layer from the Pack's own declarations instead of requiring the user to set up each sync
+ * table manually. Packs that don't declare this don't automatically participate in simplified setup.
  *
- * When a pack declares this, the platform may configure the agent's knowledge layer automatically
- * from the pack's own declarations instead of requiring the user to configure each sync table by
- * hand, and agent profiles will display defaults consistent with what the pack declares. Packs that
- * do not declare this do not automatically participate in simplified setup unless a migration or
- * override is configured by the platform.
- *
- * This is a pack-level marker; the actual defaults continue to come from the existing per-table and
- * per-parameter signals:
- * - Which sync tables are included by default: {@link SyncTableOptions.indexing} ({@link DataIndexing}).
- * - Default parameter values such as date ranges: {@link ParamDef.ingestionSuggestedValue}, falling
- *   back to {@link ParamDef.suggestedValue}.
- *
- * @example
- * ```ts
- * // Opt in, using each sync table's `indexing.default` to decide the default set.
- * pack.setDefaultIngestionConfiguration({});
- *
- * // Opt in, but restrict the default set to a curated subset of sync tables.
- * pack.setDefaultIngestionConfiguration({
- *   syncTables: ["Events", "Contacts"],
- * });
- * ```
+ * Which sync tables are included is controlled per-table via {@link SyncTableOptions.indexing}, and
+ * default parameter values via {@link ParamDef.ingestionSuggestedValue}.
  *
  * @hidden
  */
 export interface DefaultIngestionConfiguration {
 	/**
-	 * An optional explicit list of sync table names that make up the default configuration. Each name
-	 * must match the `name` of a sync table defined in this pack.
-	 *
-	 * When omitted, the default set is all sync tables that are included by default — that is, those
-	 * whose {@link SyncTableOptions.indexing} is not {@link DataIndexing.Exclude}.
+	 * An optional list of sync table names that make up the default configuration. Each name must
+	 * match the `name` of a sync table defined in this Pack. When omitted, all sync tables that aren't
+	 * excluded via {@link SyncTableOptions.indexing} are used.
 	 */
 	syncTables?: string[];
 }
@@ -6219,9 +6199,8 @@ export interface PackVersionDefinition {
 	 */
 	mcpServers?: MCPServer[];
 	/**
-	 * Declares the author-vetted default ingestion configuration for this pack, opting it in to
-	 * simplified setup and default-configuration flows in Superhuman Go. See
-	 * {@link DefaultIngestionConfiguration}.
+	 * Declares the default ingestion configuration for this Pack, opting it in to simplified agent
+	 * setup. See {@link DefaultIngestionConfiguration}.
 	 * @hidden
 	 */
 	defaultIngestionConfiguration?: DefaultIngestionConfiguration;
@@ -6558,25 +6537,17 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	addSuggestedPrompt(prompt: SuggestedPrompt): this;
 	/**
-	 * Declares the default ingestion configuration for this pack, opting it in to simplified setup
-	 * flows in Superhuman Go. See {@link DefaultIngestionConfiguration}.
-	 *
-	 * The set of sync tables included by default is controlled per-table via
-	 * {@link SyncTableOptions.indexing}, and default parameter values via
-	 * {@link ParamDef.ingestionSuggestedValue} / {@link ParamDef.suggestedValue}; this declaration
-	 * marks them as the author-vetted defaults and (optionally) narrows the default set of sync tables.
+	 * Declares the default ingestion configuration for this Pack, opting it in to simplified agent
+	 * setup. See {@link DefaultIngestionConfiguration}.
 	 *
 	 * @example
 	 * ```ts
-	 * // Opt in, using each sync table's `indexing.default` to decide the default set.
+	 * // Opt in, using each sync table's indexing default to decide the default set.
 	 * pack.setDefaultIngestionConfiguration({});
 	 *
-	 * // Opt in, but restrict the default set to a curated subset of sync tables.
-	 * pack.setDefaultIngestionConfiguration({
-	 *   syncTables: ["Events", "Contacts"],
-	 * });
+	 * // Opt in, but restrict the default set to specific sync tables.
+	 * pack.setDefaultIngestionConfiguration({syncTables: ["Events", "Contacts"]});
 	 * ```
-	 *
 	 * @hidden
 	 */
 	setDefaultIngestionConfiguration(config: DefaultIngestionConfiguration): this;
