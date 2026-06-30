@@ -1720,6 +1720,26 @@ export interface SuggestedPrompt {
 }
 
 /**
+ * Declares the default ingestion configuration for a Pack, opting it in to simplified agent setup
+ * when used to power an agent in Superhuman Go. When present, the platform can configure the agent's
+ * knowledge layer from the Pack's own declarations instead of requiring the user to set up each sync
+ * table manually. Packs that don't declare this don't automatically participate in simplified setup.
+ *
+ * Which sync tables are included is controlled per-table via {@link SyncTableOptions.indexing}, and
+ * default parameter values via {@link ParamDef.ingestionSuggestedValue}.
+ *
+ * @hidden
+ */
+export interface DefaultIngestionConfiguration {
+  /**
+   * An optional list of sync table names that make up the default configuration. Each name must
+   * match the `name` of a sync table defined in this Pack. When omitted, all sync tables that aren't
+   * excluded via {@link SyncTableOptions.indexing} are used.
+   */
+  syncTables?: string[];
+}
+
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1823,6 +1843,12 @@ export interface PackVersionDefinition {
    * @hidden
    */
   mcpServers?: MCPServer[];
+  /**
+   * Declares the default ingestion configuration for this Pack, opting it in to simplified agent
+   * setup. See {@link DefaultIngestionConfiguration}.
+   * @hidden
+   */
+  defaultIngestionConfiguration?: DefaultIngestionConfiguration;
 }
 
 /**

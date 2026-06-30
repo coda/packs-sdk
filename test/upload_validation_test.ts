@@ -8580,6 +8580,90 @@ describe('Pack metadata Validation', async () => {
       await doValidateJson(metadata);
     });
   });
+
+  describe('Default ingestion configuration', () => {
+    function makeIngestibleSyncTable(name: string) {
+      return makeSyncTable({
+        name,
+        identityName: name,
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name,
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+    }
+
+    it('Succeeds with an empty configuration (opt-in marker only)', async () => {
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [makeIngestibleSyncTable('Events')],
+          defaultIngestionConfiguration: {},
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Succeeds when syncTables reference existing sync tables', async () => {
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [makeIngestibleSyncTable('Events'), makeIngestibleSyncTable('Contacts')],
+          defaultIngestionConfiguration: {
+            syncTables: ['Events', 'Contacts'],
+          },
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Succeeds without a default ingestion configuration', async () => {
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [makeIngestibleSyncTable('Events')],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Fails when syncTables reference a sync table not defined in the pack', async () => {
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [makeIngestibleSyncTable('Events')],
+          defaultIngestionConfiguration: {
+            syncTables: ['Events', 'DoesNotExist'],
+          },
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await validateJsonAndAssertFails(metadata);
+    });
+  });
 });
 
 describe('normalizeTool', () => {

@@ -4,3 +4,4 @@ nav:
   - schema.md
   - crawling.md
   - incremental.md
+  - default-configuration.md

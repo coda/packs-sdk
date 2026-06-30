@@ -24,6 +24,7 @@ import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
 import {DataIndexing} from '../api_types';
+import type {DefaultIngestionConfiguration} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
@@ -2557,6 +2558,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
+    defaultIngestionConfiguration: z
+      .object({
+        syncTables: z.array(z.string()).optional(),
+      })
+      .optional(),
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {
@@ -2695,6 +2701,22 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
               });
             }
+          }
+        });
+      })
+      .superRefine((data: any, context) => {
+        const config = data.defaultIngestionConfiguration as DefaultIngestionConfiguration | undefined;
+        if (!config?.syncTables?.length) {
+          return;
+        }
+        const tableNames = new Set(((data.syncTables as SyncTable[]) || []).map(table => table.name));
+        config.syncTables.forEach((name, i) => {
+          if (!tableNames.has(name)) {
+            context.addIssue({
+              code: 'custom',
+              path: ['defaultIngestionConfiguration', 'syncTables', i],
+              message: `Default ingestion configuration references sync table "${name}", which is not defined in this pack.`,
+            });
           }
         });
       })

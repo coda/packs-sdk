@@ -35,7 +35,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, } = definition || {};
+        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, defaultIngestionConfiguration, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -46,6 +46,7 @@ class PackDefinitionBuilder {
         this.suggestedPrompts = suggestedPrompts || [];
         this.networkDomains = networkDomains || [];
         this.mcpServers = mcpServers || [];
+        this.defaultIngestionConfiguration = defaultIngestionConfiguration;
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
         this.version = version;
@@ -276,6 +277,24 @@ class PackDefinitionBuilder {
      */
     addSuggestedPrompt(prompt) {
         this.suggestedPrompts.push(prompt);
+        return this;
+    }
+    /**
+     * Declares the default ingestion configuration for this Pack, opting it in to simplified agent
+     * setup. See {@link DefaultIngestionConfiguration}.
+     *
+     * @example
+     * ```ts
+     * // Opt in, using each sync table's indexing default to decide the default set.
+     * pack.setDefaultIngestionConfiguration({});
+     *
+     * // Opt in, but restrict the default set to specific sync tables.
+     * pack.setDefaultIngestionConfiguration({syncTables: ["Events", "Contacts"]});
+     * ```
+     * @hidden
+     */
+    setDefaultIngestionConfiguration(config) {
+        this.defaultIngestionConfiguration = config;
         return this;
     }
     _wrapAuthenticationFunctions(authentication) {
