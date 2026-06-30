@@ -2006,6 +2006,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
+        defaultIngestionConfiguration: z
+            .object({
+            syncTables: z.array(z.string()).optional(),
+        })
+            .optional(),
     });
     function validateIdentityNames(context, identityInfo) {
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {
@@ -2128,6 +2133,23 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                             message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
                         });
                     }
+                }
+            });
+        })
+            .superRefine((data, context) => {
+            var _a;
+            const config = data.defaultIngestionConfiguration;
+            if (!((_a = config === null || config === void 0 ? void 0 : config.syncTables) === null || _a === void 0 ? void 0 : _a.length)) {
+                return;
+            }
+            const tableNames = new Set((data.syncTables || []).map(table => table.name));
+            config.syncTables.forEach((name, i) => {
+                if (!tableNames.has(name)) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: ['defaultIngestionConfiguration', 'syncTables', i],
+                        message: `Default ingestion configuration references sync table "${name}", which is not defined in this pack.`,
+                    });
                 }
             });
         })

@@ -6,6 +6,7 @@ import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {DefaultIngestionConfiguration} from './types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
@@ -100,6 +101,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * @hidden
    */
   mcpServers: MCPServer[];
+  /**
+   * See {@link PackVersionDefinition.defaultIngestionConfiguration}.
+   * @hidden
+   */
+  defaultIngestionConfiguration?: DefaultIngestionConfiguration;
 
   /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
@@ -145,6 +151,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       skillEntrypoints,
       suggestedPrompts,
       mcpServers,
+      defaultIngestionConfiguration,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -156,6 +163,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
+    this.defaultIngestionConfiguration = defaultIngestionConfiguration;
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
@@ -411,6 +419,25 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSuggestedPrompt(prompt: SuggestedPrompt): this {
     this.suggestedPrompts.push(prompt);
+    return this;
+  }
+
+  /**
+   * Declares the default ingestion configuration for this Pack, opting it in to simplified agent
+   * setup. See {@link DefaultIngestionConfiguration}.
+   *
+   * @example
+   * ```ts
+   * // Opt in, using each sync table's indexing default to decide the default set.
+   * pack.setDefaultIngestionConfiguration({});
+   *
+   * // Opt in, but restrict the default set to specific sync tables.
+   * pack.setDefaultIngestionConfiguration({syncTables: ["Events", "Contacts"]});
+   * ```
+   * @hidden
+   */
+  setDefaultIngestionConfiguration(config: DefaultIngestionConfiguration): this {
+    this.defaultIngestionConfiguration = config;
     return this;
   }
 

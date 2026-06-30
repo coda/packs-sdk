@@ -14,6 +14,7 @@ export type { Authentication } from './types';
 export type { AuthenticationDef } from './types';
 export { AuthenticationType } from './types';
 export type { BasicPackDefinition } from './types';
+export type { DefaultIngestionConfiguration } from './types';
 export type { Format } from './types';
 export type { PackDefinition } from './types';
 export type { PackId } from './types';

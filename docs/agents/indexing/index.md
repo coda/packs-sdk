@@ -24,7 +24,7 @@ Indexing a blog post or draft email makes sense, but indexing quarterly sales nu
 
 Sync tables are a Pack building block that let you pull in large lists of records from external sources. They are primarily composed of a schema that defines the data structure and a sync formula that makes requests and transforms the data. You can read more about how to create a sync table in the [Sync tables guide][sync_tables].
 
-To set up indexing, create a sync table for each record type you want to index. You'll need to ensure the schema includes the required metadata, as described in the [Schema changes guide][indexing_schemas]. You can improve the data freshness by implementing [Incremental sync][incremental] and simplify the user setup by implementing [crawling][crawling].
+To set up indexing, create a sync table for each record type you want to index. You'll need to ensure the schema includes the required metadata, as described in the [Schema changes guide][indexing_schemas]. You can improve the data freshness by implementing [Incremental sync][incremental] and simplify the user setup by implementing [crawling][crawling]. To let users set up your agent with one click, declare a [default configuration][default_configuration].
 
 
 ## Data freshness and size
@@ -41,4 +41,5 @@ These defaults are subject to change without warning, and in the future may vary
 [indexing_schemas]: ./schema.md
 [incremental]: ./incremental.md
 [crawling]: ./crawling.md
+[default_configuration]: ./default-configuration.md
 [todoist_agent]: ../examples.md#-todoist

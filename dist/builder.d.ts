@@ -2,6 +2,7 @@ import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { DefaultIngestionConfiguration } from './types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
@@ -84,6 +85,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     mcpServers: MCPServer[];
+    /**
+     * See {@link PackVersionDefinition.defaultIngestionConfiguration}.
+     * @hidden
+     */
+    defaultIngestionConfiguration?: DefaultIngestionConfiguration;
     /**
      * See {@link PackVersionDefinition.defaultAuthentication}.
      */
@@ -295,6 +301,29 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      */
     addSuggestedPrompt(prompt: SuggestedPrompt): this;
+    /**
+     * Declares the default ingestion configuration for this pack, opting it in to simplified setup
+     * flows in Superhuman Go. See {@link DefaultIngestionConfiguration}.
+     *
+     * The set of sync tables included by default is controlled per-table via
+     * {@link SyncTableOptions.indexing}, and default parameter values via
+     * {@link ParamDef.ingestionSuggestedValue} / {@link ParamDef.suggestedValue}; this declaration
+     * marks them as the author-vetted defaults and (optionally) narrows the default set of sync tables.
+     *
+     * @example
+     * ```ts
+     * // Opt in, using each sync table's `indexing.default` to decide the default set.
+     * pack.setDefaultIngestionConfiguration({});
+     *
+     * // Opt in, but restrict the default set to a curated subset of sync tables.
+     * pack.setDefaultIngestionConfiguration({
+     *   syncTables: ["Events", "Contacts"],
+     * });
+     * ```
+     *
+     * @hidden
+     */
+    setDefaultIngestionConfiguration(config: DefaultIngestionConfiguration): this;
     private _wrapAuthenticationFunctions;
     /**
      * Sets this pack to use authentication for individual users, using the

@@ -1558,6 +1558,45 @@ export interface SuggestedPrompt {
     prompt: string;
 }
 /**
+ * Declares the author-vetted default ingestion configuration for a pack, opting it in to simplified
+ * setup flows (and `useDefaultConfiguration`) when the pack is used to power an agent in Superhuman Go.
+ *
+ * When a pack declares this, the platform may configure the agent's knowledge layer automatically
+ * from the pack's own declarations instead of requiring the user to configure each sync table by
+ * hand, and agent profiles will display defaults consistent with what the pack declares. Packs that
+ * do not declare this do not automatically participate in simplified setup unless a migration or
+ * override is configured by the platform.
+ *
+ * This is a pack-level marker; the actual defaults continue to come from the existing per-table and
+ * per-parameter signals:
+ * - Which sync tables are included by default: {@link SyncTableOptions.indexing} ({@link DataIndexing}).
+ * - Default parameter values such as date ranges: {@link ParamDef.ingestionSuggestedValue}, falling
+ *   back to {@link ParamDef.suggestedValue}.
+ *
+ * @example
+ * ```ts
+ * // Opt in, using each sync table's `indexing.default` to decide the default set.
+ * pack.setDefaultIngestionConfiguration({});
+ *
+ * // Opt in, but restrict the default set to a curated subset of sync tables.
+ * pack.setDefaultIngestionConfiguration({
+ *   syncTables: ["Events", "Contacts"],
+ * });
+ * ```
+ *
+ * @hidden
+ */
+export interface DefaultIngestionConfiguration {
+    /**
+     * An optional explicit list of sync table names that make up the default configuration. Each name
+     * must match the `name` of a sync table defined in this pack.
+     *
+     * When omitted, the default set is all sync tables that are included by default — that is, those
+     * whose {@link SyncTableOptions.indexing} is not {@link DataIndexing.Exclude}.
+     */
+    syncTables?: string[];
+}
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1656,6 +1695,13 @@ export interface PackVersionDefinition {
      * @hidden
      */
     mcpServers?: MCPServer[];
+    /**
+     * Declares the author-vetted default ingestion configuration for this pack, opting it in to
+     * simplified setup and default-configuration flows in Superhuman Go. See
+     * {@link DefaultIngestionConfiguration}.
+     * @hidden
+     */
+    defaultIngestionConfiguration?: DefaultIngestionConfiguration;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
