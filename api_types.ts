@@ -1202,6 +1202,13 @@ export interface InvocationLocation {
    * @deprecated This will be removed in a future version of the SDK.
    */
   docId?: string;
+
+  /**
+   * The ID of the user this invocation runs on behalf of. Only populated for
+   * Superhuman-created Packs. Superhuman internal use only.
+   * @internal
+   */
+  userId?: string;
 }
 
 /**
