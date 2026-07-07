@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeRedirectUrl = exports.launchOAuthServerFlow = void 0;
+exports.makeAuthorizationUrl = exports.makeRedirectUrl = exports.launchOAuthServerFlow = void 0;
 require("cross-fetch/polyfill");
 const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
@@ -13,7 +13,7 @@ const oauth_helpers_2 = require("./oauth_helpers");
 const url_1 = require("../helpers/url");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
     // TODO: Handle PKCE.
-    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName } = authDef;
+    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName, resource } = authDef;
     if (!authorizationUrl || !tokenUrl) {
         throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
     }
@@ -28,6 +28,7 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
             client_id: clientId,
             client_secret: clientSecret,
             redirect_uri: redirectUri,
+            resource,
         };
         return (0, oauth_helpers_2.requestOAuthAccessToken)(params, {
             tokenUrl,
@@ -35,17 +36,17 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         });
     };
     const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
-    const queryParams = {
-        client_id: clientId,
-        redirect_uri: redirectUri,
-        response_type: 'code',
+    const authorizationUri = makeAuthorizationUrl({
+        authorizationUrl,
+        clientId,
+        redirectUri,
+        scope,
+        scopeParamName,
+        additionalParams,
+        resource,
         // Some OAuth providers require a state parameter, so we add one with an arbitrary value.
         state: new Date().getTime(),
-        ...(additionalParams || {}),
-    };
-    const scopeKey = scopeParamName || 'scope';
-    queryParams[scopeKey] = scope;
-    const authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, queryParams);
+    });
     const launchCallback = () => {
         (0, helpers_1.print)(`OAuth server running at http://localhost:${port}.\n` +
             `Complete the auth flow in your browser. If it does not open automatically, visit ${authorizationUri}`);
@@ -58,6 +59,26 @@ function makeRedirectUrl(port) {
     return `http://localhost:${port}/oauth`;
 }
 exports.makeRedirectUrl = makeRedirectUrl;
+/**
+ * Builds the authorization URL the user is redirected to in order to begin the OAuth handshake.
+ */
+function makeAuthorizationUrl({ authorizationUrl, clientId, redirectUri, scope, scopeParamName, additionalParams, resource, state, }) {
+    const queryParams = {
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        response_type: 'code',
+        state,
+        ...(additionalParams || {}),
+    };
+    const scopeKey = scopeParamName || 'scope';
+    queryParams[scopeKey] = scope;
+    // `resource` per RFC 8707.
+    if (resource !== undefined) {
+        queryParams.resource = resource;
+    }
+    return (0, url_1.withQueryParams)(authorizationUrl, queryParams);
+}
+exports.makeAuthorizationUrl = makeAuthorizationUrl;
 class OAuthServerContainer {
     constructor(tokenCallback, afterTokenExchange, port) {
         this._tokenCallback = tokenCallback;

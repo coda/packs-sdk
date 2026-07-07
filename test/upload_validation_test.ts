@@ -4758,9 +4758,43 @@ describe('Pack metadata Validation', async () => {
           type: AuthenticationType.CodaApiHeaderBearerToken,
           networkDomain: 'coda.io',
         },
-        networkDomains: ['coda.io', 'notetaker.superhuman.com'],
+        networkDomains: ['coda.io', 'foo.superhuman.com'],
       });
       await validateJson(metadata);
+    });
+
+    it('CodaApiHeaderBearerToken, valid Superhuman docs env subdomains in auth networkDomain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.CodaApiHeaderBearerToken,
+          networkDomain: ['coda.io', 'foo.superhuman.com', 'foo.pp-sh.io', 'foo.qa-sh.io'],
+        },
+        networkDomains: ['coda.io', 'foo.superhuman.com', 'foo.pp-sh.io', 'foo.qa-sh.io'],
+      });
+      await validateJson(metadata);
+    });
+
+    it('CodaApiHeaderBearerToken, validated even when a non-matching auth is checked first', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {type: AuthenticationType.None},
+        networkDomains: ['coda.io', 'evil.com'],
+        adminAuthentications: [
+          {
+            authentication: {
+              type: AuthenticationType.CodaApiHeaderBearerToken,
+              networkDomain: ['coda.io', 'evil.com'],
+            },
+            name: 'adminAuth',
+            displayName: 'Admin Auth',
+            description: 'Admin authentication',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.isTrue(
+        err.validationErrors?.some(e => e.path === 'authentication.adminAuth.networkDomain'),
+        `expected a networkDomain error on adminAuth, got ${JSON.stringify(err.validationErrors)}`,
+      );
     });
 
     it('CustomHeaderToken', async () => {
@@ -5061,6 +5095,73 @@ describe('Pack metadata Validation', async () => {
           path: 'defaultAuthentication.tokenUrl',
         },
       ]);
+    });
+
+    it('OAuth2, with resource', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: 'https://example.com/authUrl',
+          tokenUrl: 'https://example.com/tokenUrl',
+          resource: 'https://api.example.com',
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('OAuth2, resource must be an absolute URL when requiresEndpointUrl is not set', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: 'https://example.com/authUrl',
+          tokenUrl: 'https://example.com/tokenUrl',
+          resource: '/relative',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'resource must be an absolute URL when requiresEndpointUrl is not true',
+          path: 'defaultAuthentication.resource',
+        },
+      ]);
+    });
+
+    it('OAuth2, resource may be relative when requiresEndpointUrl is set', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: '/authUrl',
+          tokenUrl: '/tokenUrl',
+          requiresEndpointUrl: true,
+          resource: '/resource',
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('OAuth2, resource may be absolute when requiresEndpointUrl is set', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: '/authUrl',
+          tokenUrl: '/tokenUrl',
+          requiresEndpointUrl: true,
+          resource: 'https://api.example.com',
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('OAuth2ClientCredentials, with resource', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2ClientCredentials,
+          tokenUrl: 'https://example.com/tokenUrl',
+          resource: 'https://api.example.com',
+        },
+      });
+      await validateJson(metadata);
     });
 
     it('WebBasic', async () => {

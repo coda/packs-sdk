@@ -999,6 +999,12 @@ export interface InvocationLocation {
 	 * @deprecated This will be removed in a future version of the SDK.
 	 */
 	docId?: string;
+	/**
+	 * The ID of the user this invocation runs on behalf of. Only populated for
+	 * Superhuman-created Packs. Superhuman internal use only.
+	 * @internal
+	 */
+	userId?: string;
 }
 /**
  * An object passed to the `execute` function of every formula invocation
@@ -5104,6 +5110,12 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
 	 * that should contain the token.
 	 */
 	tokenQueryParam?: string;
+	/**
+	 * A URI identifying the target service or resource to which access is being requested.
+	 * See https://datatracker.ietf.org/doc/html/rfc8707 for more details.
+	 * @hidden Under development
+	 */
+	resource?: string;
 }
 /**
  * Fields shared by the OAuth2 Authorization Code variants (static and dynamic client).

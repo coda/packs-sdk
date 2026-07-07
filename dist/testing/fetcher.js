@@ -175,7 +175,7 @@ class AuthenticatingFetcher {
         const { clientId, clientSecret, accessToken, refreshToken, scopes } = this._credentials;
         (0, ensure_1.assertCondition)(accessToken);
         (0, ensure_1.assertCondition)(refreshToken);
-        const { tokenUrl } = this._authDef;
+        const { tokenUrl, resource } = this._authDef;
         if (!tokenUrl) {
             throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
         }
@@ -183,6 +183,7 @@ class AuthenticatingFetcher {
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
             client_id: clientId,
+            resource,
         };
         const headers = new Headers({
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -191,6 +192,9 @@ class AuthenticatingFetcher {
         const formParams = new URLSearchParams();
         const formParamsWithSecret = new URLSearchParams();
         for (const [key, value] of Object.entries(params)) {
+            if (value === undefined) {
+                continue;
+            }
             formParams.append(key, value.toString());
             formParamsWithSecret.append(key, value.toString());
         }

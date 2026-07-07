@@ -4,6 +4,23 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.16.0] - 2026-06-25
+
+### Added
+
+- Added `resource` support for OAuth2 authentication flows, including authorization URLs, token exchange, refresh token, and client credentials flows.
+
+### Changed
+
+- Updated agent documentation now that anyone can submit agents for verification, and added a Publishing link.
+- Updated dependency versions and overrides for security patches, including `qs`, `uuid`, `js-yaml`, `markdown-it`, `serialize-javascript`, and `tmp`.
+- Removed the Gitpod getting-started tutorial and references.
+
+### Fixed
+
+- Allowed `pp-sh.io` and `qa-sh.io` as first-party domains for `CodaApiHeaderBearerToken` validation.
+- Fixed `CodaApiHeaderBearerToken` validation so all authentications are checked instead of stopping after the first non-matching authentication.
+
 ## [1.15.0] - 2026-05-29
 
 ### Changed
@@ -1046,7 +1063,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.15.0...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.16.0...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1124,3 +1141,4 @@ await myHelper(context);
 [1.13.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.13.3
 [1.14.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.14.0
 [1.15.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.15.0
+[1.16.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.16.0

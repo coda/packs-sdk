@@ -53,6 +53,7 @@ export type Credentials = TokenCredentials | MultiHeaderCredentials | WebBasicCr
 interface BaseOauth2RequestAccessTokenParams {
     client_id: string;
     client_secret: string;
+    resource?: string;
 }
 export interface OAuth2RequestAccessTokenParams extends BaseOauth2RequestAccessTokenParams {
     grant_type: 'authorization_code';
