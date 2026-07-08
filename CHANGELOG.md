@@ -4,6 +4,12 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.17.0] - 2026-07-08
+
+### Added
+
+- Release the `resource` field to support sending resource in OAuth2 authentication flows.
+
 ## [1.16.0] - 2026-06-25
 
 ### Added
@@ -764,6 +770,7 @@ await myHelper(context);
 ### Added
 
 - Added support for `AuthenticationType.Custom` which formalizes the ability to use templating to insert secret credentials onto network requests that previously relied on `AuthenticationType.WebBasic`. This enables authenticating with APIs that use non-standard authentication methods. See an example of using this new authentication method below.
+
   ```typescript
   // pack authentication
   pack.setSystemAuthentication({
@@ -1063,7 +1070,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.16.0...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.17.0...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1115,7 +1122,6 @@ await myHelper(context);
 [1.9.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.1
 [1.9.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.3
 [1.9.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.2
-[1.9.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.2
 [1.9.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.6
 [1.9.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.5
 [1.9.8]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.8
@@ -1142,3 +1148,4 @@ await myHelper(context);
 [1.14.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.14.0
 [1.15.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.15.0
 [1.16.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.16.0
+[1.17.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.0
