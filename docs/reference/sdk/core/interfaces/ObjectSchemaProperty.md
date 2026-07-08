@@ -20,7 +20,7 @@ of an object schema.
 > `optional` **displayName**: `string`
 
 Without a `displayName`, a property's key will become the user-visible name. This isn't ideal
-because the key must also be used by the Coda formula language to refer to the property, requiring
+because the key must also be used by the Superhuman formula language to refer to the property, requiring
 lossy transformation.
 
 You probably want to set displayName if:

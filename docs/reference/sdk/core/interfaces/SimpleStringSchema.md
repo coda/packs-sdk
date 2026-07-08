@@ -10,7 +10,7 @@ search:
 
 # Interface: SimpleStringSchema\<T\>
 
-A schema whose underlying value is a string, along with an optional hint about how Coda
+A schema whose underlying value is a string, along with an optional hint about how Superhuman Docs
 should interpret that string.
 
 ## Extends
@@ -29,7 +29,7 @@ should interpret that string.
 
 > `optional` **codaType**: `T`
 
-An optional type hint instructing Coda about how to interpret or render this value.
+An optional type hint instructing Superhuman Docs about how to interpret or render this value.
 
 #### Inherited from
 

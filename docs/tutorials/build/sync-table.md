@@ -651,7 +651,7 @@ Now that you have the basics working, extend the schema to include the full set 
 
     These fields don't exist in the row data exactly as needed, but you can define "synthetic" properties that you populate manually in the `execute` function (you'll do that in the next step).
 
-    Define a `thumbnail` and `link` property, setting the `codaType` field to instruct Coda to display these as Image URL and Link columns respectively.
+    Define a `thumbnail` and `link` property, setting the `codaType` field to instruct Superhuman Docs to display these as Image URL and Link columns respectively.
 
     </div>
     <div markdown>
@@ -744,7 +744,7 @@ Now that you have the basics working, extend the schema to include the full set 
 
     Now that you have a bunch of properties in `BookSchema` it's a good idea to set the `featuredProperties` of the schema.
 
-    These are the properties that Coda should automatically display as column in the sync table. All properties are available in the object chip in the first column of the table, but featuring the most important properties makes it easier for users to discover them.
+    These are the properties that Superhuman Docs should automatically display as column in the sync table. All properties are available in the object chip in the first column of the table, but featuring the most important properties makes it easier for users to discover them.
 
     </div>
     <div markdown>
@@ -931,7 +931,7 @@ If everything is working correctly you should have more than 32 rows in your syn
 The Pack maker tools will show multiple executions of the sync formula, with those after the first marked as continuations.
 
 !!! info "Truncated results"
-    Sync tables have a maximum number of rows they can store, which varies depending on what Coda plan you are subscribed to. When your sync hits that limit the sync formula will be terminated, even if you returned another continuation.
+    Sync tables have a maximum number of rows they can store, which varies depending on what Superhuman Docs plan you are subscribed to. When your sync hits that limit the sync formula will be terminated, even if you returned another continuation.
 
 </div>
 <div markdown>

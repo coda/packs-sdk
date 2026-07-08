@@ -6,7 +6,7 @@ icon: material/format-textbox
 
 # Parameter samples
 
-Coda formulas, actions, and sync tables receive take in user input via parameters. They are required by default, but can by made optional. Variable argument (vararg) parameters can be used to allow for parameters to be set more than once.
+Formulas, actions, and sync tables receive take in user input via parameters. They are required by default, but can by made optional. Variable argument (vararg) parameters can be used to allow for parameters to be set more than once.
 
 
 [Learn More](../../guides/basics/parameters/index.md){ .md-button }
@@ -142,7 +142,7 @@ A formula that takes an image as a parameter. This sample returns the file size 
 import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
-// Regular expression that matches Coda-hosted images.
+// Regular expression that matches Superhuman-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
 
 // Formula that calculates the file size of an image.
@@ -159,9 +159,9 @@ pack.addFormula({
   ],
   resultType: sdk.ValueType.Number,
   execute: async function ([imageUrl], context) {
-    // Throw an error if the image isn't Coda-hosted. Image URL columns can
-    // contain images on any domain, but by default Packs can only access image
-    // attachments hosted on codahosted.io.
+    // Throw an error if the image isn't Superhuman-hosted. Image URL
+    // columns can contain images on any domain, but by default Packs can only
+    // access image attachments hosted on codahosted.io.
     if (!imageUrl.match(HostedImageUrlRegex)) {
       throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }

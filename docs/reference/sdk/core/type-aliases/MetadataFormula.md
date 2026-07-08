@@ -26,7 +26,7 @@ A variety of tasks like those mentioned above can all be accomplished with formu
 share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
 You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
 the JavaScript function that implements the formula. The platform will wrap this function with the necessary
-formula boilerplate to make it look like a complete Coda formula.
+formula boilerplate to make it look like a complete formula.
 
 All metadata functions are passed an [ExecutionContext](../interfaces/ExecutionContext.md) as the first parameter,
 and the optional second parameter is a string whose purpose and value varies depending on

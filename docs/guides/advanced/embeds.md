@@ -6,7 +6,7 @@ description: Embed external content using Packs and optimize your app for embedd
 
 Packs typically operate purely on data and actions, leaving the display up to the document. However there are times in which you may want to provide a richer experience, which can be accomplished by embedding a portion of an application directly within the doc.
 
-Coda uses the 3rd party service [Iframely][iframely] to handle embeds. Many popular apps and websites are already supported, and you can use their site to [check if a URL already supports embedding][iframely_check].
+Superhuman Docs uses the 3rd party service [Iframely][iframely] to handle embeds. Many popular apps and websites are already supported, and you can use their site to [check if a URL already supports embedding][iframely_check].
 
 ## Adding support
 
@@ -65,7 +65,7 @@ Once a user clicks the embed they are prompted to approve embedding the URL:
 !!! info "Embed approval scope"
     This approval is once per-domain, per-user. This means that each user in the document will need to approve the embed in order to see the content, but that approval works across all embeds in that doc or others.
 
-Once approved, Coda attempts to load the URL int an `<iframe>` element with [sandboxing applied][mdn_iframe_sandbox]. The URL must be secure (begin with `https://`) and must not prevent being loaded in an iframe (via the [`X-Frame-Options`][mdn_xfo] or [`Content-Security-Policy`][mdn_csp] headers).
+Once approved, Superhuman Docs attempts to load the URL int an `<iframe>` element with [sandboxing applied][mdn_iframe_sandbox]. The URL must be secure (begin with `https://`) and must not prevent being loaded in an iframe (via the [`X-Frame-Options`][mdn_xfo] or [`Content-Security-Policy`][mdn_csp] headers).
 
 
 [help_center_embed]: https://help.coda.io/hc/en-us/articles/39555949656077-Embed-third-party-content-in-your-doc

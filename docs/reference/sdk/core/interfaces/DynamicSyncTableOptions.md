@@ -58,7 +58,7 @@ into the hands of the user.
 
 > `optional` **description**: `string`
 
-The description of the dynamic sync table. This is shown to users in the Coda UI
+The description of the dynamic sync table. This is shown to users in the Superhuman Docs UI
 when listing what build blocks are contained within this pack.
 This should describe what the dynamic sync table does in a more detailed language.
 
@@ -78,7 +78,7 @@ of `identity.name` from your schema will be used instead, so in most cases you d
 
 > **formula**: [`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`SyncFormulaDef`](SyncFormulaDef.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>\>
 
-The definition of the formula that implements this sync. This is a Coda packs formula
+The definition of the formula that implements this sync. This is a Pack formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](Continuation.md).
 (The [SyncFormulaDef.name](SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
 These will eventually be consolidated.)
@@ -90,7 +90,7 @@ These will eventually be consolidated.)
 > **getDisplayUrl**: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>
 
 A formula that returns a browser-friendly url representing the
-resource being synced. The Coda UI links to this url as the source
+resource being synced. The Superhuman Docs UI links to this url as the source
 of the table data. This is typically a browser-friendly form of the
 `dynamicUrl`, which is typically an API url.
 
@@ -152,7 +152,7 @@ used to create an instance of this dynamic sync table.
 
 > **name**: `string`
 
-The name of the dynamic sync table. This is shown to users in the Coda UI
+The name of the dynamic sync table. This is shown to users in the Superhuman Docs UI
 when listing what build blocks are contained within this pack.
 This should describe the category of entities being synced. The actual
 table name once added to the doc will be dynamic, it will be whatever value

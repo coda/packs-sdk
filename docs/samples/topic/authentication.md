@@ -254,17 +254,17 @@ pack.setUserAuthentication({
 pack.addNetworkDomain("twilio.com");
 {% endraw %}
 ```
-## Coda API token
-Authentication optimized for connecting to the Coda API, which is a token passed in the Authorization header.
+## Superhuman Docs API token
+Authentication optimized for connecting to the Superhuman Docs API, which is a token passed in the Authorization header.
 
 ```ts
 {% raw %}
 import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
-// Per-user authentication to the Coda API, using a token in the Authorization
-// header.
-// See https://coda.io/developers/apis/v1
+// Per-user authentication to the Superhuman Docs API, using a token in the
+// Authorization header.
+// See https://docs.superhuman.com/developers/apis/v1
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
 
@@ -272,8 +272,8 @@ pack.setUserAuthentication({
   shouldAutoAuthSetup: true,
 });
 
-// Allow the pack to make requests to Coda.
-pack.addNetworkDomain("coda.io");
+// Allow the pack to make requests to Superhuman Docs.
+pack.addNetworkDomain("docs.superhuman.com");
 {% endraw %}
 ```
 ## AWS Signature Version 4

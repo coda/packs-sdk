@@ -26,7 +26,7 @@ export function load(app) {
   app.renderer.on(MarkdownPageEvent.END, page => {
     // Replace absolute links with relative ones.
     page.contents = page.contents?.replaceAll(
-      'https://coda.io/packs/build/latest/',
+      'https://docs.superhuman.com/packs/build/latest/',
       '{{ config.site_url }}');
   });
 }

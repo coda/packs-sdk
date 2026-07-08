@@ -91,11 +91,13 @@ When registering you application in the API provider's console you will be asked
 The **Add OAuth credentials** dialog discussed above will show the redirect URL to use for your Pack and allow you to copy it to your clipboard. In general it follows the pattern:
 
 ```
-https://coda.io/packsAuth/oauth2/{PACK ID}
+https://docs.superhuman.com/packsAuth/oauth2/{PACK ID}
 ```
 
 !!! warning "Legacy redirect URLs"
-    Previously the redirect URL for a Pack didn't include the Pack ID. We still support this using the **Legacy** option in the dropdown menu, but for greater security Packs should migrate to using the newer Pack-specific URLs.
+
+    Previously the redirect URL for a Pack was hosted on `coda.io` and/or didn't include the Pack ID.
+    We still support these URLs using the **Legacy** options in the dropdown menu, but for the best experience migrate your Packs to use the URL format shown above.
 
 
 ## Token expiry and refresh

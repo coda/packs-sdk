@@ -5,14 +5,14 @@ description: Simplify entering parameters by providing choices users can select 
 
 # Autocomplete parameter options
 
-If you have a parameter that accepts a defined set of values it's usually best to provide those options using autocomplete. These options are presented to the user in the Coda UI and they can simply click on one instead of entering the value manually. Autocomplete can be used with `String` and `Number` parameters.
+If you have a parameter that accepts a defined set of values it's usually best to provide those options using autocomplete. These options are presented to the user in the Superhuman Docs UI and they can simply click on one instead of entering the value manually. Autocomplete can be used with `String` and `Number` parameters.
 
 [View Sample Code][samples]{ .md-button }
 
 
 ## Using autocomplete
 
-In the formula editor, parameter options show up in the same pane used for the autocompletion of built-in elements of the Coda Formula Language. In the actions builder and sync table settings options are presented in a drop down.
+In the formula editor, parameter options show up in the same pane used for the autocompletion of built-in elements of the Superhuman formula language. In the actions builder and sync table settings options are presented in a drop down.
 
 === "In the formula editor"
     <img src="site:images/autocomplete_formula.png" srcset="site:images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">

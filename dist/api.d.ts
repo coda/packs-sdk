@@ -46,7 +46,7 @@ export { FetchRequest } from './api_types';
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
  * to the end user, throw a UserVisibleError with a user-friendly message
- * and the Coda UI will display the message.
+ * and the Superhuman Docs UI will display the message.
  *
  * @example
  * ```
@@ -56,7 +56,7 @@ export { FetchRequest } from './api_types';
  * ```
  *
  * @see
- * - [Handling errors - User-visible errors](https://coda.io/packs/build/latest/guides/advanced/errors/#user-visible-errors)
+ * - [Handling errors - User-visible errors](https://docs.superhuman.com/packs/build/latest/guides/advanced/errors/#user-visible-errors)
  */
 export declare class UserVisibleError extends Error {
     /** @hidden */
@@ -113,7 +113,7 @@ export type ParameterValidationResult = InvalidParameterValidationResult | Valid
 export interface StatusCodeErrorResponse {
     /** The raw body of the HTTP error response. */
     body?: any;
-    /** The headers from the HTTP error response. Many header values are redacted by Coda. */
+    /** The headers from the HTTP error response. Many header values are redacted by the platform. */
     headers?: {
         [key: string]: string | string[] | undefined;
     };
@@ -151,7 +151,7 @@ export interface StatusCodeErrorResponse {
  * }
  * ```
  *
- * @see [Fetching remote data - Errors](https://coda.io/packs/build/latest/guides/basics/fetcher/#errors)
+ * @see [Fetching remote data - Errors](https://docs.superhuman.com/packs/build/latest/guides/basics/fetcher/#errors)
  */
 export declare class StatusCodeError extends Error {
     /**
@@ -211,7 +211,7 @@ export declare class StatusCodeError extends Error {
  * ```
  *
  * @see
- * - [Guide: Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/#triggering-a-prompt)
+ * - [Guide: Authenticating using OAuth](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/oauth2/#triggering-a-prompt)
  */
 export declare class MissingScopesError extends Error {
     /**
@@ -659,14 +659,14 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      *
      * This is ignored if there is also a {@link continuation} on this object.
      *
-     * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/)
+     * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/incremental/)
      */
     completion?: SyncCompletionMetadataResult<NonNullable<ContextT['sync']['previousCompletion']>['incrementalContinuation']>;
     /**
      * The IDs of the rows that have been deleted, as discovered during an incremental sync. The IDs provided should match
      * the values in the {@link ObjectSchemaDefinition#idProperty} field of the schema.
      *
-     * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/#deleted-records)
+     * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/incremental/#deleted-records)
      */
     deletedRowIds?: string[];
     /**
@@ -915,9 +915,9 @@ export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definiti
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType` to tell Coda how to interpret a given value. For example, you can return
- * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
- * to interpret as a date in a document.
+ * `codaType` to tell the platform how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `codaType: ValueType.Date` to tell the platform
+ * to interpret as a date.
  *
  * If your formula returns an object, you must provide a `schema` property that describes
  * the structure of the object. See {@link makeObjectSchema} for how to construct an object schema.
@@ -1099,7 +1099,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
  * You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
  * the JavaScript function that implements the formula. The platform will wrap this function with the necessary
- * formula boilerplate to make it look like a complete Coda formula.
+ * formula boilerplate to make it look like a complete formula.
  *
  * All metadata functions are passed an {@link ExecutionContext} as the first parameter,
  * and the optional second parameter is a string whose purpose and value varies depending on
@@ -1190,7 +1190,7 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
  * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
  * and an `execute` function body. This includes supporting utilities like parameter autocomplete functions.
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
- * it is shaped like a Coda formula to be used at runtime.
+ * it is shaped like a formula to be used at runtime.
  */
 export declare function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType>(execute: MetadataFunction<ContextT, ReturnT>, options?: {
     connectionRequirement?: ConnectionRequirement;
@@ -1307,7 +1307,7 @@ export interface DynamicOptions {
  */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
     /**
-     * The name of the sync table. This is shown to users in the Coda UI if displayName is not present.
+     * The name of the sync table. This is shown to users in the Superhuman Docs UI if displayName is not present.
      * This should describe the entities being synced. For example, a sync table that syncs products
      * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
      *
@@ -1316,12 +1316,13 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      */
     name: string;
     /**
-     * This is the name shown to users in the Coda UI. If not present, {@link SyncTableOptions.name} will be used.
+     * This is the name shown to users in the Superhuman Docs UI. If not present, {@link SyncTableOptions.name}
+     * will be used.
      * Changing this value will not affect existing tables and only affects newly created tables.
      */
     displayName?: string;
     /**
-     * The description of the sync table. This is shown to users in the Coda UI.
+     * The description of the sync table. This is shown to users in the Superhuman Docs UI.
      * This should describe what the sync table does in more detailed language. For example, the
      * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
      */
@@ -1337,7 +1338,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
      * as the identity name.
      *
-     * When returning objects from other syncs or formulas, you may create Coda references to objects
+     * When returning objects from other syncs or formulas, you may create references to objects
      * in this table by defining an {@link Identity} in that schema that refers to this identity name.
      *
      * For example, if your identity name was 'Product', another formula or sync could return
@@ -1351,7 +1352,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      */
     schema: SchemaT;
     /**
-     * The definition of the formula that implements this sync. This is a Coda packs formula
+     * The definition of the formula that implements this sync. This is a Pack formula
      * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
      * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
      * These will eventually be consolidated.)
@@ -1400,7 +1401,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
  */
 export interface DynamicSyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
     /**
-     * The name of the dynamic sync table. This is shown to users in the Coda UI
+     * The name of the dynamic sync table. This is shown to users in the Superhuman Docs UI
      * when listing what build blocks are contained within this pack.
      * This should describe the category of entities being synced. The actual
      * table name once added to the doc will be dynamic, it will be whatever value
@@ -1408,7 +1409,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      */
     name: string;
     /**
-     * The description of the dynamic sync table. This is shown to users in the Coda UI
+     * The description of the dynamic sync table. This is shown to users in the Superhuman Docs UI
      * when listing what build blocks are contained within this pack.
      * This should describe what the dynamic sync table does in a more detailed language.
      */
@@ -1431,7 +1432,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
     getSchema: MetadataFormulaDef<ContextT>;
     /**
      * A formula that returns a browser-friendly url representing the
-     * resource being synced. The Coda UI links to this url as the source
+     * resource being synced. The Superhuman Docs UI links to this url as the source
      * of the table data. This is typically a browser-friendly form of the
      * `dynamicUrl`, which is typically an API url.
      */
@@ -1447,7 +1448,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      */
     searchDynamicUrls?: MetadataFormulaDef;
     /**
-     * The definition of the formula that implements this sync. This is a Coda packs formula
+     * The definition of the formula that implements this sync. This is a Pack formula
      * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
      * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
      * These will eventually be consolidated.)
@@ -1538,7 +1539,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  * * Normalizing the schema definition to conform to recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
- * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
+ * See [Normalization](https://docs.superhuman.com/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
     identity?: Identity;

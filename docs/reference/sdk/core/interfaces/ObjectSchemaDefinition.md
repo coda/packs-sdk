@@ -39,10 +39,10 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 > `optional` **codaType**: [`Person`](../enumerations/ValueHintType.md#person) \| [`Reference`](../enumerations/ValueHintType.md#reference) \| [`SelectList`](../enumerations/ValueHintType.md#selectlist)
 
-A hint for how Coda should interpret and render this object value.
+A hint for how Superhuman Docs should interpret and render this object value.
 
-For example, an object can represent a person (user) in a Coda doc, with properties for the
-email address of the person and their name. Using `ValueHintType.Person` tells Coda to
+For example, an object can represent a person (user) in a doc, with properties for the
+email address of the person and their name. Using `ValueHintType.Person` tells Superhuman Docs to
 render such a value as an @-reference to that person, rather than a basic object chip.
 
 ***
@@ -92,7 +92,7 @@ explain the purpose or contents of any property that is not self-evident.
 
 The name of a property within [ObjectSchemaDefinition.properties](#properties) that be used to label this object in the
 UI.
-Object values can contain many properties and the Coda UI will display them as a "chip"
+Object values can contain many properties and the Superhuman Docs UI will display them as a "chip"
 with only the value of the "displayProperty" property used as the chip's display label.
 The other properties can be seen when hovering over the chip.
 
@@ -177,8 +177,8 @@ Specifies that object instances with this schema can contain additional properti
 in the schema, and that the packs infrastructure should retain these unknown properties
 rather than stripping them.
 
-Properties not declared in the schema will not work properly in Coda: they cannot be
-used natively in the formula language and will not have correct types in Coda. But, in certain
+Properties not declared in the schema will not work properly in Superhuman Docs: they cannot be
+used natively in the formula language and will not have correct types in Superhuman Docs. But, in certain
 scenarios they can be useful.
 
 ***

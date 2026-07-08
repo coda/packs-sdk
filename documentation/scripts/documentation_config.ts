@@ -6,27 +6,27 @@ import {UrlType} from '../types';
 export const Snippets: AutocompleteSnippet[] = [
   {
     triggerTokens: ['addFormula:string', 'addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
-    content: 'Adds a Coda formula which will return a text string in the doc.',
+    content: 'Adds a formula which will return a text string in the doc.',
     codeFile: './samples/snippets/formula/string_formula.ts',
   },
   {
     triggerTokens: ['addFormula:array', 'addArrayFormula', 'makeArrayFormula', 'ArrayFormula'],
-    content: 'Adds a Coda formula which will return a text string in the doc.',
+    content: 'Adds a formula which will return a text string in the doc.',
     codeFile: './samples/snippets/formula/array_formula.ts',
   },
   {
     triggerTokens: ['addFormula:boolean', 'addBooleanFormula', 'makeBooleanFormula', 'BooleanFormula'],
-    content: 'Adds a Coda formula which will return true or false in the doc.',
+    content: 'Adds a formula which will return true or false in the doc.',
     codeFile: './samples/snippets/formula/boolean_formula.ts',
   },
   {
     triggerTokens: ['addFormula:number', 'addNumericFormula', 'makeNumericFormula', 'NumericFormula'],
-    content: 'Adds a Coda formula which will return a number in the doc.',
+    content: 'Adds a formula which will return a number in the doc.',
     codeFile: './samples/snippets/formula/numeric_formula.ts',
   },
   {
     triggerTokens: ['addFormula:object', 'addObjectFormula', 'makeObjectFormula', 'ObjectFormula'],
-    content: 'Adds a Coda formula which will return an object in the doc.',
+    content: 'Adds a formula which will return an object in the doc.',
     codeFile: './samples/snippets/formula/object_formula.ts',
   },
   {
@@ -36,7 +36,7 @@ export const Snippets: AutocompleteSnippet[] = [
   },
   {
     triggerTokens: ['addColumnFormat', 'makeColumnFormat', 'ColumnFormat'],
-    content: 'Adds a custom column type that you apply to any column in any Coda table.',
+    content: 'Adds a custom column type that you apply to any column in any table.',
     codeFile: './samples/snippets/column_format.ts',
   },
   {
@@ -56,8 +56,8 @@ export const Snippets: AutocompleteSnippet[] = [
   },
   {
     triggerTokens: ['setUserAuthentication:CodaApi', 'CodaApiHeaderBearerToken', 'CodaApiBearerTokenAuthentication'],
-    content: 'Sets per-user authentication for the Pack, using a Coda API token.',
-    codeFile: './samples/snippets/authentication/user_coda.ts',
+    content: 'Sets per-user authentication for the Pack, using a Superhuman Docs API token.',
+    codeFile: './samples/snippets/authentication/user_superhuman_docs.ts',
   },
   {
     triggerTokens: ['setUserAuthentication:Header', 'CustomHeaderToken', 'CustomHeaderTokenAuthentication'],
@@ -392,9 +392,9 @@ export const Examples: Example[] = [
         codeFile: './samples/packs/authentication/twilio.ts',
       },
       {
-        name: 'Coda API token',
-        content: 'Authentication optimized for connecting to the Coda API, which is a token passed in the Authorization header.',
-        codeFile: './samples/packs/authentication/coda.ts',
+        name: 'Superhuman Docs API token',
+        content: 'Authentication optimized for connecting to the Superhuman Docs API, which is a token passed in the Authorization header.',
+        codeFile: './samples/packs/authentication/superhuman_docs.ts',
       },
       {
         name: 'AWS Signature Version 4',
@@ -941,7 +941,7 @@ export const Examples: Example[] = [
       {
         name: 'Upload images',
         content:
-          'An action that downloads images from Coda and uploads them to another service. This sample uploads a list of files to Google Photos.',
+          'An action that downloads images from Superhuman Docs and uploads them to another service. This sample uploads a list of files to Google Photos.',
         codeFile: './samples/packs/image/google_photos.ts',
       },
       {
@@ -1012,9 +1012,9 @@ export const Examples: Example[] = [
         codeFile: './samples/packs/apis/clickup.ts',
       },
       {
-        name: 'Coda API',
-        content: 'The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.',
-        codeFile: './samples/packs/authentication/coda.ts',
+        name: 'Superhuman Docs API',
+        content: 'The Superhuman Docs API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Superhuman Docs API.',
+        codeFile: './samples/packs/authentication/superhuman_docs.ts',
       },
       {
         name: 'Copper API',
@@ -1043,7 +1043,7 @@ export const Examples: Example[] = [
       },
       {
         name: 'Google',
-        content: 'The Google APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. Note: It currently isn\'t possible to complete Google\'s OAuth verification process with a Pack. See the [FAQ](https://coda.io/packs/build/latest/guides/faq/#google) for more information.',
+        content: 'The Google APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. Note: It currently isn\'t possible to complete Google\'s OAuth verification process with a Pack. See the [FAQ](https://docs.superhuman.com/packs/build/latest/guides/faq/#google) for more information.',
         codeFile: './samples/packs/apis/google.ts',
       },
       {

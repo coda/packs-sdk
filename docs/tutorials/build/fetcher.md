@@ -9,7 +9,7 @@ cSpell:words: exchangerate
 
 # Learn to call an API
 
-One of the primary use cases for a Pack is to integrate with an external API, allowing users to bring in data or functionality not native to Coda. In this tutorial you'll create a formula that makes a request to an API and uses the response to calculate the result.
+One of the primary use cases for a Pack is to integrate with an external API, allowing users to bring in data or functionality not native to Superhuman Docs. In this tutorial you'll create a formula that makes a request to an API and uses the response to calculate the result.
 
 !!! abstract "Goal"
     Build a `ToUSD` formula that uses an external API to convert currency values to US dollars.

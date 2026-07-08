@@ -32,8 +32,8 @@ export declare enum PackCategory {
 /**
  * Authentication types supported by Packs.
  *
- * @see [Authenticating with other services](https://coda.io/packs/build/latest/guides/basics/authentication/)
- * @see [Authentication samples](https://coda.io/packs/build/latest/samples/topic/authentication/)
+ * @see [Authenticating with other services](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/)
+ * @see [Authentication samples](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/)
  */
 export declare enum AuthenticationType {
     /**
@@ -115,7 +115,7 @@ export declare enum AuthenticationType {
      */
     AWSAssumeRole = "AWSAssumeRole",
     /**
-     * Authenticate using a Coda REST API token, sent as an HTTP header.
+     * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
      *
      * @see {@link CodaApiBearerTokenAuthentication}
      */
@@ -236,14 +236,14 @@ export interface BaseAuthentication {
      * to an API's "who am I" endpoint and returns a username.
      *
      * If omitted, or if the function returns an empty value, the account will be labeled
-     * with the creating user's Coda username.
+     * with the creating user's Superhuman username.
      */
     getConnectionName?: MetadataFormula;
     /**
      * A function that is called when a user sets up a new account, that returns the ID of
      * that account in the third-party system being called.
      *
-     * This ID is not yet subsequently exposed to pack developers and is mostly for Coda
+     * This ID is not yet subsequently exposed to pack developers and is mostly for Superhuman Docs
      * internal use.
      *
      * @ignore
@@ -291,22 +291,22 @@ export interface BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Authorization header](https://coda.io/packs/build/latest/samples/topic/authentication/#authorization-header)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Authorization header](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#authorization-header)
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
     /** Identifies this as HeaderBearerToken authentication. */
     type: AuthenticationType.HeaderBearerToken;
 }
 /**
- * Authenticate using a Coda REST API token, sent as an HTTP header.
+ * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
  *
  * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user will be presented
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
  * This is primarily for use by Superhuman-authored packs, as it is only relevant for interacting with the
- * Coda REST API.
+ * Superhuman Docs REST API.
  *
  * @example
  * ```ts
@@ -315,8 +315,8 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Coda API token](https://coda.io/packs/build/latest/guides/basics/authentication/#coda-api-token)
- * @see [Authentication samples - Coda API token](https://coda.io/packs/build/latest/samples/topic/authentication/#coda-api-token)
+ * @see [Authenticating with other services - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#coda-api-token)
+ * @see [Authentication samples - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#coda-api-token)
  */
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
     /** Identifies this as CodaApiHeaderBearerToken authentication. */
@@ -326,7 +326,7 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
      */
     deferConnectionSetup?: boolean;
     /**
-     * If true, automatically creates and configures an account with a Coda API token with
+     * If true, automatically creates and configures an account with a Superhuman Docs API token with
      * default settings when installing the pack: a read-write token, added to the doc
      * as a shared account that allows actions.
      */
@@ -344,8 +344,8 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Custom header](https://coda.io/packs/build/latest/samples/topic/authentication/#custom-header)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Custom header](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#custom-header)
  */
 export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
     /** Identifies this as CustomHeaderToken authentication. */
@@ -415,8 +415,8 @@ export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Query parameters](https://coda.io/packs/build/latest/samples/topic/authentication/#query-parameter)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Query parameters](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#query-parameter)
  */
 export interface QueryParamTokenAuthentication extends BaseAuthentication {
     /** Identifies this as QueryParamToken authentication. */
@@ -444,8 +444,8 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Multiple query parameters](https://coda.io/packs/build/latest/samples/topic/authentication/#multiple-query-parameters)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Multiple query parameters](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#multiple-query-parameters)
  */
 export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
     /** Identifies this as MultiQueryParamToken authentication. */
@@ -573,8 +573,8 @@ interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
  * });
  * ```
  *
- * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
- * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
+ * @see [Authenticating using OAuth](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/oauth2/)
+ * @see [Authentication samples - OAuth2](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#oauth2)
  */
 export interface OAuth2StaticCodeAuthentication extends BaseOAuth2CodeAuthentication {
     /**
@@ -628,8 +628,8 @@ export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentic
  * When `useDynamicClientRegistration` is `true`, `authorizationUrl` and `tokenUrl` become optional
  * as they are automatically discovered using the pack's declared MCP servers and network domains.
  *
- * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
- * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
+ * @see [Authenticating using OAuth](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/oauth2/)
+ * @see [Authentication samples - OAuth2](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#oauth2)
  */
 export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2DynamicCodeAuthentication;
 /**
@@ -684,8 +684,8 @@ export declare enum TokenExchangeCredentialsLocation {
  * });
  * ```
  *
- * @see [Authenticating with other services - Username and password](https://coda.io/packs/build/latest/guides/basics/authentication/#username-and-password)
- * @see [Authentication samples - Username and password](https://coda.io/packs/build/latest/samples/topic/authentication/#username-and-password)
+ * @see [Authenticating with other services - Username and password](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#username-and-password)
+ * @see [Authentication samples - Username and password](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#username-and-password)
  * @see [Wikipedia - Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)
  */
 export interface WebBasicAuthentication extends BaseAuthentication {
@@ -782,8 +782,8 @@ export interface CustomAuthParameter {
  * {% endraw %}
  * ```
  *
- * @see [Authenticating with other services - Custom tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#custom-tokens)
- * @see [Authentication samples - Custom tokens](https://coda.io/packs/build/latest/samples/topic/authentication/#custom-tokens)
+ * @see [Authenticating with other services - Custom tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#custom-tokens)
+ * @see [Authentication samples - Custom tokens](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#custom-tokens)
  */
 export interface CustomAuthentication extends BaseAuthentication {
     /** Identifies this as Custom authentication. */
@@ -974,8 +974,8 @@ export interface AdminAuthenticationDef extends Omit<AdminAuthentication, 'authe
     authentication: AllowedAuthenticationDef;
 }
 /**
- * Definition for a custom column type that users can apply to any column in any Coda table.
- * A column format tells Coda to interpret the value in a cell by executing a formula
+ * Definition for a custom column type that users can apply to any column in any Superhuman Docs table.
+ * A column format tells Superhuman Docs to interpret the value in a cell by executing a formula
  * using that value, typically looking up data related to that value from a third-party API.
  * For example, the Weather pack has a column format "Current Weather"; when applied to a column,
  * if you type a city or address into a cell in that column, that location will be used as the input
@@ -983,7 +983,7 @@ export interface AdminAuthenticationDef extends Omit<AdminAuthentication, 'authe
  * weather info will be shown in the cell.
  *
  * A column format is just a wrapper around a formula defined in the {@link PackVersionDefinition.formulas} section
- * of your pack definition. It tells Coda to execute that particular formula using the value
+ * of your pack definition. It tells Superhuman Docs to execute that particular formula using the value
  * of the cell as input.
  *
  * The formula referenced by a format must have exactly one required parameter.
@@ -1123,7 +1123,7 @@ export declare enum ToolType {
      */
     ContactResolution = "ContactResolution",
     /**
-     * Tool that provides access to Coda docs and tables capabilities.
+     * Tool that provides access to Superhuman Docs documents and tables capabilities.
      * @internal
      */
     CodaDocsAndTables = "CodaDocsAndTables",
@@ -1288,7 +1288,7 @@ export interface MCPTool extends BaseTool<ToolType.MCP> {
 export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {
 }
 /**
- * Tool that provides access to Coda docs and tables capabilities.
+ * Tool that provides access to Superhuman Docs documents and tables capabilities.
  * @internal
  */
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {

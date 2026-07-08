@@ -1,13 +1,13 @@
-# Contributing to the Coda Pack SDK
+# Contributing to the Superhuman Pack SDK
 
 👍🎉 First off, thanks for taking the time to contribute! 🎉👍
 
-Changes to the core SDK itself can only be made by Coda engineers, and they must be coordinated with changes to the core Coda product. We do however welcome contributions to the [SDK documentation][docs], which can be done without access to or knowledge of the private codebase.
+Changes to the core SDK itself can only be made by Superhuman engineers, and they must be coordinated with changes to the Superhuman products. We do however welcome contributions to the [SDK documentation][docs], which can be done without access to or knowledge of the private codebase.
 
 
 ## Documentation changes
 
-For small contributions, such fixing a typo or adding a clarifying sentence, you can directly submit a pull request to this repo. For larger changes, such as adding a new page or code sample, first make a post to the [Coda Community][community] with your intentions to get feedback from a Codan. This helps ensure that you don't waste effort for a change which may not be approved.
+For small contributions, such fixing a typo or adding a clarifying sentence, you can directly submit a pull request to this repo. For larger changes, such as adding a new page or code sample, first make a post to the [Superhuman Community][community] with your intentions to get feedback from a Superhuman engineer. This helps ensure that you don't waste effort for a change which may not be approved.
 
 
 ### Style guide
@@ -82,7 +82,7 @@ make lint
 
 ## SDK changes
 
-The following section includes information about how to contribute to the SDK itself, which is only done by Coda engineers.
+The following section includes information about how to contribute to the SDK itself, which is only done by Superhuman engineers.
 
 
 ### Publishing Changes Process
@@ -92,8 +92,8 @@ Adjustments to the `CHANGELOG.md` file should be marked under `### Not yet relea
 Our `CHANGELOG.md` follows the [Keep a Changelog][keepachangelog] standards, where there is a "Unreleased" section at the top for any unreleased changes. Upon release, it is named according to a semantic versioning system and dated.
 
 
-[docs]: https://coda.io/packs/build
-[community]: https://community.coda.io/c/developers-central/making-packs/15
+[docs]: https://docs.superhuman.com/packs/build
+[community]: https://connect.superhuman.com/c/making-packs/15
 [cloud_shell]: https://cloud.google.com/shell
-[style_guide]: https://coda.io/packs/build/latest/support/contributing/style/
+[style_guide]: https://docs.superhuman.com/packs/build/latest/support/contributing/style/
 [keepachangelog]: https://keepachangelog.com/en/1.0.0/

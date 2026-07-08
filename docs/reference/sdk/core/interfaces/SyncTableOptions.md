@@ -38,7 +38,7 @@ this sync table (including autocomplete formulas).
 
 > `optional` **description**: `string`
 
-The description of the sync table. This is shown to users in the Coda UI.
+The description of the sync table. This is shown to users in the Superhuman Docs UI.
 This should describe what the sync table does in more detailed language. For example, the
 description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
 
@@ -48,7 +48,8 @@ description for a 'Products' sync table could be: 'Returns products from the e-c
 
 > `optional` **displayName**: `string`
 
-This is the name shown to users in the Coda UI. If not present, [SyncTableOptions.name](#name) will be used.
+This is the name shown to users in the Superhuman Docs UI. If not present, [SyncTableOptions.name](#name)
+will be used.
 Changing this value will not affect existing tables and only affects newly created tables.
 
 ***
@@ -66,7 +67,7 @@ sync tables that have a dynamic schema.
 
 > **formula**: [`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`SyncFormulaDef`](SyncFormulaDef.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>\>
 
-The definition of the formula that implements this sync. This is a Coda packs formula
+The definition of the formula that implements this sync. This is a Pack formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](Continuation.md).
 (The [SyncFormulaDef.name](SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
 These will eventually be consolidated.)
@@ -82,7 +83,7 @@ table, and must be unique across other sync tables for your pack. This is often 
 form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
 as the identity name.
 
-When returning objects from other syncs or formulas, you may create Coda references to objects
+When returning objects from other syncs or formulas, you may create references to objects
 in this table by defining an [Identity](Identity.md) in that schema that refers to this identity name.
 
 For example, if your identity name was 'Product', another formula or sync could return
@@ -132,7 +133,7 @@ when the sync table is used as a knowledge search tool in an agent.
 
 > **name**: `string`
 
-The name of the sync table. This is shown to users in the Coda UI if displayName is not present.
+The name of the sync table. This is shown to users in the Superhuman Docs UI if displayName is not present.
 This should describe the entities being synced. For example, a sync table that syncs products
 from an e-commerce platform should be called 'Products'. This name must not contain spaces.
 

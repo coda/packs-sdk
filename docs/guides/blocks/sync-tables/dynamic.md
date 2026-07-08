@@ -5,7 +5,7 @@ description: Build advanced sync tables that adapt to dynamic data sources.
 
 # Creating sync tables with dynamic schemas
 
-Sync tables are designed to bring records from an external data source into Coda, but sometimes those records don't have a predefined structure. For example, a task tracking application may allow each project to define its own set of custom fields. To bring this type of data into Coda you can create a dynamic sync table, which allows the columns in the table to adapt to the dataset that is being synced.
+Sync tables are designed to bring records from an external data source into Superhuman Docs, but sometimes those records don't have a predefined structure. For example, a task tracking application may allow each project to define its own set of custom fields. To bring this type of data into Superhuman Docs you can create a dynamic sync table, which allows the columns in the table to adapt to the dataset that is being synced.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -242,14 +242,14 @@ Since the schema itself is dynamically generated, getting the rows to match that
 
 When generating the schema for the table you need to determine the name of each property. Usually this is based on the name or title of the corresponding field or column in the dataset. Although the convention for manually defined schemas is to use lower camel case, there are no limitations to the characters you can use in a property name. This means that you don't need to sanitize or convert the names as you build the schema.
 
-It's worth remembering though that the platform will [normalize your property names][schemas_normalization] before exposing them in the Coda formula language. When you click the **Add Column** button for a property in the sync table, that normalized name is then transformed again into a column title. This process can sometimes lead to unexpected results.
+It's worth remembering though that the platform will [normalize your property names][schemas_normalization] before exposing them in the Superhuman formula language. When you click the **Add Column** button for a property in the sync table, that normalized name is then transformed again into a column title. This process can sometimes lead to unexpected results.
 
-For example, if you define a property with the name `GitHub (Beta)`, it will be normalized to `GitHubBeta` in the Coda formula language, and then transformed to `Git Hub Beta` as a column name. Currently it's not possible to override this behavior and manually specify the column name.
+For example, if you define a property with the name `GitHub (Beta)`, it will be normalized to `GitHubBeta` in the Superhuman formula language, and then transformed to `Git Hub Beta` as a column name. Currently it's not possible to override this behavior and manually specify the column name.
 
 
 ## Property schemas
 
-Similar to property names, you must also determine the schema for each property. In many cases this involves a large `switch` statement that translates from the type descriptors in the dataset to the equivalent schemas in Coda. If a given field type doesn't have an equivalent schema in Coda it usually makes sense to fallback to a string.
+Similar to property names, you must also determine the schema for each property. In many cases this involves a large `switch` statement that translates from the type descriptors in the dataset to the equivalent schemas in the Packs SDK. If a given field type doesn't have an equivalent schema it usually makes sense to fallback to a string.
 
 ```ts
 function getPropertySchema(

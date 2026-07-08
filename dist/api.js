@@ -32,7 +32,7 @@ const schema_7 = require("./schema");
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
  * to the end user, throw a UserVisibleError with a user-friendly message
- * and the Coda UI will display the message.
+ * and the Superhuman Docs UI will display the message.
  *
  * @example
  * ```
@@ -42,7 +42,7 @@ const schema_7 = require("./schema");
  * ```
  *
  * @see
- * - [Handling errors - User-visible errors](https://coda.io/packs/build/latest/guides/advanced/errors/#user-visible-errors)
+ * - [Handling errors - User-visible errors](https://docs.superhuman.com/packs/build/latest/guides/advanced/errors/#user-visible-errors)
  */
 class UserVisibleError extends Error {
     /**
@@ -94,7 +94,7 @@ exports.UserVisibleError = UserVisibleError;
  * }
  * ```
  *
- * @see [Fetching remote data - Errors](https://coda.io/packs/build/latest/guides/basics/fetcher/#errors)
+ * @see [Fetching remote data - Errors](https://docs.superhuman.com/packs/build/latest/guides/basics/fetcher/#errors)
  */
 class StatusCodeError extends Error {
     /** @hidden */
@@ -151,7 +151,7 @@ exports.StatusCodeError = StatusCodeError;
  * ```
  *
  * @see
- * - [Guide: Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/#triggering-a-prompt)
+ * - [Guide: Authenticating using OAuth](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/oauth2/#triggering-a-prompt)
  */
 class MissingScopesError extends Error {
     /** @hidden */
@@ -449,9 +449,9 @@ exports.makeStringFormula = makeStringFormula;
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType` to tell Coda how to interpret a given value. For example, you can return
- * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
- * to interpret as a date in a document.
+ * `codaType` to tell the platform how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `codaType: ValueType.Date` to tell the platform
+ * to interpret as a date.
  *
  * If your formula returns an object, you must provide a `schema` property that describes
  * the structure of the object. See {@link makeObjectSchema} for how to construct an object schema.
@@ -619,7 +619,7 @@ exports.normalizePropertyOptionsResults = normalizePropertyOptionsResults;
  * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
  * and an `execute` function body. This includes supporting utilities like parameter autocomplete functions.
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
- * it is shaped like a Coda formula to be used at runtime.
+ * it is shaped like a formula to be used at runtime.
  */
 function makeMetadataFormula(execute, options) {
     // NOTE(gary): makeObjectFormula is not correct here. A metadata formula is not guaranteed to return an object.
@@ -858,7 +858,7 @@ exports.makeObjectFormula = makeObjectFormula;
  * * Normalizing the schema definition to conform to recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
- * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
+ * See [Normalization](https://docs.superhuman.com/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
 function makeSyncTable({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, indexing, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;

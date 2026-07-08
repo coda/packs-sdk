@@ -23,7 +23,7 @@ be rendered as a slider.
 
 > **codaType**: [`Slider`](../enumerations/ValueHintType.md#slider)
 
-Instructs Coda to render this value as a slider.
+Instructs Superhuman Docs to render this value as a slider.
 
 #### Overrides
 

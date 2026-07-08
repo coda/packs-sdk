@@ -115,7 +115,7 @@ Instructions for LLMs to use the formula, overrides the description for LLMs if 
 > `readonly` `optional` **isAction**: `boolean`
 
 Does this formula take an action (vs retrieve data or make a calculation)?
-Actions are presented as buttons in the Coda UI.
+Actions are presented as buttons in the Superhuman Docs UI.
 
 #### Inherited from
 

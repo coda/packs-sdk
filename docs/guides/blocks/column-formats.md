@@ -5,7 +5,7 @@ description: Automatically apply a formula to a user's input to display it in a 
 
 # Add custom column formats
 
-A column format is a custom column type that you can apply to any column in any Coda table. It changes how the values within that column are interpreted and displayed, while still allowing users to quickly edit the underlying value.
+A column format is a custom column type that you can apply to any column in any Superhuman Docs table. It changes how the values within that column are interpreted and displayed, while still allowing users to quickly edit the underlying value.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -19,7 +19,7 @@ Column formats provided by Packs appear as choices in the **Column type** menu.
 
 ## Creating column formats
 
-A column format is just a thin wrapper around an existing formula in your Pack, instructing Coda to run that formula on the column values before rendering them. The column format itself is just metadata, deferring the actual work of calculating the column value to the formula.
+A column format is just a thin wrapper around an existing formula in your Pack, instructing Superhuman Docs to run that formula on the column values before rendering them. The column format itself is just metadata, deferring the actual work of calculating the column value to the formula.
 
 ```ts
 pack.addColumnFormat({
@@ -62,7 +62,7 @@ Unlike other building blocks, column format names can include spaces and special
 
 When the column format is applied to a cell, the value of the cell will be passed as the first parameter to the specified formula. The formula can have additional parameters defined, but they must be optional as they won't have a value passed.
 
-Users can only enter text into the cell, but Coda will attempt to coerce them into the type of the first parameter. For example, if your column format formula accepts a `Date` parameter, the user can enter the date as a string and Coda will parse that string into a `Date` object and pass that to your formula.
+Users can only enter text into the cell, but Superhuman Docs will attempt to coerce them into the type of the first parameter. For example, if your column format formula accepts a `Date` parameter, the user can enter the date as a string and Superhuman Docs will parse that string into a `Date` object and pass that to your formula.
 
 
 ## Results
@@ -79,7 +79,7 @@ Column formats can use authentication to access private resources. The account u
 
 ## Automatic formatting {: #matchers}
 
-When creating a new column, Coda tries to guess the type of the column based on the first data entered. Column formats from Packs can be included in this process by declaring matchers. Matchers are [regular expressions][mdn_regex] that define which cell values the column format should be applied to. If one of the regular expressions matches the cell value the column format will be applied automatically.
+When creating a new column, Superhuman Docs tries to guess the type of the column based on the first data entered. Column formats from Packs can be included in this process by declaring matchers. Matchers are [regular expressions][mdn_regex] that define which cell values the column format should be applied to. If one of the regular expressions matches the cell value the column format will be applied automatically.
 
 ```ts
 pack.addColumnFormat({
@@ -96,7 +96,7 @@ pack.addColumnFormat({
 
 Currently only URL patterns are fully supported, and the Pack must declare a corresponding [network domain][fetcher_network_domain].
 
-Only Packs already installed in the document will have their matchers used. If multiple column formats both match the cell input then Coda will choose one arbitrarily. If the user doesn't want to use the column format they can manually change it afterwords.
+Only Packs already installed in the document will have their matchers used. If multiple column formats both match the cell input then Superhuman Docs will choose one arbitrarily. If the user doesn't want to use the column format they can manually change it afterwords.
 
 
 ## Link formatting

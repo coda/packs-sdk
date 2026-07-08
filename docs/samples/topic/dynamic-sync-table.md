@@ -413,7 +413,7 @@ const LocationSchema = sdk.makeObjectSchema({
   displayProperty: "coordinates",
 });
 
-// A mapping from Socrata types to Coda schemas.
+// A mapping from Socrata types to Packs SDK schemas.
 const TypeSchemaMap: Record<string, sdk.Schema> = {
   text: { type: sdk.ValueType.String },
   number: { type: sdk.ValueType.Number },

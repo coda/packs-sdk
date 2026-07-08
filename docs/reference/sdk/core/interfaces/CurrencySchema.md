@@ -22,7 +22,7 @@ A schema representing a return value or object property that is an amount of cur
 
 > **codaType**: [`Currency`](../enumerations/ValueHintType.md#currency)
 
-Instructs Coda to render this value as a currency amount.
+Instructs Superhuman Docs to render this value as a currency amount.
 
 #### Overrides
 
@@ -35,7 +35,7 @@ Instructs Coda to render this value as a currency amount.
 > `optional` **currencyCode**: `string`
 
 A three-letter ISO 4217 currency code, e.g. USD or EUR.
-If the currency code is not supported by Coda, the value will be rendered using USD.
+If the currency code is not supported by Superhuman Docs, the value will be rendered using USD.
 
 ***
 

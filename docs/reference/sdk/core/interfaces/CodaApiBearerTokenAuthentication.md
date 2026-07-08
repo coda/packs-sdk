@@ -10,14 +10,14 @@ search:
 
 # Interface: CodaApiBearerTokenAuthentication
 
-Authenticate using a Coda REST API token, sent as an HTTP header.
+Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
 
 This is identical to [AuthenticationType.HeaderBearerToken](../enumerations/AuthenticationType.md#headerbearertoken) except the user will be presented
 with a UI to generate an API token rather than needing to paste an arbitrary API
 token into a text input.
 
 This is primarily for use by Superhuman-authored packs, as it is only relevant for interacting with the
-Coda REST API.
+Superhuman Docs REST API.
 
 ## Example
 
@@ -29,8 +29,8 @@ pack.setUserAuthentication({
 
 ## See
 
- - [Authenticating with other services - Coda API token]({{ config.site_url }}guides/basics/authentication/#coda-api-token)
- - [Authentication samples - Coda API token]({{ config.site_url }}samples/topic/authentication/#coda-api-token)
+ - [Authenticating with other services - Superhuman Docs API token]({{ config.site_url }}guides/basics/authentication/#coda-api-token)
+ - [Authentication samples - Superhuman Docs API token]({{ config.site_url }}samples/topic/authentication/#coda-api-token)
 
 ## Extends
 
@@ -72,7 +72,7 @@ fetcher requests that this function makes. Typically, this function makes an API
 to an API's "who am I" endpoint and returns a username.
 
 If omitted, or if the function returns an empty value, the account will be labeled
-with the creating user's Coda username.
+with the creating user's Superhuman username.
 
 #### Inherited from
 
@@ -139,7 +139,7 @@ when creating a new account.
 
 > `optional` **shouldAutoAuthSetup**: `boolean`
 
-If true, automatically creates and configures an account with a Coda API token with
+If true, automatically creates and configures an account with a Superhuman Docs API token with
 default settings when installing the pack: a read-write token, added to the doc
 as a shared account that allows actions.
 

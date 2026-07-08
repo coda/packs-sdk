@@ -157,7 +157,7 @@ Most API providers host a developer console for creating and managing applicatio
 
     Enter a name for your application in the **App name** field. This will be shown later to the user when they are approving access.
 
-    For the **App service URL** enter `https://coda.io` for now. Once your Pack is complete, change it to the URL of the listing page for your Pack.
+    For the **App service URL** enter `https://docs.superhuman.com` for now. Once your Pack is complete, change it to the URL of the listing page for your Pack.
 
     Click the **Create app** button.
 
@@ -544,7 +544,7 @@ Now that the Pack is built and the credentials set, we're finally ready to sign 
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    After approving access, the Todoist tab will close and you'll be back in your Coda doc.
+    After approving access, the Todoist tab will close and you'll be back in your doc.
 
     Click the **Complete setup** button.
 

@@ -59,7 +59,7 @@ fetcher requests that this function makes. Typically, this function makes an API
 to an API's "who am I" endpoint and returns a username.
 
 If omitted, or if the function returns an empty value, the account will be labeled
-with the creating user's Coda username.
+with the creating user's Superhuman username.
 
 #### Inherited from
 

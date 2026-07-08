@@ -13,7 +13,7 @@ search:
 An error whose message will be shown to the end user in the UI when it occurs.
 If an error is encountered in a formula and you want to describe the error
 to the end user, throw a UserVisibleError with a user-friendly message
-and the Coda UI will display the message.
+and the Superhuman Docs UI will display the message.
 
 ## Example
 

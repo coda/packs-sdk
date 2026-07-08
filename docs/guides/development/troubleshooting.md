@@ -32,7 +32,7 @@ The Packs runtime only includes a subset of the [full `console` methods][mdn_con
 
 ## HTTP request logs
 
-For Packs that make HTTP requests to external services and APIs it can be useful to see the details of the outgoing and request and incoming response. Whenever a Pack is run in a Coda doc the HTTP requests are automatically logged and can be inspected in the [Pack maker tools][pmt_http].
+For Packs that make HTTP requests to external services and APIs it can be useful to see the details of the outgoing and request and incoming response. Whenever a Pack is run in a doc the HTTP requests are automatically logged and can be inspected in the [Pack maker tools][pmt_http].
 
 When executing a Pack locally using the Pack CLI, you can use Node's built-in HTTP debug logs to see the raw requests and responses. To enable this logging, set the environment variable `NODE_DEBUG=http`. This can be done for a single execution by adding it before the execute command.
 

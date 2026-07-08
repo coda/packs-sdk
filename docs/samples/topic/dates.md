@@ -6,7 +6,7 @@ icon: material/calendar-clock
 
 # Dates and time samples
 
-Working with dates and times can be tricky, especially in Coda due to documents and operating in different timezones. These samples demonstrate some patterns you can use when taking them are parameters or returning them as results.
+Working with dates and times can be tricky, especially in Superhuman Docs due to documents and operating in different timezones. These samples demonstrate some patterns you can use when taking them are parameters or returning them as results.
 
 
 [Learn More](../../guides/advanced/timezones.md){ .md-button }

@@ -4,7 +4,7 @@ description: Utilities for Pack makers to helper them build and troubleshoot the
 
 # Pack maker tools
 
-While the Pack Studio and Pack CLI are used to develop a Pack, the primary way to monitor and interact with a Pack once it is installed in a document is via the Pack maker tools. It is a pane along the bottom of a Coda document that provides information about the Packs installed in the doc that you have edit access to.
+While the Pack Studio and Pack CLI are used to develop a Pack, the primary way to monitor and interact with a Pack once it is installed in a document is via the Pack maker tools. It is a pane along the bottom of a document that provides information about the Packs installed in the doc that you have edit access to.
 
 
 ## How to access
@@ -16,7 +16,7 @@ There are a few different ways to open the Pack maker tools.
 
     !!! info "Developer mode required"
 
-        This option is only visible if you have Developer Mode enabled on your Coda account. To enabled developer mode, open your [account settings][account_settings], scroll to the bottom, expand **Developer tools** and toggle on **Enable developer mode**.
+        This option is only visible if you have Developer Mode enabled on your Superhuman Docs account. To enabled developer mode, open your [account settings][account_settings], scroll to the bottom, expand **Developer tools** and toggle on **Enable developer mode**.
 
     <img src="site:images/pmt_open_doc.png" srcset="site:images/pmt_open_doc_2x.png 2x" class="screenshot" alt="Open Pack maker tools from doc menu">
 
@@ -64,7 +64,7 @@ A new invocation is logged each time your Pack is run, for example when a formul
 
     - Using the formula editor, which runs formulas multiple times as you type to generate a preview of the result.
     - Multiple users have the doc open at the same time (each browser will run the formula).
-    - The Coda backend running a recalculation as a part of normal operation.
+    - The Superhuman Docs backend running a recalculation as a part of normal operation.
 
 
 ### Entries
@@ -131,4 +131,4 @@ A few additional options are available under the three dots menu at the top of t
 
 [troubleshooting_logging]: troubleshooting.md#logging
 [fetcher_headers]: ../basics/fetcher.md#headers
-[account_settings]: https://coda.io/account
+[account_settings]: https://docs.superhuman.com/account

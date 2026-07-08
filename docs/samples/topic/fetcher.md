@@ -91,7 +91,7 @@ A formula that fetches binary data. This sample gets image data and calculates t
 import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
-// Regular expression that matches Coda-hosted images.
+// Regular expression that matches Superhuman-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
 
 // Formula that calculates the file size of an image.
@@ -108,9 +108,9 @@ pack.addFormula({
   ],
   resultType: sdk.ValueType.Number,
   execute: async function ([imageUrl], context) {
-    // Throw an error if the image isn't Coda-hosted. Image URL columns can
-    // contain images on any domain, but by default Packs can only access image
-    // attachments hosted on codahosted.io.
+    // Throw an error if the image isn't Superhuman-hosted. Image URL
+    // columns can contain images on any domain, but by default Packs can only
+    // access image attachments hosted on codahosted.io.
     if (!imageUrl.match(HostedImageUrlRegex)) {
       throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }

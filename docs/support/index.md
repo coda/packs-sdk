@@ -47,18 +47,18 @@ The following features require approval:
 - Using [`Custom` authentication][authentication_custom_tokens].
 - Increase the [maximum response size][errors_max_fetcher_response_size] for fetch requests.
 
-To request approval please fill out the form linked below. Ensure you are signed in with the same Coda account you are using to develop the Pack. We'll review your request and respond with a decision within a few business days.
+To request approval please fill out the form linked below. Ensure you are signed in with the same Superhuman account you are using to develop the Pack. We'll review your request and respond with a decision within a few business days.
 
 [Request approval][network_domains_form]{: .md-button .md-button--primary}
 
 
-[community_packs]: https://community.coda.io/c/15
-[community_search]: https://community.coda.io/search?q=%23making-packs
-[community_post]: https://community.coda.io/new-topic?category=making-packs
+[community_packs]: https://connect.superhuman.com/c/15
+[community_search]: https://connect.superhuman.com/search?q=%23making-packs
+[community_post]: https://connect.superhuman.com/new-topic?category=making-packs
 [support_email]: mailto:care@superhuman.com
 [hc_share]: https://help.coda.io/hc/en-us/articles/39555880940557-Share-or-publish-a-Pack
 [fetcher_network_domains]: ../guides/basics/fetcher.md#network-domains
-[network_domains_form]: https://coda.io/form/Pack-Network-Domains-Request_ddvuAhFq3IZ
+[network_domains_form]: https://docs.superhuman.com/form/Pack-Network-Domains-Request_ddvuAhFq3IZ
 [office_hours]: https://calendly.com/ekoleda/packs-office-hours
 [authentication_custom_tokens]: ../guides/basics/authentication/index.md#custom-tokens
 [authentication_url_limitations]: ../guides/basics/authentication/oauth2.md#url-limitations

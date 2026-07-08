@@ -18,9 +18,9 @@ You must indicate the kind of value that this formula returns (string, number, b
 using the `resultType` field.
 
 Formulas always return basic types, but you may optionally give a type hint using
-`codaType` to tell Coda how to interpret a given value. For example, you can return
-a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
-to interpret as a date in a document.
+`codaType` to tell the platform how to interpret a given value. For example, you can return
+a string that represents a date, but use `codaType: ValueType.Date` to tell the platform
+to interpret as a date.
 
 If your formula returns an object, you must provide a `schema` property that describes
 the structure of the object. See [makeObjectSchema](makeObjectSchema.md) for how to construct an object schema.

@@ -8,7 +8,7 @@ cSpell:words: add-ons
 
 _A Pack is an extension that adds new powers to your doc._
 
-What other platforms call plugins, add-ons, or extensions, we call "Packs". A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs. Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
+What other platforms call plugins, add-ons, or extensions, we call "Packs". A Pack extends the core building blocks of Superhuman Docs, allowing users to build more powerful and integrated docs. Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
 
 Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on the platform's servers. We have a [gallery][gallery_packs] where users can discover and install Packs, as well as a robust set of [admin controls][help_admin].
 
@@ -18,11 +18,11 @@ Packs are built using JavaScript or TypeScript, either on your local machine or 
 
 ## What can Packs do?
 
-Packs can extend Coda in four specific ways:
+Packs can extend Superhuman Docs in four specific ways:
 
 === "Formulas"
 
-    Packs can add new formulas for the [Coda formula language][formula_list]. These formulas can do simple calculations, call a library, or pull in data from an external source.
+    Packs can add new formulas for the [Superhuman formula language][formula_list]. These formulas can do simple calculations, call a library, or pull in data from an external source.
 
     <figure>
       <img src="site:images/overview_formula.png" srcset="site:images/overview_formula_2x.png 2x" alt="A custom formula in the formula editor">
@@ -67,7 +67,7 @@ Packs can extend Coda in four specific ways:
 
 ## Who can build Packs?
 
-Anyone with a Coda account is able to build a Pack, and getting started is as easy as clicking the "Create a Pack" button in the app. Our Pack Studio comes bundled with all the tools you'll need to write, build, and deploy a Pack, all without leaving your browser. And for more advanced developers we provide a command-line tool, allowing you to use your favorite IDE, tooling, and version control system.
+Anyone with a Superhuman account is able to build a Pack, and getting started is as easy as clicking the "Create a Pack" button in the app. Our Pack Studio comes bundled with all the tools you'll need to write, build, and deploy a Pack, all without leaving your browser. And for more advanced developers we provide a command-line tool, allowing you to use your favorite IDE, tooling, and version control system.
 
 You will need to have a basic understanding of JavaScript or TypeScript to be successful, so if you're new to coding an [online JavaScript course][codecademy] might be a good place to start. We also have a large library of examples and templates built into the Pack Studio, plus a [friendly community][community] of fellow Pack makers that can help you along the way.
 
@@ -80,7 +80,7 @@ Each Pack is its own [serverless application][wikipedia_serverless], fully manag
 
 All Pack code is run on the server, ensuring a consistent and secure environment. Each execution of a Pack can run for at most a minute, but there are features that allow for longer running operations.
 
-Unlike other scripting languages, Packs don't automatically have access to all of the data within the doc. Instead users pass the Pack only the specific parameters it requires. Packs can then make requests to external APIs to fetch more data, including our own [Coda API][api].
+Unlike other scripting languages, Packs don't automatically have access to all of the data within the doc. Instead users pass the Pack only the specific parameters it requires. Packs can then make requests to external APIs to fetch more data, including our own [Superhuman Docs API][api].
 
 ``` mermaid
 sequenceDiagram
@@ -100,24 +100,24 @@ Packs are run in a custom JavaScript execution environment, compatible with the 
 
 
 
-[packs_landing]: https://coda.io/packs
-[packs_why]: https://coda.io/why-build-packs
+[packs_landing]: https://docs.superhuman.com/packs
+[packs_why]: https://docs.superhuman.com/why-build-packs
 [gallery_slack]: https://coda.io/packs/slack-1000
-[formula_list]: https://coda.io/formulas
+[formula_list]: https://docs.superhuman.com/formulas
 [help_buttons]: https://help.coda.io/hc/en-us/articles/39555758072717-Button-basics
 [help_automations]: https://help.coda.io/hc/en-us/articles/39555778179853-Automations-in-Coda
 [help_format]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
 [help_pack_table]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
 [codecademy]: https://www.codecademy.com/learn/introduction-to-javascript
-[community]: https://community.coda.io/c/developers-central/making-packs/15
+[community]: https://connect.superhuman.com/c/developers-central/making-packs/15
 [quickstart_web]: ../tutorials/get-started/web.md
 [quickstart_cli]: ../tutorials/get-started/cli.md
 [wikipedia_serverless]: https://en.wikipedia.org/wiki/Serverless_computing
 [mdn_ecmascript]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_Resources
-[api]: https://coda.io/developers/apis/v1
+[api]: https://docs.superhuman.com/developers/apis/v1
 [formulas]: blocks/formulas.md
 [actions]: blocks/actions.md
 [column_formats]: blocks/column-formats.md
 [sync_tables]: blocks/sync-tables/index.md
 [help_admin]: https://help.coda.io/hc/en-us/articles/39555784421773-Enable-Pack-approvals-and-manage-requests
-[gallery_packs]: https://coda.io/gallery?filter=packs
+[gallery_packs]: https://docs.superhuman.com/gallery?filter=packs

@@ -1,7 +1,7 @@
 import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
-// Regular expression that matches Coda-hosted images.
+// Regular expression that matches Superhuman-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
 
 // A custom type that bundles together the image buffer and content type.
@@ -28,7 +28,7 @@ pack.addFormula({
   },
   isAction: true,
   execute: async function ([imageUrls], context) {
-    // Download the images from Coda.
+    // Download the images from Superhuman Docs.
     let images = await downloadImages(imageUrls, context);
     // Upload the images to Google Photos, getting temporary tokens.
     let uploadTokens = await uploadImages(images, context);
@@ -39,13 +39,14 @@ pack.addFormula({
   },
 });
 
-// Download the images from Coda, in parallel. For each image it returns a
-// buffer of image data and the MIME type of the image.
+// Download the images from Superhuman Docs, in parallel. For each image it
+// returns a buffer of image data and the MIME type of the image.
 async function downloadImages(imageUrls, context: sdk.ExecutionContext):
     Promise<ImageData[]> {
   let requests = [];
   for (let imageUrl of imageUrls) {
-    // Reject images not hosted in Coda, since we can't download them.
+    // Reject images not hosted in Superhuman Docs, since we can't download
+    // them.
     if (!imageUrl.match(HostedImageUrlRegex)) {
       throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }

@@ -23,7 +23,7 @@ i.e. a raw number with an optional decimal precision.
 
 > `optional` **codaType**: [`Percent`](../enumerations/ValueHintType.md#percent)
 
-If specified, instructs Coda to render this value as a percentage.
+If specified, instructs Superhuman Docs to render this value as a percentage.
 
 #### Overrides
 

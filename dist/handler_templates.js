@@ -219,7 +219,7 @@ function untransformBody(body, schema) {
 exports.untransformBody = untransformBody;
 /**
  * Reverses the transformation of schema object keys to the values expected by the pack.
- * Useful when passing in a list of keys from Coda -> Pack, such as when sending the aggregated
+ * Useful when passing in a list of keys from Superhuman Docs -> Pack, such as when sending the aggregated
  * sync table update payload.
  */
 function untransformKeys(keys, schema) {

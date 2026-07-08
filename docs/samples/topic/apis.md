@@ -144,17 +144,17 @@ pack.setUserAuthentication({
 pack.addNetworkDomain("clickup.com");
 {% endraw %}
 ```
-## Coda API
-The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.
+## Superhuman Docs API
+The Superhuman Docs API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Superhuman Docs API.
 
 ```ts
 {% raw %}
 import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
-// Per-user authentication to the Coda API, using a token in the Authorization
-// header.
-// See https://coda.io/developers/apis/v1
+// Per-user authentication to the Superhuman Docs API, using a token in the
+// Authorization header.
+// See https://docs.superhuman.com/developers/apis/v1
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
 
@@ -162,8 +162,8 @@ pack.setUserAuthentication({
   shouldAutoAuthSetup: true,
 });
 
-// Allow the pack to make requests to Coda.
-pack.addNetworkDomain("coda.io");
+// Allow the pack to make requests to Superhuman Docs.
+pack.addNetworkDomain("docs.superhuman.com");
 {% endraw %}
 ```
 ## Copper API
@@ -315,7 +315,7 @@ pack.addNetworkDomain("github.com");
 {% endraw %}
 ```
 ## Google
-The Google APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. Note: It currently isn&#x27;t possible to complete Google&#x27;s OAuth verification process with a Pack. See the [FAQ](https://coda.io/packs/build/latest/guides/faq/#google) for more information.
+The Google APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. Note: It currently isn&#x27;t possible to complete Google&#x27;s OAuth verification process with a Pack. See the [FAQ](https://docs.superhuman.com/packs/build/latest/guides/faq/#google) for more information.
 
 ```ts
 {% raw %}

@@ -33,11 +33,11 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
     pack.addNetworkDomain("sunrise-sunset.org");
 
     // Define a schema that will be used to bundle up the multiple pieces of data
-    // our formula will return. In the Coda doc this will be displayed as a chip.
+    // our formula will return. In the doc this will be displayed as a chip.
     const SunSchema = sdk.makeObjectSchema({
       properties: {
         // The values we return are simple strings, but we use the codaType field to
-        // to tell Coda to interpret them as durations and time values.
+        // to tell Superhuman Docs to interpret them as durations and time values.
         daylight: {
           description: "How much daylight there will be.",
           type: sdk.ValueType.String,
@@ -91,7 +91,7 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
       // This object will be defined according to the schema written above.
       schema: SunSchema,
 
-      // Everything inside this execute statement will happen anytime the Coda
+      // Everything inside this execute statement will happen anytime the
       // formula is called in a doc. An array of all user inputs is passed as the
       // first parameter. The context object is always the second parameter and is
       // used for fetching data.

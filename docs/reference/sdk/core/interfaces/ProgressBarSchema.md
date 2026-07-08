@@ -23,7 +23,7 @@ be rendered as a progress bar.
 
 > **codaType**: [`ProgressBar`](../enumerations/ValueHintType.md#progressbar)
 
-Instructs Coda to render this value as a progress bar.
+Instructs Superhuman Docs to render this value as a progress bar.
 
 #### Overrides
 

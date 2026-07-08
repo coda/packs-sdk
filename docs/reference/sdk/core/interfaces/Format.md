@@ -10,8 +10,8 @@ search:
 
 # Interface: Format
 
-Definition for a custom column type that users can apply to any column in any Coda table.
-A column format tells Coda to interpret the value in a cell by executing a formula
+Definition for a custom column type that users can apply to any column in any Superhuman Docs table.
+A column format tells Superhuman Docs to interpret the value in a cell by executing a formula
 using that value, typically looking up data related to that value from a third-party API.
 For example, the Weather pack has a column format "Current Weather"; when applied to a column,
 if you type a city or address into a cell in that column, that location will be used as the input
@@ -19,7 +19,7 @@ to a formula that fetches the current weather at that location, and the resultin
 weather info will be shown in the cell.
 
 A column format is just a wrapper around a formula defined in the [PackVersionDefinition.formulas](PackVersionDefinition.md#formulas) section
-of your pack definition. It tells Coda to execute that particular formula using the value
+of your pack definition. It tells Superhuman Docs to execute that particular formula using the value
 of the cell as input.
 
 The formula referenced by a format must have exactly one required parameter.

@@ -10,7 +10,8 @@ search:
 
 # Enumeration: ParameterType
 
-Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+Enumeration of types of formula parameters. These describe semantic value types (as opposed to
+JavaScript value types).
 
 ## Enumeration Members
 
@@ -18,7 +19,7 @@ Enumeration of types of formula parameters. These describe Coda value types (as 
 
 > **Boolean**: `"boolean"`
 
-Indicates a parameter that is a Coda boolean value.
+Indicates a parameter that is a boolean value.
 
 ***
 
@@ -26,7 +27,7 @@ Indicates a parameter that is a Coda boolean value.
 
 > **BooleanArray**: `"booleanArray"`
 
-Indicates a parameter that is a list of Coda boolean values.
+Indicates a parameter that is a list of boolean values.
 
 ***
 
@@ -34,7 +35,7 @@ Indicates a parameter that is a list of Coda boolean values.
 
 > **Date**: `"date"`
 
-Indicates a parameter that is a Coda date value (which includes time and datetime values).
+Indicates a parameter that is a date value (which includes time and datetime values).
 
 ***
 
@@ -42,7 +43,7 @@ Indicates a parameter that is a Coda date value (which includes time and datetim
 
 > **DateArray**: `"dateArray"`
 
-Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+Indicates a parameter that is a list of date values (which includes time and datetime values).
 
 Currently, when such a parameter is used with a sync table formula or an action formula
 ([BaseFormulaDef.isAction](../interfaces/BaseFormulaDef.md#isaction)), which will generate a builder UI for selecting parameters, a date array
@@ -55,7 +56,7 @@ as a list of two elements, the beginning of the range and the end of the range.
 
 > **Email**: `"email"`
 
-Indicates a parameter that is a Coda email value.
+Indicates a parameter that is an email value.
 
 ***
 
@@ -63,7 +64,7 @@ Indicates a parameter that is a Coda email value.
 
 > **EmailArray**: `"emailArray"`
 
-Indicates a parameter that is a list of Coda email values.
+Indicates a parameter that is a list of email values.
 
 ***
 
@@ -71,7 +72,7 @@ Indicates a parameter that is a list of Coda email values.
 
 > **File**: `"file"`
 
-Indicates a parameter that is a Coda file. The pack is passed a file URL.
+Indicates a parameter that is a file. The pack is passed a file URL.
 
 ***
 
@@ -79,7 +80,7 @@ Indicates a parameter that is a Coda file. The pack is passed a file URL.
 
 > **FileArray**: `"fileArray"`
 
-Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
+Indicates a parameter that is a list of file values. The pack is passed a list of file URLs.
 
 ***
 
@@ -87,7 +88,7 @@ Indicates a parameter that is a list of Coda file values. The pack is passed a l
 
 > **Html**: `"html"`
 
-Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+Indicates a parameter that is a rich text value that should be passed to the pack as HTML.
 
 ***
 
@@ -95,7 +96,7 @@ Indicates a parameter that is a Coda rich text value that should be passed to th
 
 > **HtmlArray**: `` "htmlArray`" ``
 
-Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+Indicates a parameter that is a list of rich text values that should be passed to the pack as HTML.
 
 ***
 
@@ -103,7 +104,7 @@ Indicates a parameter that is a list of Coda rich text values that should be pas
 
 > **Image**: `"image"`
 
-Indicates a parameter that is a Coda image. The pack is passed an image URL.
+Indicates a parameter that is an image. The pack is passed an image URL.
 
 ***
 
@@ -111,7 +112,7 @@ Indicates a parameter that is a Coda image. The pack is passed an image URL.
 
 > **ImageArray**: `"imageArray"`
 
-Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
+Indicates a parameter that is a list of image values. The pack is passed a list of image URLs.
 
 ***
 
@@ -119,7 +120,7 @@ Indicates a parameter that is a list of Coda image values. The pack is passed a 
 
 > **Markdown**: `"markdown"`
 
-Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+Indicates a parameter that is a rich text value that should be passed to the pack as Markdown.
 
 ***
 
@@ -127,7 +128,8 @@ Indicates a parameter that is a Coda rich text value that should be passed to th
 
 > **MarkdownArray**: `` "markdownArray`" ``
 
-Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+Indicates a parameter that is a list of rich text values that should be passed to the
+pack as Markdown.
 
 ***
 
@@ -135,7 +137,7 @@ Indicates a parameter that is a list of Coda rich text values that should be pas
 
 > **Number**: `"number"`
 
-Indicates a parameter that is a Coda number value.
+Indicates a parameter that is a number value.
 
 ***
 
@@ -143,7 +145,7 @@ Indicates a parameter that is a Coda number value.
 
 > **NumberArray**: `"numberArray"`
 
-Indicates a parameter that is a list of Coda number values.
+Indicates a parameter that is a list of Superhuman Docs number values.
 
 ***
 
@@ -223,7 +225,7 @@ Indicates a parameter that is a list of Coda number values.
 
 > **String**: `"string"`
 
-Indicates a parameter that is a Coda text value.
+Indicates a parameter that is a text value.
 
 ***
 
@@ -231,4 +233,4 @@ Indicates a parameter that is a Coda text value.
 
 > **StringArray**: `"stringArray"`
 
-Indicates a parameter that is a list of Coda text values.
+Indicates a parameter that is a list of text values.

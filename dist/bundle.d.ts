@@ -64,47 +64,48 @@ export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormula
 export type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 /**
- * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+ * Enumeration of types of formula parameters. These describe semantic value types (as opposed to
+ * JavaScript value types).
  */
 export declare enum ParameterType {
 	/**
-	 * Indicates a parameter that is a Coda text value.
+	 * Indicates a parameter that is a text value.
 	 */
 	String = "string",
 	/**
-	 * Indicates a parameter that is a Coda number value.
+	 * Indicates a parameter that is a number value.
 	 */
 	Number = "number",
 	/**
-	 * Indicates a parameter that is a Coda boolean value.
+	 * Indicates a parameter that is a boolean value.
 	 */
 	Boolean = "boolean",
 	/**
-	 * Indicates a parameter that is a Coda date value (which includes time and datetime values).
+	 * Indicates a parameter that is a date value (which includes time and datetime values).
 	 */
 	Date = "date",
 	/**
-	 * Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+	 * Indicates a parameter that is a rich text value that should be passed to the pack as HTML.
 	 */
 	Html = "html",
 	/**
-	 * Indicates a parameter that is a Coda image. The pack is passed an image URL.
+	 * Indicates a parameter that is an image. The pack is passed an image URL.
 	 */
 	Image = "image",
 	/**
-	 * Indicates a parameter that is a Coda file. The pack is passed a file URL.
+	 * Indicates a parameter that is a file. The pack is passed a file URL.
 	 */
 	File = "file",
 	/**
-	 * Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+	 * Indicates a parameter that is a rich text value that should be passed to the pack as Markdown.
 	 */
 	Markdown = "markdown",
 	/**
-	 * Indicates a parameter that is a Coda email value.
+	 * Indicates a parameter that is an email value.
 	 */
 	Email = "email",
 	/**
-	 * Indicates a parameter that is a list of Coda text values.
+	 * Indicates a parameter that is a list of text values.
 	 */
 	StringArray = "stringArray",
 	/**
@@ -112,7 +113,7 @@ export declare enum ParameterType {
 	 */
 	SparseStringArray = "sparseStringArray",
 	/**
-	 * Indicates a parameter that is a list of Coda number values.
+	 * Indicates a parameter that is a list of Superhuman Docs number values.
 	 */
 	NumberArray = "numberArray",
 	/**
@@ -120,7 +121,7 @@ export declare enum ParameterType {
 	 */
 	SparseNumberArray = "sparseNumberArray",
 	/**
-	 * Indicates a parameter that is a list of Coda boolean values.
+	 * Indicates a parameter that is a list of boolean values.
 	 */
 	BooleanArray = "booleanArray",
 	/**
@@ -128,7 +129,7 @@ export declare enum ParameterType {
 	 */
 	SparseBooleanArray = "sparseBooleanArray",
 	/**
-	 * Indicates a parameter that is a list of Coda email values.
+	 * Indicates a parameter that is a list of email values.
 	 */
 	EmailArray = "emailArray",
 	/**
@@ -136,7 +137,7 @@ export declare enum ParameterType {
 	 */
 	SparseEmailArray = "sparseEmailArray",
 	/**
-	 * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+	 * Indicates a parameter that is a list of date values (which includes time and datetime values).
 	 *
 	 * Currently, when such a parameter is used with a sync table formula or an action formula
 	 * ({@link BaseFormulaDef.isAction}), which will generate a builder UI for selecting parameters, a date array
@@ -149,7 +150,7 @@ export declare enum ParameterType {
 	 */
 	SparseDateArray = "sparseDateArray",
 	/**
-	 * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+	 * Indicates a parameter that is a list of rich text values that should be passed to the pack as HTML.
 	 */
 	HtmlArray = "htmlArray`",
 	/**
@@ -157,7 +158,7 @@ export declare enum ParameterType {
 	 */
 	SparseHtmlArray = "sparseHtmlArray",
 	/**
-	 * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
+	 * Indicates a parameter that is a list of image values. The pack is passed a list of image URLs.
 	 */
 	ImageArray = "imageArray",
 	/**
@@ -165,7 +166,7 @@ export declare enum ParameterType {
 	 */
 	SparseImageArray = "sparseImageArray",
 	/**
-	 * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
+	 * Indicates a parameter that is a list of file values. The pack is passed a list of file URLs.
 	 */
 	FileArray = "fileArray",
 	/**
@@ -173,7 +174,8 @@ export declare enum ParameterType {
 	 */
 	SparseFileArray = "sparseFileArray",
 	/**
-	 * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+	 * Indicates a parameter that is a list of rich text values that should be passed to the
+	 * pack as Markdown.
 	 */
 	MarkdownArray = "markdownArray`",
 	/**
@@ -259,7 +261,7 @@ export interface ParamDef<T extends UnionType> {
 	 * This value overrides {@link ParamDef.suggestedValue} if set.
 	 *
 	 * Useful in situations where the existing suggested value is used to scope down the synced data to what would fit
-	 * within Coda's row limits, but during indexing you'd want to include a larger scope of data.
+	 * within Superhuman Docs's row limits, but during indexing you'd want to include a larger scope of data.
 	 */
 	ingestionSuggestedValue?: SuggestedValueType<T>;
 	/**
@@ -282,7 +284,7 @@ export interface ParamDef<T extends UnionType> {
 	 *
 	 * Pack code cannot completely assume it will never see other values, though. For example, if this
 	 * parameter's value is being set via a formula (instead of a user manually picking a value from
-	 * Coda's UI), the platform will do nothing to validate that input before passing it to the pack.
+	 * the Superhuman Docs UI), the platform will do nothing to validate that input before passing it to the pack.
 	 *
 	 * Defaults to true.
 	 *
@@ -314,7 +316,7 @@ export interface ParamDef<T extends UnionType> {
 	 * }),
 	 * ```
 	 *
-	 * @see [Crawling guide](https://coda.io/packs/build/latest/agents/indexing/crawling/)
+	 * @see [Crawling guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/crawling/)
 	 */
 	crawlStrategy?: CrawlStrategy;
 	/**
@@ -433,7 +435,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	}>;
 	/**
 	 * Does this formula take an action (vs retrieve data or make a calculation)?
-	 * Actions are presented as buttons in the Coda UI.
+	 * Actions are presented as buttons in the Superhuman Docs UI.
 	 */
 	readonly isAction?: boolean;
 	/**
@@ -719,33 +721,33 @@ export interface Fetcher {
  * When syncing data from certain APIs, a response object may include the URL of a file or
  * image that can only be downloaded with the user's authentication credentials. Normally,
  * you can just return an image or file URL from a formula invocation, and if the schema
- * indicates that the value represents an attachment, Coda will ingest the data at that URL
- * and host it from Coda. However, if the URL requires authentication, Coda will be unable
+ * indicates that the value represents an attachment, Superhuman Docs will ingest the data at that URL
+ * and host it from Superhuman Docs. However, if the URL requires authentication, Superhuman Docs will be unable
  * to download the data since this ingestion does not happen within the packs execution
  * environment.
  *
  * The solution is for your pack code to fetch the data at the URL, since the pack
  * execution environment will apply the user's authentication, and then you can
  * stash the downloaded value in `TemporaryBlobStorage`, which will return a temporary
- * URL that you can return from the pack. Coda will be able to ingest the data from
+ * URL that you can return from the pack. Superhuman Docs will be able to ingest the data from
  * that temporary URL.
  *
  * Similarly, suppose your formula generates a very large value like a dynamically-generated
- * image that you wish to return and have Coda render. Pack return values are meant to be
+ * image that you wish to return and have Superhuman Docs render. Pack return values are meant to be
  * fairly small, representing human-readable data. Large values like images are meant to
  * be returned as URLs referencing that data. So rather than return the raw image data,
  * your pack should use {@link storeBlob} to upload that large data to temporary storage.
  * You will be returned a URL that you can then return with your formula response, and
- * Coda will ingest the data from that URL into permanent storage.
+ * Superhuman Docs will ingest the data from that URL into permanent storage.
  */
 export interface TemporaryBlobStorage {
 	/**
 	 * Fetches the data at the given URL, applying user authentication credentials as appropriate,
-	 * and stores it in Coda-hosted temporary storage. Returns a URL for the temporary file
+	 * and stores it in Superhuman-hosted temporary storage. Returns a URL for the temporary file
 	 * that you should return in your formula response.
 	 *
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
-	 * Coda reserves the right to ignore long expirations.
+	 * the platform reserves the right to ignore long expirations.
 	 *
 	 * If the `downloadFilename` parameter is specified, when opened in the browser the file will
 	 * be downloaded with the file name provided.
@@ -759,11 +761,11 @@ export interface TemporaryBlobStorage {
 		contentType?: string;
 	}, fetchOpts?: Pick<FetchRequest, "disableAuthentication" | "headers" | "cacheTtlSecs">): Promise<string>;
 	/**
-	 * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
+	 * Stores the given data as a file with the given content type in Superhuman-hosted temporary storage.
 	 * Returns a URL for the temporary file that you should return in your formula response.
 	 *
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
-	 * Coda reserves the right to ignore long expirations.
+	 * the platform reserves the right to ignore long expirations.
 	 *
 	 * If the `downloadFilename` parameter is specified, when opened in the browser the file will
 	 * be downloaded with the file name provided.
@@ -970,7 +972,7 @@ export declare enum InvocationSource {
 	 */
 	Brain = "Brain",
 	/**
-	 * A Coda doc.
+	 * A doc.
 	 */
 	Doc = "Doc",
 	/**
@@ -1315,8 +1317,8 @@ export declare enum ValueHintType {
 	 */
 	Email = "email",
 	/**
-	 * Indicates to interpret and render the value as a Coda person reference. The provided value should be
-	 * an object whose `idProperty` property is an email address, which Coda will try to resolve to a user
+	 * Indicates to interpret and render the value as a Superhuman Docs person reference. The provided value should be
+	 * an object whose `idProperty` property is an email address, which Superhuman Docs will try to resolve to a user
 	 * and render an @-reference to the user.
 	 *
 	 * @example
@@ -1344,7 +1346,7 @@ export declare enum ValueHintType {
 	Currency = "currency",
 	/**
 	 * Indicates to interpret and render the value as an image. The provided value should be a URL that
-	 * points to an image. Coda will hotlink to the image when rendering it a doc.
+	 * points to an image. Superhuman Docs will hotlink to the image when rendering it a doc.
 	 *
 	 * Using {@link ImageAttachment} is recommended instead, so that the image is always accessible
 	 * and won't appear as broken if the source image is later deleted.
@@ -1352,7 +1354,7 @@ export declare enum ValueHintType {
 	ImageReference = "image",
 	/**
 	 * Indicates to interpret and render the value as an image. The provided value should be a URL that
-	 * points to an image. Coda will ingest the image and host it from Coda infrastructure.
+	 * points to an image. Superhuman Docs will ingest the image and host it from Superhuman infrastructure.
 	 */
 	ImageAttachment = "imageAttachment",
 	/**
@@ -1360,11 +1362,11 @@ export declare enum ValueHintType {
 	 */
 	Url = "url",
 	/**
-	 * Indicates to interpret a text value as Markdown, which will be converted and rendered as Coda rich text.
+	 * Indicates to interpret a text value as Markdown, which will be converted and rendered as rich text.
 	 */
 	Markdown = "markdown",
 	/**
-	 * Indicates to interpret a text value as HTML, which will be converted and rendered as Coda rich text.
+	 * Indicates to interpret a text value as HTML, which will be converted and rendered as rich text.
 	 */
 	Html = "html",
 	/**
@@ -1373,8 +1375,8 @@ export declare enum ValueHintType {
 	 */
 	Embed = "embed",
 	/**
-	 * Indicates to interpret and render the value as a Coda @-reference to a table row. The provided value should
-	 * be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
+	 * Indicates to interpret and render the value as a Superhuman Docs @-reference to a table row. The provided value
+	 * should be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
 	 * used must specify an identity that specifies the desired sync table.
 	 *
 	 * Normally a reference schema is constructed from the schema object being referenced using the helper
@@ -1400,7 +1402,8 @@ export declare enum ValueHintType {
 	Reference = "reference",
 	/**
 	 * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
-	 * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+	 * pointing to a file of a supported type. Superhuman Docs will ingest the file and host it from
+	 * Superhuman infrastructure.
 	 */
 	Attachment = "attachment",
 	/**
@@ -1539,7 +1542,7 @@ export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | S
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
 	/** Identifies this schema as relating to a number value. */
 	type: ValueType.Number;
-	/** An optional type hint instructing Coda about how to interpret or render this value. */
+	/** An optional type hint instructing Superhuman Docs about how to interpret or render this value. */
 	codaType?: T;
 }
 /**
@@ -1547,7 +1550,7 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
  * i.e. a raw number with an optional decimal precision.
  */
 export interface NumericSchema extends BaseNumberSchema {
-	/** If specified, instructs Coda to render this value as a percentage. */
+	/** If specified, instructs Superhuman Docs to render this value as a percentage. */
 	codaType?: ValueHintType.Percent;
 	/** The decimal precision. The number will be rounded to this precision when rendered. */
 	precision?: number;
@@ -1556,14 +1559,14 @@ export interface NumericSchema extends BaseNumberSchema {
 }
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a date. The given number should be in seconds since the Unix epoch.
+ * which Superhuman Docs should interpret as a date. The given number should be in seconds since the Unix epoch.
  */
 export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
-	/** Instructs Coda to render this value as a date. */
+	/** Instructs Superhuman Docs to render this value as a date. */
 	codaType: ValueHintType.Date;
 	/**
-	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
-	 * used when rendering the value.
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+	 * format, used when rendering the value.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
@@ -1571,15 +1574,15 @@ export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> 
 }
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a time. The given number should be in seconds since the Unix epoch.
+ * which Superhuman Docs should interpret as a time. The given number should be in seconds since the Unix epoch.
  * While this is a full datetime, only the time component will be rendered, so the date used is irrelevant.
  */
 export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
-	/** Instructs Coda to render this value as a time. */
+	/** Instructs Superhuman Docs to render this value as a time. */
 	codaType: ValueHintType.Time;
 	/**
-	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-	 * used when rendering the value.
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+	 * format, used when rendering the value.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
@@ -1587,20 +1590,21 @@ export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> 
 }
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a datetime. The given number should be in seconds since the Unix epoch.
+ * which Superhuman Docs should interpret as a datetime. The given number should be in seconds since the Unix epoch.
  */
 export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
-	/** Instructs Coda to render this value as a datetime. */
+	/** Instructs Superhuman Docs to render this value as a datetime. */
 	codaType: ValueHintType.DateTime;
 	/**
-	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+	 * format.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
 	dateFormat?: string;
 	/**
-	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-	 * used when rendering the value.
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+	 * format, used when rendering the value.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
@@ -1608,11 +1612,11 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
 }
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a duration. The given number should be an amount of days
+ * which Superhuman Docs should interpret as a duration. The given number should be an amount of days
  * (fractions allowed).
  */
 export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Duration> {
-	/** Instructs Coda to render this value as a duration. */
+	/** Instructs Superhuman Docs to render this value as a duration. */
 	codaType: ValueHintType.Duration;
 	/**
 	 * A refinement of {@link DurationSchema.maxUnit} to use for rounding the duration when rendering.
@@ -1654,13 +1658,13 @@ export declare enum CurrencyFormat {
  * A schema representing a return value or object property that is an amount of currency.
  */
 export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
-	/** Instructs Coda to render this value as a currency amount. */
+	/** Instructs Superhuman Docs to render this value as a currency amount. */
 	codaType: ValueHintType.Currency;
 	/** The decimal precision. The value is rounded to this precision when rendered. */
 	precision?: number;
 	/**
 	 * A three-letter ISO 4217 currency code, e.g. USD or EUR.
-	 * If the currency code is not supported by Coda, the value will be rendered using USD.
+	 * If the currency code is not supported by Superhuman Docs, the value will be rendered using USD.
 	 */
 	currencyCode?: string;
 	/** A render format for further refining how the value is rendered. */
@@ -1671,7 +1675,7 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
  * be rendered as a slider.
  */
 export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
-	/** Instructs Coda to render this value as a slider. */
+	/** Instructs Superhuman Docs to render this value as a slider. */
 	codaType: ValueHintType.Slider;
 	/** The minimum value selectable by this slider (supports number or formula). */
 	minimum?: number | string;
@@ -1687,7 +1691,7 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
  * be rendered as a progress bar.
  */
 export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.ProgressBar> {
-	/** Instructs Coda to render this value as a progress bar. */
+	/** Instructs Superhuman Docs to render this value as a progress bar. */
 	codaType: ValueHintType.ProgressBar;
 	/** The minimum value selectable by this progress bar (supports number or formula). */
 	minimum?: number | string;
@@ -1734,7 +1738,7 @@ export declare enum ScaleIconSet {
  * 5 star icons, with 3 of them shaded, indicating a value of 3.
  */
 export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
-	/** Instructs Coda to render this value as a scale. */
+	/** Instructs Superhuman Docs to render this value as a scale. */
 	codaType: ValueHintType.Scale;
 	/** The number of icons to render. */
 	maximum?: number;
@@ -1766,7 +1770,7 @@ export declare enum EmailDisplayType {
  * also an option in the user interface.
  */
 export interface EmailSchema extends BaseStringSchema<ValueHintType.Email> {
-	/** Instructs Coda to render this value as an email address. */
+	/** Instructs Superhuman Docs to render this value as an email address. */
 	codaType: ValueHintType.Email;
 	/** How the email should be displayed in the UI. */
 	display?: EmailDisplayType;
@@ -1802,7 +1806,7 @@ export declare enum LinkDisplayType {
  * The link can be displayed in the UI in multiple ways, as per the above enumeration.
  */
 export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
-	/** Instructs Coda to render this value as a hyperlink. */
+	/** Instructs Superhuman Docs to render this value as a hyperlink. */
 	codaType: ValueHintType.Url;
 	/** How the URL should be displayed in the UI. */
 	display?: LinkDisplayType;
@@ -1811,16 +1815,16 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
+ * which Superhuman Docs should interpret as a date. Superhuman Docs is able to flexibly parse a number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
  */
 export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
-	/** Instructs Coda to render this value as a date. */
+	/** Instructs Superhuman Docs to render this value as a date. */
 	codaType: ValueHintType.Date;
 	/**
-	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
-	 * used when rendering the value.
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+	 * format, used when rendering the value.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
@@ -1828,31 +1832,31 @@ export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as an embed value (e.g. a URL). Coda uses an external provider (iframely)
- * to handle all embeds by default. If there is no support for a given embed that you want to use,
+ * which Superhuman Docs should interpret as an embed value (e.g. a URL). Superhuman Docs uses an external provider
+ * (iframely) to handle all embeds by default. If there is no support for a given embed that you want to use,
  * you will need to use the `force` option which falls back to a generic iframe.
  */
 export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed> {
-	/** Instructs Coda to render this value as an embed. */
+	/** Instructs Superhuman Docs to render this value as an embed. */
 	codaType: ValueHintType.Embed;
 	/**
-	 * Toggle whether to try to force embed the content in Coda. Should be kept to false for most cases.
+	 * Toggle whether to try to force embed the content in Superhuman Docs. Should be kept to false for most cases.
 	 *
 	 * By default, we use an external provider (iframely) that supports and normalizes embeds for different sites.
 	 * If you are trying to embed an uncommon site or one that is not supported by them,
-	 * you can set this to `true` to tell Coda to force render the embed. This renders a sandboxed iframe for the embed
-	 * but requires user consent per-domain to actually display the embed.
+	 * you can set this to `true` to tell Superhuman Docs to force render the embed. This renders a sandboxed iframe
+	 * for the embed but requires user consent per-domain to actually display the embed.
 	 */
 	force?: boolean;
 }
 /**
- * A schema representing a return value or object property that is provided as a string, which Coda should
+ * A schema representing a return value or object property that is provided as a string, which Superhuman Docs should
  * interpret as its internal rich text value. For "canvas column" types, `isCanvas` should be set to `true`.
  * @hidden
  */
 export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintType.CodaInternalRichText> {
 	/**
-	 * Instructs Coda to render this value as internal rich text.
+	 * Instructs Superhuman Docs to render this value as internal rich text.
 	 * @hidden
 	 */
 	codaType: ValueHintType.CodaInternalRichText;
@@ -1864,14 +1868,14 @@ export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintTy
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a time.
+ * which Superhuman Docs should interpret as a time.
  */
 export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
-	/** Instructs Coda to render this value as a date. */
+	/** Instructs Superhuman Docs to render this value as a date. */
 	codaType: ValueHintType.Time;
 	/**
-	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-	 * used when rendering the value.
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+	 * format, used when rendering the value.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
@@ -1879,23 +1883,23 @@ export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a datetime. Coda is able to flexibly a parse number of formal
+ * which Superhuman Docs should interpret as a datetime. Superhuman Docs is able to flexibly a parse number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 datetime string (e.g. 2021-11-03T19:43:58): https://en.wikipedia.org/wiki/ISO_8601.
  */
 export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
-	/** Instructs Coda to render this value as a date. */
+	/** Instructs Superhuman Docs to render this value as a date. */
 	codaType: ValueHintType.DateTime;
 	/**
-	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
-	 * used when rendering the value.
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Superhuman Docs date column
+	 * format, used when rendering the value.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
 	dateFormat?: string;
 	/**
-	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
-	 * used when rendering the value.
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Superhuman Docs time column
+	 * format, used when rendering the value.
 	 *
 	 * Only applies when this is used as a sync table property.
 	 */
@@ -1930,10 +1934,10 @@ export declare enum ImageShapeStyle {
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as an image.
+ * which Superhuman Docs should interpret as an image.
  */
 export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
-	/** Instructs Coda to render this value as an Image. */
+	/** Instructs Superhuman Docs to render this value as an Image. */
 	codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
 	/** ImageOutline type specifying style of outline on images. If unspecified, default is Solid. */
 	imageOutline?: ImageOutline;
@@ -1987,7 +1991,7 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
  * A schema representing a value with selectable options.
  */
 export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
-	/** Instructs Coda to render this value as a select list. */
+	/** Instructs Superhuman Docs to render this value as a select list. */
 	codaType: ValueHintType.SelectList;
 	/** Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. */
 	allowNewValues?: boolean;
@@ -1995,7 +1999,7 @@ export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
 	/** Identifies this schema as a string. */
 	type: ValueType.String;
-	/** An optional type hint instructing Coda about how to interpret or render this value. */
+	/** An optional type hint instructing Superhuman Docs about how to interpret or render this value. */
 	codaType?: T;
 }
 declare const SimpleStringHintValueTypes: readonly [
@@ -2008,7 +2012,7 @@ declare const SimpleStringHintValueTypes: readonly [
 ];
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
- * A schema whose underlying value is a string, along with an optional hint about how Coda
+ * A schema whose underlying value is a string, along with an optional hint about how Superhuman Docs
  * should interpret that string.
  */
 export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes> extends BaseStringSchema<T> {
@@ -2066,7 +2070,7 @@ export interface ObjectSchemaProperty {
 	fromKey?: string;
 	/**
 	 * Without a `displayName`, a property's key will become the user-visible name. This isn't ideal
-	 * because the key must also be used by the Coda formula language to refer to the property, requiring
+	 * because the key must also be used by the Superhuman formula language to refer to the property, requiring
 	 * lossy transformation.
 	 *
 	 * You probably want to set displayName if:
@@ -2100,7 +2104,7 @@ export interface ObjectSchemaProperty {
 	/**
 	 * For internal use only, Pack makers cannot set this. It is auto-populated at build time
 	 * and if somehow there were a value here it would be overwritten.
-	 * Coda table schemas use a normalized version of a property key, so this field is used
+	 * Superhuman Docs table schemas use a normalized version of a property key, so this field is used
 	 * internally to track what the Pack maker used as the property key, verbatim.
 	 * E.g., if a sync table schema had `properties: { 'foo-bar': {type: sdk.ValueType.String} }`,
 	 * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
@@ -2126,7 +2130,7 @@ export type GenericObjectSchema = ObjectSchema<string, string>;
  *
  * You may optionally specify an {@link ObjectSchemaDefinition.identity} when defining an object schema.
  * This signals that this schema represents an important named entity in the context of your pack.
- * Schemas with identities may be referenced by other schemas, in which case Coda
+ * Schemas with identities may be referenced by other schemas, in which case Superhuman Docs
  * will render such values as @-references in the doc, allowing you to create relationships
  * between entities.
  *
@@ -2185,7 +2189,7 @@ export interface PropertyIdentifierDetails {
 	/**
 	 * An optional placeholder value, which will be rendered when the property value is an empty value
 	 * (null, undefined, "", [], \{\}). This will be used in the Pack card title, subtitle, and snippet.
-	 * Not accessible within the Coda formula language.
+	 * Not accessible within the Superhuman formula language.
 	 */
 	placeholder?: string;
 	/**
@@ -2453,16 +2457,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that be used to label this object in the
 	 * UI.
-	 * Object values can contain many properties and the Coda UI will display them as a "chip"
+	 * Object values can contain many properties and the Superhuman Docs UI will display them as a "chip"
 	 * with only the value of the "displayProperty" property used as the chip's display label.
 	 * The other properties can be seen when hovering over the chip.
 	 */
 	displayProperty?: K;
 	/**
-	 * A hint for how Coda should interpret and render this object value.
+	 * A hint for how Superhuman Docs should interpret and render this object value.
 	 *
-	 * For example, an object can represent a person (user) in a Coda doc, with properties for the
-	 * email address of the person and their name. Using `ValueHintType.Person` tells Coda to
+	 * For example, an object can represent a person (user) in a doc, with properties for the
+	 * email address of the person and their name. Using `ValueHintType.Person` tells Superhuman Docs to
 	 * render such a value as an @-reference to that person, rather than a basic object chip.
 	 */
 	codaType?: ObjectHintTypes;
@@ -2501,8 +2505,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * in the schema, and that the packs infrastructure should retain these unknown properties
 	 * rather than stripping them.
 	 *
-	 * Properties not declared in the schema will not work properly in Coda: they cannot be
-	 * used natively in the formula language and will not have correct types in Coda. But, in certain
+	 * Properties not declared in the schema will not work properly in Superhuman Docs: they cannot be
+	 * used natively in the formula language and will not have correct types in Superhuman Docs. But, in certain
 	 * scenarios they can be useful.
 	 */
 	includeUnknownProperties?: boolean;
@@ -2782,7 +2786,7 @@ export interface ObjectSchema<K extends string, L extends string> extends Object
 	 */
 	identity?: Identity;
 	/**
-	 * Pack makers should never need to interact with this, it's just present for Coda's internal plumbing.
+	 * Pack makers should never need to interact with this, it's just present for Superhuman Docs' internal plumbing.
 	 */
 	__packId?: number;
 }
@@ -2792,7 +2796,7 @@ export interface ObjectSchema<K extends string, L extends string> extends Object
  * Multiple attribution nodes can be rendered all together, for example to have
  * attribution that contains both text and a logo image.
  *
- * @see [Structuring data with schemas - Data attribution](https://coda.io/packs/build/latest/guides/advanced/schemas/#attribution)
+ * @see [Structuring data with schemas - Data attribution](https://docs.superhuman.com/packs/build/latest/guides/advanced/schemas/#attribution)
  */
 export declare enum AttributionNodeType {
 	/**
@@ -3143,7 +3147,7 @@ export interface ResponseHandlerTemplate<T extends Schema> {
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
  * to the end user, throw a UserVisibleError with a user-friendly message
- * and the Coda UI will display the message.
+ * and the Superhuman Docs UI will display the message.
  *
  * @example
  * ```
@@ -3153,7 +3157,7 @@ export interface ResponseHandlerTemplate<T extends Schema> {
  * ```
  *
  * @see
- * - [Handling errors - User-visible errors](https://coda.io/packs/build/latest/guides/advanced/errors/#user-visible-errors)
+ * - [Handling errors - User-visible errors](https://docs.superhuman.com/packs/build/latest/guides/advanced/errors/#user-visible-errors)
  */
 export declare class UserVisibleError extends Error {
 	/** @hidden */
@@ -3210,7 +3214,7 @@ export type ParameterValidationResult = InvalidParameterValidationResult | Valid
 export interface StatusCodeErrorResponse {
 	/** The raw body of the HTTP error response. */
 	body?: any;
-	/** The headers from the HTTP error response. Many header values are redacted by Coda. */
+	/** The headers from the HTTP error response. Many header values are redacted by the platform. */
 	headers?: {
 		[key: string]: string | string[] | undefined;
 	};
@@ -3248,7 +3252,7 @@ export interface StatusCodeErrorResponse {
  * }
  * ```
  *
- * @see [Fetching remote data - Errors](https://coda.io/packs/build/latest/guides/basics/fetcher/#errors)
+ * @see [Fetching remote data - Errors](https://docs.superhuman.com/packs/build/latest/guides/basics/fetcher/#errors)
  */
 export declare class StatusCodeError extends Error {
 	/**
@@ -3308,7 +3312,7 @@ export declare class StatusCodeError extends Error {
  * ```
  *
  * @see
- * - [Guide: Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/#triggering-a-prompt)
+ * - [Guide: Authenticating using OAuth](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/oauth2/#triggering-a-prompt)
  */
 export declare class MissingScopesError extends Error {
 	/**
@@ -3637,14 +3641,14 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 *
 	 * This is ignored if there is also a {@link continuation} on this object.
 	 *
-	 * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/)
+	 * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/incremental/)
 	 */
 	completion?: SyncCompletionMetadataResult<NonNullable<ContextT["sync"]["previousCompletion"]>["incrementalContinuation"]>;
 	/**
 	 * The IDs of the rows that have been deleted, as discovered during an incremental sync. The IDs provided should match
 	 * the values in the {@link ObjectSchemaDefinition#idProperty} field of the schema.
 	 *
-	 * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/#deleted-records)
+	 * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/incremental/#deleted-records)
 	 */
 	deletedRowIds?: string[];
 	/**
@@ -3865,9 +3869,9 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType` to tell Coda how to interpret a given value. For example, you can return
- * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
- * to interpret as a date in a document.
+ * `codaType` to tell the platform how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `codaType: ValueType.Date` to tell the platform
+ * to interpret as a date.
  *
  * If your formula returns an object, you must provide a `schema` property that describes
  * the structure of the object. See {@link makeObjectSchema} for how to construct an object schema.
@@ -4049,7 +4053,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
  * You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
  * the JavaScript function that implements the formula. The platform will wrap this function with the necessary
- * formula boilerplate to make it look like a complete Coda formula.
+ * formula boilerplate to make it look like a complete formula.
  *
  * All metadata functions are passed an {@link ExecutionContext} as the first parameter,
  * and the optional second parameter is a string whose purpose and value varies depending on
@@ -4107,7 +4111,7 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
  * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
  * and an `execute` function body. This includes supporting utilities like parameter autocomplete functions.
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
- * it is shaped like a Coda formula to be used at runtime.
+ * it is shaped like a formula to be used at runtime.
  */
 export declare function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType>(execute: MetadataFunction<ContextT, ReturnT>, options?: {
 	connectionRequirement?: ConnectionRequirement;
@@ -4222,7 +4226,7 @@ export interface DynamicOptions {
  */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
 	/**
-	 * The name of the sync table. This is shown to users in the Coda UI if displayName is not present.
+	 * The name of the sync table. This is shown to users in the Superhuman Docs UI if displayName is not present.
 	 * This should describe the entities being synced. For example, a sync table that syncs products
 	 * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
 	 *
@@ -4231,12 +4235,13 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 */
 	name: string;
 	/**
-	 * This is the name shown to users in the Coda UI. If not present, {@link SyncTableOptions.name} will be used.
+	 * This is the name shown to users in the Superhuman Docs UI. If not present, {@link SyncTableOptions.name}
+	 * will be used.
 	 * Changing this value will not affect existing tables and only affects newly created tables.
 	 */
 	displayName?: string;
 	/**
-	 * The description of the sync table. This is shown to users in the Coda UI.
+	 * The description of the sync table. This is shown to users in the Superhuman Docs UI.
 	 * This should describe what the sync table does in more detailed language. For example, the
 	 * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
 	 */
@@ -4252,7 +4257,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
 	 * as the identity name.
 	 *
-	 * When returning objects from other syncs or formulas, you may create Coda references to objects
+	 * When returning objects from other syncs or formulas, you may create references to objects
 	 * in this table by defining an {@link Identity} in that schema that refers to this identity name.
 	 *
 	 * For example, if your identity name was 'Product', another formula or sync could return
@@ -4266,7 +4271,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 */
 	schema: SchemaT;
 	/**
-	 * The definition of the formula that implements this sync. This is a Coda packs formula
+	 * The definition of the formula that implements this sync. This is a Pack formula
 	 * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
 	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
 	 * These will eventually be consolidated.)
@@ -4315,7 +4320,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
  */
 export interface DynamicSyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
 	/**
-	 * The name of the dynamic sync table. This is shown to users in the Coda UI
+	 * The name of the dynamic sync table. This is shown to users in the Superhuman Docs UI
 	 * when listing what build blocks are contained within this pack.
 	 * This should describe the category of entities being synced. The actual
 	 * table name once added to the doc will be dynamic, it will be whatever value
@@ -4323,7 +4328,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 */
 	name: string;
 	/**
-	 * The description of the dynamic sync table. This is shown to users in the Coda UI
+	 * The description of the dynamic sync table. This is shown to users in the Superhuman Docs UI
 	 * when listing what build blocks are contained within this pack.
 	 * This should describe what the dynamic sync table does in a more detailed language.
 	 */
@@ -4346,7 +4351,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	getSchema: MetadataFormulaDef<ContextT>;
 	/**
 	 * A formula that returns a browser-friendly url representing the
-	 * resource being synced. The Coda UI links to this url as the source
+	 * resource being synced. The Superhuman Docs UI links to this url as the source
 	 * of the table data. This is typically a browser-friendly form of the
 	 * `dynamicUrl`, which is typically an API url.
 	 */
@@ -4362,7 +4367,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 */
 	searchDynamicUrls?: MetadataFormulaDef;
 	/**
-	 * The definition of the formula that implements this sync. This is a Coda packs formula
+	 * The definition of the formula that implements this sync. This is a Pack formula
 	 * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
 	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
 	 * These will eventually be consolidated.)
@@ -4453,7 +4458,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  * * Normalizing the schema definition to conform to recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
- * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
+ * See [Normalization](https://docs.superhuman.com/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
@@ -4623,8 +4628,8 @@ declare enum PackCategory {
 /**
  * Authentication types supported by Packs.
  *
- * @see [Authenticating with other services](https://coda.io/packs/build/latest/guides/basics/authentication/)
- * @see [Authentication samples](https://coda.io/packs/build/latest/samples/topic/authentication/)
+ * @see [Authenticating with other services](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/)
+ * @see [Authentication samples](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/)
  */
 export declare enum AuthenticationType {
 	/**
@@ -4706,7 +4711,7 @@ export declare enum AuthenticationType {
 	 */
 	AWSAssumeRole = "AWSAssumeRole",
 	/**
-	 * Authenticate using a Coda REST API token, sent as an HTTP header.
+	 * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
 	 *
 	 * @see {@link CodaApiBearerTokenAuthentication}
 	 */
@@ -4827,14 +4832,14 @@ export interface BaseAuthentication {
 	 * to an API's "who am I" endpoint and returns a username.
 	 *
 	 * If omitted, or if the function returns an empty value, the account will be labeled
-	 * with the creating user's Coda username.
+	 * with the creating user's Superhuman username.
 	 */
 	getConnectionName?: MetadataFormula;
 	/**
 	 * A function that is called when a user sets up a new account, that returns the ID of
 	 * that account in the third-party system being called.
 	 *
-	 * This ID is not yet subsequently exposed to pack developers and is mostly for Coda
+	 * This ID is not yet subsequently exposed to pack developers and is mostly for Superhuman Docs
 	 * internal use.
 	 *
 	 * @ignore
@@ -4882,22 +4887,22 @@ export interface BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Authorization header](https://coda.io/packs/build/latest/samples/topic/authentication/#authorization-header)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Authorization header](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#authorization-header)
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as HeaderBearerToken authentication. */
 	type: AuthenticationType.HeaderBearerToken;
 }
 /**
- * Authenticate using a Coda REST API token, sent as an HTTP header.
+ * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
  *
  * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user will be presented
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
  * This is primarily for use by Superhuman-authored packs, as it is only relevant for interacting with the
- * Coda REST API.
+ * Superhuman Docs REST API.
  *
  * @example
  * ```ts
@@ -4906,8 +4911,8 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Coda API token](https://coda.io/packs/build/latest/guides/basics/authentication/#coda-api-token)
- * @see [Authentication samples - Coda API token](https://coda.io/packs/build/latest/samples/topic/authentication/#coda-api-token)
+ * @see [Authenticating with other services - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#coda-api-token)
+ * @see [Authentication samples - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#coda-api-token)
  */
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as CodaApiHeaderBearerToken authentication. */
@@ -4917,7 +4922,7 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
 	 */
 	deferConnectionSetup?: boolean;
 	/**
-	 * If true, automatically creates and configures an account with a Coda API token with
+	 * If true, automatically creates and configures an account with a Superhuman Docs API token with
 	 * default settings when installing the pack: a read-write token, added to the doc
 	 * as a shared account that allows actions.
 	 */
@@ -4935,8 +4940,8 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Custom header](https://coda.io/packs/build/latest/samples/topic/authentication/#custom-header)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Custom header](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#custom-header)
  */
 export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as CustomHeaderToken authentication. */
@@ -5006,8 +5011,8 @@ export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Query parameters](https://coda.io/packs/build/latest/samples/topic/authentication/#query-parameter)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Query parameters](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#query-parameter)
  */
 export interface QueryParamTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as QueryParamToken authentication. */
@@ -5035,8 +5040,8 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
- * @see [Authentication samples - Multiple query parameters](https://coda.io/packs/build/latest/samples/topic/authentication/#multiple-query-parameters)
+ * @see [Authenticating with other services - Simple tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Multiple query parameters](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#multiple-query-parameters)
  */
 export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as MultiQueryParamToken authentication. */
@@ -5164,8 +5169,8 @@ export interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
  * });
  * ```
  *
- * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
- * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
+ * @see [Authenticating using OAuth](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/oauth2/)
+ * @see [Authentication samples - OAuth2](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#oauth2)
  */
 export interface OAuth2StaticCodeAuthentication extends BaseOAuth2CodeAuthentication {
 	/**
@@ -5219,8 +5224,8 @@ export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentic
  * When `useDynamicClientRegistration` is `true`, `authorizationUrl` and `tokenUrl` become optional
  * as they are automatically discovered using the pack's declared MCP servers and network domains.
  *
- * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
- * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
+ * @see [Authenticating using OAuth](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/oauth2/)
+ * @see [Authentication samples - OAuth2](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#oauth2)
  */
 export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2DynamicCodeAuthentication;
 /**
@@ -5275,8 +5280,8 @@ export declare enum TokenExchangeCredentialsLocation {
  * });
  * ```
  *
- * @see [Authenticating with other services - Username and password](https://coda.io/packs/build/latest/guides/basics/authentication/#username-and-password)
- * @see [Authentication samples - Username and password](https://coda.io/packs/build/latest/samples/topic/authentication/#username-and-password)
+ * @see [Authenticating with other services - Username and password](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#username-and-password)
+ * @see [Authentication samples - Username and password](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#username-and-password)
  * @see [Wikipedia - Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)
  */
 export interface WebBasicAuthentication extends BaseAuthentication {
@@ -5373,8 +5378,8 @@ export interface CustomAuthParameter {
  * {% endraw %}
  * ```
  *
- * @see [Authenticating with other services - Custom tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#custom-tokens)
- * @see [Authentication samples - Custom tokens](https://coda.io/packs/build/latest/samples/topic/authentication/#custom-tokens)
+ * @see [Authenticating with other services - Custom tokens](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#custom-tokens)
+ * @see [Authentication samples - Custom tokens](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#custom-tokens)
  */
 export interface CustomAuthentication extends BaseAuthentication {
 	/** Identifies this as Custom authentication. */
@@ -5520,8 +5525,8 @@ export interface AdminAuthenticationDef extends Omit<AdminAuthentication, "authe
 	authentication: AllowedAuthenticationDef;
 }
 /**
- * Definition for a custom column type that users can apply to any column in any Coda table.
- * A column format tells Coda to interpret the value in a cell by executing a formula
+ * Definition for a custom column type that users can apply to any column in any Superhuman Docs table.
+ * A column format tells Superhuman Docs to interpret the value in a cell by executing a formula
  * using that value, typically looking up data related to that value from a third-party API.
  * For example, the Weather pack has a column format "Current Weather"; when applied to a column,
  * if you type a city or address into a cell in that column, that location will be used as the input
@@ -5529,7 +5534,7 @@ export interface AdminAuthenticationDef extends Omit<AdminAuthentication, "authe
  * weather info will be shown in the cell.
  *
  * A column format is just a wrapper around a formula defined in the {@link PackVersionDefinition.formulas} section
- * of your pack definition. It tells Coda to execute that particular formula using the value
+ * of your pack definition. It tells Superhuman Docs to execute that particular formula using the value
  * of the cell as input.
  *
  * The formula referenced by a format must have exactly one required parameter.
@@ -5657,7 +5662,7 @@ export declare enum ToolType {
 	 */
 	ContactResolution = "ContactResolution",
 	/**
-	 * Tool that provides access to Coda docs and tables capabilities.
+	 * Tool that provides access to Superhuman Docs documents and tables capabilities.
 	 * @internal
 	 */
 	CodaDocsAndTables = "CodaDocsAndTables",
@@ -5817,7 +5822,7 @@ export interface MCPTool extends BaseTool<ToolType.MCP> {
 export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {
 }
 /**
- * Tool that provides access to Coda docs and tables capabilities.
+ * Tool that provides access to Superhuman Docs documents and tables capabilities.
  * @internal
  */
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {

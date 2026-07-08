@@ -12,9 +12,9 @@ const FileSchema = sdk.makeObjectSchema({
     },
     thumbnail: {
       type: sdk.ValueType.String,
-      // ImageAttachments instructs Coda to ingest the image and store it in the
-      // doc. This is required, since the thumbnail image URLs returned by
-      // TemporaryBlobStorage expire.
+      // ImageAttachments instructs Superhuman Docs to ingest the image and
+      // store it in the doc. This is required, since the thumbnail image URLs
+      // returned by TemporaryBlobStorage expire.
       codaType: sdk.ValueHintType.ImageAttachment,
     },
     id: { type: sdk.ValueType.String },

@@ -5,9 +5,9 @@ description: How to design your Pack so that it's easy to use and support.
 
 # Design your Pack
 
-Packs don't include traditional user interface elements like dialogs or sidebars. Instead users interact with your building blocks using standard Coda interfaces, like the formula editor. However there are still many subtle design choices to make when building your Pack, and they can have a real impact on usability.
+Packs don't include traditional user interface elements like dialogs or sidebars. Instead users interact with your building blocks using standard Superhuman Docs interfaces, like the formula editor. However there are still many subtle design choices to make when building your Pack, and they can have a real impact on usability.
 
-This page aims to provide the guidance you need to create a Pack that meets the needs and expectations of Coda users.
+This page aims to provide the guidance you need to create a Pack that meets the needs and expectations of Superhuman users.
 
 
 ## General guidance
@@ -164,7 +164,7 @@ Most REST APIs are organized into collections, usually corresponding specific ty
 
 ### Design the schema
 
-Examine the data returned for each item in the collection and determine what to expose to users in Coda. Select the fields most important to users and start there. You can always add more fields later without breaking anything.
+Examine the data returned for each item in the collection and determine what to expose to users in Superhuman Docs. Select the fields most important to users and start there. You can always add more fields later without breaking anything.
 
 When designing your schema, select user-friendly names for your properties. The field in the API may use technical terminology or refer to an older name no longer in use by the product.
 
@@ -191,7 +191,7 @@ For each collection, add a set of building blocks that allow users to work with 
     !!! abstract "Requirements"
         - [x] The API has an endpoint for retrieving all the items in the collection (ex: `GET /tasks`).
 
-    A [sync table][sync_tables] exposes a collection as a special Coda table, allowing users to work with large sets of data using familiar conventions.
+    A [sync table][sync_tables] exposes a collection as a special Superhuman Docs table, allowing users to work with large sets of data using familiar conventions.
 
     - If the API endpoint support filtering the results, consider exposing those as parameters on the sync table to allow for faster, more targeted syncs.
     - If the API paginates the results, use [continuations][sync_table_continuations] to spread the requests over multiple executions and avoid timeouts.
@@ -256,7 +256,7 @@ For each collection, add a set of building blocks that allow users to work with 
             - Deleting an item (ex: `DELETE /tasks/123`)
             - Performing a custom action (ex: `POST /tasks/123:notify`)
 
-    An [action formula][actions] allows users to update the items from within their Coda doc, either in buttons or automations. Any API calls that have side effects (change the state of the app being integrated with) should be exposed as action formulas, as regular formulas can be executed at any time by the formula engine.
+    An [action formula][actions] allows users to update the items from within their doc, either in buttons or automations. Any API calls that have side effects (change the state of the app being integrated with) should be exposed as action formulas, as regular formulas can be executed at any time by the formula engine.
 
     - When creating or updating items, use optional parameters to capture the values for individual fields.
     - In addition to a generic update action, consider adding streamlined action formulas for common tasks (ex: `Reassign`, `ChangeAddress`, etc.).
@@ -283,7 +283,7 @@ For each collection, add a set of building blocks that allow users to work with 
 [column_formats]: ./blocks/column-formats.md
 [actions]: ./blocks/actions.md
 [todoist_reference]: https://developer.todoist.com/rest/v2/#overview
-[best_practices_featured_doc]: https://coda.io/@bri-strauss/best-practices-for-launching-your-pack/building-a-great-doc-for-your-pack-15
+[best_practices_featured_doc]: https://docs.superhuman.com/@bri-strauss/best-practices-for-launching-your-pack/building-a-great-doc-for-your-pack-15
 [formulas_naming]: ./blocks/formulas.md#naming
 [actions_naming]: ./blocks/actions.md#naming
 [sync_tables_naming]: ./blocks/sync-tables/index.md#naming
