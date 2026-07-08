@@ -46,7 +46,7 @@ export async function handleExecute({
   const manifest = await importManifest(bundlePath);
   if (manifest.networkDomains && manifest.networkDomains.length > 1 && !allowMultipleNetworkDomains) {
     return printAndExit(
-      'Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains',
+      'Using multiple network domains requires approval from Coda. Visit https://docs.superhuman.com/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains',
     );
   }
   await executeFormulaOrSyncFromCLI({

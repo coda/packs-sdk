@@ -4,7 +4,7 @@
 
 # Superhuman Packs SDK
 
-Superhuman Packs allow you to extend the Superhuman suite, creating agents for Go and adding building blocks to Coda. To learn more, see [our SDK documentation](https://coda.io/packs/build).
+Superhuman Packs allow you to extend the Superhuman suite, creating agents for Go and adding building blocks to Coda. To learn more, see [our SDK documentation](https://docs.superhuman.com/packs/build).
 
 ## Contributing
 
