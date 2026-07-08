@@ -264,7 +264,7 @@ export const commands: yargs.CommandModule[] = [
       'Supported options:\n' +
       '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
       '  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
-      '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.superhuman.com"). When set, all commands will use this endpoint by default.\n\n' +
+      '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
       'Usage: packs setOption path/to/pack.ts timerStrategy fake',
     handler: handleSetOption as any,
   },

@@ -107,5 +107,5 @@ return sdk.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
 [buffer]: https://nodejs.org/api/buffer.html#buffer
 [mdn_data_urls]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 [mdn_svg]: https://developer.mozilla.org/en-US/docs/Web/SVG
-[pack_latex]: https://docs.superhuman.com/packs/latex-1058
+[pack_latex]: https://coda.io/packs/latex-1058
 [mdn_target]: https://developer.mozilla.org/en-US/docs/Web/CSS/:target

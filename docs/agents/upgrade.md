@@ -202,7 +202,7 @@ Currently, some Pack features don't work in agents.
 [actions]: ../guides/blocks/actions.md
 [autocomplete]: ../guides/basics/parameters/autocomplete.md
 [connection_requirement_optional]: ../reference/sdk/core/enumerations/ConnectionRequirement.md#optional
-[weather_pack]: https://docs.superhuman.com/packs/weather-1015
+[weather_pack]: https://coda.io/packs/weather-1015
 [invocationsource]: ../reference/sdk/core/enumerations/InvocationSource.md
 [source]: ../reference/sdk/core/interfaces/InvocationLocation.md#source
 [ingestionsuggestedvalue]: ../reference/sdk/core/interfaces/ParamDef.md#ingestionsuggestedvalue

@@ -102,7 +102,7 @@ Packs are run in a custom JavaScript execution environment, compatible with the 
 
 [packs_landing]: https://docs.superhuman.com/packs
 [packs_why]: https://docs.superhuman.com/why-build-packs
-[gallery_slack]: https://docs.superhuman.com/packs/slack-1000
+[gallery_slack]: https://coda.io/packs/slack-1000
 [formula_list]: https://docs.superhuman.com/formulas
 [help_buttons]: https://help.coda.io/hc/en-us/articles/39555758072717-Button-basics
 [help_automations]: https://help.coda.io/hc/en-us/articles/39555778179853-Automations-in-Coda

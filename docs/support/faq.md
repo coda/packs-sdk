@@ -83,7 +83,7 @@ Only the [support][support_email] team can transfer a Pack to another workspace,
 [google_verification_exceptions]: https://support.google.com/cloud/answer/9110914#exceptions-ver-reqts&zippy=%2Cexceptions-to-verification-requirements
 [google_verification_line]: https://support.google.com/cloud/answer/9110914?hl=en#zippy=%2Chow-can-i-make-sure-the-verification-process-is-as-streamlined-as-possible
 [oauth_redirect]: ../guides/basics/authentication/oauth2.md#redirect-url
-[packs_apps_script]: https://docs.superhuman.com/packs/apps-script-14470
+[packs_apps_script]: https://coda.io/packs/apps-script-14470
 [dynamic_sync_tables]: ../guides/blocks/sync-tables/dynamic.md
 [support_email]: mailto:care@superhuman.com
 [hc_selling]: https://help.coda.io/hc/en-us/articles/39555971447053-Sell-your-Packs-on-Coda

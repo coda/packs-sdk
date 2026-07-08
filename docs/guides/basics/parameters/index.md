@@ -526,7 +526,7 @@ The table below shows the recommended parameter type to use with various types o
 [mdn_rest]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#assigning_the_rest_of_an_array_to_a_variable
 [autocomplete]: autocomplete.md
 [PrecannedDateRange]: ../../../reference/sdk/core/enumerations/PrecannedDateRange.md
-[calendar_pack]: https://docs.superhuman.com/packs/google-calendar-1003/documentation
+[calendar_pack]: https://coda.io/packs/google-calendar-1003/documentation
 [ParameterType]: ../../../reference/sdk/core/enumerations/ParameterType.md
 [ToText]: https://docs.superhuman.com/formulas#ToText
 [ToNumber]: https://docs.superhuman.com/formulas#ToNumber
