@@ -20,7 +20,7 @@ async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dyn
     });
     const manifest = await (0, helpers_1.importManifest)(bundlePath);
     if (manifest.networkDomains && manifest.networkDomains.length > 1 && !allowMultipleNetworkDomains) {
-        return (0, helpers_3.printAndExit)('Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains');
+        return (0, helpers_3.printAndExit)('Using multiple network domains requires approval from Coda. Visit https://docs.superhuman.com/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains');
     }
     await (0, execution_1.executeFormulaOrSyncFromCLI)({
         formulaName,
