@@ -78,6 +78,6 @@ If you are building a Pack using the CLI you may want to consider utilizing more
 [DateTimeFormat_parameters]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters
 [luxon_math]: https://moment.github.io/luxon/#/math?id=calendar-math-vs-time-math
 [parameters_date]: ../basics/parameters/index.md#dates
-[data_types_date]: ../basics/data_types.md#dates
-[data_types_duration]: ../basics/data_types.md#durations
+[data_types_date]: ../basics/data-types.md#dates
+[data_types_duration]: ../basics/data-types.md#durations
 [ExecutionContext_timezone]: ../../reference/sdk/core/interfaces/ExecutionContext.md#timezone
