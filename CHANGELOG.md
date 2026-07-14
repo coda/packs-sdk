@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - `MCPServer.endpointUrl` now accepts a root-relative path (e.g. `/mcp`) that is resolved against the connection's endpoint when the pack's authentication provides one — via `requiresEndpointUrl` or `endpointKey` — mirroring the `authorizationUrl` / `tokenUrl` convention. This also applies to packs that use `setSystemAuthentication` instead of a per-user default authentication. Absolute `https` URLs continue to work unchanged.
+- `OAuth2ClientCredentialsAuthentication.tokenUrl` now accepts a root-relative path (e.g. `/token`) that is resolved against the connection's endpoint when the pack's authentication sets `requiresEndpointUrl`, mirroring the OAuth2 authorization-code flow's `tokenUrl` convention. Absolute `https` URLs continue to work unchanged.
 
 ## [1.17.0] - 2026-07-08
 

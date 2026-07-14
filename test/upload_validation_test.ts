@@ -5188,6 +5188,66 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('OAuth2ClientCredentials, requiresEndpointUrl requires relative tokenUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2ClientCredentials,
+          tokenUrl: 'https://example.com/tokenUrl',
+          requiresEndpointUrl: true,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'tokenUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+
+      assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2ClientCredentials);
+      metadata.defaultAuthentication.tokenUrl = '/tokenUrl';
+      await validateJson(metadata);
+    });
+
+    it('OAuth2ClientCredentials, no requiresEndpointUrl requires absolute tokenUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2ClientCredentials,
+          tokenUrl: '/tokenUrl',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'tokenUrl must be an absolute URL when requiresEndpointUrl is not true',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+
+      assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2ClientCredentials);
+      metadata.defaultAuthentication.tokenUrl = 'https://example.com/tokenUrl';
+      await validateJson(metadata);
+    });
+
+    it('OAuth2ClientCredentials, requiresEndpointUrl rejects protocol-relative tokenUrl', async () => {
+      // A protocol-relative URL like "//evil.com/tokenUrl" starts with "/" but resolves to a
+      // different host than the connection endpoint, so it must not be treated as relative.
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2ClientCredentials,
+          tokenUrl: '//evil.com/tokenUrl',
+          requiresEndpointUrl: true,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'tokenUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+    });
+
     it('WebBasic', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
@@ -5590,7 +5650,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata, '1.0.0');
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Invalid URL',
+          message: 'tokenUrl must be an absolute URL when requiresEndpointUrl is not true',
           path: 'defaultAuthentication.tokenUrl',
         },
       ]);

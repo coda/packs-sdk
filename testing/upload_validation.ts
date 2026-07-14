@@ -847,17 +847,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
-      tokenUrl: z.string().url().refine(validateUrlParsesIfAbsolute),
+      /** Accepts a relative URL when requiresEndpointUrl is true; enforced in the superRefine below. */
+      tokenUrl: z.string().refine(validateUrlParsesIfAbsolute),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
       tokenQueryParam: z.string().optional(),
-      /** Unlike the authorization code flow, this flow's tokenUrl is absolute-only, so resource must be too. */
+      /** Unlike tokenUrl, resource has no relative-URL exception and must always be absolute. */
       resource: z.string().url().refine(validateUrlParsesIfAbsolute).optional(),
       scopeParamName: z.string().optional(),
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
+    }).superRefine(({requiresEndpointUrl, tokenUrl}, context) => {
+      validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl, {requiresEndpointUrl}, context);
     }),
     [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({
       type: zodDiscriminant(AuthenticationType.WebBasic),
