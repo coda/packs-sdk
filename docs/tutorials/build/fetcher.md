@@ -355,6 +355,6 @@ Now that you have an understanding of how to call an external API, here are some
 [exchangerate_home]: https://www.exchangerate-api.com/
 [fetcher]: ../../guides/basics/fetcher.md
 [samples_fetcher]: ../../samples/topic/fetcher.md
-[pmt]: ../../guides/development/pack-maker-tools.md
+[pmt]: ../../development/pack-maker-tools.md
 [autocomplete]: ../../guides/basics/parameters/autocomplete.md
 [uservisibleerror]: ../../reference/sdk/core/classes/UserVisibleError.md

@@ -14,4 +14,4 @@ The [Testing module][module_testing] contains utilities that aid in writing unit
 [guides]: https://docs.superhuman.com/packs/build/latest/guides/overview.md
 [module_core]: https://docs.superhuman.com/packs/build/latest/reference/sdk/core/
 [module_testing]: https://docs.superhuman.com/packs/build/latest/reference/sdk/testing/
-[testing]: https://docs.superhuman.com/packs/build/latest/guides/development/testing.md#local
+[testing]: https://docs.superhuman.com/packs/build/latest/development/testing.md#local

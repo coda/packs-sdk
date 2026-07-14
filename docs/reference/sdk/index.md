@@ -23,7 +23,7 @@ The [Testing module][module_testing] contains utilities that aid in writing unit
 [guides]: {{ config.site_url }}guides/overview.md
 [module_core]: {{ config.site_url }}reference/sdk/core/
 [module_testing]: {{ config.site_url }}reference/sdk/testing/
-[testing]: {{ config.site_url }}guides/development/testing.md#local
+[testing]: {{ config.site_url }}development/testing.md#local
 
 ## Modules
 

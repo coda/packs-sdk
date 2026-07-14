@@ -170,6 +170,6 @@ examples: [
 [user_auth]: ../../reference/sdk/core/classes/PackDefinitionBuilder.md#setuserauthentication
 [connectionRequirement]: ../../reference/sdk/core/interfaces/PackFormulaDef.md#connectionrequirement
 [sync_formula]: sync-tables/index.md#formula
-[pmt_settings]: ../development/pack-maker-tools.md#settings
-[pmt_options]: ../development/pack-maker-tools.md#options
+[pmt_settings]: ../../development/pack-maker-tools.md#settings
+[pmt_options]: ../../development/pack-maker-tools.md#options
 [caching]: ../advanced/caching.md

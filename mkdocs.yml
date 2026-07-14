@@ -98,10 +98,10 @@ plugins:
           # 2022-01-14: Reorganize guides and tutorials.
           "guides/advanced/autocomplete.md": "guides/basics/parameters/autocomplete.md"
           "guides/advanced/dynamic-sync-tables.md": "guides/blocks/sync-tables/dynamic.md"
-          "guides/advanced/cli.md": "guides/development/cli.md"
-          "guides/advanced/libraries.md": "guides/development/libraries.md"
-          "guides/advanced/testing.md": "guides/development/testing.md"
-          "guides/troubleshooting.md": "guides/development/troubleshooting.md"
+          "guides/advanced/cli.md": "development/cli.md"
+          "guides/advanced/libraries.md": "development/libraries.md"
+          "guides/advanced/testing.md": "development/testing.md"
+          "guides/troubleshooting.md": "development/troubleshooting.md"
           "get-started/cli.md": "tutorials/get-started/cli.md"
           "get-started/web.md": "tutorials/get-started/web.md"
 
@@ -355,6 +355,14 @@ plugins:
 
           # 2026-06-01: Delete the Gitpod tutorial.
           "tutorials/get-started/gitpod.md": "tutorials/get-started/cli.md"
+
+          # 2026-07-14: Move development pages to a top-level Development section.
+          "guides/development/cli.md": "development/cli.md"
+          "guides/development/libraries.md": "development/libraries.md"
+          "guides/development/pack-maker-tools.md": "development/pack-maker-tools.md"
+          "guides/development/testing.md": "development/testing.md"
+          "guides/development/troubleshooting.md": "development/troubleshooting.md"
+          "guides/development/versions.md": "development/versions.md"
 
     # Generate an RSS feed for the blog.
     # See: https://guts.github.io/mkdocs-rss-plugin/

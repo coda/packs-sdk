@@ -360,5 +360,5 @@ Like with the Authorization Code flow, a variety of other advanced options are a
 [oauth_pkce]: https://www.oauth.com/oauth2-servers/pkce/
 [oauth_dcr]: https://datatracker.ietf.org/doc/html/rfc7591
 [mcp_servers]: ../../../agents/features/mcp.md
-[cli]: ../../development/cli.md
+[cli]: ../../../development/cli.md
 [two_way_sync]: ../../blocks/sync-tables/two-way.md
