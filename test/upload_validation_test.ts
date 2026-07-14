@@ -4989,6 +4989,30 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('OAuth2, requiresEndpointUrl rejects protocol-relative URLs', async () => {
+      // A protocol-relative URL like "//evil.com/authUrl" starts with "/" but resolves to a
+      // different host than the connection endpoint, so it must not be treated as relative.
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: '//evil.com/authUrl',
+          tokenUrl: '//evil.com/tokenUrl',
+          requiresEndpointUrl: true,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'authorizationUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.authorizationUrl',
+        },
+        {
+          message: 'tokenUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+    });
+
     it('OAuth2, requiresEndpointUrl and endpointKey requires absolute URLs', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {

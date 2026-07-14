@@ -822,24 +822,16 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       // When requiresEndpointUrl is set (and no endpointKey resolves the endpoint), these URLs are expected to be
       // relative and resolved against the user-provided endpoint; otherwise they must be absolute.
       const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
-      const isRelativeUrl = (url: string) => url.startsWith('/');
-      const validateUrlIsRelativeOrAbsolute = (fieldName: string, url: string) => {
-        if ((expectsRelativeUrl && !isRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
-          const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
-          context.addIssue({
-            code: 'custom',
-            path: [fieldName],
-            message: `${fieldName} must be ${expectedType} URL when \
-${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
-          });
-        }
-      };
-
       if (authorizationUrl) {
-        validateUrlIsRelativeOrAbsolute('authorizationUrl', authorizationUrl);
+        validateUrlIsRelativeOrAbsolute(
+          'authorizationUrl',
+          authorizationUrl,
+          {requiresEndpointUrl, endpointKey},
+          context,
+        );
       }
       if (tokenUrl) {
-        validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl);
+        validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl, {requiresEndpointUrl, endpointKey}, context);
       }
       // Unlike authorizationUrl/tokenUrl, an absolute resource is always allowed. A relative resource is only
       // permitted when there is a user-provided endpoint to resolve it against (i.e. expectsRelativeUrl).
@@ -3445,4 +3437,26 @@ function validateUrlParsesIfAbsolute(url: string) {
     return true;
   }
   return Boolean(parseDomainName(url));
+}
+
+/**
+ * Validates a field that must be relative exactly when `requiresEndpointUrl` is set (and no
+ * `endpointKey` resolves an endpoint instead) — shared by fields evaluated during the auth flow.
+ */
+function validateUrlIsRelativeOrAbsolute(
+  fieldName: string,
+  url: string,
+  {requiresEndpointUrl, endpointKey}: {requiresEndpointUrl?: boolean; endpointKey?: string},
+  context: z.RefinementCtx,
+) {
+  const expectsRelativeUrl = Boolean(requiresEndpointUrl && !endpointKey);
+  if ((expectsRelativeUrl && !isRootRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
+    const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+    context.addIssue({
+      code: 'custom',
+      path: [fieldName],
+      message: `${fieldName} must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
+    });
+  }
 }
