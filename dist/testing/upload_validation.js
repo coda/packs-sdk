@@ -635,23 +635,11 @@ function buildMetadataSchema({ sdkVersion }) {
             // When requiresEndpointUrl is set (and no endpointKey resolves the endpoint), these URLs are expected to be
             // relative and resolved against the user-provided endpoint; otherwise they must be absolute.
             const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
-            const isRelativeUrl = (url) => url.startsWith('/');
-            const validateUrlIsRelativeOrAbsolute = (fieldName, url) => {
-                if ((expectsRelativeUrl && !isRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
-                    const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
-                    context.addIssue({
-                        code: 'custom',
-                        path: [fieldName],
-                        message: `${fieldName} must be ${expectedType} URL when \
-${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
-                    });
-                }
-            };
             if (authorizationUrl) {
-                validateUrlIsRelativeOrAbsolute('authorizationUrl', authorizationUrl);
+                validateUrlIsRelativeOrAbsolute('authorizationUrl', authorizationUrl, { requiresEndpointUrl, endpointKey }, context);
             }
             if (tokenUrl) {
-                validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl);
+                validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl, { requiresEndpointUrl, endpointKey }, context);
             }
             // Unlike authorizationUrl/tokenUrl, an absolute resource is always allowed. A relative resource is only
             // permitted when there is a user-provided endpoint to resolve it against (i.e. expectsRelativeUrl).
@@ -2412,18 +2400,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
     })
         .superRefine((untypedData, context) => {
-        var _a;
+        var _a, _b;
         const data = untypedData;
         if (!((_a = data.mcpServers) === null || _a === void 0 ? void 0 : _a.length)) {
             return;
         }
         // endpointUrl may be an absolute https URL or a root-relative path. A relative path is only
-        // valid when the authentication collects a per-account endpoint to resolve it against
-        // (requiresEndpointUrl is set); without one there is nothing to resolve against. Absolute
-        // HTTPS URLs are always allowed.
-        const auth = data.defaultAuthentication;
+        // valid when the connection has a per-account endpoint to resolve it against; without one
+        // there is nothing to resolve against. Absolute HTTPS URLs are always allowed.
+        //
+        // A connection gets an endpoint either from `requiresEndpointUrl` (the user enters it) or from
+        // `endpointKey` (extracted from the OAuth token response and saved on the account). Unlike
+        // authorizationUrl/tokenUrl — which run during auth, before any endpointKey value exists — an
+        // MCP request happens at runtime when the endpoint is already resolved, so either source works.
+        // Packs that use system authentication instead of a per-user default authentication resolve
+        // their connection endpoint from `systemConnectionAuthentication` instead.
+        const auth = (_b = data.defaultAuthentication) !== null && _b !== void 0 ? _b : data.systemConnectionAuthentication;
         const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
-        const canResolveRelativeUrl = Boolean(requiresEndpointUrl);
+        const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
+        const canResolveRelativeUrl = Boolean(requiresEndpointUrl || endpointKey);
         data.mcpServers.forEach((server, i) => {
             if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
                 return;
@@ -2441,7 +2436,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: 'custom',
                     path: [`mcpServers[${i}].endpointUrl`],
-                    message: "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication sets requiresEndpointUrl.",
+                    message: "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl or endpointKey).",
                 });
             }
         });
@@ -2775,4 +2770,20 @@ function validateUrlParsesIfAbsolute(url) {
         return true;
     }
     return Boolean(parseDomainName(url));
+}
+/**
+ * Validates a field that must be relative exactly when `requiresEndpointUrl` is set (and no
+ * `endpointKey` resolves an endpoint instead) — shared by fields evaluated during the auth flow.
+ */
+function validateUrlIsRelativeOrAbsolute(fieldName, url, { requiresEndpointUrl, endpointKey }, context) {
+    const expectsRelativeUrl = Boolean(requiresEndpointUrl && !endpointKey);
+    if ((expectsRelativeUrl && !isRootRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
+        const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+        context.addIssue({
+            code: 'custom',
+            path: [fieldName],
+            message: `${fieldName} must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
+        });
+    }
 }
