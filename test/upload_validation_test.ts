@@ -6506,7 +6506,7 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
-    it('fails when MCP server endpointUrl is relative but auth lacks requiresEndpointUrl', async () => {
+    it('fails when MCP server endpointUrl is relative but auth provides no connection endpoint', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {type: AuthenticationType.None},
         mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
@@ -6516,9 +6516,42 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'mcpServers[0].endpointUrl',
           message:
-            "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication sets requiresEndpointUrl.",
+            "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl or endpointKey).",
         },
       ]);
+    });
+
+    it('passes when MCP server endpointUrl is relative and auth resolves its endpoint via endpointKey', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          // endpointKey extracts the endpoint from the token response, so the connection has one at
+          // runtime even without requiresEndpointUrl — a relative MCP endpointUrl can resolve against it.
+          authorizationUrl: 'https://example.com/authorize',
+          tokenUrl: 'https://example.com/token',
+          endpointKey: 'instance_url',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      await validateJson(metadata);
+    });
+
+    it('passes when MCP server endpointUrl is relative and systemConnectionAuthentication sets requiresEndpointUrl', async () => {
+      // Packs that use system authentication instead of a per-user default authentication resolve
+      // their connection endpoint from systemConnectionAuthentication instead of defaultAuthentication.
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: undefined,
+        systemConnectionAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'example.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      await validateJson(metadata);
     });
 
     it('passes when MCP server endpointUrl is absolute even though auth sets requiresEndpointUrl', async () => {

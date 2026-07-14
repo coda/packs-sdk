@@ -3014,12 +3014,19 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         return;
       }
       // endpointUrl may be an absolute https URL or a root-relative path. A relative path is only
-      // valid when the authentication collects a per-account endpoint to resolve it against
-      // (requiresEndpointUrl is set); without one there is nothing to resolve against. Absolute
-      // HTTPS URLs are always allowed.
-      const auth = data.defaultAuthentication;
+      // valid when the connection has a per-account endpoint to resolve it against; without one
+      // there is nothing to resolve against. Absolute HTTPS URLs are always allowed.
+      //
+      // A connection gets an endpoint either from `requiresEndpointUrl` (the user enters it) or from
+      // `endpointKey` (extracted from the OAuth token response and saved on the account). Unlike
+      // authorizationUrl/tokenUrl — which run during auth, before any endpointKey value exists — an
+      // MCP request happens at runtime when the endpoint is already resolved, so either source works.
+      // Packs that use system authentication instead of a per-user default authentication resolve
+      // their connection endpoint from `systemConnectionAuthentication` instead.
+      const auth = data.defaultAuthentication ?? data.systemConnectionAuthentication;
       const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
-      const canResolveRelativeUrl = Boolean(requiresEndpointUrl);
+      const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
+      const canResolveRelativeUrl = Boolean(requiresEndpointUrl || endpointKey);
       data.mcpServers.forEach((server, i) => {
         if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
           return;
@@ -3038,7 +3045,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             code: 'custom',
             path: [`mcpServers[${i}].endpointUrl`],
             message:
-              "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication sets requiresEndpointUrl.",
+              "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl or endpointKey).",
           });
         }
       });
