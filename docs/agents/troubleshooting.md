@@ -61,5 +61,5 @@ This is a generic error message that is shown when something unexpected goes wro
 This error is shown when the page open in your browser is too large to send to the agent. You can work around it by removing the page context, selecting a subset of the text, or switching to a smaller page.
 
 [developing]: ./development.md
-[pmt]: ../guides/development/pack-maker-tools.md#logs
+[pmt]: ../development/pack-maker-tools.md#logs
 [indexing]: ./indexing/index.md

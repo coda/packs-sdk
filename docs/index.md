@@ -116,7 +116,7 @@ Makers have been busy building Packs of all types, and many have published their
 
 [overview]: guides/overview.md
 [get_started]: tutorials/get-started/web.md
-[cli]: guides/development/cli.md
+[cli]: development/cli.md
 [samples]: samples/index.md
 [changelog]: reference/changes.md
 [community]: https://connect.superhuman.com/c/developers-central/making-packs/15

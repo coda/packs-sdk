@@ -130,5 +130,5 @@ A few additional options are available under the three dots menu at the top of t
 
 
 [troubleshooting_logging]: troubleshooting.md#logging
-[fetcher_headers]: ../basics/fetcher.md#headers
+[fetcher_headers]: ../guides/basics/fetcher.md#headers
 [account_settings]: https://docs.superhuman.com/account

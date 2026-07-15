@@ -356,8 +356,8 @@ The next time you run `packs upload` your Pack will be updated to use the local 
 
 
 [libraries]: libraries.md
-[quickstart_cli]: ../../tutorials/get-started/cli.md
-[sync_tables]: ../blocks/sync-tables/index.md
+[quickstart_cli]: ../tutorials/get-started/cli.md
+[sync_tables]: ../guides/blocks/sync-tables/index.md
 [integration]: testing.md#integration
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [testing]: testing.md#local
