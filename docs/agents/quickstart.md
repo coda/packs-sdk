@@ -151,7 +151,7 @@ Follow the steps below to install your agent in Superhuman Go.
 
     Open any website ([textarea.org](https://textarea.org) is great for testing agents).
 
-    Slide your mouse to the right of the page, and click the Superhuman Go icon :superhuman-go: that slides out.
+    Slide your mouse to the right of the page, and click the Superhuman Go icon :superhuman-go-standalone: that slides out.
 
     </div>
     <div markdown>
