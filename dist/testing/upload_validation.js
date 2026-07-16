@@ -1822,6 +1822,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         // config in a later refinement.
         endpointUrl: z
             .string()
+            .min(1, 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").')
             .refine(validateUrlParsesIfAbsolute, 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").'),
         name: z
             .string()
@@ -2405,21 +2406,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (!((_a = data.mcpServers) === null || _a === void 0 ? void 0 : _a.length)) {
             return;
         }
-        // endpointUrl may be an absolute https URL or a root-relative path. A relative path is only
-        // valid when the connection has a per-account endpoint to resolve it against; without one
-        // there is nothing to resolve against. Absolute HTTPS URLs are always allowed.
-        //
-        // A connection gets an endpoint either from `requiresEndpointUrl` (the user enters it) or from
-        // `endpointKey` (extracted from the OAuth token response and saved on the account). Unlike
-        // authorizationUrl/tokenUrl — which run during auth, before any endpointKey value exists — an
-        // MCP request happens at runtime when the endpoint is already resolved, so either source works.
-        // Packs that use system authentication instead of a per-user default authentication resolve
-        // their connection endpoint from `systemConnectionAuthentication` instead.
-        const auth = (_b = data.defaultAuthentication) !== null && _b !== void 0 ? _b : data.systemConnectionAuthentication;
+        // A relative endpointUrl resolves against the connection's endpoint, so it's only valid when
+        // one exists — from requiresEndpointUrl, endpointKey, or a SetEndpoint postSetup step.
+        // Absolute HTTPS URLs are always allowed. System auth takes precedence over a per-user
+        // default auth at runtime (resolveMcpConnectionWithSystemFallback), so check it first here too.
+        const auth = (_b = data.systemConnectionAuthentication) !== null && _b !== void 0 ? _b : data.defaultAuthentication;
         const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
         const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
-        const canResolveRelativeUrl = Boolean(requiresEndpointUrl || endpointKey);
+        const postSetup = auth && 'postSetup' in auth ? auth.postSetup : undefined;
+        const hasSetEndpointStep = postSetup === null || postSetup === void 0 ? void 0 : postSetup.some(step => step.type === types_6.PostSetupType.SetEndpoint);
+        const canResolveRelativeUrl = Boolean(requiresEndpointUrl || endpointKey || hasSetEndpointStep);
         data.mcpServers.forEach((server, i) => {
+            // Empty string is rejected by the field-level schema; nothing more to check here.
             if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
                 return;
             }
@@ -2436,7 +2434,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: 'custom',
                     path: [`mcpServers[${i}].endpointUrl`],
-                    message: "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl or endpointKey).",
+                    message: "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl, endpointKey, or a SetEndpoint postSetup step).",
                 });
             }
         });
