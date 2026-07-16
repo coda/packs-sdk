@@ -309,6 +309,7 @@ export type {RewriteScreenAnnotation} from './types';
 export type {MCPTool} from './types';
 export type {ContactResolutionTool} from './types';
 export type {CodaDocsAndTablesTool} from './types';
+export type {MailAndCalendarTool} from './types';
 export type {WebSearchTool} from './types';
 export type {MCPServer} from './types';
 export type {PartialSkillDef} from './types';
