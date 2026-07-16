@@ -225,6 +225,35 @@ npx packs execute path/to/pack.ts Auth:postSetup:setEndpoint:<stepName>
 ```
 
 
+## Debugging locally
+
+When you run your Pack locally with `packs execute`, any output from `console.log()` and the other [supported logging methods][logging] is printed to the terminal.
+
+
+### HTTP request logs
+
+To see the raw HTTP requests and responses your Pack makes, use Node's built-in HTTP debug logs by setting the `NODE_DEBUG=http` environment variable. You can do this for a single execution by adding it before the command:
+
+```sh
+NODE_DEBUG=http npx packs execute pack.ts Hello "World"
+```
+
+
+### Using a debugger
+
+You can connect a JavaScript debugger to your Pack code, which lets you set breakpoints, examine variables, and step through your code line by line. It requires a bit more setup than logging values but is much more flexible.
+
+By default the `packs execute` command runs your Pack code in a limited JavaScript VM that emulates the Packs runtime. This VM lacks debugging capability, so you must run your Pack with the `--vm=false` flag to execute it in Node.js directly.
+
+For example, to use the debugger in the VS Code IDE follow these steps:
+
+1.  Add a `debugger;` statement to your code where you want to add a breakpoint. Setting a breakpoint in the IDE itself (the red dot in the gutter to the left of the line) works in some environments, but has known issues in others.
+1.  Open a **JavaScript Debug Terminal** (run **Debug: Create JavaScript Debug Terminal** from the command palette).
+1.  Run the `npx packs execute` command passing in the flag `--vm=false`. For example:
+
+    ```npx packs execute --vm=false pack.ts Hello "Eric"```
+
+
 ## Authentication {: #authentication}
 
 The SDK will help you set up authentication in your development environment so that you can execute Pack formulas with authentication applied to them. This allows you to run your code end-to-end including making fetcher requests to external APIs.
@@ -356,6 +385,7 @@ The next time you run `packs upload` your Pack will be updated to use the local 
 
 
 [libraries]: libraries.md
+[logging]: logging.md
 [quickstart_cli]: ../tutorials/get-started/cli.md
 [sync_tables]: ../guides/blocks/sync-tables/index.md
 [integration]: testing.md#integration

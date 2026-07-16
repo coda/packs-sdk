@@ -45,7 +45,7 @@ The data in your sync tables won't be available to the agent unless you index th
 1. Have at least one free-text column (description, notes, body, etc.)
 2. Have a link column
 
-See the [Indexing guide][indexing] for more information on adding indexing features to your sync table, and the [Developing & testing guide][developing] for testing.
+See the [Indexing guide][indexing] for more information on adding indexing features to your sync table, and the [Testing and monitoring][indexing_monitoring] section to verify it worked.
 
 
 ### Add chat skills where appropriate
@@ -193,7 +193,7 @@ Currently, some Pack features don't work in agents.
 
 
 [indexing]: ./indexing/index.md
-[developing]: ./development.md
+[indexing_monitoring]: ./indexing/index.md#testing-and-monitoring
 [default_chat_skill]: ./features/skills.md#default-chat-skill
 [skills]: ./features/skills.md
 [screen_tools]: ./features/tools.md#screen-annotation-tools

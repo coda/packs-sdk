@@ -454,7 +454,7 @@ If the server takes too long to respond to your fetch request it will timeout. T
 
 Many APIs have internal rate limits, and when you exceed those they will return a 429 "Too Many Requests" response. The fetcher will intercept these responses and automatically retry the request for you. The fetcher will wait a few seconds before retrying, or if a `Retry-After` header is returned in the 429 response its value will be used.
 
-If there isn't enough time left for a retry (it would exceed the 1 minute execution time limit) then the request will fail with a `StatusCodeError` as described in the [Errors section](#errors) above. You can catch this error and throw a user-friendly error message if desired. The logs from all retries will be shows in the [Pack maker tools][pmt_http].
+If there isn't enough time left for a retry (it would exceed the 1 minute execution time limit) then the request will fail with a `StatusCodeError` as described in the [Errors section](#errors) above. You can catch this error and throw a user-friendly error message if desired. The logs from all retries will be shown in the [connector logs][pmt_http].
 
 ### From your Pack
 
@@ -467,7 +467,7 @@ You can set a total rate limit across all users of your Pack, or if your Pack us
 
 ## Request logs {: #logs}
 
-The full request and response of each request is stored in the logs, and accessible via the Pack maker tools. Read the [Pack maker tools guide][pmt_http] for more information.
+The full request and response of each request is stored in the logs, and accessible via the connector logs. Read the [Logging guide][pmt_http] for more information.
 
 
 ## Identifying requests
@@ -514,4 +514,4 @@ You can also identify HTTP requests originating from Packs by the `User-Agent` h
 [example_box]: https://github.com/coda/packs-examples/tree/main/examples/box
 [graphql]: https://graphql.org/
 [forceCache]: ../advanced/caching.md#forcecache
-[pmt_http]: ../../development/pack-maker-tools.md#http
+[pmt_http]: ../../development/logging.md#http

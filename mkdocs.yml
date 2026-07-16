@@ -101,7 +101,7 @@ plugins:
           "guides/advanced/cli.md": "development/cli.md"
           "guides/advanced/libraries.md": "development/libraries.md"
           "guides/advanced/testing.md": "development/testing.md"
-          "guides/troubleshooting.md": "development/troubleshooting.md"
+          "guides/troubleshooting.md": "development/logging.md"
           "get-started/cli.md": "tutorials/get-started/cli.md"
           "get-started/web.md": "tutorials/get-started/web.md"
 
@@ -359,10 +359,16 @@ plugins:
           # 2026-07-14: Move development pages to a top-level Development section.
           "guides/development/cli.md": "development/cli.md"
           "guides/development/libraries.md": "development/libraries.md"
-          "guides/development/pack-maker-tools.md": "development/pack-maker-tools.md"
+          "guides/development/pack-maker-tools.md": "development/logging.md"
+          "development/pack-maker-tools.md": "development/logging.md"
           "guides/development/testing.md": "development/testing.md"
-          "guides/development/troubleshooting.md": "development/troubleshooting.md"
+          "guides/development/troubleshooting.md": "development/logging.md"
+          "development/troubleshooting.md": "development/logging.md"
           "guides/development/versions.md": "development/versions.md"
+
+          # 2026-07-16: Remove the agent developing & troubleshooting guides.
+          "agents/development.md": "agents/index.md"
+          "agents/troubleshooting.md": "development/logging.md"
 
     # Generate an RSS feed for the blog.
     # See: https://guts.github.io/mkdocs-rss-plugin/
