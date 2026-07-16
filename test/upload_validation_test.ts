@@ -5188,7 +5188,10 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
-    it('OAuth2ClientCredentials, requiresEndpointUrl requires relative tokenUrl', async () => {
+    it('OAuth2ClientCredentials, requiresEndpointUrl allows either a relative or absolute tokenUrl', async () => {
+      // Packs already support a manually-entered endpoint alongside a fixed absolute tokenUrl (auth
+      // at one endpoint, requests to a customer-specific one), so a relative tokenUrl is an
+      // additional option here, not a requirement — enforcing relative-only would break those packs.
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2ClientCredentials,
@@ -5196,13 +5199,7 @@ describe('Pack metadata Validation', async () => {
           requiresEndpointUrl: true,
         },
       });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'tokenUrl must be a relative URL when requiresEndpointUrl is true',
-          path: 'defaultAuthentication.tokenUrl',
-        },
-      ]);
+      await validateJson(metadata);
 
       assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2ClientCredentials);
       metadata.defaultAuthentication.tokenUrl = '/tokenUrl';
@@ -5231,7 +5228,8 @@ describe('Pack metadata Validation', async () => {
 
     it('OAuth2ClientCredentials, requiresEndpointUrl rejects protocol-relative tokenUrl', async () => {
       // A protocol-relative URL like "//evil.com/tokenUrl" starts with "/" but resolves to a
-      // different host than the connection endpoint, so it must not be treated as relative.
+      // different host than the connection endpoint, so it must not be treated as relative — and
+      // it isn't a valid absolute URL either, so it's rejected even though both shapes are allowed.
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2ClientCredentials,
@@ -5242,7 +5240,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'tokenUrl must be a relative URL when requiresEndpointUrl is true',
+          message: 'tokenUrl must be a relative or absolute URL when requiresEndpointUrl is true',
           path: 'defaultAuthentication.tokenUrl',
         },
       ]);
