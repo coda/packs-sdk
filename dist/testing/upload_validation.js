@@ -2417,7 +2417,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const hasSetEndpointStep = postSetup === null || postSetup === void 0 ? void 0 : postSetup.some(step => step.type === types_6.PostSetupType.SetEndpoint);
         const canResolveRelativeUrl = Boolean(requiresEndpointUrl || endpointKey || hasSetEndpointStep);
         data.mcpServers.forEach((server, i) => {
-            // Empty string is rejected by the field-level schema; nothing more to check here.
             if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
                 return;
             }
