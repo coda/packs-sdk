@@ -1769,6 +1769,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const codaDocsToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.CodaDocsAndTables),
     });
+    const mailAndCalendarToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_11.ToolType.MailAndCalendar),
+    });
     const webSearchToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.WebSearch),
         allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
@@ -1784,6 +1787,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         mcpToolSchema,
         contactResolutionToolSchema,
         codaDocsToolSchema,
+        mailAndCalendarToolSchema,
         embeddedContentToolSchema,
         webSearchToolSchema,
     ]);

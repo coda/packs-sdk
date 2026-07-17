@@ -259,6 +259,11 @@ var ToolType;
      * @internal
      */
     ToolType["EmbeddedContent"] = "EmbeddedContent";
+    /**
+     * Tool that provides access to Superhuman Mail email and calendar capabilities.
+     * @internal
+     */
+    ToolType["MailAndCalendar"] = "MailAndCalendar";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.

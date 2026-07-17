@@ -6300,6 +6300,9 @@ describe('Pack metadata Validation', async () => {
                 type: ToolType.CodaDocsAndTables,
               },
               {
+                type: ToolType.MailAndCalendar,
+              },
+              {
                 type: ToolType.EmbeddedContent,
                 embeddedContent: {
                   type: EmbeddedContentType.CopyableBlock,
@@ -6379,6 +6382,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.ContactResolution:
           break;
         case ToolType.CodaDocsAndTables:
+          break;
+        case ToolType.MailAndCalendar:
           break;
         case ToolType.EmbeddedContent:
           break;

@@ -56,6 +56,7 @@ import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MCPServer} from '../types';
 import type {MCPTool} from '../types';
+import type {MailAndCalendarTool} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -2308,6 +2309,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.CodaDocsAndTables),
   });
 
+  const mailAndCalendarToolSchema = zodCompleteStrictObject<MailAndCalendarTool>({
+    type: z.literal(ToolType.MailAndCalendar),
+  });
+
   const webSearchToolSchema = zodCompleteStrictObject<WebSearchTool>({
     type: z.literal(ToolType.WebSearch),
     allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
@@ -2325,6 +2330,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     mcpToolSchema,
     contactResolutionToolSchema,
     codaDocsToolSchema,
+    mailAndCalendarToolSchema,
     embeddedContentToolSchema,
     webSearchToolSchema,
   ]);

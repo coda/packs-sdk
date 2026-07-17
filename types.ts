@@ -1268,6 +1268,12 @@ export enum ToolType {
    * @internal
    */
   EmbeddedContent = 'EmbeddedContent',
+
+  /**
+   * Tool that provides access to Superhuman Mail email and calendar capabilities.
+   * @internal
+   */
+  MailAndCalendar = 'MailAndCalendar',
 }
 
 /**
@@ -1441,6 +1447,12 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {}
 
 /**
+ * Tool that provides access to Superhuman Mail email and calendar capabilities.
+ * @internal
+ */
+export interface MailAndCalendarTool extends BaseTool<ToolType.MailAndCalendar> {}
+
+/**
  * Tool that enables searching the public internet for up-to-date information.
  * When enabled, the agent can search the web to retrieve current information
  * about a topic or from a URL.
@@ -1558,6 +1570,7 @@ export interface ToolMap {
   [ToolType.MCP]: MCPTool;
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
+  [ToolType.MailAndCalendar]: MailAndCalendarTool;
   [ToolType.WebSearch]: WebSearchTool;
   [ToolType.EmbeddedContent]: EmbeddedContentTool;
 }
