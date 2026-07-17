@@ -4989,6 +4989,30 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('OAuth2, requiresEndpointUrl rejects protocol-relative URLs', async () => {
+      // A protocol-relative URL like "//evil.com/authUrl" starts with "/" but resolves to a
+      // different host than the connection endpoint, so it must not be treated as relative.
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: '//evil.com/authUrl',
+          tokenUrl: '//evil.com/tokenUrl',
+          requiresEndpointUrl: true,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'authorizationUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.authorizationUrl',
+        },
+        {
+          message: 'tokenUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+    });
+
     it('OAuth2, requiresEndpointUrl and endpointKey requires absolute URLs', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
@@ -6405,11 +6429,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'mcpServers[0].endpointUrl',
-          message: 'MCP server endpointUrl must be a valid URL.',
-        },
-        {
-          path: 'mcpServers.mcpServers',
-          message: 'MCP server endpointUrl must be HTTPS URLs only.',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
     });
@@ -6426,10 +6446,212 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'mcpServers.mcpServers',
-          message: 'MCP server endpointUrl must be HTTPS URLs only.',
+          path: 'mcpServers[0].endpointUrl',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
         },
       ]);
+    });
+
+    it('fails when MCP server endpointUrl is http even though auth sets requiresEndpointUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['attacker.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'attacker.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: 'http://attacker.com/mcp'}],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
+        },
+      ]);
+    });
+
+    it('fails when MCP server endpointUrl is protocol-relative even though auth sets requiresEndpointUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['attacker.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'attacker.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '//attacker.com/mcp'}],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
+        },
+      ]);
+    });
+
+    it('passes when MCP server endpointUrl is relative and auth sets requiresEndpointUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'example.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails when MCP server endpointUrl is relative but auth provides no connection endpoint', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message:
+            "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl, endpointKey, or a SetEndpoint postSetup step).",
+        },
+      ]);
+    });
+
+    it('passes when MCP server endpointUrl is relative and auth resolves its endpoint via endpointKey', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          // endpointKey extracts the endpoint from the token response, so the connection has one at
+          // runtime even without requiresEndpointUrl — a relative MCP endpointUrl can resolve against it.
+          authorizationUrl: 'https://example.com/authorize',
+          tokenUrl: 'https://example.com/token',
+          endpointKey: 'instance_url',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      await validateJson(metadata);
+    });
+
+    it('passes when MCP server endpointUrl is relative and systemConnectionAuthentication sets requiresEndpointUrl', async () => {
+      // Packs that use system authentication instead of a per-user default authentication resolve
+      // their connection endpoint from systemConnectionAuthentication instead of defaultAuthentication.
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: undefined,
+        systemConnectionAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'example.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      await validateJson(metadata);
+    });
+
+    it('prefers systemConnectionAuthentication over defaultAuthentication when both are declared, matching runtime precedence', async () => {
+      // resolveMcpConnectionWithSystemFallback prefers a pack's system connection over any per-user
+      // connection, so this validator must check systemConnectionAuthentication first too — otherwise
+      // it could accept (or reject) a pack based on the auth that never actually applies at runtime.
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: false,
+        },
+        systemConnectionAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'example.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      // Would fail if defaultAuthentication (requiresEndpointUrl: false) were checked first.
+      await validateJson(metadata);
+    });
+
+    it('fails when defaultAuthentication would allow a relative endpointUrl but systemConnectionAuthentication (which wins at runtime) does not', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'example.com',
+        },
+        systemConnectionAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: false,
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message:
+            "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl, endpointKey, or a SetEndpoint postSetup step).",
+        },
+      ]);
+    });
+
+    it('passes when MCP server endpointUrl is relative and auth resolves its endpoint via a SetEndpoint postSetup step', async () => {
+      // A SetEndpoint postSetup step lets the user pick a per-account endpoint after auth completes,
+      // without requiresEndpointUrl or endpointKey — the connection still ends up with an endpoint to
+      // resolve a relative MCP endpointUrl against.
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          postSetup: [
+            {
+              type: PostSetupType.SetEndpoint,
+              name: 'setEndpoint',
+              description: 'some description',
+              getOptions: {} as any,
+            },
+          ],
+        },
+        mcpServers: [{name: 'Example', endpointUrl: '/api/2.0/mcp/genie'}],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails when MCP server endpointUrl is an empty string', async () => {
+      const metadata = createFakePackVersionMetadata({
+        mcpServers: [{name: 'Example', endpointUrl: ''}],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
+        },
+      ]);
+    });
+
+    it('passes when MCP server endpointUrl is absolute even though auth sets requiresEndpointUrl', async () => {
+      // A pack may collect a per-account endpoint for some calls while still pointing an MCP server
+      // at a fixed/global absolute host — same as fetcher requests. Absolute URLs are always allowed.
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          instructionsUrl: 'some-url',
+          requiresEndpointUrl: true,
+          endpointDomain: 'example.com',
+        },
+        mcpServers: [{name: 'Example', endpointUrl: 'https://mcp.example.com/mcp'}],
+      });
+      await validateJson(metadata);
     });
 
     // skipped because currently we do not allow more than one MCP server per pack

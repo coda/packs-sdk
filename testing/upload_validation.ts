@@ -822,24 +822,16 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       // When requiresEndpointUrl is set (and no endpointKey resolves the endpoint), these URLs are expected to be
       // relative and resolved against the user-provided endpoint; otherwise they must be absolute.
       const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
-      const isRelativeUrl = (url: string) => url.startsWith('/');
-      const validateUrlIsRelativeOrAbsolute = (fieldName: string, url: string) => {
-        if ((expectsRelativeUrl && !isRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
-          const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
-          context.addIssue({
-            code: 'custom',
-            path: [fieldName],
-            message: `${fieldName} must be ${expectedType} URL when \
-${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
-          });
-        }
-      };
-
       if (authorizationUrl) {
-        validateUrlIsRelativeOrAbsolute('authorizationUrl', authorizationUrl);
+        validateUrlIsRelativeOrAbsolute(
+          'authorizationUrl',
+          authorizationUrl,
+          {requiresEndpointUrl, endpointKey},
+          context,
+        );
       }
       if (tokenUrl) {
-        validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl);
+        validateUrlIsRelativeOrAbsolute('tokenUrl', tokenUrl, {requiresEndpointUrl, endpointKey}, context);
       }
       // Unlike authorizationUrl/tokenUrl, an absolute resource is always allowed. A relative resource is only
       // permitted when there is a user-provided endpoint to resolve it against (i.e. expectsRelativeUrl).
@@ -2370,7 +2362,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   });
 
   const mcpServerSchema = zodCompleteStrictObject<MCPServer>({
-    endpointUrl: z.string().url('MCP server endpointUrl must be a valid URL.'),
+    // Ensures an absolute URL parses; relative paths pass here and are checked against the auth
+    // config in a later refinement.
+    endpointUrl: z
+      .string()
+      .min(1, 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").')
+      .refine(
+        validateUrlParsesIfAbsolute,
+        'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
+      ),
     name: z
       .string()
       .min(1)
@@ -2519,27 +2519,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
           });
         }
-      })
-      .superRefine((data, context) => {
-        if (
-          (data || [])
-            .map(server => server.endpointUrl)
-            .every(url => {
-              try {
-                const protocol = new URL(url).protocol;
-                return protocol === 'https:';
-              } catch (error) {
-                return false;
-              }
-            })
-        ) {
-          return;
-        }
-        context.addIssue({
-          code: 'custom',
-          path: ['mcpServers'],
-          message: 'MCP server endpointUrl must be HTTPS URLs only.',
-        });
       }),
 
     skillEntrypoints: skillEntrypointsSchema.optional(),
@@ -3012,6 +2991,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }
 
       for (const [i, server] of data.mcpServers.entries()) {
+        // A relative endpointUrl yields an empty hostname here and is skipped; its host comes from
+        // the user's connection endpoint and is validated against networkDomains at request time.
         const usedNetworkDomain = URLParse(server.endpointUrl).hostname;
         if (!usedNetworkDomain) {
           continue;
@@ -3027,6 +3008,44 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           return;
         }
       }
+    })
+    .superRefine((untypedData, context) => {
+      const data = untypedData as PackVersionMetadata;
+      if (!data.mcpServers?.length) {
+        return;
+      }
+      // A relative endpointUrl resolves against the connection's endpoint, so it's only valid when
+      // one exists — from requiresEndpointUrl, endpointKey, or a SetEndpoint postSetup step.
+      // Absolute HTTPS URLs are always allowed. System auth takes precedence over a per-user
+      // default auth at runtime (resolveMcpConnectionWithSystemFallback), so check it first here too.
+      const auth = data.systemConnectionAuthentication ?? data.defaultAuthentication;
+      const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
+      const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
+      const postSetup = auth && 'postSetup' in auth ? auth.postSetup : undefined;
+      const hasSetEndpointStep = postSetup?.some(step => step.type === PostSetupType.SetEndpoint);
+      const canResolveRelativeUrl = Boolean(requiresEndpointUrl || endpointKey || hasSetEndpointStep);
+      data.mcpServers.forEach((server, i) => {
+        if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
+          return;
+        }
+        if (!isRootRelativeUrl(server.endpointUrl)) {
+          context.addIssue({
+            code: 'custom',
+            path: [`mcpServers[${i}].endpointUrl`],
+            message: 'MCP server endpointUrl must be an HTTPS URL or a root-relative path (e.g. "/mcp").',
+          });
+          return;
+        }
+        // A relative path with no per-account endpoint to resolve against.
+        if (!canResolveRelativeUrl) {
+          context.addIssue({
+            code: 'custom',
+            path: [`mcpServers[${i}].endpointUrl`],
+            message:
+              "MCP server endpointUrl must be an HTTPS URL unless the pack's authentication provides a connection endpoint (requiresEndpointUrl, endpointKey, or a SetEndpoint postSetup step).",
+          });
+        }
+      });
     })
     .superRefine((untypedData, context) => {
       const data = untypedData as PackVersionMetadata;
@@ -3405,6 +3424,10 @@ function isAbsoluteUrl(url: string): boolean {
   return url.startsWith('https://');
 }
 
+function isRootRelativeUrl(url: string): boolean {
+  return url.startsWith('/') && url[1] !== '/' && url[1] !== '\\';
+}
+
 function parseDomainName(url: string): string | undefined {
   if (!isAbsoluteUrl(url)) {
     return;
@@ -3418,4 +3441,26 @@ function validateUrlParsesIfAbsolute(url: string) {
     return true;
   }
   return Boolean(parseDomainName(url));
+}
+
+/**
+ * Validates a field that must be relative exactly when `requiresEndpointUrl` is set (and no
+ * `endpointKey` resolves an endpoint instead) — shared by fields evaluated during the auth flow.
+ */
+function validateUrlIsRelativeOrAbsolute(
+  fieldName: string,
+  url: string,
+  {requiresEndpointUrl, endpointKey}: {requiresEndpointUrl?: boolean; endpointKey?: string},
+  context: z.RefinementCtx,
+) {
+  const expectsRelativeUrl = Boolean(requiresEndpointUrl && !endpointKey);
+  if ((expectsRelativeUrl && !isRootRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
+    const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+    context.addIssue({
+      code: 'custom',
+      path: [fieldName],
+      message: `${fieldName} must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
+    });
+  }
 }
