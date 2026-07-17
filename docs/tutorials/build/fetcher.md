@@ -295,7 +295,7 @@ The platform logs every API request that your Pack makes, and examining those lo
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    In the Pack's side panel click the **View logs** button to bring up the Pack Maker Tools. If you have navigated away from the Pack's panel, click {{ custom.pack_panel_clicks }}.
+    In the Pack's side panel click the **View logs** button to bring up the Pack maker tools. If you have navigated away from the Pack's panel, click {{ custom.pack_panel_clicks }}.
 
     </div>
     <div markdown>
@@ -355,6 +355,6 @@ Now that you have an understanding of how to call an external API, here are some
 [exchangerate_home]: https://www.exchangerate-api.com/
 [fetcher]: ../../guides/basics/fetcher.md
 [samples_fetcher]: ../../samples/topic/fetcher.md
-[pmt]: ../../development/pack-maker-tools.md
+[pmt]: ../../development/logging.md
 [autocomplete]: ../../guides/basics/parameters/autocomplete.md
 [uservisibleerror]: ../../reference/sdk/core/classes/UserVisibleError.md

@@ -1,9 +1,8 @@
 title: Development
 append_unmatched: true
 nav:
-  - pack-maker-tools.md
+  - logging.md
   - testing.md
-  - troubleshooting.md
   - cli.md
   - libraries.md
   - versions.md

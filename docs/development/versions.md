@@ -9,7 +9,7 @@ Building a Pack is often an incremental process, and the platform provides a ver
 
 ## Versions
 
-Versions are like checkpoints for your code, and represent a unique build of your Pack that could be run in a live doc. Versions and version numbers are private to the Pack maker, and not visible to other users that install your Pack. If you are familiar with [Git][git], they are sort of like a Git commit.
+Versions are like checkpoints for your code, and represent a unique build of your Pack that could be run in a doc or chat session. Versions and version numbers are private to the Pack maker, and not visible to other users that install your Pack. If you are familiar with [Git][git], they are sort of like a Git commit.
 
 A new version is created when:
 
@@ -17,7 +17,7 @@ A new version is created when:
 - You run `npx packs upload` using the Packs CLI.
 
 !!! info "Many Pack versions"
-    When working in the Pack Studio web editor the only way to test your code is to build it and try it in a live doc, therefore it's not uncommon to accumulate many Pack versions. While this may feel messy, rest assured it has no impact on how your Pack looks or works.
+    When working in the Pack Studio web editor the only way to test your code is to build it and try it out, therefore it's not uncommon to accumulate many Pack versions. While this may feel messy, rest assured it has no impact on how your Pack looks or works.
 
 
 ### Version numbers
@@ -89,19 +89,51 @@ To your users it will appear as if you've released a new version of your Pack, b
 
 ## Which version is in use
 
-When a user installs your Pack they have only one choice of what version to use: the latest release. The Pack side panel will show them the release number, but not the associated version number.
+There are three different options for determining which version of the Pack to use:
 
-<img src="site:images/versions_installed.png" srcset="site:images/versions_installed_2x.png 2x" class="screenshot" alt="Pack side panel showing release installed">
+- **Latest release** - Use the version associated with the latest release of the Pack
+- **Latest version** - Use the latest version of the Pack, even if it isn't released
+- **Specific version** - Pin to a specific version of the Pack (:superhuman-docs: Docs only)
 
-Pack makers can choose to install a different version however, which is useful when testing out new versions before releasing them. Do this in the [Pack maker tools][pmt_settings] panel. Select **Latest Version** to always use the latest build of your Pack, or a specific version if for example you want to reproduce an issue on an earlier release.
+When someone installs a released Pack, they will default to the **Latest release** option. If the Pack has no releases yet, Pack admins and testers can install and they will default to the **Latest version** option.
 
-!!! info "Default for Pack makers"
-    Before your Pack has any releases, when you install it the doc will be set to use the **Latest Version**. Making your first release won't change any of your existing docs, but when adding your Pack to a new doc you'll default to **Latest Release** just like your users.
+
+### :superhuman-go: Go
+
+To change the version used by Go:
+
+=== "Agent"
+
+    1.  Open the [agent's settings screen][navigation_agent_settings]{ data-preview }.
+    1.  Click the gear icon :octicons-gear-16:.
+    1.  Change the **Pack version** option as desired.
+
+=== "Connector"
+
+    1.  Open the [connector's settings screen][navigation_connector_settings]{ data-preview }.
+    1.  Click the gear icon :octicons-gear-16:.
+    1.  Change the **Pack version** option as desired.
+
+<img src="site:images/agent_version.png" srcset="site:images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the agent.">
+
+
+### :superhuman-docs: Docs
+
+To change the version used in the doc:
+
+1. Open the [Pack maker tools][navigation_connector_maker_tools]{ data-preview } panel.
+1. Click the gear icon on the panel.
+1. Change the **Installed in this doc** setting as desired.
+
+<img src="site:images/pmt_settings.png" srcset="site:images/pmt_settings_2x.png 2x" class="screenshot" alt="Changing the version installed in a doc from the Pack maker tools settings">
+
 
 !!! warning "Don't use latest version for published docs"
-    The **Latest Version** option is useful for developing and testing, but before publishing a doc you should make sure it's set to **Latest Release**. This ensures that you don't break your doc as you make changes to your Pack, and that users get the same behavior when they copy the doc.
+    The **Latest Version** option is useful while developing and testing, but you must switch to **Latest Release** before you can publish a doc or convert it to a template — and once a doc is published or turned into a template you won't be able to change the version at all. Using **Latest Release** also ensures you don't break your doc as you change your Pack, and that users get the same behavior when they copy it.
 
 
 [semver]: https://semver.org/
 [git]: https://git-scm.com/
-[pmt_settings]: pack-maker-tools.md#settings
+[navigation_connector_maker_tools]: ../support/navigation.md#connector-maker-tools
+[navigation_agent_settings]: ../support/navigation.md#agent
+[navigation_connector_settings]: ../support/navigation.md#connector-go

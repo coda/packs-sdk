@@ -103,10 +103,10 @@ Building or releasing a new version of your Pack doesn't automatically cause exi
 
 <img src="site:images/settings_recalc.png" srcset="site:images/settings_recalc_2x.png 2x" class="screenshot" alt="Recalculation settings in the Pack side panel">
 
-Pack makers also have access to additional options in the Pack Maker Tools:
+Pack makers also have access to additional options in the [Pack maker tools][navigation_connector_maker_tools]{ data-preview }:
 
-- In the three dots menu at the top right of the Pack Maker Tools panel, click the option **Refresh Pack formulas and tables**. [Learn more][pmt_options].
-- In the settings of the Pack Maker tools, toggle on the setting **Auto-refresh formulas & tables**. [Learn more][pmt_settings].
+- In the three dots menu at the top right of the Pack maker tools panel, click the option **Refresh Pack formulas and tables**.
+- In the settings of the Pack maker tools, toggle on the setting **Auto-refresh formulas & tables**.
 
 Superhuman Docs has complex logic that determines when formula results need to be recalculated. Formulas will always recalculate when the parameter values change, but it will also happen periodically for other reasons including routine maintenance. In general you shouldn't make any assumptions about how often your formula will be run. If running your formula is expensive in some way (API cost, etc) make sure to use [caching](#caching) and [rate limits][fetcher_rate_limits] to limit the impact of recalculation.
 
@@ -170,6 +170,5 @@ examples: [
 [user_auth]: ../../reference/sdk/core/classes/PackDefinitionBuilder.md#setuserauthentication
 [connectionRequirement]: ../../reference/sdk/core/interfaces/PackFormulaDef.md#connectionrequirement
 [sync_formula]: sync-tables/index.md#formula
-[pmt_settings]: ../../development/pack-maker-tools.md#settings
-[pmt_options]: ../../development/pack-maker-tools.md#options
+[navigation_connector_maker_tools]: ../../support/navigation.md#connector-maker-tools
 [caching]: ../advanced/caching.md

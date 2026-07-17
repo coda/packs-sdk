@@ -13,7 +13,7 @@ For performance reasons the platform uses a variety of caching techniques to sto
 
 ## Formula cache {: #formula}
 
-Before the platform executes your [Pack formula][formulas], it first checks a cache of previous formula results. If a matching entry is found, it is returned instead of re-running your code. When a cached result is returned, the Pack Maker Tools logs entry will end with **returned a prior result from the cache** and the **Cache hit** field will be set to **true**.
+Before the platform executes your [Pack formula][formulas], it first checks a cache of previous formula results. If a matching entry is found, it is returned instead of re-running your code. When a cached result is returned, the logs entry will end with **returned a prior result from the cache** and the **Cache hit** field will be set to **true**.
 
 <img src="site:images/cache_formula_logs.png" srcset="site:images/cache_formula_logs_2x.png 2x" class="screenshot" alt="Cached formula in the logs">
 
@@ -28,7 +28,7 @@ The following types of formulas are never cached:
 
 ## Fetcher cache {: #fetcher}
 
-When making an HTTP request with the [fetcher][fetcher], the Packs runtime first checks a cache of previous responses. If a matching entry is found, it is returned instead of making a request to the server. When a cached response is returned, the Pack Maker Tools logs entry will be labeled with **(Cached)** and the **Cache hit** field will be set to **true**.
+When making an HTTP request with the [fetcher][fetcher], the Packs runtime first checks a cache of previous responses. If a matching entry is found, it is returned instead of making a request to the server. When a cached response is returned, the logs entry will be labeled with **(Cached)** and the **Cache hit** field will be set to **true**.
 
 <img src="site:images/cache_fetcher_logs.png" srcset="site:images/cache_fetcher_logs_2x.png 2x" class="screenshot" alt="Cached fetcher requests in the logs">
 

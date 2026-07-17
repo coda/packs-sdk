@@ -36,9 +36,31 @@ There are also limits as to how much data can be indexed. By default an agent ca
 These defaults are subject to change without warning, and in the future may vary based on the user's plan.
 
 
+## Testing and monitoring
+
+When a connector contains sync tables, the installation screen in :superhuman-go: Go includes additional elements that let the user configure which records to sync. If a table has parameters, you can click its row to set those parameters. Clicking **Done** starts the indexing process, which can take a few minutes to complete depending on the size of the dataset.
+
+To check the status of an indexing job:
+
+1.  Open the [connector's settings screen][navigation_connector_go]{ data-preview }
+1.  Click the **Sync status** tab
+
+This will show whether the sync is complete and how many records were found.
+
+!!! warning "Missing data"
+
+    You may sometimes see the sync status listed as **Synced**, but Go doesn't have access to the data. This can happen for a few reasons:
+
+    - The schema is missing the metadata required for indexing. See the [Schema changes guide][indexing_schemas] for more information on how to add that metadata.
+    - There is a lag between when the sync is complete and when the data becomes available to Go. It can take a few minutes, so wait a bit and refresh the page later.
+
+Making changes to your Pack or connection settings doesn't immediately trigger the indexing process. Instead, we recommend deleting and recreating the connection whenever you want to see the effects of a change.
+
+
 [sync_tables]: ../../guides/blocks/sync-tables/index.md
 [tools_knowledge]: ../features/tools.md#knowledge
 [indexing_schemas]: ./schema.md
 [incremental]: ./incremental.md
 [crawling]: ./crawling.md
 [todoist_agent]: ../examples.md#-todoist
+[navigation_connector_go]: ../../support/navigation.md#connector-go
