@@ -315,8 +315,8 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * });
  * ```
  *
- * @see [Authenticating with other services - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#coda-api-token)
- * @see [Authentication samples - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#coda-api-token)
+ * @see [Authenticating with other services - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/guides/basics/authentication/#superhuman-docs-api-token)
+ * @see [Authentication samples - Superhuman Docs API token](https://docs.superhuman.com/packs/build/latest/samples/topic/authentication/#superhuman-docs-api-token)
  */
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
     /** Identifies this as CodaApiHeaderBearerToken authentication. */

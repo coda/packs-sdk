@@ -551,7 +551,7 @@ There are services however where each account is associated with a distinct doma
 [sample_automatic_endpoint]: ../../../samples/topic/authentication.md#automatic-endpoint
 [sample_selected_endpoint]: ../../../samples/topic/authentication.md#user-selected-endpoint
 [sample_connection_name]: ../../../samples/topic/authentication.md#oauth2
-[sample_coda_api]: ../../../samples/topic/authentication.md#coda-api-token
+[sample_coda_api]: ../../../samples/topic/authentication.md#superhuman-docs-api-token
 [sample_custom]: ../../../samples/topic/authentication.md#custom-tokens
 [sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
 [sample_multiple_headers]: ../../../samples/topic/authentication.md#multiple-headers
