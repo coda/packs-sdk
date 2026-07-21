@@ -921,7 +921,7 @@
       {
         "name": "Token auth",
         "content": "An MCP integration that authenticates using a static token. This sample connects to the Ref.tools MCP server.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\n\nexport const pack = coda.newPack();\n\npack.addMCPServer({\n  name: \"Ref.tools\",\n  endpointUrl: \"https://api.ref.tools/mcp\",\n});\n\npack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"x-ref-api-key\",\n  instructionsUrl: \"https://ref.tools/keys\",\n});\n\npack.addNetworkDomain(\"ref.tools\");"
+        "code": "import * as coda from \"@codahq/packs-sdk\";\n\nexport const pack = coda.newPack();\n\npack.addMCPServer({\n  name: \"Ref_tools\",\n  endpointUrl: \"https://api.ref.tools/mcp\",\n});\n\npack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"x-ref-api-key\",\n  instructionsUrl: \"https://ref.tools/keys\",\n});\n\npack.addNetworkDomain(\"ref.tools\");"
       },
       {
         "name": "Static OAuth client",
