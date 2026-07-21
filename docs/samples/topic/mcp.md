@@ -25,7 +25,7 @@ pack.addMCPServer({
 {% endraw %}
 ```
 ## No auth
-An MCP integration that doesn&#x27;t require authentication. This sample connects to Icons8&#x27;s MCP server.
+An MCP integration that does not require authentication. This sample connects to the Icons8 MCP server.
 
 ```ts
 {% raw %}

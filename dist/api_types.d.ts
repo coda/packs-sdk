@@ -337,7 +337,7 @@ export interface ParamDef<T extends UnionType> {
      * }),
      * ```
      *
-     * @see [Crawling guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/crawling/)
+     * @see [Crawling guide](https://docs.superhuman.com/packs/build/latest/guides/blocks/sync-tables/indexing/crawling/)
      */
     crawlStrategy?: CrawlStrategy;
     /**

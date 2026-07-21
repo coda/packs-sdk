@@ -915,7 +915,7 @@
       },
       {
         "name": "No auth",
-        "content": "An MCP integration that doesn't require authentication. This sample connects to Icons8's MCP server.",
+        "content": "An MCP integration that does not require authentication. This sample connects to the Icons8 MCP server.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\n\nexport const pack = coda.newPack();\n\npack.addMCPServer({\n  name: \"Icons8\",\n  endpointUrl: \"https://mcp.icons8.com/mcp/\",\n});\n\npack.addNetworkDomain(\"icons8.com\");"
       },
       {

@@ -316,7 +316,7 @@ export interface ParamDef<T extends UnionType> {
 	 * }),
 	 * ```
 	 *
-	 * @see [Crawling guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/crawling/)
+	 * @see [Crawling guide](https://docs.superhuman.com/packs/build/latest/guides/blocks/sync-tables/indexing/crawling/)
 	 */
 	crawlStrategy?: CrawlStrategy;
 	/**
@@ -3641,14 +3641,14 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 *
 	 * This is ignored if there is also a {@link continuation} on this object.
 	 *
-	 * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/incremental/)
+	 * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/guides/blocks/sync-tables/indexing/incremental/)
 	 */
 	completion?: SyncCompletionMetadataResult<NonNullable<ContextT["sync"]["previousCompletion"]>["incrementalContinuation"]>;
 	/**
 	 * The IDs of the rows that have been deleted, as discovered during an incremental sync. The IDs provided should match
 	 * the values in the {@link ObjectSchemaDefinition#idProperty} field of the schema.
 	 *
-	 * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/agents/indexing/incremental/#deleted-records)
+	 * @see [Incremental sync guide](https://docs.superhuman.com/packs/build/latest/guides/blocks/sync-tables/indexing/incremental/#deleted-records)
 	 */
 	deletedRowIds?: string[];
 	/**

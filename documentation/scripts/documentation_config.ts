@@ -1203,7 +1203,7 @@ export const Examples: Example[] = [
       },
       {
         name: 'No auth',
-        content: "An MCP integration that doesn't require authentication. This sample connects to Icons8's MCP server.",
+        content: 'An MCP integration that does not require authentication. This sample connects to the Icons8 MCP server.',
         codeFile: './samples/packs/mcp/icons8.ts',
       },
       {
