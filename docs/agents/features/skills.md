@@ -169,5 +169,5 @@ Prompts in skills are currently limited to 20,000 characters, which should be su
 
 
 [tools]: ./tools.md
-[indexing]: ../indexing/index.md
+[indexing]: ../../guides/blocks/sync-tables/indexing/index.md
 [skillmodel]: ../../reference/sdk/core/enumerations/SkillModel.md

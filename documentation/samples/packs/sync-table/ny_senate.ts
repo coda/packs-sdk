@@ -180,8 +180,16 @@ pack.addSyncTable({
           email: member.person.email,
         };
       });
+
+      // If there are more members to sync, continue from the next offset.
+      let continuation;
+      if (offset + MembersPageSize < data.total) {
+        continuation = { offset: offset + MembersPageSize };
+      }
+
       return {
         result: rows,
+        continuation: continuation,
       };
     },
   },
@@ -223,7 +231,7 @@ pack.addSyncTable({
 // A sync table of documents.
 pack.addSyncTable({
   name: "Documents",
-  description: "",
+  description: "Lists the documents with a section of the law.",
   identityName: "Document",
   schema: DocumentSchema,
   formula: {
@@ -280,8 +288,6 @@ pack.addSyncTable({
         let documentId = getDocumentId(document);
         return {
           id: documentId,
-          name: document.title,
-          number: document.docLevelId,
           title: getFormattedTitle(document),
           path: document.parents?.map(
             parent => getFormattedTitle(parent)).join(" >"),

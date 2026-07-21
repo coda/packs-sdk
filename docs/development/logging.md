@@ -169,7 +169,7 @@ Search results are no longer grouped by invocation, but instead a flat list of e
 [mdn_console]: https://developer.mozilla.org/en-US/docs/Web/API/console
 [cli_logging]: cli.md#debugging-locally
 [fetcher_headers]: ../guides/basics/fetcher.md#headers
-[indexing]: ../agents/indexing/index.md
+[indexing]: ../guides/blocks/sync-tables/indexing/index.md
 [navigation_agent_settings]: ../support/navigation.md#agent
 [navigation_connector_go]: ../support/navigation.md#connector-go
 [navigation_connector_maker_tools]: ../support/navigation.md#connector-maker-tools

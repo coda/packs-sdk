@@ -1,6 +1,7 @@
 title: Building blocks
 append_unmatched: true
 nav:
+  - mcp.md
   - formulas.md
   - cards.md
   - actions.md

@@ -269,9 +269,9 @@ When used to retrieve information from a specific URL, and the user did not supp
 [skills]: ./skills.md
 [formulas]: ../../guides/blocks/formulas.md
 [actions]: ../../guides/blocks/actions.md
-[indexing]: ../indexing/index.md
-[mcp]: ./mcp.md
-[indexing_schemas]: ../indexing/schema.md#contacts
+[indexing]: ../../guides/blocks/sync-tables/indexing/index.md
+[mcp]: ../../guides/blocks/mcp.md
+[indexing_schemas]: ../../guides/blocks/sync-tables/indexing/schema.md#contacts
 [contact_resolution]: ../../reference/sdk/core/enumerations/ToolType.md#contactresolution
 [fetcher]: ../../guides/basics/fetcher.md
 [allowed_domains]: ../../reference/sdk/core/interfaces/WebSearchTool.md#alloweddomains

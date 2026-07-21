@@ -1,3 +1,6 @@
 append_unmatched: true
 nav:
   - index.md
+  - dynamic.md
+  - two-way.md
+  - indexing

@@ -23,7 +23,7 @@ We've also worked to make it easier for legacy Packs to be upgraded to agents, w
 - [Invocation source][invocation_source] - Determine if your sync table is being run in Superhuman Go vs Superhuman Docs, to adjust the logic, etc.
 
 
-[mcp]: ../../agents/features/mcp.md
+[mcp]: ../../guides/blocks/mcp.md
 [bench_initialization]: ../../agents/features/skills.md#bench
 [agent_logs]: ../../development/logging.md#agent-logs
 [parameter_validation]: ../../guides/basics/parameters/index.md#validation

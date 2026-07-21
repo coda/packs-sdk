@@ -69,7 +69,7 @@ makeParameter({
 
 #### See
 
-[Crawling guide]({{ config.site_url }}agents/indexing/crawling/)
+[Crawling guide]({{ config.site_url }}guides/blocks/sync-tables/indexing/crawling/)
 
 ***
 

@@ -370,6 +370,13 @@ plugins:
           "agents/development.md": "agents/index.md"
           "agents/troubleshooting.md": "development/logging.md"
 
+          # 2026-07-17: Move MCP and indexing from agents to connector building blocks.
+          "agents/features/mcp.md": "guides/blocks/mcp.md"
+          "agents/indexing/index.md": "guides/blocks/sync-tables/indexing/index.md"
+          "agents/indexing/schema.md": "guides/blocks/sync-tables/indexing/schema.md"
+          "agents/indexing/crawling.md": "guides/blocks/sync-tables/indexing/crawling.md"
+          "agents/indexing/incremental.md": "guides/blocks/sync-tables/indexing/incremental.md"
+
     # Generate an RSS feed for the blog.
     # See: https://guts.github.io/mkdocs-rss-plugin/
     - rss:
