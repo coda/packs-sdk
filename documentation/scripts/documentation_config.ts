@@ -702,6 +702,12 @@ export const Examples: Example[] = [
           "A sync table that contains a reference to a row in another sync table. This sample syncs the tasks from a user's Todoist account.",
         codeFile: './samples/packs/todoist/reference.ts',
       },
+      {
+        name: 'With indexing',
+        content:
+          'Demonstrates how to index PDF content and contacts. This sample syncs information from the NY Senate API.',
+        codeFile: './samples/packs/sync-table/ny_senate.ts',
+      },
     ],
   },
   {
@@ -1175,6 +1181,51 @@ export const Examples: Example[] = [
         content:
           "A sync table that supports user edits via two-way sync, with a defined set of options for certain properties. This sample syncs a user's expenses in Splitwise.",
         codeFile: './samples/packs/two-way/splitwise.ts',
+      },
+    ],
+  },
+  {
+    name: 'MCP',
+    description: 'Samples that show how to incorporate tools from an MCP server.',
+    icon: 'material/connection',
+    category: ExampleCategory.Topic,
+    triggerTokens: [],
+    contentFile: './samples/packs/mcp/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/blocks/mcp',
+    },
+    exampleSnippets: [
+      {
+        name: 'Template',
+        content: 'The basic structure of an MCP server integration.',
+        codeFile: './samples/snippets/mcp/add_mcp_server.ts',
+      },
+      {
+        name: 'No auth',
+        content: 'An MCP integration that does not require authentication. This sample connects to the Icons8 MCP server.',
+        codeFile: './samples/packs/mcp/icons8.ts',
+      },
+      {
+        name: 'Token auth',
+        content: 'An MCP integration that authenticates using a static token. This sample connects to the Ref.tools MCP server.',
+        codeFile: './samples/packs/mcp/ref.tools.ts',
+      },
+      {
+        name: 'Static OAuth client',
+        content: 'An MCP integration that authenticates using OAuth, with a static client. This sample connects to the Google Calendar MCP server.',
+        codeFile: './samples/packs/mcp/google_calendar.ts',
+      },
+      {
+        name: 'Dynamic OAuth client',
+        content: 'An MCP integration that authenticates using OAuth, with a dynamically registered client. This sample connects to the Miro MCP server.',
+        codeFile: './samples/packs/mcp/miro.ts',
+      },
+      {
+        name: 'With other building blocks',
+        content:
+          'A Pack that uses an MCP for most tools, but includes a sync table for indexing. This sample syncs information from Todoist.',
+        codeFile: './samples/packs/todoist/mcp.ts',
       },
     ],
   },

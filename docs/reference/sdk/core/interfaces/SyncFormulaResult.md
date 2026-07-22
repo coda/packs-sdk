@@ -37,7 +37,7 @@ This is ignored if there is also a [continuation](#continuation) on this object.
 
 #### See
 
-[Incremental sync guide]({{ config.site_url }}agents/indexing/incremental/)
+[Incremental sync guide]({{ config.site_url }}guides/blocks/sync-tables/indexing/incremental/)
 
 ***
 
@@ -60,7 +60,7 @@ the values in the [ObjectSchemaDefinition#idProperty](ObjectSchemaDefinition.md#
 
 #### See
 
-[Incremental sync guide]({{ config.site_url }}agents/indexing/incremental/#deleted-records)
+[Incremental sync guide]({{ config.site_url }}guides/blocks/sync-tables/indexing/incremental/#deleted-records)
 
 ***
 

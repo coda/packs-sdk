@@ -192,8 +192,8 @@ Currently, some Pack features don't work in agents.
 - [Two-way sync][two_way_sync] - Agents can't edit records using two-way sync. As a workaround, add an [action formula][actions] that can update a record.
 
 
-[indexing]: ./indexing/index.md
-[indexing_monitoring]: ./indexing/index.md#testing-and-monitoring
+[indexing]: ../guides/blocks/sync-tables/indexing/index.md
+[indexing_monitoring]: ../guides/blocks/sync-tables/indexing/index.md#testing-and-monitoring
 [default_chat_skill]: ./features/skills.md#default-chat-skill
 [skills]: ./features/skills.md
 [screen_tools]: ./features/tools.md#screen-annotation-tools

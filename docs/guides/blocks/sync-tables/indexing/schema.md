@@ -129,7 +129,7 @@ const ProductSchema = sdk.makeObjectSchema({
 
 Optionally set `index.contextProperties` to a list of properties that contain short-form text that should be duplicated in each chunk of indexed text. Context properties help with retrieval, increasing the likelihood that the LLM will find the desired records.
 
-Select properties of type `String`. If you select a property of type `Array<String>`, it will be flattened into a string, comma-separated. You can use [property paths](../../guides/advanced/schemas.md#property-paths) to reference data in nested objects.
+Select properties of type `String`. If you select a property of type `Array<String>`, it will be flattened into a string, comma-separated. You can use [property paths](../../../advanced/schemas.md#property-paths) to reference data in nested objects.
 
 The `titleProperty` will automatically be included as a context property in each chunk.
 
@@ -242,7 +242,7 @@ getSchema: async function (context) {
 
 ## Contacts {:#contacts}
 
-In addition to indexing the records themselves, Superhuman Go can separately index the people associated with those records. For example, the assignee of a ticket or the attendees of an event. Once indexed, every other agent the user has installed can access these contacts using the [Contact resolution tool][contact_resolution_tool].
+In addition to indexing the records themselves, the platform can separately index the people associated with those records. For example, the assignee of a ticket or the attendees of an event. Once indexed, every other connector the user has installed can access these contacts using the [Contact resolution tool][contact_resolution_tool].
 
 To be indexed, a contact must have both a name and an email address. It's not currently possible to index additional information about a contact, such as a phone number or mailing address.
 
@@ -267,21 +267,21 @@ Schemas annotated this way can be the top-level schema of a sync table, or neste
 
 !!! warning "`Person` objects supported, but not recommended"
 
-    Instead of setting the `userEmailProperty`, you can instead apply the value hint [`Person`][person] and set the required fields. These person schemas are treated specially when used in a doc, but come with some downsides when the referenced person isn't a member of the organization or when the schema contains additional properties. Most agents should prefer the `userEmailProperty` approach mentioned above.
+    Instead of setting the `userEmailProperty`, you can instead apply the value hint [`Person`][person] and set the required fields. These person schemas are treated specially when used in a doc, but come with some downsides when the referenced person isn't a member of the organization or when the schema contains additional properties. Most connectors should prefer the `userEmailProperty` approach mentioned above.
 
 
 ## Known limitations
 
 ### Reference properties not resolved
 
-`Reference` properties are not resolved during indexing, meaning they don't link up to the whole record in the foreign table. If you are building an agent from scratch, avoid using them.
+`Reference` properties are not resolved during indexing, meaning they don't link up to the whole record in the foreign table. If you are building a connector from scratch, avoid using them.
 
 If you are upgrading an existing Pack, you'll need to denormalize any data you want to use in either `contextProperties` or `filterableProperties`. For example, adding a `projectName` property alongside the existing `project` reference property.
 
 
-[temporary_blob_storage]: ../../reference/sdk/core/interfaces/TemporaryBlobStorage.md
-[people]: ../../guides/basics/data-types.md#people
-[schemas]: ../../guides/advanced/schemas.md
-[dynamic_sync_tables]: ../../guides/blocks/sync-tables/dynamic.md
-[contact_resolution_tool]: ../features/tools.md#contacts
-[person]: ../../reference/sdk/core/enumerations/ValueHintType.md#person
+[temporary_blob_storage]: ../../../../reference/sdk/core/interfaces/TemporaryBlobStorage.md
+[people]: ../../../basics/data-types.md#people
+[schemas]: ../../../advanced/schemas.md
+[dynamic_sync_tables]: ../dynamic.md
+[contact_resolution_tool]: ../../../../agents/features/tools.md#contacts
+[person]: ../../../../reference/sdk/core/enumerations/ValueHintType.md#person

@@ -27,4 +27,4 @@ For more details, including how to combine DCR with manually specified endpoints
 
 
 [oauth2_dcr]: ../../guides/basics/authentication/oauth2.md#dcr
-[mcp]: ../../agents/features/mcp.md
+[mcp]: ../../guides/blocks/mcp.md

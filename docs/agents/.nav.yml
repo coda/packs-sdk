@@ -4,6 +4,5 @@ nav:
   - quickstart.md
   - examples.md
   - features
-  - indexing
   - Publishing: https://docs.superhuman.com/@hector/go-agent-development-guide/listing-publishing-7
   - upgrade.md

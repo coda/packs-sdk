@@ -543,5 +543,5 @@ The table below shows the recommended parameter type to use with various types o
 [fetcher_binary_response]: ../../basics/fetcher.md#binary-response
 [network_domains]: ../../basics/fetcher.md#network-domains
 [examples_box_filename]: https://github.com/coda/packs-examples/blob/c565981293f14a4ca82bc2ddcf385ea9c7bbbad6/examples/box/helpers.ts#L31-L52
-[indexing]: ../../../agents/indexing/index.md
+[indexing]: ../../blocks/sync-tables/indexing/index.md
 [validateparameters]: ../../../reference/sdk/core/interfaces/CommonPackFormulaDef.md#validateparameters

@@ -1,14 +1,18 @@
 ---
 nav: MCP
-description: Learn how to connect your agent to a hosted MCP server.
+description: Learn how to connect your connector to a hosted MCP server.
 cSpell:words: Streamable
 ---
 
 # Connect to an MCP server
 
+!!! info "Superhuman Go only"
+
+    Connecting to an MCP server is only supported for connectors installed in :superhuman-go: Go.
+
 The [Model Context Protocol (MCP)][mcp] offers a standard way to expose resources and tools to LLMs. Many apps are adopting this standard and hosting MCP servers, making it easy for AI tools to interact with their data and features.
 
-Superhuman Go agents can connect to MCP servers to take advantage of the tools provided. Adding an MCP server to an agent requires only a few lines of code, specifying an internal name and the server's URL.
+Connectors can integrate with MCP servers to take advantage of the tools provided. Adding an MCP server to a connector requires only a few lines of code, specifying an internal name and the server's URL.
 
 ```ts
 pack.addMCPServer({
@@ -17,22 +21,22 @@ pack.addMCPServer({
 });
 ```
 
-!!! warning "Only one MCP server per-agent"
+!!! warning "Only one MCP server per-connector"
 
-    An agent is limited to connecting to only a single MCP server. The platform expects each agent to connect to a single external application, and users wishing to work across multiple applications would install multiple agents.
+    A connector is limited to connecting to only a single MCP server. The platform expects each connector to connect to a single external application, and users wishing to work across multiple applications would install multiple connectors.
 
 
 ## Compatibility
 
-MCP is a large, rapidly evolving standard, and not all MCP servers are compatible with Superhuman Go agents.
+MCP is a large, rapidly evolving standard, and not all MCP servers are compatible with the platform.
 
 - **Hosted servers only** - Local MCP servers (installed via `npm`, etc) are not supported.
 - **Streamable HTTP transport only** - Most MCP servers use the more modern Streamable HTTP transport, but the older and now deprecated HTTP+SSE transport is not supported.
 
 Additionally, not all MCP features are supported by the platform.
 
-- **Tools only** - Although MCP servers can provide additional types of resources, agents can only use the tools.
-- **No streaming support** - Agents must wait for the complete response from the MCP server, and cannot take advantage of streamed responses.
+- **Tools only** - Although MCP servers can provide additional types of resources, connectors can only use the tools.
+- **No streaming support** - Connectors must wait for the complete response from the MCP server, and cannot take advantage of streamed responses.
 
 ## Network access
 
@@ -118,16 +122,16 @@ Requests to MCP servers use the same [authentication system][authentication] as 
 
 !!! tip "Same authentication as the REST API is preferred"
 
-    When possible, configure the agent's authentication to support both the MCP server and the app's REST API (if available). A Pack can only include a single type of authentication, and advanced agent features may require using the app's REST API to implement them.
+    When possible, configure the connector's authentication to support both the MCP server and the app's REST API (if available). A Pack can only include a single type of authentication, and advanced connector features may require using the app's REST API to implement them.
 
 
 ## User confirmation for actions
 
-Superhuman Go agents prompt the user for confirmation before performing actions that mutate records or have side effects. An MCP tool will be considered such an action if the `readOnlyHint` annotation on the tool is any value other than `true`. See the [`ToolAnnotations`][mcp_tool_annotations] type in the MCP specification for more information.
+:superhuman-go: Go prompts users for confirmation before performing actions that mutate records or have side effects. An MCP tool will be considered such an action if the `readOnlyHint` annotation on the tool is any value other than `true`. See the [`ToolAnnotations`][mcp_tool_annotations] type in the MCP specification for more information.
 
 
 [mcp]: https://modelcontextprotocol.io/
-[fetcher]: ../../guides/basics/fetcher.md
-[authentication]: ../../guides/basics/authentication/index.md
-[oauth2_dcr]: ../../guides/basics/authentication/oauth2.md#dcr
+[fetcher]: ../basics/fetcher.md
+[authentication]: ../basics/authentication/index.md
+[oauth2_dcr]: ../basics/authentication/oauth2.md#dcr
 [mcp_tool_annotations]: https://modelcontextprotocol.io/specification/2025-11-25/schema#toolannotations
