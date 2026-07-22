@@ -29,8 +29,8 @@ pack.setUserAuthentication({
 
 ## See
 
- - [Authenticating with other services - Superhuman Docs API token]({{ config.site_url }}guides/basics/authentication/#coda-api-token)
- - [Authentication samples - Superhuman Docs API token]({{ config.site_url }}samples/topic/authentication/#coda-api-token)
+ - [Authenticating with other services - Superhuman Docs API token]({{ config.site_url }}guides/basics/authentication/#superhuman-docs-api-token)
+ - [Authentication samples - Superhuman Docs API token]({{ config.site_url }}samples/topic/authentication/#superhuman-docs-api-token)
 
 ## Extends
 
