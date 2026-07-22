@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Fixed
+
+- The `packs register` and `coda register` commands now open the Superhuman Docs account page when creating a Pack-scoped API token.
+
 ### Changed
 
 - `MCPServer.endpointUrl` now accepts a root-relative path (e.g. `/mcp`) that is resolved against the connection's endpoint when the pack's authentication provides one — via `requiresEndpointUrl` or `endpointKey` — mirroring the `authorizationUrl` / `tokenUrl` convention. This also applies to packs that use `setSystemAuthentication` instead of a per-user default authentication. Absolute `https` URLs continue to work unchanged.
