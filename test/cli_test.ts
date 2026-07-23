@@ -2,6 +2,7 @@ import type {PackVersionDefinition} from '../types';
 import {PublicApiType} from '../helpers/external-api/v1';
 import {compilePackMetadata} from '../helpers/metadata';
 import {formatWhoami} from '../cli/whoami';
+import {getApiTokenCreationUrl} from '../cli/register';
 import {parsePackIdOrUrl} from '../cli/link';
 
 describe('CLI', () => {
@@ -42,6 +43,26 @@ describe('CLI', () => {
       assert.equal(parsePackIdOrUrl('https://codadoc.io/p/1234'), null);
       assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo'), null);
       assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo-1234/5678'), null);
+    });
+  });
+
+  describe('API token creation URL', () => {
+    it('uses Superhuman Docs for the default API endpoint', () => {
+      assert.equal(
+        getApiTokenCreationUrl('https://coda.io'),
+        'https://docs.superhuman.com/account?openDialog=CREATE_API_TOKEN&scopeType=pack#apiSettings',
+      );
+      assert.equal(
+        getApiTokenCreationUrl('https://coda.io/'),
+        'https://docs.superhuman.com/account?openDialog=CREATE_API_TOKEN&scopeType=pack#apiSettings',
+      );
+    });
+
+    it('preserves custom API endpoints', () => {
+      assert.equal(
+        getApiTokenCreationUrl('https://tenant.example.com/'),
+        'https://tenant.example.com/account?openDialog=CREATE_API_TOKEN&scopeType=pack#apiSettings',
+      );
     });
   });
 
