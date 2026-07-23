@@ -847,17 +847,31 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
-      tokenUrl: z.string().url().refine(validateUrlParsesIfAbsolute),
+      // Absolute (any scheme) always allowed; relative only when requiresEndpointUrl is true — see superRefine.
+      tokenUrl: z.string(),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
       tokenQueryParam: z.string().optional(),
-      /** Unlike the authorization code flow, this flow's tokenUrl is absolute-only, so resource must be too. */
+      /** Unlike tokenUrl, resource has no relative-URL exception and must always be absolute. */
       resource: z.string().url().refine(validateUrlParsesIfAbsolute).optional(),
       scopeParamName: z.string().optional(),
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
+    }).superRefine(({requiresEndpointUrl, tokenUrl}, context) => {
+      const isValid = requiresEndpointUrl
+        ? isRootRelativeUrl(tokenUrl) || isAbsoluteUrlOfAnyScheme(tokenUrl)
+        : isAbsoluteUrlOfAnyScheme(tokenUrl);
+      if (!isValid) {
+        context.addIssue({
+          code: 'custom',
+          path: ['tokenUrl'],
+          message: requiresEndpointUrl
+            ? 'tokenUrl must be a relative or absolute URL when requiresEndpointUrl is true'
+            : 'tokenUrl must be an absolute URL when requiresEndpointUrl is not true',
+        });
+      }
     }),
     [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({
       type: zodDiscriminant(AuthenticationType.WebBasic),
@@ -3428,6 +3442,15 @@ function validateDeprecatedParameterFields<T extends UnionType>(
 
 function isAbsoluteUrl(url: string): boolean {
   return url.startsWith('https://');
+}
+
+/** Unlike {@link isAbsoluteUrl}, accepts any scheme (matching the pre-existing `z.string().url()` check). */
+function isAbsoluteUrlOfAnyScheme(url: string): boolean {
+  try {
+    return Boolean(new URL(url));
+  } catch {
+    return false;
+  }
 }
 
 function isRootRelativeUrl(url: string): boolean {

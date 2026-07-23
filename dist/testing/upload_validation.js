@@ -654,17 +654,31 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
         [types_1.AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.OAuth2ClientCredentials),
-            tokenUrl: z.string().url().refine(validateUrlParsesIfAbsolute),
+            // Absolute (any scheme) always allowed; relative only when requiresEndpointUrl is true — see superRefine.
+            tokenUrl: z.string(),
             scopes: z.array(z.string()).optional(),
             scopeDelimiter: z.enum([' ', ',', ';']).optional(),
             tokenPrefix: z.string().optional(),
             tokenQueryParam: z.string().optional(),
-            /** Unlike the authorization code flow, this flow's tokenUrl is absolute-only, so resource must be too. */
+            /** Unlike tokenUrl, resource has no relative-URL exception and must always be absolute. */
             resource: z.string().url().refine(validateUrlParsesIfAbsolute).optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
+        }).superRefine(({ requiresEndpointUrl, tokenUrl }, context) => {
+            const isValid = requiresEndpointUrl
+                ? isRootRelativeUrl(tokenUrl) || isAbsoluteUrlOfAnyScheme(tokenUrl)
+                : isAbsoluteUrlOfAnyScheme(tokenUrl);
+            if (!isValid) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['tokenUrl'],
+                    message: requiresEndpointUrl
+                        ? 'tokenUrl must be a relative or absolute URL when requiresEndpointUrl is true'
+                        : 'tokenUrl must be an absolute URL when requiresEndpointUrl is not true',
+                });
+            }
         }),
         [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.WebBasic),
@@ -2755,6 +2769,15 @@ function validateDeprecatedParameterFields(param, pathPrefix, context) {
 }
 function isAbsoluteUrl(url) {
     return url.startsWith('https://');
+}
+/** Unlike {@link isAbsoluteUrl}, accepts any scheme (matching the pre-existing `z.string().url()` check). */
+function isAbsoluteUrlOfAnyScheme(url) {
+    try {
+        return Boolean(new URL(url));
+    }
+    catch {
+        return false;
+    }
 }
 function isRootRelativeUrl(url) {
     return url.startsWith('/') && url[1] !== '/' && url[1] !== '\\';
