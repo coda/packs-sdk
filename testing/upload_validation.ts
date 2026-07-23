@@ -847,12 +847,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
-      /**
-       * May be relative or absolute when requiresEndpointUrl is true (enforced in the superRefine
-       * below) — packs already support a manually-entered endpoint alongside a fixed absolute
-       * tokenUrl, so a relative tokenUrl is offered as an additional option, not a requirement.
-       */
-      tokenUrl: z.string().refine(validateUrlParsesIfAbsolute),
+      // Absolute (any scheme) always allowed; relative only when requiresEndpointUrl is true — see superRefine.
+      tokenUrl: z.string(),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
@@ -864,12 +860,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
     }).superRefine(({requiresEndpointUrl, tokenUrl}, context) => {
-      validateUrlIsRelativeOrAbsolute(
-        'tokenUrl',
-        tokenUrl,
-        {requiresEndpointUrl, allowEitherWhenEndpointRequired: true},
-        context,
-      );
+      const isValid = requiresEndpointUrl
+        ? isRootRelativeUrl(tokenUrl) || isAbsoluteUrlOfAnyScheme(tokenUrl)
+        : isAbsoluteUrlOfAnyScheme(tokenUrl);
+      if (!isValid) {
+        context.addIssue({
+          code: 'custom',
+          path: ['tokenUrl'],
+          message: requiresEndpointUrl
+            ? 'tokenUrl must be a relative or absolute URL when requiresEndpointUrl is true'
+            : 'tokenUrl must be an absolute URL when requiresEndpointUrl is not true',
+        });
+      }
     }),
     [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({
       type: zodDiscriminant(AuthenticationType.WebBasic),
@@ -3442,6 +3444,15 @@ function isAbsoluteUrl(url: string): boolean {
   return url.startsWith('https://');
 }
 
+/** Unlike {@link isAbsoluteUrl}, accepts any scheme (matching the pre-existing `z.string().url()` check). */
+function isAbsoluteUrlOfAnyScheme(url: string): boolean {
+  try {
+    return Boolean(new URL(url));
+  } catch {
+    return false;
+  }
+}
+
 function isRootRelativeUrl(url: string): boolean {
   return url.startsWith('/') && url[1] !== '/' && url[1] !== '\\';
 }
@@ -3464,35 +3475,21 @@ function validateUrlParsesIfAbsolute(url: string) {
 /**
  * Validates a field that must be relative exactly when `requiresEndpointUrl` is set (and no
  * `endpointKey` resolves an endpoint instead) — shared by fields evaluated during the auth flow.
- *
- * `allowEitherWhenEndpointRequired` relaxes that to accept either a relative or an absolute URL
- * when an endpoint is required, instead of requiring relative. Some auth types (e.g.
- * {@link OAuth2ClientCredentialsAuthentication.tokenUrl}) already supported a manually-entered
- * endpoint alongside a fixed absolute URL (auth at one endpoint, requests to a customer-specific
- * one), so enforcing relative-only here would be a backwards-incompatible break for those packs.
  */
 function validateUrlIsRelativeOrAbsolute(
   fieldName: string,
   url: string,
-  {
-    requiresEndpointUrl,
-    endpointKey,
-    allowEitherWhenEndpointRequired,
-  }: {requiresEndpointUrl?: boolean; endpointKey?: string; allowEitherWhenEndpointRequired?: boolean},
+  {requiresEndpointUrl, endpointKey}: {requiresEndpointUrl?: boolean; endpointKey?: string},
   context: z.RefinementCtx,
 ) {
   const expectsRelativeUrl = Boolean(requiresEndpointUrl && !endpointKey);
-  const allowsRelative = expectsRelativeUrl;
-  const allowsAbsolute = !expectsRelativeUrl || allowEitherWhenEndpointRequired;
-  if ((allowsRelative && isRootRelativeUrl(url)) || (allowsAbsolute && isAbsoluteUrl(url))) {
-    return;
-  }
-  const expectedType =
-    allowsRelative && allowsAbsolute ? 'a relative or absolute' : allowsRelative ? 'a relative' : 'an absolute';
-  context.addIssue({
-    code: 'custom',
-    path: [fieldName],
-    message: `${fieldName} must be ${expectedType} URL when \
+  if ((expectsRelativeUrl && !isRootRelativeUrl(url)) || (!expectsRelativeUrl && !isAbsoluteUrl(url))) {
+    const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+    context.addIssue({
+      code: 'custom',
+      path: [fieldName],
+      message: `${fieldName} must be ${expectedType} URL when \
 ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
-  });
+    });
+  }
 }

@@ -679,7 +679,13 @@ export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2Dynami
 export interface OAuth2ClientCredentialsAuthentication extends BaseOAuthAuthentication {
   /** Identifies this as OAuth2 client credentials authentication. */
   type: AuthenticationType.OAuth2ClientCredentials;
-  /** The URL that the platform will hit in order to exchange credentials for an access token. */
+  /**
+   * The URL that the platform will hit in order to exchange credentials for an access token.
+   *
+   * If {@link BaseAuthentication.requiresEndpointUrl} is `true`, this may instead be a
+   * root-relative path (e.g. `/oauth/token`), which the platform resolves against the account's
+   * endpoint. Absolute URLs are always accepted, with or without `requiresEndpointUrl`.
+   */
   tokenUrl: string;
 }
 

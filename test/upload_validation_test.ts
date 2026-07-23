@@ -5189,9 +5189,7 @@ describe('Pack metadata Validation', async () => {
     });
 
     it('OAuth2ClientCredentials, requiresEndpointUrl allows either a relative or absolute tokenUrl', async () => {
-      // Packs already support a manually-entered endpoint alongside a fixed absolute tokenUrl (auth
-      // at one endpoint, requests to a customer-specific one), so a relative tokenUrl is an
-      // additional option here, not a requirement — enforcing relative-only would break those packs.
+      // A fixed absolute tokenUrl remains valid even when requiresEndpointUrl is true.
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2ClientCredentials,
@@ -5206,7 +5204,7 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
-    it('OAuth2ClientCredentials, no requiresEndpointUrl requires absolute tokenUrl', async () => {
+    it('OAuth2ClientCredentials, no requiresEndpointUrl requires absolute tokenUrl, any scheme', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2ClientCredentials,
@@ -5221,15 +5219,15 @@ describe('Pack metadata Validation', async () => {
         },
       ]);
 
+      // Non-https absolute URLs must keep working (pre-existing behavior).
       assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2ClientCredentials);
-      metadata.defaultAuthentication.tokenUrl = 'https://example.com/tokenUrl';
+      metadata.defaultAuthentication.tokenUrl = 'http://example.com/tokenUrl';
       await validateJson(metadata);
     });
 
     it('OAuth2ClientCredentials, requiresEndpointUrl rejects protocol-relative tokenUrl', async () => {
-      // A protocol-relative URL like "//evil.com/tokenUrl" starts with "/" but resolves to a
-      // different host than the connection endpoint, so it must not be treated as relative — and
-      // it isn't a valid absolute URL either, so it's rejected even though both shapes are allowed.
+      // "//evil.com/tokenUrl" starts with "/" but points at a different host, so it's neither a
+      // valid relative path nor a valid absolute URL.
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2ClientCredentials,

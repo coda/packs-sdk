@@ -239,6 +239,10 @@ that should contain the token.
 
 The URL that the platform will hit in order to exchange credentials for an access token.
 
+If [BaseAuthentication.requiresEndpointUrl](BaseAuthentication.md#requiresendpointurl) is `true`, this may instead be a
+root-relative path (e.g. `/oauth/token`), which the platform resolves against the account's
+endpoint. Absolute URLs are always accepted, with or without `requiresEndpointUrl`.
+
 #### Overrides
 
 `BaseOAuthAuthentication.tokenUrl`
