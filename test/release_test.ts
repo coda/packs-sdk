@@ -15,10 +15,9 @@ const mockReleaseResponse: PublicApiPackRelease = {
   packId: PACK_ID,
   packVersion: '1.0.0',
   releaseId: 42,
-  releaseVersion: '1.0.0',
   releaseNotes: 'Test release',
   createdAt: '2026-01-14T10:00:00.000Z',
-  buildId: 999,
+  sdkVersion: '1.17.1',
 };
 
 describe('Release command', () => {

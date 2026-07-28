@@ -1,12 +1,13 @@
 "use strict";
+/* eslint-disable */
 /**
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicApiPackFormulaType = exports.PublicApiFeaturedDocStatus = exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackConnectionType = exports.PublicApiPackDiscoverability = exports.PublicApiPackSource = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPackListingsSortBy = exports.PublicApiPacksSortBy = exports.PublicApiAnalyticsScale = exports.PublicApiPackAnalyticsOrderBy = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiLinkDisplayType = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
-/* eslint-disable */
-exports.OpenApiSpecHash = '3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad';
-exports.OpenApiSpecVersion = '1.2.5';
+exports.PublicApiPackAssetType = exports.PublicApiPackEntrypoint = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPackListingsSortBy = exports.PublicApiPacksSortBy = exports.PublicApiPackFormulaAnalyticsOrderBy = exports.PublicApiAnalyticsScale = exports.PublicApiPackAnalyticsOrderBy = exports.PublicApiDocAnalyticsOrderBy = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiCheckboxDisplayType = exports.PublicApiSliderDisplayType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiLinkDisplayType = exports.PublicApiImageShapeStyle = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSyncPageType = exports.PublicApiSortDirection = exports.PublicApiPageLineStyle = exports.PublicApiPageType = exports.PublicApiPageContentFormat = exports.PublicApiLayout = exports.PublicApiPageEmbedRenderMethod = exports.PublicApiPageContentExportStatus = exports.PublicApiPageContentOutputFormat = exports.PublicApiPageContentInsertionMode = exports.PublicApiPageContentItemContentFormat = exports.PublicApiPageContentItemType = exports.PublicApiFolderIconColor = exports.PublicApiCustomDomainConnectedStatus = exports.PublicApiCustomDocDomainSetupStatus = exports.PublicApiCustomDocDomainProvider = exports.PublicApiDocPublishMode = exports.PublicApiAccessTypeNotNone = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
+exports.PublicApiIngestionChildExecutionType = exports.PublicApiIngestionExecutionType = exports.PublicApiIngestionStatus = exports.PublicApiPackPlanPricingType = exports.PublicApiPackPlanCurrency = exports.PublicApiPackSourceCodeVisibility = exports.PublicApiPackFormulaType = exports.PublicApiFeaturedDocStatus = exports.PublicApiPaidFeatureSet = exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackOAuth2ClientCredentialsLocation = exports.PublicApiPackConnectionType = exports.PublicApiIngestionPackReleaseChannel = exports.PublicApiPackListingInstallContextType = exports.PublicApiPackCategoryType = exports.PublicApiPackType = exports.PublicApiPackDiscoverability = exports.PublicApiPackSource = exports.PublicApiPackReviewStatus = void 0;
+exports.OpenApiSpecHash = '4f64de8de03e3a7e64fa67827a25c62de87d1a332fbb5c6414943849dff961f6';
+exports.OpenApiSpecVersion = '1.6.0';
 /**
  * A constant identifying the type of the resource.
  */
@@ -14,16 +15,28 @@ var PublicApiType;
 (function (PublicApiType) {
     PublicApiType["AclMetadata"] = "aclMetadata";
     PublicApiType["AclPermissions"] = "aclPermissions";
+    PublicApiType["AclSettings"] = "aclSettings";
+    PublicApiType["AgentPackLog"] = "agentPackLog";
+    PublicApiType["AnalyticsLastUpdated"] = "analyticsLastUpdated";
     PublicApiType["ApiLink"] = "apiLink";
     PublicApiType["Automation"] = "automation";
     PublicApiType["Column"] = "column";
     PublicApiType["Control"] = "control";
     PublicApiType["Doc"] = "doc";
+    PublicApiType["CustomDocDomain"] = "customDocDomain";
+    PublicApiType["CustomDocDomainProvider"] = "customDocDomainProvider";
     PublicApiType["DocAnalytics"] = "docAnalytics";
     PublicApiType["DocAnalyticsSummary"] = "docAnalyticsSummary";
     PublicApiType["DocAnalyticsV2"] = "docAnalyticsV2";
     PublicApiType["Folder"] = "folder";
     PublicApiType["Formula"] = "formula";
+    PublicApiType["GoLink"] = "goLink";
+    PublicApiType["IngestionBatchExecution"] = "ingestionBatchExecution";
+    PublicApiType["IngestionExecution"] = "ingestionExecution";
+    PublicApiType["IngestionExecutionAttempt"] = "ingestionExecutionAttempt";
+    PublicApiType["IngestionPackLog"] = "ingestionPackLog";
+    PublicApiType["IngestionParentItem"] = "ingestionParentItem";
+    PublicApiType["InternalRichText"] = "internalRichText";
     PublicApiType["MutationStatus"] = "mutationStatus";
     PublicApiType["Pack"] = "pack";
     PublicApiType["PackAclPermissions"] = "packAclPermissions";
@@ -31,15 +44,23 @@ var PublicApiType;
     PublicApiType["PackAnalyticsSummary"] = "packAnalyticsSummary";
     PublicApiType["PackAsset"] = "packAsset";
     PublicApiType["PackCategory"] = "packCategory";
+    PublicApiType["PackConfigurationSchema"] = "packConfigurationSchema";
+    PublicApiType["PackFeaturedDocs"] = "packFeaturedDocs";
     PublicApiType["PackFormulaAnalytics"] = "packFormulaAnalytics";
+    PublicApiType["PackInvitation"] = "packInvitation";
+    PublicApiType["PackListingDraft"] = "packListingDraft";
     PublicApiType["PackLog"] = "packLog";
     PublicApiType["PackMaker"] = "packMaker";
     PublicApiType["PackOauthConfig"] = "packOauthConfig";
     PublicApiType["PackRelease"] = "packRelease";
+    PublicApiType["PackReview"] = "packReview";
     PublicApiType["PackSourceCode"] = "packSourceCode";
     PublicApiType["PackSystemConnection"] = "packSystemConnection";
     PublicApiType["PackVersion"] = "packVersion";
     PublicApiType["Page"] = "page";
+    PublicApiType["PageContentExport"] = "pageContentExport";
+    PublicApiType["PageContentExportStatus"] = "pageContentExportStatus";
+    PublicApiType["Principal"] = "principal";
     PublicApiType["Row"] = "row";
     PublicApiType["Table"] = "table";
     PublicApiType["User"] = "user";
@@ -51,8 +72,11 @@ var PublicApiType;
 var PublicApiPrincipalType;
 (function (PublicApiPrincipalType) {
     PublicApiPrincipalType["Email"] = "email";
+    PublicApiPrincipalType["Group"] = "group";
     PublicApiPrincipalType["Domain"] = "domain";
+    PublicApiPrincipalType["Workspace"] = "workspace";
     PublicApiPrincipalType["Anyone"] = "anyone";
+    PublicApiPrincipalType["InternalAccess"] = "internalAccess";
 })(PublicApiPrincipalType || (exports.PublicApiPrincipalType = PublicApiPrincipalType = {}));
 /**
  * Type of access.
@@ -65,7 +89,16 @@ var PublicApiAccessType;
     PublicApiAccessType["None"] = "none";
 })(PublicApiAccessType || (exports.PublicApiAccessType = PublicApiAccessType = {}));
 /**
- * A time unit used as part of a duration value.
+ * Type of access (excluding none).
+ */
+var PublicApiAccessTypeNotNone;
+(function (PublicApiAccessTypeNotNone) {
+    PublicApiAccessTypeNotNone["ReadOnly"] = "readonly";
+    PublicApiAccessTypeNotNone["Write"] = "write";
+    PublicApiAccessTypeNotNone["Comment"] = "comment";
+})(PublicApiAccessTypeNotNone || (exports.PublicApiAccessTypeNotNone = PublicApiAccessTypeNotNone = {}));
+/**
+ * Which interaction mode the published doc should use.
  */
 var PublicApiDocPublishMode;
 (function (PublicApiDocPublishMode) {
@@ -73,6 +106,96 @@ var PublicApiDocPublishMode;
     PublicApiDocPublishMode["Play"] = "play";
     PublicApiDocPublishMode["Edit"] = "edit";
 })(PublicApiDocPublishMode || (exports.PublicApiDocPublishMode = PublicApiDocPublishMode = {}));
+var PublicApiCustomDocDomainProvider;
+(function (PublicApiCustomDocDomainProvider) {
+    PublicApiCustomDocDomainProvider["GoDaddy"] = "GoDaddy";
+    PublicApiCustomDocDomainProvider["Namecheap"] = "Namecheap";
+    PublicApiCustomDocDomainProvider["Hover"] = "Hover (Tucows)";
+    PublicApiCustomDocDomainProvider["NetworkSolutions"] = "Network Solutions";
+    PublicApiCustomDocDomainProvider["GoogleDomains"] = "Google Domains";
+    PublicApiCustomDocDomainProvider["Other"] = "Other";
+})(PublicApiCustomDocDomainProvider || (exports.PublicApiCustomDocDomainProvider = PublicApiCustomDocDomainProvider = {}));
+var PublicApiCustomDocDomainSetupStatus;
+(function (PublicApiCustomDocDomainSetupStatus) {
+    PublicApiCustomDocDomainSetupStatus["Pending"] = "pending";
+    PublicApiCustomDocDomainSetupStatus["Succeeded"] = "succeeded";
+    PublicApiCustomDocDomainSetupStatus["Failed"] = "failed";
+})(PublicApiCustomDocDomainSetupStatus || (exports.PublicApiCustomDocDomainSetupStatus = PublicApiCustomDocDomainSetupStatus = {}));
+var PublicApiCustomDomainConnectedStatus;
+(function (PublicApiCustomDomainConnectedStatus) {
+    PublicApiCustomDomainConnectedStatus["Connected"] = "connected";
+    PublicApiCustomDomainConnectedStatus["NotConnected"] = "notConnected";
+})(PublicApiCustomDomainConnectedStatus || (exports.PublicApiCustomDomainConnectedStatus = PublicApiCustomDomainConnectedStatus = {}));
+/**
+ * Color scheme for folder icons.
+ */
+var PublicApiFolderIconColor;
+(function (PublicApiFolderIconColor) {
+    PublicApiFolderIconColor["DarkBlue"] = "DARK_BLUE";
+    PublicApiFolderIconColor["DarkYellow"] = "DARK_YELLOW";
+    PublicApiFolderIconColor["DarkPurple"] = "DARK_PURPLE";
+    PublicApiFolderIconColor["DarkPink"] = "DARK_PINK";
+    PublicApiFolderIconColor["DarkOrange"] = "DARK_ORANGE";
+    PublicApiFolderIconColor["DarkGreen"] = "DARK_GREEN";
+    PublicApiFolderIconColor["DarkRed"] = "DARK_RED";
+    PublicApiFolderIconColor["DarkGray"] = "DARK_GRAY";
+    PublicApiFolderIconColor["LightBlue"] = "LIGHT_BLUE";
+    PublicApiFolderIconColor["LightYellow"] = "LIGHT_YELLOW";
+    PublicApiFolderIconColor["LightPurple"] = "LIGHT_PURPLE";
+    PublicApiFolderIconColor["LightPink"] = "LIGHT_PINK";
+    PublicApiFolderIconColor["LightOrange"] = "LIGHT_ORANGE";
+    PublicApiFolderIconColor["LightGreen"] = "LIGHT_GREEN";
+    PublicApiFolderIconColor["LightRed"] = "LIGHT_RED";
+    PublicApiFolderIconColor["LightGray"] = "LIGHT_GRAY";
+})(PublicApiFolderIconColor || (exports.PublicApiFolderIconColor = PublicApiFolderIconColor = {}));
+/**
+ * The type of content item in a page.
+ */
+var PublicApiPageContentItemType;
+(function (PublicApiPageContentItemType) {
+    PublicApiPageContentItemType["Line"] = "line";
+})(PublicApiPageContentItemType || (exports.PublicApiPageContentItemType = PublicApiPageContentItemType = {}));
+/**
+ * Content format for the item.
+ */
+var PublicApiPageContentItemContentFormat;
+(function (PublicApiPageContentItemContentFormat) {
+    PublicApiPageContentItemContentFormat["PlainText"] = "plainText";
+})(PublicApiPageContentItemContentFormat || (exports.PublicApiPageContentItemContentFormat = PublicApiPageContentItemContentFormat = {}));
+/**
+ * Mode for updating the content on an existing page.
+ */
+var PublicApiPageContentInsertionMode;
+(function (PublicApiPageContentInsertionMode) {
+    PublicApiPageContentInsertionMode["Append"] = "append";
+    PublicApiPageContentInsertionMode["Prepend"] = "prepend";
+    PublicApiPageContentInsertionMode["Replace"] = "replace";
+})(PublicApiPageContentInsertionMode || (exports.PublicApiPageContentInsertionMode = PublicApiPageContentInsertionMode = {}));
+/**
+ * Supported output content formats that can be requested for getting content for an existing page.
+ */
+var PublicApiPageContentOutputFormat;
+(function (PublicApiPageContentOutputFormat) {
+    PublicApiPageContentOutputFormat["Html"] = "html";
+    PublicApiPageContentOutputFormat["Markdown"] = "markdown";
+})(PublicApiPageContentOutputFormat || (exports.PublicApiPageContentOutputFormat = PublicApiPageContentOutputFormat = {}));
+/**
+ * Status of a page content export.
+ */
+var PublicApiPageContentExportStatus;
+(function (PublicApiPageContentExportStatus) {
+    PublicApiPageContentExportStatus["InProgress"] = "inProgress";
+    PublicApiPageContentExportStatus["Failed"] = "failed";
+    PublicApiPageContentExportStatus["Complete"] = "complete";
+})(PublicApiPageContentExportStatus || (exports.PublicApiPageContentExportStatus = PublicApiPageContentExportStatus = {}));
+/**
+ * Render mode for a page using the Embed page type.
+ */
+var PublicApiPageEmbedRenderMethod;
+(function (PublicApiPageEmbedRenderMethod) {
+    PublicApiPageEmbedRenderMethod["Compatibility"] = "compatibility";
+    PublicApiPageEmbedRenderMethod["Standard"] = "standard";
+})(PublicApiPageEmbedRenderMethod || (exports.PublicApiPageEmbedRenderMethod = PublicApiPageEmbedRenderMethod = {}));
 /**
  * Layout type of the table or view.
  */
@@ -95,6 +218,41 @@ var PublicApiLayout;
     PublicApiLayout["WordCloud"] = "wordCloud";
 })(PublicApiLayout || (exports.PublicApiLayout = PublicApiLayout = {}));
 /**
+ * Supported content types for page (canvas) content.
+ */
+var PublicApiPageContentFormat;
+(function (PublicApiPageContentFormat) {
+    PublicApiPageContentFormat["Html"] = "html";
+    PublicApiPageContentFormat["Markdown"] = "markdown";
+})(PublicApiPageContentFormat || (exports.PublicApiPageContentFormat = PublicApiPageContentFormat = {}));
+/**
+ * The type of a page in a doc.
+ */
+var PublicApiPageType;
+(function (PublicApiPageType) {
+    PublicApiPageType["Canvas"] = "canvas";
+    PublicApiPageType["Embed"] = "embed";
+    PublicApiPageType["SyncPage"] = "syncPage";
+    PublicApiPageType["Table"] = "table";
+})(PublicApiPageType || (exports.PublicApiPageType = PublicApiPageType = {}));
+/**
+ * The style of a line element in a canvas page.
+ */
+var PublicApiPageLineStyle;
+(function (PublicApiPageLineStyle) {
+    PublicApiPageLineStyle["BlockQuote"] = "blockQuote";
+    PublicApiPageLineStyle["BulletedList"] = "bulletedList";
+    PublicApiPageLineStyle["CheckboxList"] = "checkboxList";
+    PublicApiPageLineStyle["Code"] = "code";
+    PublicApiPageLineStyle["CollapsibleList"] = "collapsibleList";
+    PublicApiPageLineStyle["H1"] = "h1";
+    PublicApiPageLineStyle["H2"] = "h2";
+    PublicApiPageLineStyle["H3"] = "h3";
+    PublicApiPageLineStyle["NumberedList"] = "numberedList";
+    PublicApiPageLineStyle["Paragraph"] = "paragraph";
+    PublicApiPageLineStyle["PullQuote"] = "pullQuote";
+})(PublicApiPageLineStyle || (exports.PublicApiPageLineStyle = PublicApiPageLineStyle = {}));
+/**
  * Direction of a sort for a table or view.
  */
 var PublicApiSortDirection;
@@ -102,6 +260,14 @@ var PublicApiSortDirection;
     PublicApiSortDirection["Ascending"] = "ascending";
     PublicApiSortDirection["Descending"] = "descending";
 })(PublicApiSortDirection || (exports.PublicApiSortDirection = PublicApiSortDirection = {}));
+/**
+ * The type of sync page in a doc
+ */
+var PublicApiSyncPageType;
+(function (PublicApiSyncPageType) {
+    PublicApiSyncPageType["Page"] = "page";
+    PublicApiSyncPageType["Document"] = "document";
+})(PublicApiSyncPageType || (exports.PublicApiSyncPageType = PublicApiSyncPageType = {}));
 /**
  * How the numeric value should be formatted (with or without symbol, negative numbers in parens).
  */
@@ -120,6 +286,14 @@ var PublicApiEmailDisplayType;
     PublicApiEmailDisplayType["IconOnly"] = "iconOnly";
     PublicApiEmailDisplayType["EmailOnly"] = "emailOnly";
 })(PublicApiEmailDisplayType || (exports.PublicApiEmailDisplayType = PublicApiEmailDisplayType = {}));
+/**
+ * How an image should be displayed.
+ */
+var PublicApiImageShapeStyle;
+(function (PublicApiImageShapeStyle) {
+    PublicApiImageShapeStyle["Auto"] = "auto";
+    PublicApiImageShapeStyle["Circle"] = "circle";
+})(PublicApiImageShapeStyle || (exports.PublicApiImageShapeStyle = PublicApiImageShapeStyle = {}));
 /**
  * How a link should be displayed in the user interface.
  */
@@ -168,6 +342,22 @@ var PublicApiIconSet;
     PublicApiIconSet["LightBulb"] = "lightbulb";
 })(PublicApiIconSet || (exports.PublicApiIconSet = PublicApiIconSet = {}));
 /**
+ * How the slider should be rendered.
+ */
+var PublicApiSliderDisplayType;
+(function (PublicApiSliderDisplayType) {
+    PublicApiSliderDisplayType["Slider"] = "slider";
+    PublicApiSliderDisplayType["Progress"] = "progress";
+})(PublicApiSliderDisplayType || (exports.PublicApiSliderDisplayType = PublicApiSliderDisplayType = {}));
+/**
+ * How a checkbox should be displayed.
+ */
+var PublicApiCheckboxDisplayType;
+(function (PublicApiCheckboxDisplayType) {
+    PublicApiCheckboxDisplayType["Toggle"] = "toggle";
+    PublicApiCheckboxDisplayType["Check"] = "check";
+})(PublicApiCheckboxDisplayType || (exports.PublicApiCheckboxDisplayType = PublicApiCheckboxDisplayType = {}));
+/**
  * Format type of the column
  */
 var PublicApiColumnFormatType;
@@ -187,6 +377,7 @@ var PublicApiColumnFormatType;
     PublicApiColumnFormatType["Slider"] = "slider";
     PublicApiColumnFormatType["Scale"] = "scale";
     PublicApiColumnFormatType["Image"] = "image";
+    PublicApiColumnFormatType["ImageReference"] = "imageReference";
     PublicApiColumnFormatType["Attachments"] = "attachments";
     PublicApiColumnFormatType["Button"] = "button";
     PublicApiColumnFormatType["Checkbox"] = "checkbox";
@@ -239,16 +430,20 @@ var PublicApiValueFormat;
  */
 var PublicApiControlType;
 (function (PublicApiControlType) {
+    PublicApiControlType["AIBlock"] = "aiBlock";
     PublicApiControlType["Button"] = "button";
     PublicApiControlType["Checkbox"] = "checkbox";
     PublicApiControlType["DatePicker"] = "datePicker";
     PublicApiControlType["DateRangePicker"] = "dateRangePicker";
+    PublicApiControlType["DateTimePicker"] = "dateTimePicker";
     PublicApiControlType["Lookup"] = "lookup";
     PublicApiControlType["Multiselect"] = "multiselect";
     PublicApiControlType["Select"] = "select";
     PublicApiControlType["Scale"] = "scale";
     PublicApiControlType["Slider"] = "slider";
     PublicApiControlType["Reaction"] = "reaction";
+    PublicApiControlType["Textbox"] = "textbox";
+    PublicApiControlType["TimePicker"] = "timePicker";
 })(PublicApiControlType || (exports.PublicApiControlType = PublicApiControlType = {}));
 /**
  * Determines how the objects returned are sorted
@@ -261,6 +456,7 @@ var PublicApiTableType;
 (function (PublicApiTableType) {
     PublicApiTableType["Table"] = "table";
     PublicApiTableType["View"] = "view";
+    PublicApiTableType["Database"] = "database";
 })(PublicApiTableType || (exports.PublicApiTableType = PublicApiTableType = {}));
 var PublicApiWorkspaceUserRole;
 (function (PublicApiWorkspaceUserRole) {
@@ -268,6 +464,30 @@ var PublicApiWorkspaceUserRole;
     PublicApiWorkspaceUserRole["DocMaker"] = "DocMaker";
     PublicApiWorkspaceUserRole["Editor"] = "Editor";
 })(PublicApiWorkspaceUserRole || (exports.PublicApiWorkspaceUserRole = PublicApiWorkspaceUserRole = {}));
+/**
+ * Determines how the Doc analytics returned are sorted.
+ */
+var PublicApiDocAnalyticsOrderBy;
+(function (PublicApiDocAnalyticsOrderBy) {
+    PublicApiDocAnalyticsOrderBy["AnalyticsDate"] = "date";
+    PublicApiDocAnalyticsOrderBy["DocId"] = "docId";
+    PublicApiDocAnalyticsOrderBy["Title"] = "title";
+    PublicApiDocAnalyticsOrderBy["CreatedAt"] = "createdAt";
+    PublicApiDocAnalyticsOrderBy["PublishedAt"] = "publishedAt";
+    PublicApiDocAnalyticsOrderBy["Likes"] = "likes";
+    PublicApiDocAnalyticsOrderBy["Copies"] = "copies";
+    PublicApiDocAnalyticsOrderBy["Views"] = "views";
+    PublicApiDocAnalyticsOrderBy["SessionsDesktop"] = "sessionsDesktop";
+    PublicApiDocAnalyticsOrderBy["SessionsMobile"] = "sessionsMobile";
+    PublicApiDocAnalyticsOrderBy["SessionsOther"] = "sessionsOther";
+    PublicApiDocAnalyticsOrderBy["TotalSessions"] = "totalSessions";
+    PublicApiDocAnalyticsOrderBy["AiCreditsChat"] = "aiCreditsChat";
+    PublicApiDocAnalyticsOrderBy["AiCreditsBlock"] = "aiCreditsBlock";
+    PublicApiDocAnalyticsOrderBy["AiCreditsColumn"] = "aiCreditsColumn";
+    PublicApiDocAnalyticsOrderBy["AiCreditsAssistant"] = "aiCreditsAssistant";
+    PublicApiDocAnalyticsOrderBy["AiCreditsReviewer"] = "aiCreditsReviewer";
+    PublicApiDocAnalyticsOrderBy["AiCredits"] = "aiCredits";
+})(PublicApiDocAnalyticsOrderBy || (exports.PublicApiDocAnalyticsOrderBy = PublicApiDocAnalyticsOrderBy = {}));
 /**
  * Determines how the Pack analytics returned are sorted.
  */
@@ -293,6 +513,9 @@ var PublicApiPackAnalyticsOrderBy;
     PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing30Day"] = "workspacesActivelyUsing30Day";
     PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing90Day"] = "workspacesActivelyUsing90Day";
     PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsingAllTime"] = "workspacesActivelyUsingAllTime";
+    PublicApiPackAnalyticsOrderBy["WorkspacesWithActiveSubscriptions"] = "workspacesWithActiveSubscriptions";
+    PublicApiPackAnalyticsOrderBy["WorkspacesWithSuccessfulTrials"] = "workspacesWithSuccessfulTrials";
+    PublicApiPackAnalyticsOrderBy["RevenueUsd"] = "revenueUsd";
 })(PublicApiPackAnalyticsOrderBy || (exports.PublicApiPackAnalyticsOrderBy = PublicApiPackAnalyticsOrderBy = {}));
 /**
  * Quantization period over which to view analytics.
@@ -302,6 +525,29 @@ var PublicApiAnalyticsScale;
     PublicApiAnalyticsScale["Daily"] = "daily";
     PublicApiAnalyticsScale["Cumulative"] = "cumulative";
 })(PublicApiAnalyticsScale || (exports.PublicApiAnalyticsScale = PublicApiAnalyticsScale = {}));
+/**
+ * Determines how the Pack formula analytics returned are sorted.
+ */
+var PublicApiPackFormulaAnalyticsOrderBy;
+(function (PublicApiPackFormulaAnalyticsOrderBy) {
+    PublicApiPackFormulaAnalyticsOrderBy["AnalyticsDate"] = "date";
+    PublicApiPackFormulaAnalyticsOrderBy["FormulaName"] = "formulaName";
+    PublicApiPackFormulaAnalyticsOrderBy["FormulaType"] = "formulaType";
+    PublicApiPackFormulaAnalyticsOrderBy["FormulaInvocations"] = "formulaInvocations";
+    PublicApiPackFormulaAnalyticsOrderBy["MedianLatencyMs"] = "medianLatencyMs";
+    PublicApiPackFormulaAnalyticsOrderBy["MedianResponseSizeBytes"] = "medianResponseSizeBytes";
+    PublicApiPackFormulaAnalyticsOrderBy["Errors"] = "errors";
+    PublicApiPackFormulaAnalyticsOrderBy["DocsActivelyUsing"] = "docsActivelyUsing";
+    PublicApiPackFormulaAnalyticsOrderBy["DocsActivelyUsing7Day"] = "docsActivelyUsing7Day";
+    PublicApiPackFormulaAnalyticsOrderBy["DocsActivelyUsing30Day"] = "docsActivelyUsing30Day";
+    PublicApiPackFormulaAnalyticsOrderBy["DocsActivelyUsing90Day"] = "docsActivelyUsing90Day";
+    PublicApiPackFormulaAnalyticsOrderBy["DocsActivelyUsingAllTime"] = "docsActivelyUsingAllTime";
+    PublicApiPackFormulaAnalyticsOrderBy["WorkspacesActivelyUsing"] = "workspacesActivelyUsing";
+    PublicApiPackFormulaAnalyticsOrderBy["WorkspacesActivelyUsing7Day"] = "workspacesActivelyUsing7Day";
+    PublicApiPackFormulaAnalyticsOrderBy["WorkspacesActivelyUsing30Day"] = "workspacesActivelyUsing30Day";
+    PublicApiPackFormulaAnalyticsOrderBy["WorkspacesActivelyUsing90Day"] = "workspacesActivelyUsing90Day";
+    PublicApiPackFormulaAnalyticsOrderBy["WorkspacesActivelyUsingAllTime"] = "workspacesActivelyUsingAllTime";
+})(PublicApiPackFormulaAnalyticsOrderBy || (exports.PublicApiPackFormulaAnalyticsOrderBy = PublicApiPackFormulaAnalyticsOrderBy = {}));
 /**
  * Determines how the Packs returned are sorted.
  */
@@ -320,6 +566,7 @@ var PublicApiPackListingsSortBy;
     PublicApiPackListingsSortBy["Name"] = "name";
     PublicApiPackListingsSortBy["PackVersion"] = "packVersion";
     PublicApiPackListingsSortBy["PackVersionModifiedAt"] = "packVersionModifiedAt";
+    PublicApiPackListingsSortBy["AgentDirectorySort"] = "agentDirectorySort";
 })(PublicApiPackListingsSortBy || (exports.PublicApiPackListingsSortBy = PublicApiPackListingsSortBy = {}));
 /**
  * Type of Pack permissions.
@@ -329,19 +576,41 @@ var PublicApiPackPrincipalType;
     PublicApiPackPrincipalType["User"] = "user";
     PublicApiPackPrincipalType["Workspace"] = "workspace";
     PublicApiPackPrincipalType["Worldwide"] = "worldwide";
+    PublicApiPackPrincipalType["NomosOrganization"] = "nomosOrganization";
+    PublicApiPackPrincipalType["Group"] = "group";
+    PublicApiPackPrincipalType["GrammarlyInstitution"] = "grammarlyInstitution";
 })(PublicApiPackPrincipalType || (exports.PublicApiPackPrincipalType = PublicApiPackPrincipalType = {}));
 var PublicApiPackAccessType;
 (function (PublicApiPackAccessType) {
+    PublicApiPackAccessType["None"] = "none";
     PublicApiPackAccessType["View"] = "view";
     PublicApiPackAccessType["Test"] = "test";
     PublicApiPackAccessType["Edit"] = "edit";
+    PublicApiPackAccessType["Admin"] = "admin";
 })(PublicApiPackAccessType || (exports.PublicApiPackAccessType = PublicApiPackAccessType = {}));
+var PublicApiPackEntrypoint;
+(function (PublicApiPackEntrypoint) {
+    PublicApiPackEntrypoint["Go"] = "go";
+    PublicApiPackEntrypoint["Docs"] = "docs";
+})(PublicApiPackEntrypoint || (exports.PublicApiPackEntrypoint = PublicApiPackEntrypoint = {}));
 var PublicApiPackAssetType;
 (function (PublicApiPackAssetType) {
     PublicApiPackAssetType["Logo"] = "logo";
     PublicApiPackAssetType["Cover"] = "cover";
     PublicApiPackAssetType["ExampleImage"] = "exampleImage";
+    PublicApiPackAssetType["AgentImage"] = "agentImage";
 })(PublicApiPackAssetType || (exports.PublicApiPackAssetType = PublicApiPackAssetType = {}));
+/**
+ * The status of a Pack review
+ */
+var PublicApiPackReviewStatus;
+(function (PublicApiPackReviewStatus) {
+    PublicApiPackReviewStatus["Pending"] = "pending";
+    PublicApiPackReviewStatus["Approved"] = "approved";
+    PublicApiPackReviewStatus["Denied"] = "denied";
+    PublicApiPackReviewStatus["Canceled"] = "canceled";
+    PublicApiPackReviewStatus["Superseded"] = "superseded";
+})(PublicApiPackReviewStatus || (exports.PublicApiPackReviewStatus = PublicApiPackReviewStatus = {}));
 var PublicApiPackSource;
 (function (PublicApiPackSource) {
     PublicApiPackSource["Web"] = "web";
@@ -353,19 +622,70 @@ var PublicApiPackSource;
 var PublicApiPackDiscoverability;
 (function (PublicApiPackDiscoverability) {
     PublicApiPackDiscoverability["Public"] = "public";
+    PublicApiPackDiscoverability["NomosOrganization"] = "nomosOrganization";
+    PublicApiPackDiscoverability["Group"] = "group";
+    PublicApiPackDiscoverability["GrammarlyInstitution"] = "grammarlyInstitution";
     PublicApiPackDiscoverability["Workspace"] = "workspace";
     PublicApiPackDiscoverability["Private"] = "private";
 })(PublicApiPackDiscoverability || (exports.PublicApiPackDiscoverability = PublicApiPackDiscoverability = {}));
+/**
+ * Type of a Pack.
+ */
+var PublicApiPackType;
+(function (PublicApiPackType) {
+    PublicApiPackType["Standard"] = "standard";
+    PublicApiPackType["System"] = "system";
+})(PublicApiPackType || (exports.PublicApiPackType = PublicApiPackType = {}));
+/**
+ * The category of a Pack.
+ */
+var PublicApiPackCategoryType;
+(function (PublicApiPackCategoryType) {
+    PublicApiPackCategoryType["Connector"] = "connector";
+    PublicApiPackCategoryType["Agent"] = "agent";
+    PublicApiPackCategoryType["CustomAgent"] = "customAgent";
+})(PublicApiPackCategoryType || (exports.PublicApiPackCategoryType = PublicApiPackCategoryType = {}));
+/**
+ * Type of context in which a Pack is being installed.
+ */
+var PublicApiPackListingInstallContextType;
+(function (PublicApiPackListingInstallContextType) {
+    PublicApiPackListingInstallContextType["Workspace"] = "workspace";
+    PublicApiPackListingInstallContextType["Doc"] = "doc";
+    PublicApiPackListingInstallContextType["CodaBrain"] = "codaBrain";
+})(PublicApiPackListingInstallContextType || (exports.PublicApiPackListingInstallContextType = PublicApiPackListingInstallContextType = {}));
+/**
+ * Live or Latest version of Pack
+ */
+var PublicApiIngestionPackReleaseChannel;
+(function (PublicApiIngestionPackReleaseChannel) {
+    PublicApiIngestionPackReleaseChannel["Live"] = "LIVE";
+    PublicApiIngestionPackReleaseChannel["Latest"] = "LATEST";
+})(PublicApiIngestionPackReleaseChannel || (exports.PublicApiIngestionPackReleaseChannel = PublicApiIngestionPackReleaseChannel = {}));
 /**
  * Type of Pack connections.
  */
 var PublicApiPackConnectionType;
 (function (PublicApiPackConnectionType) {
     PublicApiPackConnectionType["Header"] = "header";
+    PublicApiPackConnectionType["MultiHeader"] = "multiHeader";
     PublicApiPackConnectionType["UrlParam"] = "urlParam";
     PublicApiPackConnectionType["HttpBasic"] = "httpBasic";
     PublicApiPackConnectionType["Custom"] = "custom";
+    PublicApiPackConnectionType["OAuth2ClientCredentials"] = "oauth2ClientCredentials";
+    PublicApiPackConnectionType["GoogleServiceAccount"] = "googleServiceAccount";
+    PublicApiPackConnectionType["AwsAssumeRole"] = "awsAssumeRole";
+    PublicApiPackConnectionType["AwsAccessKey"] = "awsAccessKey";
 })(PublicApiPackConnectionType || (exports.PublicApiPackConnectionType = PublicApiPackConnectionType = {}));
+/**
+ * Location of including OAuth2 client credentials in a request.
+ */
+var PublicApiPackOAuth2ClientCredentialsLocation;
+(function (PublicApiPackOAuth2ClientCredentialsLocation) {
+    PublicApiPackOAuth2ClientCredentialsLocation["Automatic"] = "automatic";
+    PublicApiPackOAuth2ClientCredentialsLocation["Body"] = "body";
+    PublicApiPackOAuth2ClientCredentialsLocation["Header"] = "header";
+})(PublicApiPackOAuth2ClientCredentialsLocation || (exports.PublicApiPackOAuth2ClientCredentialsLocation = PublicApiPackOAuth2ClientCredentialsLocation = {}));
 /**
  * The context request type where a Pack log is generated.
  */
@@ -375,15 +695,19 @@ var PublicApiPackLogRequestType;
     PublicApiPackLogRequestType["ConnectionNameMetadataRequest"] = "connectionNameMetadataRequest";
     PublicApiPackLogRequestType["ParameterAutocompleteMetadataRequest"] = "parameterAutocompleteMetadataRequest";
     PublicApiPackLogRequestType["PostAuthSetupMetadataRequest"] = "postAuthSetupMetadataRequest";
+    PublicApiPackLogRequestType["PropertyOptionsMetadataRequest"] = "propertyOptionsMetadataRequest";
     PublicApiPackLogRequestType["GetSyncTableSchemaMetadataRequest"] = "getSyncTableSchemaMetadataRequest";
     PublicApiPackLogRequestType["GetDynamicSyncTableNameMetadataRequest"] = "getDynamicSyncTableNameMetadataRequest";
     PublicApiPackLogRequestType["ListSyncTableDynamicUrlsMetadataRequest"] = "listSyncTableDynamicUrlsMetadataRequest";
+    PublicApiPackLogRequestType["SearchSyncTableDynamicUrlsMetadataRequest"] = "searchSyncTableDynamicUrlsMetadataRequest";
     PublicApiPackLogRequestType["GetDynamicSyncTableDisplayUrlMetadataRequest"] = "getDynamicSyncTableDisplayUrlMetadataRequest";
-    PublicApiPackLogRequestType["GetIdentifiersForConnectionRequest"] = "getIdentifiersForConnectionRequest";
-    PublicApiPackLogRequestType["InvokeFormulaRequest"] = "invokeFormulaRequest";
-    PublicApiPackLogRequestType["InvokeSyncFormulaRequest"] = "invokeSyncFormulaRequest";
-    PublicApiPackLogRequestType["ImpersonateInvokeFormulaRequest"] = "impersonateInvokeFormulaRequest";
-    PublicApiPackLogRequestType["ImpersonateInvokeMetadataFormulaRequest"] = "impersonateInvokeMetadataFormulaRequest";
+    PublicApiPackLogRequestType["ValidateParametersMetadataRequest"] = "getIdentifiersForConnectionRequest";
+    PublicApiPackLogRequestType["GetIdentifiersForConnectionRequest"] = "invokeFormulaRequest";
+    PublicApiPackLogRequestType["InvokeFormulaRequest"] = "invokeSyncFormulaRequest";
+    PublicApiPackLogRequestType["InvokeSyncFormulaRequest"] = "invokeSyncUpdateFormulaRequest";
+    PublicApiPackLogRequestType["InvokeSyncUpdateFormulaRequest"] = "invokeExecuteGetPermissionsRequest";
+    PublicApiPackLogRequestType["InvokeExecuteGetPermissionsRequest"] = "validateParametersMetadataRequest";
+    PublicApiPackLogRequestType["Mcp"] = "mcp";
 })(PublicApiPackLogRequestType || (exports.PublicApiPackLogRequestType = PublicApiPackLogRequestType = {}));
 var PublicApiPackLogType;
 (function (PublicApiPackLogType) {
@@ -392,6 +716,10 @@ var PublicApiPackLogType;
     PublicApiPackLogType["Invocation"] = "invocation";
     PublicApiPackLogType["Internal"] = "internal";
     PublicApiPackLogType["Auth"] = "auth";
+    PublicApiPackLogType["IngestionLifecycle"] = "ingestionLifecycle";
+    PublicApiPackLogType["IngestionDebug"] = "ingestionDebug";
+    PublicApiPackLogType["AgentRuntime"] = "agentRuntime";
+    PublicApiPackLogType["Mcp"] = "mcp";
 })(PublicApiPackLogType || (exports.PublicApiPackLogType = PublicApiPackLogType = {}));
 var PublicApiLogLevel;
 (function (PublicApiLogLevel) {
@@ -403,7 +731,7 @@ var PublicApiLogLevel;
     PublicApiLogLevel["Unknown"] = "unknown";
 })(PublicApiLogLevel || (exports.PublicApiLogLevel = PublicApiLogLevel = {}));
 /**
- * Only relevant for original Coda packs.
+ * Only relevant for original Superhuman Packs.
  */
 var PublicApiFeatureSet;
 (function (PublicApiFeatureSet) {
@@ -413,16 +741,22 @@ var PublicApiFeatureSet;
     PublicApiFeatureSet["Enterprise"] = "Enterprise";
 })(PublicApiFeatureSet || (exports.PublicApiFeatureSet = PublicApiFeatureSet = {}));
 /**
- * Status of featured doc in pack listing.
+ * Workspace feature set excluding free.
+ */
+var PublicApiPaidFeatureSet;
+(function (PublicApiPaidFeatureSet) {
+    PublicApiPaidFeatureSet["Pro"] = "Pro";
+    PublicApiPaidFeatureSet["Team"] = "Team";
+    PublicApiPaidFeatureSet["Enterprise"] = "Enterprise";
+})(PublicApiPaidFeatureSet || (exports.PublicApiPaidFeatureSet = PublicApiPaidFeatureSet = {}));
+/**
+ * Status of featured doc in Pack listing.
  */
 var PublicApiFeaturedDocStatus;
 (function (PublicApiFeaturedDocStatus) {
     PublicApiFeaturedDocStatus["DocInaccessibleOrDoesNotExist"] = "docInaccessibleOrDoesNotExist";
     PublicApiFeaturedDocStatus["InvalidPublishedDocUrl"] = "invalidPublishedDocUrl";
 })(PublicApiFeaturedDocStatus || (exports.PublicApiFeaturedDocStatus = PublicApiFeaturedDocStatus = {}));
-/**
- * The pack formula type.
- */
 var PublicApiPackFormulaType;
 (function (PublicApiPackFormulaType) {
     PublicApiPackFormulaType["Action"] = "action";
@@ -430,3 +764,56 @@ var PublicApiPackFormulaType;
     PublicApiPackFormulaType["Sync"] = "sync";
     PublicApiPackFormulaType["Metadata"] = "metadata";
 })(PublicApiPackFormulaType || (exports.PublicApiPackFormulaType = PublicApiPackFormulaType = {}));
+/**
+ * Visibility of a Pack's source code.
+ */
+var PublicApiPackSourceCodeVisibility;
+(function (PublicApiPackSourceCodeVisibility) {
+    PublicApiPackSourceCodeVisibility["Private"] = "private";
+    PublicApiPackSourceCodeVisibility["Shared"] = "shared";
+})(PublicApiPackSourceCodeVisibility || (exports.PublicApiPackSourceCodeVisibility = PublicApiPackSourceCodeVisibility = {}));
+/**
+ * Currency needed to subscribe to the Pack.
+ */
+var PublicApiPackPlanCurrency;
+(function (PublicApiPackPlanCurrency) {
+    PublicApiPackPlanCurrency["Usd"] = "USD";
+})(PublicApiPackPlanCurrency || (exports.PublicApiPackPlanCurrency = PublicApiPackPlanCurrency = {}));
+/**
+ * Type of pricing used to subscribe to a Pack.
+ */
+var PublicApiPackPlanPricingType;
+(function (PublicApiPackPlanPricingType) {
+    PublicApiPackPlanPricingType["Free"] = "Free";
+    PublicApiPackPlanPricingType["MonthlyDocMaker"] = "MonthlyDocMaker";
+    PublicApiPackPlanPricingType["BundledWithTier"] = "BundledWithTier";
+})(PublicApiPackPlanPricingType || (exports.PublicApiPackPlanPricingType = PublicApiPackPlanPricingType = {}));
+/**
+ * Status of the ingestion execution.
+ */
+var PublicApiIngestionStatus;
+(function (PublicApiIngestionStatus) {
+    PublicApiIngestionStatus["Queued"] = "QUEUED";
+    PublicApiIngestionStatus["Started"] = "STARTED";
+    PublicApiIngestionStatus["Cancelled"] = "CANCELLED";
+    PublicApiIngestionStatus["UpForRetry"] = "UP_FOR_RETRY";
+    PublicApiIngestionStatus["Completed"] = "COMPLETED";
+    PublicApiIngestionStatus["Failed"] = "FAILED";
+})(PublicApiIngestionStatus || (exports.PublicApiIngestionStatus = PublicApiIngestionStatus = {}));
+/**
+ * Type of an ingestion batch execution.
+ */
+var PublicApiIngestionExecutionType;
+(function (PublicApiIngestionExecutionType) {
+    PublicApiIngestionExecutionType["Full"] = "FULL";
+    PublicApiIngestionExecutionType["Incremental"] = "INCREMENTAL";
+})(PublicApiIngestionExecutionType || (exports.PublicApiIngestionExecutionType = PublicApiIngestionExecutionType = {}));
+/**
+ * Type of an ingestion childexecution.
+ */
+var PublicApiIngestionChildExecutionType;
+(function (PublicApiIngestionChildExecutionType) {
+    PublicApiIngestionChildExecutionType["Full"] = "FULL";
+    PublicApiIngestionChildExecutionType["Incremental"] = "INCREMENTAL";
+    PublicApiIngestionChildExecutionType["Patch"] = "PATCH";
+})(PublicApiIngestionChildExecutionType || (exports.PublicApiIngestionChildExecutionType = PublicApiIngestionChildExecutionType = {}));
