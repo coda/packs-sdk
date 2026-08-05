@@ -251,6 +251,8 @@ a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
 Variable argument parameters, used if this formula should accept arbitrary
 numbers of inputs.
 
+Only supported in Superhuman Docs.
+
 #### Inherited from
 
 `Omit.varargParameters`

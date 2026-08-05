@@ -72,7 +72,12 @@ Run `npx packs init` to initialize an empty project with the recommended setting
 
 ## Running code locally
 
-Once published, your Pack functionality will be executed on the platform's servers after being invoked from a doc. During the development process, you can call your formulas directly from the command line, to simulate this process for rapid development. When you're nearing the end of authoring your Pack, you can upload your Pack and run it in a real doc to verify it works as intended.
+Once published, your Pack functionality will be executed on the platform's servers after being invoked from a doc. During the development process, you can call your formulas directly from the command line, to simulate this process for rapid development. When you're nearing the end of authoring your Pack, you can upload your Pack and run it in production to verify it works as intended.
+
+Running locally lets you invoke a single formula or sync and see the value or rows it returns, but how closely that matches production varies.
+
+- **:superhuman-go: Go** - Local runs cover less. You can't emulate the agent, so there's no LLM behavior or chat experience, and indexing isn't available, so you can see a sync's rows but not how they're indexed into the knowledge layer or searched over. To check how your Pack behaves in Go, upload it and try it there.
+- **:superhuman-docs: Docs** - It closely matches production, since formulas and syncs are also run directly.
 
 
 ### Running formulas

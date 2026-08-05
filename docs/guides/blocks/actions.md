@@ -12,14 +12,24 @@ In Superhuman Docs, users can take actions directly within their documents, usin
 
 ## Using actions
 
-Actions provided by Packs appear as choices in the button and automation dialogs along-side built-in actions. Actions can also be used in the formula editor for those buttons and automations.
+Once your Pack is installed, its actions are available for users to run.
 
-=== "In a button"
-    <img src="site:images/actions_button.png" srcset="site:images/actions_button_2x.png 2x" class="screenshot" alt="Selecting an action for a button">
-=== "In an automation"
-    <img src="site:images/actions_automation.png" srcset="site:images/actions_automation_2x.png 2x" class="screenshot" alt="Selecting an action for an automation">
-=== "In the formula editor"
-    <img src="site:images/actions_formula.png" srcset="site:images/actions_formula_2x.png 2x" class="screenshot" alt="Using actions in the formula editor.">
+=== ":superhuman-go: Go"
+
+    An action is exposed as a tool that the agent can call while completing a task. Because actions typically create, update, or delete data, :superhuman-go: Go prompts the user to confirm before running one.
+
+    <img src="site:images/actions_go_approval.png" srcset="site:images/actions_go_approval_2x.png 2x" class="screenshot" alt="Action approval prompt in Superhuman Go">
+
+=== ":superhuman-docs: Docs"
+
+    Actions provided by Packs appear as choices in the button and automation dialogs along-side built-in actions. Actions can also be used in the formula editor for those buttons and automations.
+
+    === "In a button"
+        <img src="site:images/actions_button.png" srcset="site:images/actions_button_2x.png 2x" class="screenshot" alt="Selecting an action for a button">
+    === "In an automation"
+        <img src="site:images/actions_automation.png" srcset="site:images/actions_automation_2x.png 2x" class="screenshot" alt="Selecting an action for an automation">
+    === "In the formula editor"
+        <img src="site:images/actions_formula.png" srcset="site:images/actions_formula_2x.png 2x" class="screenshot" alt="Using actions in the formula editor.">
 
 
 ## Creating actions
@@ -86,9 +96,13 @@ pack.addFormula({
 In some cases there is no meaningful result, in which case the convention is to return the string "OK". See the [Data types guide][data-types] for more information on the type of values that can be returned.
 
 
-## Authentication
+## Private accounts
 
-Actions can use authentication to access private resources, but unlike other formulas they aren't required to always use a specific user account. For actions, the account parameter will include the special option "User's private account". When this option is selected, each user that presses the button will take the action using one of their connected accounts, or be prompted to create an account if they don't have one set up already.
+!!! docs "Docs only"
+
+    Private accounts are only supported in :superhuman-docs: Docs.
+
+Like other building blocks, an action has an account parameter where you can select any account connected to the document. Actions can additionally use the special option "User's private account". When that option is selected, each user who presses the button takes the action using one of their own connected accounts, or is prompted to create one if they haven't set one up already.
 
 <img src="site:images/actions_private_account.png" srcset="site:images/actions_private_account_2x.png 2x" class="screenshot" alt="Private account option for actions">
 
@@ -99,6 +113,10 @@ Unlike other formulas, actions are never cached or automatically recalculated. T
 
 
 ## Update sync table rows {:#sync}
+
+!!! docs "Docs only"
+
+    Updating sync table rows from an action is only supported in :superhuman-docs: Docs. In :superhuman-go: Go the synced records live in the knowledge layer and can only be updated by reindexing.
 
 It's common for a Pack to have a [sync table][sync_table] that brings in records from an external API, and an action that allows the user to update those records. The changes made by the action will be reflected in the table the next time it syncs, but you can update the row immediately by selecting the correct return value for your formula.
 

@@ -8,7 +8,12 @@ cSpell:words: Luxon
 
 Every document has a **Timezone** setting in the **Region** section of the settings menu, that defaults to the timezone of the device that created it. All dates and times entered in the document are interpreted in the context of that timezone. Users often don't need to be aware this, since all of their interactions with the dates and times take place in the context of that doc.
 
-Packs don't have a configurable timezone however, and all date and time operations in Pack code run in [Coordinated Universal Time (UTC)][wikipedia_utc]. The timezone of the document is passed to Pack formulas as [`context.timezone`][ExecutionContext_timezone], containing an [IANA timezone identifier][wikipedia_tz] (ex: `America/New_York`).
+Packs don't have a configurable timezone however, and all date and time operations in Pack code run in [Coordinated Universal Time (UTC)][wikipedia_utc]. The relevant timezone is passed to Pack formulas as [`context.timezone`][ExecutionContext_timezone], containing an [IANA timezone identifier][wikipedia_tz] (ex: `America/New_York`).
+
+- **:superhuman-go: Go** - The timezone comes from the user's Superhuman account.
+- **:superhuman-docs: Docs** - The timezone comes from the document.
+
+The shifting behavior described on this page applies in :superhuman-go: Go as well.
 
 
 ## Timezone shifting {: #shifting}

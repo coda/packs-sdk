@@ -170,6 +170,8 @@ pack.addColumnFormat({
 });
 ```
 
+Only supported in Superhuman Docs.
+
 #### Parameters
 
 | Parameter | Type |
@@ -289,6 +291,8 @@ Adds an MCP server to this pack.
 ```
 pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
 ```
+
+Only supported in Superhuman Go.
 
 #### Parameters
 

@@ -122,6 +122,8 @@ var ValueHintType;
     /**
      * Indicates to interpret and render a value as an embed. The provided value should be a URL pointing
      * to an embeddable web page.
+     *
+     * Only supported in Superhuman Docs.
      */
     ValueHintType["Embed"] = "embed";
     /**
@@ -148,6 +150,8 @@ var ValueHintType;
      *   },
      * });
      * ```
+     *
+     * Only supported in Superhuman Docs.
      */
     ValueHintType["Reference"] = "reference";
     /**

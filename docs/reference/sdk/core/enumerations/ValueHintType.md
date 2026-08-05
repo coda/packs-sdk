@@ -71,6 +71,8 @@ Indicates to interpret the value as an email address (e.g. joe@foo.com).
 Indicates to interpret and render a value as an embed. The provided value should be a URL pointing
 to an embeddable web page.
 
+Only supported in Superhuman Docs.
+
 ***
 
 ### Html
@@ -179,6 +181,8 @@ makeObjectSchema({
   },
 });
 ```
+
+Only supported in Superhuman Docs.
 
 ***
 

@@ -97,6 +97,10 @@ For performance reasons formula results are cached by default. See the [caching 
 
 ## Recalculation
 
+!!! docs "Docs only"
+
+    Recalculation is only supported in :superhuman-docs: Docs. In :superhuman-go: Go a formula is a tool the agent runs on demand, so there's no stored result to recalculate.
+
 After a formula is run its value is stored in the document model. Reloading the document will not cause the formula to be run again. Instead the formula engine monitors for changes to the formula inputs and determines if the result needs to be recalculated.
 
 Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the **Settings** tab of the Pack's side panel there is a "Refresh now" button (**⟳**) that allows users to recalculate all formulas using the Pack, as well as options to cause them to recalculate on a regular schedule.

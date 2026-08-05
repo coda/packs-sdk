@@ -443,6 +443,8 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
     /**
      * Variable argument parameters, used if this formula should accept arbitrary
      * numbers of inputs.
+     *
+     * Only supported in Superhuman Docs.
      */
     readonly varargParameters?: ParamDefs;
     /**

@@ -1,1 +1,3 @@
 Two-way sync is an optional feature of sync tables that allows users to make edits to row data and push those changes back to the data source. Pack makers enable two-way sync on their tables by annotating their schemas and writing an `executeUpdate` function that handles the update logic.
+
+Two-way sync is only supported in Superhuman Docs.

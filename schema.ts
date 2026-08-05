@@ -122,6 +122,8 @@ export enum ValueHintType {
   /**
    * Indicates to interpret and render a value as an embed. The provided value should be a URL pointing
    * to an embeddable web page.
+   *
+   * Only supported in Superhuman Docs.
    */
   Embed = 'embed',
   /**
@@ -148,6 +150,8 @@ export enum ValueHintType {
    *   },
    * });
    * ```
+   *
+   * Only supported in Superhuman Docs.
    */
   Reference = 'reference',
   /**
@@ -919,6 +923,8 @@ export interface ObjectSchemaProperty {
    * Whether this object schema property is editable by the user in the UI.
    *
    * Only supported for top-level properties of a sync table.
+   *
+   * Only supported in Superhuman Docs.
    */
   mutable?: boolean;
 
@@ -1399,6 +1405,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    *
    * Non-featured properties can always be referenced in formulas regardless of whether column
    * projections have been created for them.
+   *
+   * Only supported in Superhuman Docs.
    */
   featuredProperties?: L[];
   /**
@@ -1410,6 +1418,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * Attribution text, images, and/or links that should be rendered along with this value.
    *
    * See {@link makeAttributionNode}.
+   *
+   * Only supported in Superhuman Docs.
    */
   attribution?: AttributionNode[];
   /**
@@ -1420,6 +1430,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * Properties not declared in the schema will not work properly in Superhuman Docs: they cannot be
    * used natively in the formula language and will not have correct types in Superhuman Docs. But, in certain
    * scenarios they can be useful.
+   *
+   * Only supported in Superhuman Docs.
    */
   includeUnknownProperties?: boolean;
   /**
@@ -1544,6 +1556,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
 
   /**
    * Defines how to index objects for use with full-text indexing.
+   *
+   * Only supported in Superhuman Go.
    */
   index?: IndexDefinition;
 

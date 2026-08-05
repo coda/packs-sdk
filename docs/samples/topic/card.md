@@ -8,6 +8,8 @@ icon: material/card-text
 
 A card is a visual way to display key information about an item, typically represented by a URL in an external application.
 
+Cards are only supported in Superhuman Docs.
+
 
 [Learn More](../../guides/blocks/cards.md){ .md-button }
 

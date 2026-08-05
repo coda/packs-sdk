@@ -5,23 +5,66 @@ description: Create tables of data that automatically sync in records from an ex
 
 # Add sync tables
 
-Tables are one of the most powerful features of Superhuman Docs, and many times people use them to track items that are also represented in other systems. For example, you may have a table of upcoming events, each of which is already listed in a company calendar. Sync tables allow you to define a special type of table where the rows are automatically synced from an external data source such as an API.
+Sync tables let you sync a large amount of data from an external data source, such as an API, and keep it up to date automatically. For example, you might pull in the upcoming events from a company calendar or the open tasks from a project tracker.
+
+A sync table's data can end up in one of two places.
+
+- **:superhuman-go: Go** - The records are synced into the knowledge layer so Go and agents can search over your data. This requires some additional setup, described in the [Indexing guide][indexing].
+- **:superhuman-docs: Docs** - The records populate a special type of table in your doc, where they can be viewed, filtered, and referenced like any other table.
 
 [View Sample Code][samples]{ .md-button }
 
 
 ## Using sync tables
 
-Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ custom.pack_panel_clicks }} and drag the table into the canvas.
+Before a sync table can pull in data it must be added and configured.
 
-<video style="width:auto" loop muted autoplay alt="Recording of adding a sync table." class="screenshot"><source src="site:images/sync_table_use.mp4" type="video/mp4"></source></video>
+=== ":superhuman-go: Go"
 
-If the sync table doesn't have any required parameters it will start syncing immediately, otherwise you'll have to configure it first. The data in the table can be synced manually or set up to sync automatically at regular intervals.
+    Sync tables are configured when installing the connector, during which time the user can also set parameters. Once the connector is installed, the platform will begin indexing the data into the knowledge layer. See the [Indexing guide][indexing] for more information.
 
-!!! info "Multiple syncs"
-    Each sync table can only be added once to a document. If you want to sync data from multiple accounts or with different parameters you can add additional syncs to the table. In the table options pane click the **Add another sync** button and configure the settings. The results from all syncs will be appended to the same table, but you can use views and filters on that table to display them separately.
+    <img src="site:images/sync_table_usage_go.png" srcset="site:images/sync_table_usage_go_2x.png 2x" class="screenshot" alt="Sync table setup in Go.">
 
-The data in the table is synced with the external source automatically on a schedule (at most hourly). In the table's **Options** pane users can set the sync frequency or start a manual sync. It is not possible to configure a button or automation to start a sync.
+=== ":superhuman-docs: Docs"
+
+    Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ custom.pack_panel_clicks }} and drag the table into the canvas.
+
+    <video style="width:auto" loop muted autoplay alt="Recording of adding a sync table." class="screenshot"><source src="site:images/sync_table_use.mp4" type="video/mp4"></source></video>
+
+    If the sync table doesn't have any required parameters it will start syncing immediately, otherwise you'll have to configure it first.
+
+
+## Sync frequency
+
+A sync table's data refreshes automatically on a schedule, and can also be re-synced manually.
+
+=== ":superhuman-go: Go"
+
+    Go decides how often to reindex the data, so users don't set a sync frequency. By default a full sync runs every 24 hours, and if the connector supports [incremental sync][incremental] an incremental sync runs every 4 hours with a full sync every 7 days. To trigger a manual re-sync, use the **Rerun sync** button (the lightning bolt) in the [ingestion logs][ingestion_logs].
+
+=== ":superhuman-docs: Docs"
+
+    Automatic syncs run at most hourly. In the table's **Options** pane users can set the sync frequency or start a manual sync. It is not possible to configure a button or automation to start a sync.
+
+
+## Multiple syncs
+
+A single sync table can be populated by more than one sync, letting you pull in data from multiple accounts or with different parameters. The rows from all of a table's syncs are combined into that one table.
+
+=== ":superhuman-go: Go"
+
+    You add additional syncs while configuring the connector on the installation screen. With the table selected, click **Options** > **Add sync setting** to create additional syncs.
+
+    <img src="site:images/sync_table_multiple_go.png" srcset="site:images/sync_table_multiple_go_2x.png 2x" class="screenshot" alt="Configuring multiple syncs in Superhuman Go">
+
+=== ":superhuman-docs: Docs"
+
+    A sync table can only be added to a document once, so to add more you open the table's **Options** pane and click **Add another sync**. The rows from each sync are appended to the same table, and you can use views and filters to display them separately.
+
+    <img src="site:images/sync_table_multiple_docs.png" srcset="site:images/sync_table_multiple_docs_2x.png 2x" class="screenshot" alt="Adding another sync in Superhuman Docs">
+
+!!! info "Not supported for dynamic sync tables"
+    Multiple syncs are only available for regular sync tables, not [dynamic sync tables][dynamic_sync_tables].
 
 
 ## Creating a sync table
@@ -143,9 +186,19 @@ The parameters defined on the sync formula are exposed to users as criteria in t
 In most sync tables, parameters are used to allow users to filter the results in the sync table. Although users can always add filters to the resulting table to hide certain rows, it's faster and simpler to do that filtering in the sync formula itself.
 
 
-## Row limits
+## Limits
 
-Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit the platform will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
+Sync tables have a limit on how much data they can hold.
+
+=== ":superhuman-go: Go"
+
+    Go limits indexed data by size rather than by number of rows. By default a connector can index up to 10 tables and 100MB of data across all of them. When the size limit is reached the sync is terminated, so we recommend syncing the most relevant records (newest, most trafficked) first.
+
+=== ":superhuman-docs: Docs"
+
+    Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit the platform will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit. Because of this limit, you often need to prune the synced data down to the subset you're interested in.
+
+These defaults are subject to change without warning, and in the future may vary based on the user's plan.
 
 
 ## Long-running syncs {: #longrunning}
@@ -233,6 +286,12 @@ See the [Schemas guide][schema_references] for more information on how to create
 
 [View Sample Code][sample_reference]{ .md-button }
 
+!!! go "Limited in Go"
+
+    Row references effectively don't work in :superhuman-go: Go. Go sees only the reference's display value and ID, and doesn't resolve the reference to load the rest of the target row's data.
+
+    To give Go the data it needs, populate the fields directly rather than relying on a reference. You can [detect the source application][source_detection] and fill in the fuller set of fields when running in Go.
+
 
 ## Account-specific fields
 
@@ -247,6 +306,10 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 
 
 ## Columns selection
+
+!!! docs "Docs only"
+
+    Column selection is only available in :superhuman-docs: Docs. In :superhuman-go: Go all columns are always indexed.
 
 Although only [featured columns][schemas_featured_columns] are shown in the table by default, all of the schema properties are synced and stored in the table as their own columns. Additionally, the object chip in the first column of the sync table provides quick access to view and formulaically access the value of all properties.
 
@@ -266,6 +329,10 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
     ```
 
 [samples]: ../../../samples/topic/sync-table.md
+[indexing]: indexing/index.md
+[incremental]: indexing/incremental.md
+[source_detection]: ../../../agents/upgrade.md#source-application-detection
+[ingestion_logs]: ../../../development/logging.md#ingestion-logs
 [help_center]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
 [sample_todoist]: ../../../samples/full/todoist.md
 [schemas]: ../../advanced/schemas.md
