@@ -1634,6 +1634,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     purpose?: import("./api_types").FormulaPurpose | undefined;
+    replacesMcpTools?: readonly string[] | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
     validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
@@ -1680,6 +1681,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     purpose?: import("./api_types").FormulaPurpose | undefined;
+    replacesMcpTools?: readonly string[] | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
     validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;

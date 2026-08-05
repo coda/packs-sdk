@@ -613,6 +613,16 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly purpose?: FormulaPurpose;
 
   /**
+   * Names of MCP tools, exposed by this same pack's MCP server(s), that this formula replaces.
+   * When both this formula and the listed MCP tool(s) resolve for an agent, the MCP tool(s) are
+   * hidden in favor of this purpose-built formula. Use the plain tool name your MCP server
+   * publishes (e.g. `slack_send_message`) — the agent runtime maps it to the internal namespaced
+   * name for you. Used by agents; not for use by packs that are not Superhuman-authored.
+   * @internal
+   */
+  readonly replacesMcpTools?: readonly string[];
+
+  /**
    * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
    * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
    * can use the bulk of the pack without those privileges. The platform will give users help in understanding

@@ -891,6 +891,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         isExperimental: z.boolean().optional(),
         isSystem: z.boolean().optional(),
         purpose: z.nativeEnum(api_types_4.FormulaPurpose).optional(),
+        replacesMcpTools: z.array(z.string()).optional(),
         extraOAuthScopes: z.array(z.string()).optional(),
         allowedAuthenticationNames: z.array(z.string()).optional(),
         // Has to be any to avoid circular dependency.
