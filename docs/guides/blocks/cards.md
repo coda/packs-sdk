@@ -5,6 +5,10 @@ description: Display structured information as rich cards.
 
 # Preview content with rich cards
 
+!!! docs "Docs only"
+
+    Cards are only supported in :superhuman-docs: Docs.
+
 Pack formulas can return structured data as [objects][data_types_objects], allowing a single call to return a variety of related information. By default these objects are presented as "mentions", shown as chips in the document that you can hover over to get the full set of information.
 
 <img src="site:images/cards_demo_mention.png" srcset="site:images/cards_demo_mention_2x.png 2x" alt="Schema shown as a mention">

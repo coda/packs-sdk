@@ -6,9 +6,9 @@ cSpell:words: Streamable
 
 # Connect to an MCP server
 
-!!! info "Superhuman Go only"
+!!! go "Go only"
 
-    Connecting to an MCP server is only supported for connectors installed in :superhuman-go: Go.
+    MCP servers are only supported in :superhuman-go: Go.
 
 The [Model Context Protocol (MCP)][mcp] offers a standard way to expose resources and tools to LLMs. Many apps are adopting this standard and hosting MCP servers, making it easy for AI tools to interact with their data and features.
 

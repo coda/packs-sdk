@@ -70,8 +70,12 @@ let encoded = Buffer.from(svg).toString("base64");
 return sdk.SvgConstants.DataUrlPrefix + encoded;
 ```
 
-!!! danger "Data URL Size"
-    Data URLs should only be used for very small images, like simple SVGs. Returning large images as data URLs can cause performance issues or even break the document they are used in.
+Data URLs should only be used for very small images, like simple SVGs. Using this approach for large images can lead to issues.
+
+- **:superhuman-go: Go** - A data URL is passed to the LLM, which has to reproduce it character-for-character when writing its response. LLMs often can't faithfully copy long base64 strings, resulting in a broken image.
+- **:superhuman-docs: Docs** - The URL data is stored in the document model, and large URLs can lead to performance issues or even break the document.
+
+For large images, return a hosted URL instead, for example from [temporary blob storage](#raw-image-data).
 
 
 ### Dark mode

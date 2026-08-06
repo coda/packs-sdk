@@ -13,7 +13,7 @@
     },
     "exampleFooterLink": "https://docs.superhuman.com/packs/build/latest/guides/blocks/column-formats",
     "learnMoreLink": "/guides/blocks/column-formats",
-    "content": "A **column format** is a custom column type that you apply to any column in any table. A column format tells Superhuman Docs to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from an external API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used as an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
+    "content": "A **column format** is a custom column type that you apply to any column in any table. A column format tells Superhuman Docs to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from an external API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used as an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.\n\nColumn formats are only supported in Superhuman Docs.",
     "exampleSnippets": [
       {
         "name": "Template",
@@ -834,7 +834,7 @@
     },
     "exampleFooterLink": "https://docs.superhuman.com/packs/build/latest/guides/blocks/cards",
     "learnMoreLink": "/guides/blocks/cards",
-    "content": "A card is a visual way to display key information about an item, typically represented by a URL in an external application.",
+    "content": "A card is a visual way to display key information about an item, typically represented by a URL in an external application.\n\nCards are only supported in Superhuman Docs.",
     "exampleSnippets": [
       {
         "name": "Template",
@@ -870,7 +870,7 @@
     },
     "exampleFooterLink": "https://docs.superhuman.com/packs/build/latest/guides/blocks/sync-tables/two-way",
     "learnMoreLink": "/guides/blocks/sync-tables/two-way",
-    "content": "Two-way sync is an optional feature of sync tables that allows users to make edits to row data and push those changes back to the data source. Pack makers enable two-way sync on their tables by annotating their schemas and writing an `executeUpdate` function that handles the update logic.",
+    "content": "Two-way sync is an optional feature of sync tables that allows users to make edits to row data and push those changes back to the data source. Pack makers enable two-way sync on their tables by annotating their schemas and writing an `executeUpdate` function that handles the update logic.\n\nTwo-way sync is only supported in Superhuman Docs.",
     "exampleSnippets": [
       {
         "name": "Simple two-way sync",
@@ -906,7 +906,7 @@
     },
     "exampleFooterLink": "https://docs.superhuman.com/packs/build/latest/guides/blocks/mcp",
     "learnMoreLink": "/guides/blocks/mcp",
-    "content": "The **Model Context Protocol (MCP)** is an open standard for exposing tools to LLMs, and many applications now host MCP servers. A connector can integrate with a hosted MCP server to make its tools available in Superhuman Go, without having to implement each one yourself. Adding a server takes only a few lines of code, along with whatever authentication it requires.\n\nThe samples below show how to connect to an MCP server using each of the supported authentication types, as well as how to combine an MCP server with other building blocks like sync tables.",
+    "content": "The **Model Context Protocol (MCP)** is an open standard for exposing tools to LLMs, and many applications now host MCP servers. A connector can integrate with a hosted MCP server to make its tools available in Superhuman Go, without having to implement each one yourself. Adding a server takes only a few lines of code, along with whatever authentication it requires.\n\nThe samples below show how to connect to an MCP server using each of the supported authentication types, as well as how to combine an MCP server with other building blocks like sync tables.\n\nMCP servers are only supported in Superhuman Go.",
     "exampleSnippets": [
       {
         "name": "Template",

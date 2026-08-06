@@ -152,6 +152,8 @@ class PackDefinitionBuilder {
      *   formulaName: 'MyFormula',
      * });
      * ```
+     *
+     * Only supported in Superhuman Docs.
      */
     addColumnFormat(format) {
         this.formats.push(format);
@@ -186,6 +188,8 @@ class PackDefinitionBuilder {
      * ```
      * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
      * ```
+     *
+     * Only supported in Superhuman Go.
      */
     addMCPServer(server) {
         this.mcpServers.push(server);

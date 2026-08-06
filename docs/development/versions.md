@@ -97,39 +97,38 @@ There are three different options for determining which version of the Pack to u
 
 When someone installs a released Pack, they will default to the **Latest release** option. If the Pack has no releases yet, Pack admins and testers can install and they will default to the **Latest version** option.
 
+You can change which version is used at any time.
 
-### :superhuman-go: Go
+=== ":superhuman-go: Go"
 
-To change the version used by Go:
+    To change the version used by Go:
 
-=== "Agent"
+    === "Agent"
 
-    1.  Open the [agent's settings screen][navigation_agent_settings]{ data-preview }.
-    1.  Click the gear icon :octicons-gear-16:.
-    1.  Change the **Pack version** option as desired.
+        1.  Open the [agent's settings screen][navigation_agent_settings]{ data-preview }.
+        1.  Click the gear icon :octicons-gear-16:.
+        1.  Change the **Pack version** option as desired.
 
-=== "Connector"
+    === "Connector"
 
-    1.  Open the [connector's settings screen][navigation_connector_settings]{ data-preview }.
-    1.  Click the gear icon :octicons-gear-16:.
-    1.  Change the **Pack version** option as desired.
+        1.  Open the [connector's settings screen][navigation_connector_settings]{ data-preview }.
+        1.  Click the gear icon :octicons-gear-16:.
+        1.  Change the **Pack version** option as desired.
 
-<img src="site:images/agent_version.png" srcset="site:images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the agent.">
+    <img src="site:images/agent_version.png" srcset="site:images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the agent.">
 
+=== ":superhuman-docs: Docs"
 
-### :superhuman-docs: Docs
+    To change the version used in the doc:
 
-To change the version used in the doc:
+    1. Open the [Pack maker tools][navigation_connector_maker_tools]{ data-preview } panel.
+    1. Click the gear icon on the panel.
+    1. Change the **Installed in this doc** setting as desired.
 
-1. Open the [Pack maker tools][navigation_connector_maker_tools]{ data-preview } panel.
-1. Click the gear icon on the panel.
-1. Change the **Installed in this doc** setting as desired.
+    <img src="site:images/pmt_settings.png" srcset="site:images/pmt_settings_2x.png 2x" class="screenshot" alt="Changing the version installed in a doc from the Pack maker tools settings">
 
-<img src="site:images/pmt_settings.png" srcset="site:images/pmt_settings_2x.png 2x" class="screenshot" alt="Changing the version installed in a doc from the Pack maker tools settings">
-
-
-!!! warning "Don't use latest version for published docs"
-    The **Latest Version** option is useful while developing and testing, but you must switch to **Latest Release** before you can publish a doc or convert it to a template — and once a doc is published or turned into a template you won't be able to change the version at all. Using **Latest Release** also ensures you don't break your doc as you change your Pack, and that users get the same behavior when they copy it.
+    !!! warning "Don't use latest version for published docs"
+        The **Latest Version** option is useful while developing and testing, but you must switch to **Latest Release** before you can publish a doc or convert it to a template — and once a doc is published or turned into a template you won't be able to change the version at all. Using **Latest Release** also ensures you don't break your doc as you change your Pack, and that users get the same behavior when they copy it.
 
 
 [semver]: https://semver.org/

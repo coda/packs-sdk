@@ -5,9 +5,9 @@ description: Add content to the built-in vector database to use with RAG.
 
 # Index content into the knowledge layer
 
-!!! info "Superhuman Go only"
+!!! go "Go only"
 
-    Indexing is only available for connectors installed in :superhuman-go: Go.
+    Indexing is only supported in :superhuman-go: Go.
 
 LLMs have a limited context window — the amount of text they can consider at once. This can make it challenging to give your connector access to all the data it needs, which can be much larger. One approach is RAG (retrieval-augmented generation), in which the LLM first retrieves relevant records for the user's query and then generates a response using them.
 
@@ -29,13 +29,11 @@ Indexing a blog post or draft email makes sense, but indexing quarterly sales nu
 Indexing is built on top of [sync tables][sync_tables]. Create a sync table for each record type you want to index, then ensure its schema includes the required metadata, as described in the [Schema changes guide][indexing_schemas]. You can improve the data freshness by implementing [Incremental sync][incremental] and simplify the user setup by implementing [crawling][crawling].
 
 
-## Data freshness and size
+## Data freshness
 
 The platform determines how often to reindex the data, attempting to find a balance between freshness and resource consumption. The default is to sync the data every 24 hours. If the connector supports [incremental sync][incremental], then an incremental sync is done every 4 hours with a full sync done every 7 days (or as needed).
 
-There are also limits as to how much data can be indexed. By default a connector can index 10 tables and up to 100MB of data across all tables. Where the size limit is reached the sync will be terminated, therefore we recommend that the most relevant records (newest, most trafficked) are synced first.
-
-These defaults are subject to change without warning, and in the future may vary based on the user's plan.
+There are also limits as to how much data can be indexed. See the [Limits section][sync_tables_limits] of the sync tables guide for more information.
 
 
 ## Testing and monitoring
@@ -60,6 +58,7 @@ Making changes to your Pack or connection settings doesn't immediately trigger t
 
 
 [sync_tables]: ../index.md
+[sync_tables_limits]: ../index.md#limits
 [tools_knowledge]: ../../../../agents/features/tools.md#knowledge
 [indexing_schemas]: ./schema.md
 [incremental]: ./incremental.md
