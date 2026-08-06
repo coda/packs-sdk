@@ -151,7 +151,7 @@ var ValueHintType;
      * });
      * ```
      *
-     * Only supported in Superhuman Docs.
+     * Limited supported in Superhuman Go.
      */
     ValueHintType["Reference"] = "reference";
     /**

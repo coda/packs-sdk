@@ -182,7 +182,7 @@ makeObjectSchema({
 });
 ```
 
-Only supported in Superhuman Docs.
+Limited supported in Superhuman Go.
 
 ***
 

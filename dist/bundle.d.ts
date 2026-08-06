@@ -1403,7 +1403,7 @@ export declare enum ValueHintType {
 	 * });
 	 * ```
 	 *
-	 * Only supported in Superhuman Docs.
+	 * Limited supported in Superhuman Go.
 	 */
 	Reference = "reference",
 	/**
