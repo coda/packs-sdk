@@ -212,7 +212,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.SparseEmailArray]: { type: 'array', items: Type.email, allowEmpty: true },
 };
 /**
- * Enumeration of purposes for a formula that can be used by agents.
+ * Enumeration of purposes for a formula that can be used in Superhuman Go.
  */
 var FormulaPurpose;
 (function (FormulaPurpose) {
@@ -313,7 +313,7 @@ var InvocationSource;
      */
     InvocationSource["Doc"] = "Doc";
     /**
-     * A Superhuman Go agent.
+     * Superhuman Go.
      */
     InvocationSource["Go"] = "Go";
     /**

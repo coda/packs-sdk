@@ -115,7 +115,7 @@ You can change which version is used at any time.
         1.  Click the gear icon :octicons-gear-16:.
         1.  Change the **Pack version** option as desired.
 
-    <img src="site:images/agent_version.png" srcset="site:images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the agent.">
+    <img src="site:images/agent_version.png" srcset="site:images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the connector.">
 
 === ":superhuman-docs: Docs"
 
@@ -134,5 +134,4 @@ You can change which version is used at any time.
 [semver]: https://semver.org/
 [git]: https://git-scm.com/
 [navigation_connector_maker_tools]: ../support/navigation.md#connector-maker-tools
-[navigation_agent_settings]: ../support/navigation.md#agent
 [navigation_connector_settings]: ../support/navigation.md#connector-go

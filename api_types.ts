@@ -437,7 +437,7 @@ export interface ParamDef<T extends UnionType> {
 
   /**
    * Whether this parameter is compatible with incremental sync.
-   * If not, it will be hidden from agent setup UI.
+   * If not, it will be hidden from the Superhuman Go setup UI.
    */
   supportsIncrementalSync?: boolean;
 }
@@ -609,7 +609,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly isSystem?: boolean;
 
   /**
-   * The purpose for this formula, if any. Used by agents.
+   * The purpose for this formula, if any. Used in Superhuman Go.
    * @internal
    */
   readonly purpose?: FormulaPurpose;
@@ -670,7 +670,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 }
 
 /**
- * Enumeration of purposes for a formula that can be used by agents.
+ * Enumeration of purposes for a formula that can be used in Superhuman Go.
  */
 export enum FormulaPurpose {
   /**
@@ -1179,7 +1179,7 @@ export enum InvocationSource {
    */
   Doc = 'Doc',
   /**
-   * A Superhuman Go agent.
+   * Superhuman Go.
    */
   Go = 'Go',
   /**
@@ -1276,7 +1276,7 @@ export interface ExecutionContext {
   /**
    * If this invocation is a retry, this will be populated with information about what went wrong during the previous
    * attempt. If an error occurs while indexing a sync table, it will retried again later. This field is only applicable
-   * for sync tables used within Superhuman Go agents.
+   * for sync tables used within Superhuman Go.
    */
   readonly previousAttemptError?: InvocationError;
 }

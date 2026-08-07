@@ -291,7 +291,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   }
 
   /**
-   * Adds an agent skill definition to this pack.
+   * Adds a skill definition to this pack.
    *
    * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
    *
@@ -328,9 +328,9 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
   /**
-   * Sets the chat skill for this pack's agent.
+   * Sets the chat skill for agent.
    *
-   * The chat skill controls the behavior when users chat with the pack agent.
+   * The chat skill controls the behavior when users chat with the agent.
    * It defines the prompts, available tools, and optionally the model to use.
    *
    * All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
@@ -356,6 +356,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *   ],
    * });
    * ```
+   *
+   * @deprecated No longer used, now that agents are connectors.
    */
   setChatSkill(skill: PartialSkillDef): this {
     this.chatSkill = skill;
@@ -376,6 +378,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *   tools: [],
    * });
    * ```
+   *
+   * @deprecated No longer used, now that agents are connectors.
    */
   setBenchInitializationSkill(skill: PartialSkillDef): this {
     this.benchInitializationSkill = skill;
@@ -383,7 +387,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   }
 
   /**
-   * Maps agent entrypoints to skills in the Pack.
+   * Maps entrypoints to skills in the Pack.
    *
    * @example
    * ```
@@ -392,7 +396,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * });
    * ```
    *
-   * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
+   * @deprecated No longer used, now that agents are connectors.
    */
   setSkillEntrypoints(entrypoints: SkillEntrypoints): this {
     this.skillEntrypoints = entrypoints;
@@ -412,6 +416,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *   `,
    * });
    * ```
+   *
+   * @deprecated No longer used, now that agents are connectors.
    */
   addSuggestedPrompt(prompt: SuggestedPrompt): this {
     this.suggestedPrompts.push(prompt);

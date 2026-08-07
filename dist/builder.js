@@ -160,7 +160,7 @@ class PackDefinitionBuilder {
         return this;
     }
     /**
-     * Adds an agent skill definition to this pack.
+     * Adds a skill definition to this pack.
      *
      * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
      *
@@ -196,9 +196,9 @@ class PackDefinitionBuilder {
         return this;
     }
     /**
-     * Sets the chat skill for this pack's agent.
+     * Sets the chat skill for agent.
      *
-     * The chat skill controls the behavior when users chat with the pack agent.
+     * The chat skill controls the behavior when users chat with the agent.
      * It defines the prompts, available tools, and optionally the model to use.
      *
      * All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
@@ -224,6 +224,8 @@ class PackDefinitionBuilder {
      *   ],
      * });
      * ```
+     *
+     * @deprecated No longer used, now that agents are connectors.
      */
     setChatSkill(skill) {
         this.chatSkill = skill;
@@ -243,13 +245,15 @@ class PackDefinitionBuilder {
      *   tools: [],
      * });
      * ```
+     *
+     * @deprecated No longer used, now that agents are connectors.
      */
     setBenchInitializationSkill(skill) {
         this.benchInitializationSkill = skill;
         return this;
     }
     /**
-     * Maps agent entrypoints to skills in the Pack.
+     * Maps entrypoints to skills in the Pack.
      *
      * @example
      * ```
@@ -258,7 +262,7 @@ class PackDefinitionBuilder {
      * });
      * ```
      *
-     * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
+     * @deprecated No longer used, now that agents are connectors.
      */
     setSkillEntrypoints(entrypoints) {
         this.skillEntrypoints = entrypoints;
@@ -277,6 +281,8 @@ class PackDefinitionBuilder {
      *   `,
      * });
      * ```
+     *
+     * @deprecated No longer used, now that agents are connectors.
      */
     addSuggestedPrompt(prompt) {
         this.suggestedPrompts.push(prompt);

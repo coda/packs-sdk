@@ -10,7 +10,7 @@ search:
 
 # Interface: Skill
 
-A prompt and set of tools that defines a specific skill this agent provides.
+A prompt and set of tools that defines a specific skill this connector provides.
 
 ## Properties
 

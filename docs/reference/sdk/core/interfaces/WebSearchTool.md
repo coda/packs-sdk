@@ -11,8 +11,6 @@ search:
 # Interface: WebSearchTool
 
 Tool that enables searching the public internet for up-to-date information.
-When enabled, the agent can search the web to retrieve current information
-about a topic or from a URL.
 
 ## Extends
 

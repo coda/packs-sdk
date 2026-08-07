@@ -24,9 +24,59 @@ This should only be used by legacy pack implementations.
 
 ## Properties
 
+### ~~benchInitializationSkill?~~
+
+> `optional` **benchInitializationSkill**: `Partial`\<[`Skill`](Skill.md)\>
+
+The skill used when the agent is first initialized in the bench.
+All fields are optional - omitted fields will use defaults at runtime.
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
+#### Inherited from
+
+[`PackVersionDefinition`](PackVersionDefinition.md).[`benchInitializationSkill`](PackVersionDefinition.md#benchinitializationskill)
+
+***
+
 ### ~~category?~~
 
 > `optional` **category**: `PackCategory`
+
+***
+
+### ~~chatSkill?~~
+
+> `optional` **chatSkill**: `Partial`\<[`Skill`](Skill.md)\>
+
+The skill used when chatting with the agent.
+All fields are optional - omitted fields will use defaults at runtime.
+
+#### Example
+
+```ts
+// Override just the tools
+pack.setChatSkill({
+  tools: [
+    { type: sdk.ToolType.Pack },
+  ],
+});
+
+// Override just the prompt
+pack.setChatSkill({
+  prompt: "You are an expert in this pack.",
+});
+```
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
+#### Inherited from
+
+[`PackVersionDefinition`](PackVersionDefinition.md).[`chatSkill`](PackVersionDefinition.md#chatskill)
 
 ***
 
@@ -119,6 +169,18 @@ Whether this is a pack that will be used internally and not exposed directly to 
 
 ***
 
+### ~~mcpServers?~~
+
+> `optional` **mcpServers**: [`MCPServer`](MCPServer.md)[]
+
+Definitions of MCP servers that this pack can connect to.
+
+#### Inherited from
+
+[`PackVersionDefinition`](PackVersionDefinition.md).[`mcpServers`](PackVersionDefinition.md#mcpservers)
+
+***
+
 ### ~~minimumFeatureSet?~~
 
 > `optional` **minimumFeatureSet**: `FeatureSet`
@@ -177,7 +239,11 @@ contact support for approval.
 
 > `optional` **skillEntrypoints**: [`SkillEntrypoints`](SkillEntrypoints.md)
 
-Mapping of skills to entrypoints that the pack agent can be invoked from.
+Mapping of skills to entrypoints that the agent can be invoked from.
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
 
 #### Inherited from
 
@@ -194,6 +260,22 @@ Definitions of skills that can be executed within this pack.
 #### Inherited from
 
 [`PackVersionDefinition`](PackVersionDefinition.md).[`skills`](PackVersionDefinition.md#skills)
+
+***
+
+### ~~suggestedPrompts?~~
+
+> `optional` **suggestedPrompts**: [`SuggestedPrompt`](SuggestedPrompt.md)[]
+
+Static suggested prompts that appear when the agent is opened in chat.
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
+#### Inherited from
+
+[`PackVersionDefinition`](PackVersionDefinition.md).[`suggestedPrompts`](PackVersionDefinition.md#suggestedprompts)
 
 ***
 

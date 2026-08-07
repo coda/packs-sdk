@@ -290,31 +290,13 @@
   "addSkill": {
     "prefix": "/addSkill",
     "description": "Adds a skill to guide the LLM.",
-    "body": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
-    "scope": "javascript,typescript"
-  },
-  "setChatSkill": {
-    "prefix": "/setChatSkill",
-    "description": "Sets the skill to use when replying to a chat message.",
-    "body": "pack.setChatSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
-    "scope": "javascript,typescript"
-  },
-  "setBenchInitializationSkill": {
-    "prefix": "/setBenchInitializationSkill",
-    "description": "Sets the skill to run when the user clicks on the agent.",
-    "body": "pack.setBenchInitializationSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
+    "body": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // Optionally: Add tools.\n  ],\n});",
     "scope": "javascript,typescript"
   },
   "addMcpServer": {
     "prefix": "/addMcpServer",
     "description": "Adds an MCP server.",
     "body": "pack.addMCPServer({\n  name: \"${1:MyMCPServer}\",\n  endpointUrl: \"${2:https://my-mcp-server.com/mcp}\",\n});",
-    "scope": "javascript,typescript"
-  },
-  "addSuggestedPrompt": {
-    "prefix": "/addSuggestedPrompt",
-    "description": "Adds a suggested prompt that shows up as a button in new chats.",
-    "body": "pack.addSuggestedPrompt({\n  name: \"${1:MyPrompt}\",\n  displayName: \"${2:My Prompt}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n});",
     "scope": "javascript,typescript"
   }
 }
