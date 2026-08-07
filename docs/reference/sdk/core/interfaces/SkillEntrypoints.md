@@ -15,9 +15,17 @@ Entrypoints that skills can be invoked from.
 
 ## Deprecated
 
-Use [PackDefinitionBuilder.setChatSkill](../classes/PackDefinitionBuilder.md#setchatskill) instead.
+No longer used, now that agents are connectors.
 
 ## Properties
+
+### ~~benchInitialization?~~
+
+> `optional` **benchInitialization**: [`SkillEntrypointConfig`](SkillEntrypointConfig.md)
+
+Skill to be invoked when the agent is clicked on in the bench for the first time.
+
+***
 
 ### ~~defaultChat?~~
 

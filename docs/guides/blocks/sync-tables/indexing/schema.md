@@ -283,5 +283,5 @@ If you are upgrading an existing Pack, you'll need to denormalize any data you w
 [people]: ../../../basics/data-types.md#people
 [schemas]: ../../../advanced/schemas.md
 [dynamic_sync_tables]: ../dynamic.md
-[contact_resolution_tool]: ../../../../agents/features/tools.md#contacts
+[contact_resolution_tool]: ../../skills.md#contacts
 [person]: ../../../../reference/sdk/core/enumerations/ValueHintType.md#person

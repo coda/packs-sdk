@@ -12,6 +12,6 @@ pack.addSkill({
     $4$My prompt$
   `,
   tools: [
-    // TODO: Add tools.
+    // Optionally: Add tools.
   ],
 });

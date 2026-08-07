@@ -367,7 +367,7 @@ plugins:
           "guides/development/versions.md": "development/versions.md"
 
           # 2026-07-16: Remove the agent developing & troubleshooting guides.
-          "agents/development.md": "agents/index.md"
+          "agents/development.md": "support/migration/superhuman-go.md"
           "agents/troubleshooting.md": "development/logging.md"
 
           # 2026-07-17: Move MCP and indexing from agents to connector building blocks.
@@ -376,6 +376,16 @@ plugins:
           "agents/indexing/schema.md": "guides/blocks/sync-tables/indexing/schema.md"
           "agents/indexing/crawling.md": "guides/blocks/sync-tables/indexing/crawling.md"
           "agents/indexing/incremental.md": "guides/blocks/sync-tables/indexing/incremental.md"
+
+          # 2026-08-06: Remove agents section.
+          "agents/features/skills.md": "guides/blocks/skills.md"
+          "agents/features/tools.md": "guides/blocks/skills.md"
+          "agents/upgrade.md": "support/migration/superhuman-go.md"
+          "agents/index.md": "support/migration/superhuman-go.md"
+          "agents/quickstart.md": "support/migration/superhuman-go.md"
+          "agents/examples.md": "support/migration/superhuman-go.md"
+          "agents/features/chat.md": "support/migration/superhuman-go.md"
+          "agents/features/context.md": "support/migration/superhuman-go.md"
 
     # Generate an RSS feed for the blog.
     # See: https://guts.github.io/mkdocs-rss-plugin/

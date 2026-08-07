@@ -941,6 +941,37 @@
     ]
   },
   {
+    "name": "Skills",
+    "description": "Samples that show how to define a skill.",
+    "icon": "material/school-outline",
+    "category": "Topic",
+    "triggerTokens": [],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/blocks/skills"
+    },
+    "exampleFooterLink": "https://docs.superhuman.com/packs/build/latest/guides/blocks/skills",
+    "learnMoreLink": "/guides/blocks/skills",
+    "content": "A **skill** is an optional set of instructions that guides the LLM on how to perform a specific task. The LLM reads each skill's description and loads the ones useful to the task at hand, along with any tools the skill suggests.\n\nSkills are only supported in Superhuman Go.",
+    "exampleSnippets": [
+      {
+        "name": "Template",
+        "content": "The basic structure of a skill.",
+        "code": "pack.addSkill({\n  name: \"MySkill\",\n  displayName: \"My skill\",\n  description: \"My skill description.\",\n  prompt: `\n    My prompt\n  `,\n  tools: [\n    // Optionally: Add tools.\n  ],\n});"
+      },
+      {
+        "name": "With MCP tools",
+        "content": "A skill that orchestrates several MCP tools to perform a task. This sample uses the Alpha Vantage MCP server.",
+        "code": "import * as sdk from \"@codahq/packs-sdk\";\n\nexport const pack = sdk.newPack();\n\npack.addSkill({\n  name: \"CompanySummary\",\n  displayName: \"Company summary\",\n  description: \"Gets a summary of a company, including stock performance.\",\n  prompt: `\n    First, use the SYMBOL_SEARCH tool to search for the ticker symbol,\n    preferring the US variant.\n    Then, call the following tools using that symbol: COMPANY_OVERVIEW,\n    COMPANY_LOGO, TIME_SERIES_DAILY, NEWS_SENTIMENT\n    Finally, output the company logo, a brief overview, a summary of recent\n    performance, and a summary of key news items affecting the company.\n  `,\n  tools: [\n    { type: sdk.ToolType.MCP },\n  ],\n});\n\npack.addMCPServer({\n  name: \"AlphaVantage\",\n  endpointUrl: \"https://mcp.alphavantage.co/mcp\",\n});\n\npack.setUserAuthentication({\n  type: sdk.AuthenticationType.QueryParamToken,\n  paramName: \"apikey\",\n  instructionsUrl: \"https://www.alphavantage.co/support/#api-key\",\n});\n\npack.addNetworkDomain(\"alphavantage.co\");"
+      },
+      {
+        "name": "With Pack tools",
+        "content": "A skill that uses Pack tools to perform a task. This sample uses the ExchangeRate-API and the screen annotation tool.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\npack.addSkill({\n  name: \"PlaceholderFiller\",\n  displayName: \"Placeholder Filler\",\n  description:\n    \"Finds placeholders for currency values in the writing, and fills them in.\",\n  prompt: `\n    Look for text like \"$100 (or X CAD)\" in the user's writing.\n    Use the ExchangeRate tool to convert from one currency to another.\n    Create a suggestion using the rewrite tool to replace the placeholder with\n    the value.\n  `,\n  tools: [\n    { type: coda.ToolType.Pack },\n    {\n      type: coda.ToolType.ScreenAnnotation,\n      annotation: { type: coda.ScreenAnnotationType.Rewrite },\n    },\n  ],\n});\n\npack.addFormula({\n  name: \"ExchangeRate\",\n  description: \"Gets the current exchange rate between two currencies.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"from\",\n      description: \"The ISO 4217 country code to convert from.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"to\",\n      description: \"The ISO 4217 country code to convert to.\",\n    }),\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function (args, context) {\n    let [fromCountry, toCountry] = args;\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: `https://v6.exchangerate-api.com/v6/latest/${fromCountry}`,\n    });\n    // The JSON response is automatically parsed into an object.\n    let rates = response.body.conversion_rates;\n    let rate = rates[toCountry];\n    if (!rate) {\n      throw new coda.UserVisibleError(\"Exchange rate not available.\");\n    }\n    return rate;\n  },\n});\n\n// Use the same API key for all users, passed in the Authorization header.\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"https://app.exchangerate-api.com/dashboard\",\n});\n\npack.addNetworkDomain(\"exchangerate-api.com\");"
+      }
+    ]
+  },
+  {
     "name": "Hello World",
     "description": "A simple \"Hello World\" Pack.",
     "icon": "material/hand-wave-outline",

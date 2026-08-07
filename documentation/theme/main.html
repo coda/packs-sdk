@@ -12,15 +12,6 @@
 {% endblock %}
 
 {% block content %}
-  {% if page and page.url and page.url.startswith('agents/') %}
-    <div class="admonition early-access">
-      <p class="admonition-title">Beta</p>
-      <p>
-        The SDK for agents is still under development, and the specifics are subject to change.<br>
-      </p>
-    </div>
-  {% endif %}
-
   {% if page and page.canonical_url %}
 
     {% set prompt = "Can you please read [this page](" ~ markdown_url ~ ") and prepare to answer questions about it?" %}
