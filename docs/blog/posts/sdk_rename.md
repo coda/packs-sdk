@@ -34,6 +34,6 @@ Packs for Coda are alive and well. You can keep building them, publishing them, 
 You'll also see the old name stick around in a few places. The npm package is still published as [`@codahq/packs-sdk`][npm], the source still lives at [`coda/packs-sdk`][repo] on GitHub. Renaming these artifacts isn't as straightforward, so they'll likely keep the old branding for some time.
 
 
-[go]: ../../agents/index.md
+[go]: ../../support/migration/superhuman-go.md
 [npm]: https://www.npmjs.com/package/@codahq/packs-sdk
 [repo]: https://github.com/coda/packs-sdk

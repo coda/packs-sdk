@@ -9,17 +9,6 @@ Throughout this documentation we reference various settings screens, panels, and
 
 ## :superhuman-go: Go
 
-### Agent settings {:#agent}
-
-After an agent is installed, you can access its settings by opening the following URL in your browser:
-
-```
-https://docs.superhuman.com/go/agent/setup/{PACK_ID}
-```
-
-Replace `{PACK_ID}` with the ID of the Pack containing the agent.
-
-
 ### Connector settings {:#connector-go}
 
 After a connector is installed, you can access its settings by:

@@ -379,9 +379,9 @@ pack.addSyncTable({
 });
 ```
 
-This approach works well in a doc, where the user can quickly determine if there is an error and adjust accordingly. However, when a sync table is used by an agent to [index data][indexing], the sync takes places out of view and the user won't get that feedback.
+This approach works well in a doc, where the user can quickly determine if there is an error and adjust accordingly. However, when a sync table is used by a connector to [index data][indexing], the sync takes places out of view and the user won't get that feedback.
 
-For sync tables only, you can instead use the [`validateParameters`][validateparameters] function. This function is run before the `execute` function begins, and the agent setup process won't complete until it passes. In it you can validate all of the parameter values and return an object containing the full set of errors to show to the user.
+For sync tables only, you can instead use the [`validateParameters`][validateparameters] function. This function is run before the `execute` function begins, and the connector setup process won't complete until it passes. In it you can validate all of the parameter values and return an object containing the full set of errors to show to the user.
 
 ```{.ts hl_lines="5-30"}
 pack.addSyncTable({

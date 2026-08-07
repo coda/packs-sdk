@@ -220,7 +220,7 @@ var SyncInterval;
     SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
 })(SyncInterval || (exports.SyncInterval = SyncInterval = {}));
 /**
- * The types of tools that can be used in an agent skill.
+ * The types of tools that can be used in a skill.
  */
 var ToolType;
 (function (ToolType) {

@@ -10,7 +10,7 @@ search:
 
 # Enumeration: ToolType
 
-The types of tools that can be used in an agent skill.
+The types of tools that can be used in a skill.
 
 ## Enumeration Members
 

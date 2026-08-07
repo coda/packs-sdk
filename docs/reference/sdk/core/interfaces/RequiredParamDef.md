@@ -176,7 +176,7 @@ The suggested value to be prepopulated for this parameter if it is not specified
 > `optional` **supportsIncrementalSync**: `boolean`
 
 Whether this parameter is compatible with incremental sync.
-If not, it will be hidden from agent setup UI.
+If not, it will be hidden from the Superhuman Go setup UI.
 
 #### Inherited from
 

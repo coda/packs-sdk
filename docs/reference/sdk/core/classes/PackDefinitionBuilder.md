@@ -339,7 +339,7 @@ pack.addNetworkDomain('example.com');
 
 > **addSkill**(`skill`): `this`
 
-Adds an agent skill definition to this pack.
+Adds a skill definition to this pack.
 
 In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
 
@@ -369,7 +369,7 @@ pack.addSkill({
 
 ***
 
-### addSuggestedPrompt()
+### ~~addSuggestedPrompt()~~
 
 > **addSuggestedPrompt**(`prompt`): `this`
 
@@ -387,11 +387,15 @@ pack.addSuggestedPrompt({
 });
 ```
 
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `prompt` | `SuggestedPrompt` |
+| `prompt` | [`SuggestedPrompt`](../interfaces/SuggestedPrompt.md) |
 
 #### Returns
 
@@ -445,7 +449,7 @@ pack.addSyncTable({
 
 ***
 
-### setBenchInitializationSkill()
+### ~~setBenchInitializationSkill()~~
 
 > **setBenchInitializationSkill**(`skill`): `this`
 
@@ -464,6 +468,10 @@ pack.setBenchInitializationSkill({
 });
 ```
 
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
 #### Parameters
 
 | Parameter | Type |
@@ -476,13 +484,13 @@ pack.setBenchInitializationSkill({
 
 ***
 
-### setChatSkill()
+### ~~setChatSkill()~~
 
 > **setChatSkill**(`skill`): `this`
 
-Sets the chat skill for this pack's agent.
+Sets the chat skill for agent.
 
-The chat skill controls the behavior when users chat with the pack agent.
+The chat skill controls the behavior when users chat with the agent.
 It defines the prompts, available tools, and optionally the model to use.
 
 All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
@@ -510,6 +518,10 @@ pack.setChatSkill({
 });
 ```
 
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
 #### Parameters
 
 | Parameter | Type |
@@ -526,7 +538,7 @@ pack.setChatSkill({
 
 > **setSkillEntrypoints**(`entrypoints`): `this`
 
-Maps agent entrypoints to skills in the Pack.
+Maps entrypoints to skills in the Pack.
 
 #### Example
 
@@ -538,7 +550,7 @@ pack.setSkillEntrypoints({
 
 #### Deprecated
 
-Use [PackDefinitionBuilder.setChatSkill](#setchatskill) instead.
+No longer used, now that agents are connectors.
 
 #### Parameters
 

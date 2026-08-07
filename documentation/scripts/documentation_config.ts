@@ -270,24 +270,9 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/skill/add_skill.ts',
   },
   {
-    triggerTokens: ['setChatSkill', 'ChatSkill', 'chat'],
-    content: 'Sets the skill to use when replying to a chat message.',
-    codeFile: './samples/snippets/skill/set_chat_skill.ts',
-  },
-  {
-    triggerTokens: ['setBenchInitializationSkill', 'BenchInitializationSkill', 'bench'],
-    content: 'Sets the skill to run when the user clicks on the agent.',
-    codeFile: './samples/snippets/skill/set_bench_initialization_skill.ts',
-  },
-  {
     triggerTokens: ['addMcpServer', 'McpServer', 'MCP'],
     content: 'Adds an MCP server.',
     codeFile: './samples/snippets/mcp/add_mcp_server.ts',
-  },
-  {
-    triggerTokens: ['addSuggestedPrompt', 'SuggestedPrompt', 'suggested'],
-    content: 'Adds a suggested prompt that shows up as a button in new chats.',
-    codeFile: './samples/snippets/agent/add_suggested_prompt.ts',
   },
 ];
 
@@ -1226,6 +1211,35 @@ export const Examples: Example[] = [
         content:
           'A Pack that uses an MCP for most tools, but includes a sync table for indexing. This sample syncs information from Todoist.',
         codeFile: './samples/packs/todoist/mcp.ts',
+      },
+    ],
+  },
+  {
+    name: 'Skills',
+    description: 'Samples that show how to define a skill.',
+    icon: 'material/school-outline',
+    category: ExampleCategory.Topic,
+    triggerTokens: [],
+    contentFile: './samples/packs/skill/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/blocks/skills',
+    },
+    exampleSnippets: [
+      {
+        name: 'Template',
+        content: 'The basic structure of a skill.',
+        codeFile: './samples/snippets/skill/add_skill.ts',
+      },
+      {
+        name: 'With MCP tools',
+        content: 'A skill that orchestrates several MCP tools to perform a task. This sample uses the Alpha Vantage MCP server.',
+        codeFile: './samples/packs/skill/alpha_vantage.ts',
+      },
+      {
+        name: 'With Pack tools',
+        content: 'A skill that uses Pack tools to perform a task. This sample uses the ExchangeRate-API and the screen annotation tool.',
+        codeFile: './samples/packs/skill/currency.ts',
       },
     ],
   },

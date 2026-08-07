@@ -1,10 +1,10 @@
 ---
-description: How to view and use logs to monitor and debug your agents and connectors.
+description: How to view and use logs to monitor and debug your connectors.
 ---
 
 # Logging
 
-Logs are the primary way to debug and troubleshoot your agents and connectors once they are running. Depending on what you're building and where it runs, there are a few different kinds of logs available.
+Logs are the primary way to debug and troubleshoot your connectors once they are running. Depending on what you're building and where it runs, there are a few different kinds of logs available.
 
 Viewing any of these logs requires **Pack admin** or **Can test** privileges on the underlying Pack. The entries you can see are scoped to a container:
 
@@ -12,20 +12,6 @@ Viewing any of these logs requires **Pack admin** or **Can test** privileges on 
 - :superhuman-docs: Docs - the document, so you'll see entries from activity in a document you have access to, even if someone else triggered it
 
 Log entries are kept for approximately two weeks, after which they are no longer available.
-
-
-## Agent logs
-
-Agent logs show what happened during a chat session with an agent, focused primarily on the context provided to the LLM, the actions it took, and the responses it generated. Agent logs include basic information about which tools were called and the responses, but don't include the internal execution details; for those, open the [connector logs](#connector-logs) of the relevant connectors.
-
-To access the agent logs:
-
-1.  Open the [agent's settings screen][navigation_agent_settings]{ data-preview }.
-1.  Click the **Agent logs** button.
-
-The drawer that opens lets you view logs from your recent sessions with the agent. Expand an **Agent Execution** entry and click **Show agent runtime details** to browse the internal state of the agent.
-
-<img src="site:images/agent_logs.png" srcset="site:images/agent_logs_2x.png 2x" class="screenshot" alt="A screenshot of the agent logs drawer.">
 
 
 ## Connector logs
@@ -40,7 +26,7 @@ How you access the connector logs depends on which product the connector was use
 The connector logs contain information about each time a formula in the connector was used in a tool call, either by an agent or by Go directly. To view them:
 
 1.  Open the [connector's settings screen][navigation_connector_go]{ data-preview }
-1.  Click the **Agent logs** button.
+1.  Click the **Session logs** button.
 
 The logs are grouped by the Go session where the connector was used, with the most recent session at the top. To get the latest results, click the refresh button in the upper right of the logs panel.
 
@@ -69,7 +55,7 @@ Connectors that use [Indexing][indexing] and include sync tables will generate a
 To access the ingestion logs:
 
 1.  Open the [connector's settings screen][navigation_connector_go]{ data-preview }
-1.  Click the **Ingestion logs** button.
+1.  Click the **Connector logs** button.
 
 Select a table from the **Datasource** dropdown to see the logs for that sync table. You can see the recent syncs for the table, and drill down into individual executions of the sync table and any associated logs.
 
@@ -170,7 +156,6 @@ Search results are no longer grouped by invocation, but instead a flat list of e
 [cli_logging]: cli.md#debugging-locally
 [fetcher_headers]: ../guides/basics/fetcher.md#headers
 [indexing]: ../guides/blocks/sync-tables/indexing/index.md
-[navigation_agent_settings]: ../support/navigation.md#agent
 [navigation_connector_go]: ../support/navigation.md#connector-go
 [navigation_connector_maker_tools]: ../support/navigation.md#connector-maker-tools
 [navigation_connector_panel]: ../support/navigation.md#connector-panel

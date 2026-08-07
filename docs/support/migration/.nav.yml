@@ -1,3 +1,5 @@
 append_unmatched: true
 nav:
   - Overview: index.md
+  - v0.11.0.md
+  - superhuman-go.md
