@@ -74,21 +74,25 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   skills: Skill[];
   /**
    * See {@link PackVersionDefinition.skillEntrypoints}.
+   * @deprecated No longer used, now that agents are connectors.
    */
   skillEntrypoints?: SkillEntrypoints;
   /**
    * See {@link PackVersionDefinition.chatSkill}.
    * @hidden
+   * @deprecated No longer used, now that agents are connectors.
    */
   chatSkill?: PartialSkillDef;
   /**
    * See {@link PackVersionDefinition.benchInitializationSkill}.
    * @hidden
+   * @deprecated No longer used, now that agents are connectors.
    */
   benchInitializationSkill?: PartialSkillDef;
   /**
    * See {@link PackVersionDefinition.suggestedPrompts}.
    * @hidden
+   * @deprecated No longer used, now that agents are connectors.
    */
   suggestedPrompts: SuggestedPrompt[];
   /**

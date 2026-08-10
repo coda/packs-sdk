@@ -181,9 +181,7 @@ Currently, some Pack features don't work in Superhuman Go.
 
 [indexing]: ../../guides/blocks/sync-tables/indexing/index.md
 [indexing_monitoring]: ../../guides/blocks/sync-tables/indexing/index.md#testing-and-monitoring
-[default_chat_skill]: ../../guides/blocks/skills.md#default-chat-skill
 [skills]: ../../guides/blocks/skills.md
-[screen_tools]: ../../guides/blocks/skills.md#screen-annotation-tools
 [vararg]: ../../guides/basics/parameters/index.md#vararg
 [two_way_sync]: ../../guides/blocks/sync-tables/two-way.md
 [actions]: ../../guides/blocks/actions.md

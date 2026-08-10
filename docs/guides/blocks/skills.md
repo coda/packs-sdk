@@ -41,7 +41,7 @@ pack.addSkill({
 
 ## Tools
 
-A skill can suggest a set of tools to use, which will be loaded into the agent's context (if not available already).
+A skill can suggest a set of tools to use, which will be loaded into the LLM's context (if not available already).
 
 
 ### MCP Tools
@@ -188,7 +188,7 @@ pack.addSkill({
 });
 ```
 
-When the tool runs, blue bars are added to the left of the affected paragraphs. Hovering over them reveals the alternative text the agent suggested, which users can accept or reject.
+When the tool runs, blue bars are added to the left of the affected paragraphs. Hovering over them reveals the alternative text that :superhuman-go: Go suggested, which users can accept or reject.
 
 <!-- TODO: Screenshot -->
 
@@ -219,7 +219,7 @@ For example, if the user types "Assign the ticket to Alice" your connector can s
 To allow your connector to search these contacts, add the [`ContactResolution`][contact_resolution] tool to the desired skills.
 
 ```ts
-pack.setChatSkill({
+pack.addSkill({
   name: "SearchByOwner",
   displayName: "Search tickets by owner",
   description: "Search for tickets by who they are assigned to.",
@@ -239,7 +239,7 @@ Each contact has a name and email address only; it's not possible to retrieve ot
 
 ### Web search
 
-The `WebSearch` tool allows the agent to search the internet for information or fetch data from a public URL. It's useful when the agent needs to do deeper research or reference information that may have changed after the LLM's training cutoff.
+The `WebSearch` tool allows the :superhuman-go: Go to search the internet for information or fetch data from a public URL. It's useful when the it needs to do deeper research or reference information that may have changed after the LLM's training cutoff.
 
 ```ts
 pack.addSkill({

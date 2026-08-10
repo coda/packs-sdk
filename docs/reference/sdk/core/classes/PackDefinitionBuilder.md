@@ -97,11 +97,15 @@ See [PackVersionDefinition.networkDomains](../interfaces/PackVersionDefinition.m
 
 ***
 
-### skillEntrypoints?
+### ~~skillEntrypoints?~~
 
 > `optional` **skillEntrypoints**: [`SkillEntrypoints`](../interfaces/SkillEntrypoints.md)
 
 See [PackVersionDefinition.skillEntrypoints](../interfaces/PackVersionDefinition.md#skillentrypoints).
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
 
 #### Implementation of
 

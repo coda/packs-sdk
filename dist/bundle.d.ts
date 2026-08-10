@@ -6023,16 +6023,7 @@ export interface Skill {
 	/** The prompt/instructions that define the skill's behavior. */
 	prompt: string;
 	/**
-	 * List of tools that this skill can use.
-	 *
-	 * When used in {@link PackDefinitionBuilder.addSkill}, this field is required.
-	 *
-	 * When omitted from {@link PackDefinitionBuilder.setChatSkill}, the following defaults are applied
-	 * at runtime:
-	 *
-	 * - {@link ToolType.Pack} — the pack's own formulas (always included)
-	 * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
-	 *   defines sync tables)
+	 * Recommended list of tools for this skill to use.
 	 */
 	tools: Tool[];
 	/**
@@ -6080,10 +6071,14 @@ export interface Skill {
  *   ],
  * });
  * ```
+ *
+ * @deprecated No longer used, now that agents are connectors.
  */
 export type PartialSkillDef = Partial<Skill>;
 /**
  * Configuration for a skill entrypoint.
+ *
+ * @deprecated No longer used, now that agents are connectors.
  */
 export interface SkillEntrypointConfig {
 	/** The name of the skill to be invoked. */
@@ -6314,21 +6309,25 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	skills: Skill[];
 	/**
 	 * See {@link PackVersionDefinition.skillEntrypoints}.
+	 * @deprecated No longer used, now that agents are connectors.
 	 */
 	skillEntrypoints?: SkillEntrypoints;
 	/**
 	 * See {@link PackVersionDefinition.chatSkill}.
 	 * @hidden
+	 * @deprecated No longer used, now that agents are connectors.
 	 */
 	chatSkill?: PartialSkillDef;
 	/**
 	 * See {@link PackVersionDefinition.benchInitializationSkill}.
 	 * @hidden
+	 * @deprecated No longer used, now that agents are connectors.
 	 */
 	benchInitializationSkill?: PartialSkillDef;
 	/**
 	 * See {@link PackVersionDefinition.suggestedPrompts}.
 	 * @hidden
+	 * @deprecated No longer used, now that agents are connectors.
 	 */
 	suggestedPrompts: SuggestedPrompt[];
 	/**
