@@ -331,7 +331,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [samples]: ../../../samples/topic/sync-table.md
 [indexing]: indexing/index.md
 [incremental]: indexing/incremental.md
-[source_detection]: ../../../agents/upgrade.md#source-application-detection
+[source_detection]: ../../../support/migration/superhuman-go.md#source-application-detection
 [ingestion_logs]: ../../../development/logging.md#ingestion-logs
 [help_center]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
 [sample_todoist]: ../../../samples/full/todoist.md

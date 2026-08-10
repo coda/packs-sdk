@@ -59,7 +59,7 @@ Making changes to your Pack or connection settings doesn't immediately trigger t
 
 [sync_tables]: ../index.md
 [sync_tables_limits]: ../index.md#limits
-[tools_knowledge]: ../../../../agents/features/tools.md#knowledge
+[tools_knowledge]: ../../skills.md#knowledge
 [indexing_schemas]: ./schema.md
 [incremental]: ./incremental.md
 [crawling]: ./crawling.md
