@@ -33,6 +33,8 @@ Attribution text, images, and/or links that should be rendered along with this v
 
 See [makeAttributionNode](../functions/makeAttributionNode.md).
 
+Only supported in Superhuman Docs.
+
 ***
 
 ### codaType?
@@ -127,6 +129,8 @@ and the user can add additional columns as they find them useful.
 Non-featured properties can always be referenced in formulas regardless of whether column
 projections have been created for them.
 
+Only supported in Superhuman Docs.
+
 ***
 
 ### ~~id?~~
@@ -181,6 +185,8 @@ Properties not declared in the schema will not work properly in Superhuman Docs:
 used natively in the formula language and will not have correct types in Superhuman Docs. But, in certain
 scenarios they can be useful.
 
+Only supported in Superhuman Docs.
+
 ***
 
 ### index?
@@ -188,6 +194,8 @@ scenarios they can be useful.
 > `optional` **index**: [`IndexDefinition`](../type-aliases/IndexDefinition.md)
 
 Defines how to index objects for use with full-text indexing.
+
+Only supported in Superhuman Go.
 
 ***
 

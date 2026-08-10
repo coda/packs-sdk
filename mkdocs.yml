@@ -441,6 +441,7 @@ theme:
     - announce.dismiss
     - content.action.edit
     - content.code.copy
+    - content.tabs.link
     - navigation.path
     - navigation.prune
     - navigation.sections

@@ -89,6 +89,8 @@ Whether this object schema property is editable by the user in the UI.
 
 Only supported for top-level properties of a sync table.
 
+Only supported in Superhuman Docs.
+
 ***
 
 ### required?

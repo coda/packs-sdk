@@ -6,10 +6,10 @@ description: How to view and use logs to monitor and debug your agents and conne
 
 Logs are the primary way to debug and troubleshoot your agents and connectors once they are running. Depending on what you're building and where it runs, there are a few different kinds of logs available.
 
-Viewing any of these logs requires **Pack admin** or **Can test** privileges on the underlying Pack. The entries you can see are scoped to a container:
+Viewing any of these logs requires **Pack admin** or **Can test** privileges on the underlying Pack. The entries you can see are scoped to a container.
 
-- :superhuman-go: Go - the chat session, so you'll only see entries from your own sessions
-- :superhuman-docs: Docs - the document, so you'll see entries from activity in a document you have access to, even if someone else triggered it
+- **:superhuman-go: Go** - The container is the chat session, so you'll only see entries from your own sessions.
+- **:superhuman-docs: Docs** - The container is the document, so you'll see entries from activity in a document you have access to, even if someone else triggered it.
 
 Log entries are kept for approximately two weeks, after which they are no longer available.
 
@@ -32,34 +32,30 @@ The drawer that opens lets you view logs from your recent sessions with the agen
 
 Connector logs show the execution of the individual building blocks in a connector, for example when a formula is calculated, a button is pressed, or a sync table syncs. Each entry can include details from network requests and any messages you output with `console.log()`.
 
-How you access the connector logs depends on which product the connector was used in.
+=== ":superhuman-go: Go"
 
+    The connector logs contain information about each time a formula in the connector was used in a tool call, either by an agent or by Go directly. To view them:
 
-### :superhuman-go: Go
+    1.  Open the [connector's settings screen][navigation_connector_go]{ data-preview }
+    1.  Click the **Agent logs** button.
 
-The connector logs contain information about each time a formula in the connector was used in a tool call, either by an agent or by Go directly. To view them:
+    The logs are grouped by the Go session where the connector was used, with the most recent session at the top. To get the latest results, click the refresh button in the upper right of the logs panel.
 
-1.  Open the [connector's settings screen][navigation_connector_go]{ data-preview }
-1.  Click the **Agent logs** button.
+    <img src="site:images/connector_logs.png" srcset="site:images/connector_logs_2x.png 2x" class="screenshot" alt="A screenshot of the connector logs drawer in Go.">
 
-The logs are grouped by the Go session where the connector was used, with the most recent session at the top. To get the latest results, click the refresh button in the upper right of the logs panel.
+=== ":superhuman-docs: Docs"
 
-<img src="site:images/connector_logs.png" srcset="site:images/connector_logs_2x.png 2x" class="screenshot" alt="A screenshot of the connector logs drawer in Go.">
+    The connector logs contain information about each time a building block was run in a doc. This includes the formula engine executing a formula, a user triggering an action, or a sync table refreshing. To view them, open the doc with the connector installed and then use one of the options below:
 
+    - Open the [Pack maker tools][navigation_connector_maker_tools]{ data-preview } panel
+    - Open the [Pack side panel][navigation_connector_panel]{ data-preview } and click the **View logs** button
+    - Hover over the broken connector formula and click the **View error details** link
 
-### :superhuman-docs: Docs
+    The logs are grouped by invocation, with the latest entries at the top. New log entries are displayed automatically, usually a few seconds after the connector is run — there's no need to refresh the page or reopen the panel.
 
-The connector logs contain information about each time a building block was run in a doc. This includes the formula engine executing a formula, a user triggering an action, or a sync table refreshing. To view them, open the doc with the connector installed and then use one of the options below:
+    <img src="site:images/connector_logs_docs.png" srcset="site:images/connector_logs_docs_2x.png 2x" class="screenshot" alt="A screenshot of the connector logs in Docs.">
 
-- Open the [Pack maker tools][navigation_connector_maker_tools]{ data-preview } panel
-- Open the [Pack side panel][navigation_connector_panel]{ data-preview } and click the **View logs** button
-- Hover over the broken connector formula and click the **View error details** link
-
-The logs are grouped by invocation, with the latest entries at the top. New log entries are displayed automatically, usually a few seconds after the connector is run — there's no need to refresh the page or reopen the panel.
-
-<img src="site:images/connector_logs_docs.png" srcset="site:images/connector_logs_docs_2x.png 2x" class="screenshot" alt="A screenshot of the connector logs in Docs.">
-
-The panel will only show the logs from one connector at a time. To change the selected connector you can click the connector name at the top of the panel and select a new one from the dropdown.
+    The panel will only show the logs from one connector at a time. To change the selected connector you can click the connector name at the top of the panel and select a new one from the dropdown.
 
 
 ## Ingestion logs

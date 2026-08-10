@@ -19,25 +19,43 @@ Packs that support per-user authentication require some additional setup. Users 
 
 ### Connecting an account
 
-The first time a user adds a building block that requires authentication they will be shown a **Connect an account** button. Upon clicking it the user will be launched into a sign-in flow, which varies depending on the type of authentication used and the service the user is connecting to.
+Before a connector can use per-user authentication the user must sign in to connect an account.
 
-<video style="width:auto" loop muted autoplay alt="Recording of authenticating with a Pack." class="screenshot"><source src="site:images/auth_sign_in.mp4" type="video/mp4"></source></video>
+=== ":superhuman-go: Go"
 
-Users can sign in to additional accounts and change their sharing settings from the **Settings** tab of the Pack's side panel. Accounts can be reused across docs, and  users can manage all of their connected accounts on the [Account settings][account_settings] page.
+    You connect an account as part of installing the connector.
+
+=== ":superhuman-docs: Docs"
+
+    The first time a user adds a building block that requires authentication they will be shown a **Connect an account** button. Upon clicking it the user will be launched into the sign-in flow.
+
+    <video style="width:auto" loop muted autoplay alt="Recording of authenticating with a Pack." class="screenshot"><source src="site:images/auth_sign_in.mp4" type="video/mp4"></source></video>
+
+    You can sign in to additional accounts from the **Settings** tab of the Pack's side panel.
+
+The sign in flow varies depending on the type of authentication used and the service being connected to. Connected accounts are shared across :superhuman-go: Go and :superhuman-docs: Docs, so an account you connect in one is available to choose in the other. You manage all of your connected accounts, including those used by Go connectors, from the [Account settings][account_settings] page of :superhuman-docs: Docs.
 
 
 ### Selecting an account
 
-In the formula editor the account is shown as the first parameter to the formula, and in the other dialogs the account to use is displayed as a dropdown list.
+When a building block uses authentication, you choose which connected account it should use.
 
-=== "In the formula editor"
-    <img src="site:images/auth_formula.png" srcset="site:images/auth_formula_2x.png 2x" class="screenshot" alt="Account selection in the formula editor">
-=== "In the action builder"
-    <img src="site:images/auth_action.png" srcset="site:images/auth_action_2x.png 2x" class="screenshot" alt="Account selection in the action builder">
-=== "In the column format settings"
-    <img src="site:images/auth_column_format.png" srcset="site:images/auth_column_format_2x.png 2x" class="screenshot" alt="Account selection in the column format settings">
-=== "In the sync table settings"
-    <img src="site:images/auth_sync_table.png" srcset="site:images/auth_sync_table_2x.png 2x" class="screenshot" alt="Account selection in the sync table settings">
+=== ":superhuman-go: Go"
+
+    You select the account when you install the connector, and that single account is used for everything the connector does, both indexing and tool calls.
+
+=== ":superhuman-docs: Docs"
+
+    In the formula editor the account is shown as the first parameter to the formula, and in the other dialogs the account to use is displayed as a dropdown list.
+
+    === "In the formula editor"
+        <img src="site:images/auth_formula.png" srcset="site:images/auth_formula_2x.png 2x" class="screenshot" alt="Account selection in the formula editor">
+    === "In the action builder"
+        <img src="site:images/auth_action.png" srcset="site:images/auth_action_2x.png 2x" class="screenshot" alt="Account selection in the action builder">
+    === "In the column format settings"
+        <img src="site:images/auth_column_format.png" srcset="site:images/auth_column_format_2x.png 2x" class="screenshot" alt="Account selection in the column format settings">
+    === "In the sync table settings"
+        <img src="site:images/auth_sync_table.png" srcset="site:images/auth_sync_table_2x.png 2x" class="screenshot" alt="Account selection in the sync table settings">
 
 
 ## Adding authentication to your Pack

@@ -166,7 +166,9 @@ pack.addFormula({
 
 ## Value hints
 
-To indicate that Superhuman Docs should display your value in a more meaningful way you can set a value hint. The enumeration [`ValueHintType`][ValueHintType] defines the set of supported value hints, which correspond to the [column formats][column_formats] in Superhuman Docs. The value hint is set one using the `codaType` property of a formula or schema. Hints can only be used with certain value types, for example the `Percent` value hint can only be used with the `Number` value type.
+A value hint tells the platform how to interpret a value beyond its basic type. The enumeration [`ValueHintType`][ValueHintType] defines the set of supported value hints, and you set one using the `codaType` property of a formula or schema. Hints can only be used with certain value types, for example the `Percent` value hint can only be used with the `Number` value type.
+
+In :superhuman-docs: Docs a hint controls how the value is displayed, corresponding to the [column formats][column_formats] available.
 
 ```ts
 pack.addFormula({
@@ -183,7 +185,12 @@ pack.addFormula({
 [View all hints][ValueHintType]{ .md-button }
 
 
-### Markdown {. #markdown}
+!!! go "Limited in Go"
+
+    Because :superhuman-go: Go doesn't render values, hints have a limited effect there. For formula and action results the value is passed to the agent with its hint attached, but it's up to the LLM to interpret the hint and it may not always use it reliably. For indexed sync table data, the raw underlying value is indexed regardless of the hint in most cases, though some content hints like `Attachment` change how the content is ingested (see the [Indexing guide][indexing]).
+
+
+### Markdown {: #markdown}
 
 The [`Markdown`][hint_markdown] value hint indicates that Superhuman Docs should parse the returned string as markdown and render it as rich text. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
 
@@ -510,6 +517,7 @@ The full set of formatting options for a given value type and hint can be found 
 
 
 [samples]: ../../samples/topic/data-type.md
+[indexing]: ../blocks/sync-tables/indexing/index.md
 [formulas]: ../blocks/formulas.md
 [schemas]: ../advanced/schemas.md
 [schemas_references]: ../advanced/schemas.md#references

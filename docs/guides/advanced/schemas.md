@@ -162,19 +162,25 @@ let PersonSchema = sdk.makeObjectSchema({
 });
 ```
 
-These descriptions are shown in various places in the Superhuman Docs UI.
+=== ":superhuman-go: Go"
 
-=== "Formula editor"
+    The agent uses these descriptions when working with your data, currently to generate filters over indexed [filterable properties][indexing_filterable].
 
-    When inspecting the property in the formula editor.
+=== ":superhuman-docs: Docs"
 
-    <img src="site:images/schemas_descriptions.png" srcset="site:images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
+    Descriptions are shown in a few places in the UI.
 
-=== "Column description"
+    === "Formula editor"
 
-    When used in sync tables or column formats, schema properties can be broken out into their own columns, and the property's description will be used as the initial value for the column's description. This column description is set once when the column is added to the table, and it can later be edited or removed by the user.
+        When inspecting the property in the formula editor.
 
-    <img src="site:images/schemas_column_descriptions.png" srcset="site:images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
+        <img src="site:images/schemas_descriptions.png" srcset="site:images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
+
+    === "Column description"
+
+        When used in sync tables or column formats, schema properties can be broken out into their own columns, and the property's description will be used as the initial value for the column's description. This column description is set once when the column is added to the table, and it can later be edited or removed by the user.
+
+        <img src="site:images/schemas_column_descriptions.png" srcset="site:images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
 
 ??? tip "Add descriptions to object properties"
 
@@ -364,6 +370,10 @@ The normalized name of a property is shown in the formula editor, but it also im
 
 ### Data attribution {: #attribution}
 
+!!! docs "Docs only"
+
+    Attribution is only supported in :superhuman-docs: Docs.
+
 The terms of service for some APIs require you to provide visual attribution when you display their data. This can be accommodated in Packs using the `attribution` field of the schema. You can include a mix of text, links, and images which will be displayed when the user hovers over the object's chip.
 
 ```ts
@@ -466,6 +476,10 @@ pack.addFormula({
 
 ### Featured columns
 
+!!! docs "Docs only"
+
+    Featured properties are only supported in :superhuman-docs: Docs.
+
 By default a sync table will only contain one column, containing a chip with the synced object. When viewing the hover card for the object, users can click the **Add column** button to create a new column from any property. Alternatively, they can manually create new columns and use the formula editor to reference a property of the synced object.
 
 You can specify additional default columns by setting the `featuredProperties` field of the schema. This field should contain the names of the properties that should be given their own columns when the sync table is created.
@@ -542,6 +556,9 @@ In your sync formula you only need to populate the fields of the reference objec
 !!! warning
     Reference schemas are only resolved to rows when they are used in a sync table. If used in a formula or column format they will always appear in a broken state, even if the row they are referencing is present.
 
+!!! go "Limited in Go"
+    Row references effectively don't work in :superhuman-go: Go. Go sees only the reference's ID and display value, and doesn't resolve the rest of the target row. See the [Sync tables guide][sync_tables_references] for details and a workaround.
+
 
 ### Column IDs
 
@@ -563,6 +580,10 @@ for (let customField of customFields) {
 
 
 ### Column names {: #column-names}
+
+!!! docs "Docs only"
+
+    Column names are only supported in :superhuman-docs: Docs.
 
 By default sync table column names are derived from the [normalized name](#normalization) of the corresponding schema property. For example, a property with the key `contact_email` would be normalized to the property name `ContactEmail` which would result in a column named "Contact email". This is just the default name for the column however, and users can later rename it in their doc if they so desire.
 
@@ -587,6 +608,9 @@ This display name will only be used to set the default column name for that prop
 
 
 ## Schemas in cards {: #cards}
+
+!!! docs "Docs only"
+    Cards are only supported in :superhuman-docs: Docs.
 
 The contents of a card are defined using an object schema. The following fields are specific to cards:
 
@@ -732,6 +756,7 @@ If you need to further customize the value, such as combining the value of multi
 [todoist]: ../../samples/full/todoist.md
 [makeReferenceSchemaFromObjectSchema]: ../../reference/sdk/core/functions/makeReferenceSchemaFromObjectSchema.md
 [sync_tables_references]: ../blocks/sync-tables/index.md#references
+[indexing_filterable]: ../blocks/sync-tables/indexing/schema.md#filterable-properties
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
 [actions_sync]: ../blocks/actions.md#sync

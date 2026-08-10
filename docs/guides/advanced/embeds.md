@@ -4,6 +4,10 @@ description: Embed external content using Packs and optimize your app for embedd
 
 # Embedding content
 
+!!! docs "Docs only"
+
+    Embedding content is only supported in :superhuman-docs: Docs. The :superhuman-go: Go chat can't render embedded content like iframes.
+
 Packs typically operate purely on data and actions, leaving the display up to the document. However there are times in which you may want to provide a richer experience, which can be accomplished by embedding a portion of an application directly within the doc.
 
 Superhuman Docs uses the 3rd party service [Iframely][iframely] to handle embeds. Many popular apps and websites are already supported, and you can use their site to [check if a URL already supports embedding][iframely_check].

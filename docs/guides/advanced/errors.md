@@ -15,7 +15,7 @@ When the fetcher receives a response from the API indicating there was a problem
 
 ## User-visible errors
 
-By default an unhandled exception in your code will be presented to the user as a generic error message.
+By default an unhandled exception in your code is presented as a generic error message.
 
 ```ts
 pack.addFormula({
@@ -43,7 +43,17 @@ pack.addFormula({
 });
 ```
 
-<img src="site:images/errors_generic.png" srcset="site:images/errors_generic_2x.png 2x" class="screenshot" alt="Generic error message.">
+=== ":superhuman-go: Go"
+
+    The agent receives a generic error message, without the details of the underlying error.
+
+    > An internal error occurred.
+
+=== ":superhuman-docs: Docs"
+
+    The user sees a generic error message.
+
+    <img src="site:images/errors_generic.png" srcset="site:images/errors_generic_2x.png 2x" class="screenshot" alt="Generic error message.">
 
 When you want to provide a more specific error message, throw a `UserVisibleError` exception instead.
 
@@ -59,7 +69,17 @@ pack.addFormula({
 });
 ```
 
-<img src="site:images/errors_user_visible.png" srcset="site:images/errors_user_visible_2x.png 2x" class="screenshot" alt="User-visible error message.">
+=== ":superhuman-go: Go"
+
+    The agent receives the message you provided, and can act on it or relay it to the user.
+
+    > The quantity must be greater than zero.
+
+=== ":superhuman-docs: Docs"
+
+    The message is shown directly to the user.
+
+    <img src="site:images/errors_user_visible.png" srcset="site:images/errors_user_visible_2x.png 2x" class="screenshot" alt="User-visible error message.">
 
 When the error originates from an API or library, you can catch the error and throw a `UserVisibleError` one instead.
 

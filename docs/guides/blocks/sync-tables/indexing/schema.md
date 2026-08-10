@@ -1,6 +1,6 @@
 ---
-nav: Schema changes
-description: Update your schemas to include the metadata needed for indexing.
+nav: Schema requirements
+description: Information about the schema metadata needed for indexing.
 ---
 
 # Enrich the schema for indexing
@@ -206,7 +206,7 @@ To help with filtering and ranking, set the following fields in your schema, if 
 
 ## Property descriptions
 
-Ensure each property has an informative description that provides relevant context to help the LLM interpret the meaning of that column.
+Ensure each property has an informative description that provides relevant context about the data it contains.
 
 ```{.ts hl_lines="6-9"}
 const ProductSchema = sdk.makeObjectSchema({
@@ -223,7 +223,9 @@ const ProductSchema = sdk.makeObjectSchema({
 });
 ```
 
-In addition to helping the LLM, these descriptions will be shown to users in the Superhuman Formula Language editor and as initial values for column descriptions. See the [Schemas guide][schemas] for more information.
+Agents use these descriptions when generating filters over [filterable properties](#filterable-properties). Descriptions on other properties aren't used by the agent yet, but we recommend adding them across the board so your connector benefits as the platform makes more use of them in the future.
+
+These descriptions are also shown to users in the Superhuman Formula Language editor and as initial values for column descriptions. See the [Schemas guide][schemas] for more information.
 
 ## Schema descriptions
 

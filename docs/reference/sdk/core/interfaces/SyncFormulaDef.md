@@ -160,6 +160,8 @@ Not for use by packs that are not Superhuman-authored.
 If the table supports object updates, the maximum number of objects that will be sent to the pack
 in a single batch. Defaults to 1 if not specified.
 
+Only supported in Superhuman Docs.
+
 ***
 
 ### name
@@ -220,6 +222,8 @@ For sync tables, the execution context will include a `sync` field.
 Variable argument parameters, used if this formula should accept arbitrary
 numbers of inputs.
 
+Only supported in Superhuman Docs.
+
 #### Inherited from
 
 [`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`varargParameters`](CommonPackFormulaDef.md#varargparameters)
@@ -264,6 +268,8 @@ The JavaScript function that implements this sync update if the table supports u
 This function takes in parameters, updated sync table objects, and a sync context,
 and is responsible for pushing those updated objects to the external system then returning
 the new state of each object.
+
+Only supported in Superhuman Docs.
 
 #### Parameters
 

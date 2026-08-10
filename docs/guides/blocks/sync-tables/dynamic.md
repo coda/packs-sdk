@@ -12,9 +12,19 @@ Sync tables are designed to bring records from an external data source into Supe
 
 ## Using dynamic sync tables
 
-Adding a dynamic sync table to a doc is similar to adding a regular sync table, but with an additional step of selecting the specific dataset to sync from. Start by navigating to {{ custom.pack_panel_clicks }} and clicking on the table in the side panel. This will expand a section below the table that displays the specific datasets that the user has access to. Then drag one of these datasets onto the page.
+Using a dynamic sync table in a doc is similar to using a regular sync table, but with an additional step of selecting the specific dataset to sync from.
 
-<video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="site:images/dynamic_sync_table_usage.mp4" type="video/mp4"></source></video>
+=== ":superhuman-go: Go"
+
+    When installing the connector, click into the table to browse the list of datasources. Check off each datasource you want to index, and optionally set parameters.
+
+    <video style="width:auto" loop muted autoplay alt="Recording of indexing a dynamic sync table." class="screenshot"><source src="site:images/dynamic_sync_table_usage_go.mp4" type="video/mp4"></source></video>
+
+=== ":superhuman-docs: Docs"
+
+    Start by navigating to {{ custom.pack_panel_clicks }} and clicking on the table in the side panel. This will expand a section below the table that displays the specific datasets that the user has access to. Then drag one of these datasets onto the page.
+
+    <video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="site:images/dynamic_sync_table_usage.mp4" type="video/mp4"></source></video>
 
 
 ## Creating a dynamic sync table
@@ -113,6 +123,10 @@ pack.addDynamicSyncTable({
 
 ### Generate the display URL {: #display-url}
 
+!!! docs "Docs only"
+
+    The function is always required, but the URL it returns is only shown in :superhuman-docs: Docs.
+
 The [`getDisplayUrl`][getDisplayUrl] function is responsible for generating the user-facing version of the dynamic URL. If the URL you selected to represent the dataset is already user friendly (it will open in their browser) then you can return it as-is. However if you chose to use an API-specific URL as the dynamic URL, this function should translate that into something more useful. This is typically done by making an API request to retrieve a user-facing URL.
 
 ```ts
@@ -132,7 +146,7 @@ pack.addDynamicSyncTable({
 ```
 
 
-### Generate the row schema {:. #get-schema}
+### Generate the row schema {: #get-schema}
 
 The [`getSchema`][getSchema] function is responsible for generating the schema that represents each row of the sync table. Unlike regular sync tables that can define their sync table at build time, the schema for a dynamic sync table must be generated at run-time based on the dataset selected. The function is first run when the user drags the sync table into the document, and then again before every sync.
 
@@ -358,7 +372,10 @@ The `getSchema` function is first run when the table is initially dragged into t
 
 Instead of returning a flat list of datasets in the `listDynamicUrls` function, you can instead organize them into folders.
 
-<img src="site:images/dynamic_sync_table_folder.png" srcset="site:images/dynamic_sync_table_folder_2x.png 2x" class="screenshot" alt="Organize the URL list into folders">
+=== ":superhuman-go: Go"
+    <img src="site:images/dynamic_sync_table_folder_go.png" srcset="site:images/dynamic_sync_table_folder_go_2x.png 2x" class="screenshot" alt="Dataset list organized into folders in Superhuman Go">
+=== ":superhuman-docs: Docs"
+    <img src="site:images/dynamic_sync_table_folder.png" srcset="site:images/dynamic_sync_table_folder_2x.png 2x" class="screenshot" alt="Organize the URL list into folders">
 
 To create a folder, return a [`MetadataFormulaObjectResultType`][MetadataFormulaObjectResultType] with `hasChildren: true`. When a user clicks on a folder, the `listDynamicUrls` function will be re-run, passing in the URL of the parent folder as the second parameter.
 
@@ -383,7 +400,10 @@ Folders can be nested inside of other folders, allowing you to represent complex
 
 Finding the desired dataset, even when [organized into folders](#folders), can be difficult when the there are many options to select from. If the underlying API supports it you can allow users to search for the dataset instead.
 
-<img src="site:images/dynamic_sync_table_search.png" srcset="site:images/dynamic_sync_table_search_2x.png 2x" class="screenshot" alt="Searching for a dataset.">
+=== ":superhuman-go: Go"
+    <img src="site:images/dynamic_sync_table_search_go.png" srcset="site:images/dynamic_sync_table_search_go_2x.png 2x" class="screenshot" alt="Searching for a dataset in Superhuman Go">
+=== ":superhuman-docs: Docs"
+    <img src="site:images/dynamic_sync_table_search.png" srcset="site:images/dynamic_sync_table_search_2x.png 2x" class="screenshot" alt="Searching for a dataset.">
 
  To enable this search feature, add a `searchDynamicUrls` function to your sync table definition. This function works identically to `listDynamicUrls`, except that the 2nd parameter contains the user-entered search term instead of the folder URL.
 
@@ -402,6 +422,10 @@ pack.addDynamicSyncTable({
 
 
 ## Manually entered URLs
+
+!!! docs "Docs only"
+
+    Manually entered dynamic URLs are only supported in :superhuman-docs: Docs. To support :superhuman-go: Go, provide a `listDynamicUrls` or `searchDynamicUrls` function instead.
 
 In some cases it's not feasible to generate a list of all possible datasets the user can select from. In these cases you can omit the `listDynamicUrls` function and instead have your users directly enter the URL of the dataset.
 

@@ -290,7 +290,7 @@ The `function` keyword makes it very clear to readers that you are defining a fu
 
 The order of keys in the formula declaration should be:
 
-```ts no_lint
+```ts
 pack.addFormula({
   name: ...,
   description: ...,
@@ -326,6 +326,75 @@ const MySchema = sdk.makeObjectSchema({
 ### 80 character max line length
 
 Limit lines to 80 characters. Horizontal space is limited in the Packs Editor side panel and in the Documentation, and lines more than 80 characters can lead to scroll or wrapping that makes it harder to read.
+
+
+## Writing
+
+The rules below apply to the prose on the guide and reference pages, as opposed to the sample code covered above.
+
+
+### Documenting Docs and Go differences
+
+Connectors often behave differently in :superhuman-docs: Docs and :superhuman-go: Go, sometimes requiring separate notes, instructions, screenshots, etc.
+
+A few conventions keep this consistent:
+
+- **Lead with the shared behavior.** Start a section with an intro sentence or two covering what's common to both products, then describe only the differences. Pull any information that applies to both out of the product-specific blocks and into that intro.
+- **Put :superhuman-go: Go first.** Whenever the two are presented together, in content tabs or a bulleted list, order Go ahead of Docs.
+- **Label with the icon and short name.** Refer to the products as `:superhuman-go: Go` and `:superhuman-docs: Docs`, including in tab titles and list items.
+
+Choose the format based on the shape of the difference.
+
+#### Large differences
+
+When each product needs more than a sentence, has its own steps, or has its own screenshots, use content tabs. This is the default for anything substantial. Screenshots that only apply to one product belong inside that product's tab.
+
+```
+=== ":superhuman-go: Go"
+
+    For formulas the agent fills in the parameter values automatically.
+    ...
+
+=== ":superhuman-docs: Docs"
+
+    In the formula editor parameters are entered as comma-separated values.
+    ...
+```
+
+#### Small differences
+
+When each product's difference fits in a single short sentence, use a bulleted list. Format each item as the icon, the bold short name, a spaced hyphen, and the text.
+
+```
+- **:superhuman-go: Go** - The timezone comes from the user's Superhuman account.
+- **:superhuman-docs: Docs** - The timezone comes from the document.
+```
+
+#### Available in only one product
+
+When an entire page or section covers a feature that only works on one product, use the custom `docs` or `go` admonition. Place it at the top, and keep the body short.
+
+```
+!!! docs "Docs only"
+
+    Cards are only supported in :superhuman-docs: Docs.
+```
+
+When a one-product feature is only a single section sitting among two-product content, prefer content tabs instead, with the unsupported product's tab noting just that it isn't supported.
+
+#### Partial support in one product
+
+When a feature mostly works the same but has a limitation on one product, use the `go` or `docs` admonition titled "Limited in Go" or "Limited in Docs". Place it at the bottom of the section, after the shared explanation.
+
+```
+!!! go "Limited in Go"
+
+    Row references don't resolve in Go the way they do in Docs.
+```
+
+#### In the reference documentation
+
+When a difference is a plain fact about a field or method, add a brief caveat to its TypeScript doc comment rather than the generated markdown. Keep it to a single sentence and use plain text without icon shortcodes, since it also appears in IDE hovers.
 
 
 [google_style]: https://developers.google.com/style

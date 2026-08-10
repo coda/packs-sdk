@@ -88,7 +88,7 @@ pack.addFormula({
 
 The default time to live (TTL) for both caches is 5 minutes, and the maximum you can set is 24 hours. Both of these values are subject to change without warning. Setting a `cacheTtlSecs` value larger than the maximum will not result in an error, but will reduced down to the maximum. This TTL is best effort, and for a variety of reasons a cache entry may be evicted earlier.
 
-Both caches are scoped to the unique inputs (formula name and parameters, or fetcher URL and headers) as well as the connected account (if [authentication][authentication] is used). The formula cache is additionally scoped to the document it's used in and the specific version of the Pack. Building or releasing a new version of your Pack will effectively invalidate the formula cache, ensuring you get fresh results using your new code.
+Both caches are scoped to the unique inputs (formula name and parameters, or fetcher URL and headers), the connected account if [authentication][authentication] is used, and the specific version of the Pack. Building or releasing a new version effectively invalidates the formula cache, so you get fresh results from your new code. In :superhuman-docs: Docs the formula cache is additionally scoped to the document it's used in.
 
 
 ## Recommendations

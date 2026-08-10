@@ -10,6 +10,8 @@ The **Model Context Protocol (MCP)** is an open standard for exposing tools to L
 
 The samples below show how to connect to an MCP server using each of the supported authentication types, as well as how to combine an MCP server with other building blocks like sync tables.
 
+MCP servers are only supported in Superhuman Go.
+
 
 [Learn More](../../guides/blocks/mcp.md){ .md-button }
 

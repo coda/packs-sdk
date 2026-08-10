@@ -11,14 +11,27 @@ The primary mechanism for passing data from the user or document into your Pack 
 
 ## Using parameters
 
-In the formula editor parameters are entered as comma-separated values, while in the action dialog or sync table side panel they presented as input boxes.
+Before a formula, action, or sync table can be run, values must be supplied for its parameters.
 
-=== "In the formula editor"
-    <img src="site:images/parameter_formula.png" srcset="site:images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
-=== "In the action builder"
-    <img src="site:images/parameter_action.png" srcset="site:images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
-=== "In the sync table settings"
-    <img src="site:images/parameter_sync.png" srcset="site:images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
+=== ":superhuman-go: Go"
+
+    For formulas the agent fills in the parameter values automatically as it calls the tool, guided by each parameter's name and description. However, parameters are shown to users in a UI in two cases: when an action requires approval, and when a connector with sync tables is being set up.
+
+    === "In an action approval card"
+        <img src="site:images/parameter_go_action.png" srcset="site:images/parameter_go_action_2x.png 2x" class="screenshot" alt="Parameters in a Go action approval card">
+    === "On the connector install screen"
+        <img src="site:images/parameter_go_sync.png" srcset="site:images/parameter_go_sync_2x.png 2x" class="screenshot" alt="Sync table parameters on the connector install screen">
+
+=== ":superhuman-docs: Docs"
+
+    In the formula editor parameters are entered as comma-separated values, while in the action dialog or sync table side panel they presented as input boxes.
+
+    === "In the formula editor"
+        <img src="site:images/parameter_formula.png" srcset="site:images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
+    === "In the action builder"
+        <img src="site:images/parameter_action.png" srcset="site:images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
+    === "In the sync table settings"
+        <img src="site:images/parameter_sync.png" srcset="site:images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
 
 ## Defining parameters
 
@@ -77,6 +90,9 @@ The order that you define the parameters determines the order they are passed in
 
 When defining a parameter you must specify what type of data the parameter will accept. The enum [`ParameterType`][ParameterType] lists all of the allowed parameter types.
 
+- **:superhuman-go: Go** - The agent supplies each parameter value directly as its declared type.
+- **:superhuman-docs: Docs** - A value is sourced from the doc, often from a column, and converted into the parameter's type.
+
 
 ### Plain text
 
@@ -131,7 +147,7 @@ JavaScript Date objects can only represent a specific moment in time. This means
 - **Time** and **Duration** values will be converted a datetime that is that much time past midnight on 1899-12-30[^1], in the document's timezone. For example, the duration "12 hours" in a document set to "America/New York" will be passed as `Sat Dec 30 1899 12:00:00 GMT-0500 (Eastern Standard Time)`.
 
 !!! warning "Timezone shifting"
-    Because of how timezones work in Superhuman Docs and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information.
+    Because of how timezones work in Superhuman Docs and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information, including how the timezone is determined in Docs and Go.
 
 ??? example "Example: Good New Years Eve glasses formula"
     ```ts
@@ -143,9 +159,12 @@ JavaScript Date objects can only represent a specific moment in time. This means
 
 Use the `Image` parameter type to pass an image to your formula, and the `File` type for files. The value passed to the `execute` function will be the URL of that image or file.
 
-Images and files that the user uploaded to the doc will be hosted on the `codahosted.io` domain and don't require authentication to access. These URLs are temporary, and you should not rely on them being accessible after the Pack execution has completed.
+Where that URL comes from differs between Go and Docs.
 
-If you need access to the binary content of the image or file you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. The fetcher is automatically allowed access to the `codahosted.io` domain, so no need to declare it as a [network domain][network_domains]. It's not possible to access the binary content of images coming from an **Image URL** column, since they can come from any domain.
+- **:superhuman-go: Go** - The agent supplies the URL directly. The type acts as a semantic hint and the source of the URL isn't enforced, so a `File` parameter can receive any URL the agent has, not just an uploaded file.
+- **:superhuman-docs: Docs** - The URL comes from the doc. An `Image` parameter can use an image uploaded to the doc or an **Image URL** column, while a `File` parameter must come from an uploaded file. Uploaded files are hosted on the `codahosted.io` domain and don't require authentication to access, but their URLs are temporary and you shouldn't rely on them after the Pack execution has completed.
+
+If you need access to the binary content of the image or file you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. The fetcher can always access the `codahosted.io` domain without declaring it as a [network domain][network_domains]. To fetch from any other domain, including an arbitrary URL passed in Go or one from an **Image URL** column, that domain must be declared as a network domain.
 
 ??? example "Example: Image file size formula"
     ```ts
@@ -175,7 +194,7 @@ Each of the parameter types described above has an array variant that allows you
 
 ### Table column
 
-Passing a table column into an array parameter can be error prone, because if the column contains blank cells the formula will fail to run. To accept a list that may include blank values use the sparse variant of the array parameter (`SparseStringArray`, `SparseNumberArray`, etc). Blank cells will be represented as `null`, and you'll need to make sure your code can handle those values.
+Passing a table column from :superhuman-docs: Docs into an array parameter can be error prone, because if the column contains blank cells the formula will fail to run. To accept a list that may include blank values use the sparse variant of the array parameter (`SparseStringArray`, `SparseNumberArray`, etc). Blank cells will be represented as `null`, and you'll need to make sure your code can handle those values.
 
 ??? example "Example: Total cost formula"
     ```ts
@@ -185,7 +204,7 @@ Passing a table column into an array parameter can be error prone, because if th
 
 ### Pages
 
-Docs can contain many pages, and it's possible to pass the contents of a page to a Superhuman formula using the `Html` parameter type. Users will be presented with the pages they can select from in the autocomplete options, and once selected the formula will receive an HTML version of that page's content. Some features of the page may not be included in the HTML markup, and it should not be considered a complete or stable API surface.
+A :superhuman-docs: Docs document can contain many pages, and it's possible to pass the contents of a page to a Superhuman formula using the `Html` parameter type. Users will be presented with the pages they can select from in the autocomplete options, and once selected the formula will receive an HTML version of that page's content. Some features of the page may not be included in the HTML markup, and it should not be considered a complete or stable API surface.
 
 !!! warning "Formulas not recalculated when page content changes"
     Unlike with other data sources, when passing a page as a parameter the formula will not be automatically recalculated when the content of the page changes. For this reason we recommend only passing pages for action formulas, which are calculated on each button press or automation run.
@@ -282,6 +301,10 @@ Currently suggested values are only used for required parameters, and setting th
 
 
 ## Accepting multiple values {: #vararg}
+
+!!! docs "Docs only"
+
+    Variable argument parameters are only supported in :superhuman-docs: Docs. The agent can't pass vararg values in :superhuman-go: Go, so avoid them if your Pack will be used in Go and use an [array parameter](#lists) instead.
 
 For some formulas you may want to allow the user to enter multiple values for a parameter. You could use an array parameter for this case but a more user-friendly approach may be to use variable argument (vararg) parameters. These are parameters that you allow the user to repeat as many times as needed.
 
@@ -481,6 +504,10 @@ sdk.makeParameter({
   suggestedValue: sdk.PrecannedDateRange.Last30Days,
 });
 ```
+
+!!! go "Limited in Go"
+
+    In :superhuman-go: Go the date range picker and `PrecannedDateRange` suggested values work for sync tables and formulas, but date range parameters aren't rendered or usable in action approval cards.
 
 
 ## Recommended parameter types

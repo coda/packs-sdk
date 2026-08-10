@@ -833,6 +833,8 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
     /**
      * If the table supports object updates, the maximum number of objects that will be sent to the pack
      * in a single batch. Defaults to 1 if not specified.
+     *
+     * Only supported in Superhuman Docs.
      */
     maxUpdateBatchSize?: number;
     /**
@@ -841,6 +843,8 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * This function takes in parameters, updated sync table objects, and a sync context,
      * and is responsible for pushing those updated objects to the external system then returning
      * the new state of each object.
+     *
+     * Only supported in Superhuman Docs.
      */
     executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: UpdateSyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
     /**

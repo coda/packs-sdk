@@ -190,6 +190,8 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      *   formulaName: 'MyFormula',
      * });
      * ```
+     *
+     * Only supported in Superhuman Docs.
      */
     addColumnFormat(format: Format): this;
     /**
@@ -218,6 +220,8 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
      * ```
+     *
+     * Only supported in Superhuman Go.
      */
     addMCPServer(server: MCPServer): this;
     /**
