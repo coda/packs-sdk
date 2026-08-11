@@ -461,7 +461,7 @@ theme:
   palette:
     scheme: superhuman
   logo: assets/logo.svg
-  favicon: assets/favicon.svg
+  favicon: !ENV [MK_DOCS_FAVICON, "assets/favicon.svg"]
   icon:
     repo: fontawesome/brands/github
 
