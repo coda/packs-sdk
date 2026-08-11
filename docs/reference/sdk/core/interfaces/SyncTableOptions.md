@@ -125,7 +125,7 @@ The default indexing status for this sync table. See [DataIndexing](../enumerati
 > `optional` **instructions**: `string`
 
 Instructions for LLMs on how to search this sync table. This overrides the description
-when the sync table is used as a knowledge search tool in an agent.
+when the sync table is used as a knowledge search tool in Superhuman Go.
 
 ***
 

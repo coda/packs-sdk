@@ -26,4 +26,4 @@ A doc.
 
 > **Go**: `"Go"`
 
-A Superhuman Go agent.
+Superhuman Go.

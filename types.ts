@@ -1235,7 +1235,7 @@ export interface RateLimits {
 export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 
 /**
- * The types of tools that can be used in an agent skill.
+ * The types of tools that can be used in a skill.
  */
 export enum ToolType {
   /**
@@ -1460,8 +1460,6 @@ export interface MailAndCalendarTool extends BaseTool<ToolType.MailAndCalendar> 
 
 /**
  * Tool that enables searching the public internet for up-to-date information.
- * When enabled, the agent can search the web to retrieve current information
- * about a topic or from a URL.
  */
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
   /**
@@ -1617,7 +1615,7 @@ export interface SkillModelConfiguration {
 }
 
 /**
- * A prompt and set of tools that defines a specific skill this agent provides.
+ * A prompt and set of tools that defines a specific skill this connector provides.
  */
 export interface Skill {
   /** Stable identifier for the skill. */
@@ -1629,16 +1627,7 @@ export interface Skill {
   /** The prompt/instructions that define the skill's behavior. */
   prompt: string;
   /**
-   * List of tools that this skill can use.
-   *
-   * When used in {@link PackDefinitionBuilder.addSkill}, this field is required.
-   *
-   * When omitted from {@link PackDefinitionBuilder.setChatSkill}, the following defaults are applied
-   * at runtime:
-   *
-   * - {@link ToolType.Pack} — the pack's own formulas (always included)
-   * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
-   *   defines sync tables)
+   * Recommended list of tools for this skill to use.
    */
   tools: Tool[];
   /**
@@ -1687,11 +1676,15 @@ export interface Skill {
  *   ],
  * });
  * ```
+ *
+ * @deprecated No longer used, now that agents are connectors.
  */
 export type PartialSkillDef = Partial<Skill>;
 
 /**
  * Configuration for a skill entrypoint.
+ *
+ * @deprecated No longer used, now that agents are connectors.
  */
 export interface SkillEntrypointConfig {
   /** The name of the skill to be invoked. */
@@ -1701,12 +1694,11 @@ export interface SkillEntrypointConfig {
 /**
  * Entrypoints that skills can be invoked from.
  *
- * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
+ * @deprecated No longer used, now that agents are connectors.
  */
 export interface SkillEntrypoints {
   /**
    * Skill to be invoked when the agent is clicked on in the bench for the first time.
-   * @hidden In development
    */
   benchInitialization?: SkillEntrypointConfig;
   /** Default skill to be invoked when chatting with the agent. */
@@ -1726,7 +1718,7 @@ export interface SkillEntrypoints {
  * });
  * ```
  *
- * @hidden In development
+ * @deprecated No longer used, now that agents are connectors.
  */
 export interface SuggestedPrompt {
   /** A unique identifier for this suggested prompt. This acts as a stable ID for the prompt. */
@@ -1801,7 +1793,7 @@ export interface PackVersionDefinition {
    */
   skills?: Skill[];
   /**
-   * The skill used when chatting with the pack agent.
+   * The skill used when chatting with the agent.
    * All fields are optional - omitted fields will use defaults at runtime.
    *
    * @example
@@ -1818,27 +1810,27 @@ export interface PackVersionDefinition {
    *   prompt: "You are an expert in this pack.",
    * });
    * ```
-   * @hidden
+   * @deprecated No longer used, now that agents are connectors.
    */
   chatSkill?: PartialSkillDef;
   /**
    * The skill used when the agent is first initialized in the bench.
    * All fields are optional - omitted fields will use defaults at runtime.
-   * @hidden
+   * @deprecated No longer used, now that agents are connectors.
    */
   benchInitializationSkill?: PartialSkillDef;
   /**
-   * Mapping of skills to entrypoints that the pack agent can be invoked from.
+   * Mapping of skills to entrypoints that the agent can be invoked from.
+   * @deprecated No longer used, now that agents are connectors.
    */
   skillEntrypoints?: SkillEntrypoints;
   /**
    * Static suggested prompts that appear when the agent is opened in chat.
-   * @hidden
+   * @deprecated No longer used, now that agents are connectors.
    */
   suggestedPrompts?: SuggestedPrompt[];
   /**
    * Definitions of MCP servers that this pack can connect to.
-   * @hidden
    */
   mcpServers?: MCPServer[];
 }

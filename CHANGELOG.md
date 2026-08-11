@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Deprecated `setChatSkill`, `setBenchInitializationSkill`, and `addSuggestedPrompt`. These features no longer function now that the SDK is used to create connectors, not agents.
+
 ## [1.17.1] - 2026-07-28
 
 ### Fixed

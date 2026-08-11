@@ -19,6 +19,48 @@ heart of the implementation of a Pack.
 
 ## Properties
 
+### ~~benchInitializationSkill?~~
+
+> `optional` **benchInitializationSkill**: `Partial`\<[`Skill`](Skill.md)\>
+
+The skill used when the agent is first initialized in the bench.
+All fields are optional - omitted fields will use defaults at runtime.
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
+***
+
+### ~~chatSkill?~~
+
+> `optional` **chatSkill**: `Partial`\<[`Skill`](Skill.md)\>
+
+The skill used when chatting with the agent.
+All fields are optional - omitted fields will use defaults at runtime.
+
+#### Example
+
+```ts
+// Override just the tools
+pack.setChatSkill({
+  tools: [
+    { type: sdk.ToolType.Pack },
+  ],
+});
+
+// Override just the prompt
+pack.setChatSkill({
+  prompt: "You are an expert in this pack.",
+});
+```
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
+
+***
+
 ### defaultAuthentication?
 
 > `optional` **defaultAuthentication**: [`Authentication`](../type-aliases/Authentication.md)
@@ -54,6 +96,14 @@ with `isAction: true`.
 
 ***
 
+### mcpServers?
+
+> `optional` **mcpServers**: [`MCPServer`](MCPServer.md)[]
+
+Definitions of MCP servers that this pack can connect to.
+
+***
+
 ### networkDomains?
 
 > `optional` **networkDomains**: `string`[]
@@ -68,11 +118,15 @@ contact support for approval.
 
 ***
 
-### skillEntrypoints?
+### ~~skillEntrypoints?~~
 
 > `optional` **skillEntrypoints**: [`SkillEntrypoints`](SkillEntrypoints.md)
 
-Mapping of skills to entrypoints that the pack agent can be invoked from.
+Mapping of skills to entrypoints that the agent can be invoked from.
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
 
 ***
 
@@ -81,6 +135,18 @@ Mapping of skills to entrypoints that the pack agent can be invoked from.
 > `optional` **skills**: [`Skill`](Skill.md)[]
 
 Definitions of skills that can be executed within this pack.
+
+***
+
+### ~~suggestedPrompts?~~
+
+> `optional` **suggestedPrompts**: [`SuggestedPrompt`](SuggestedPrompt.md)[]
+
+Static suggested prompts that appear when the agent is opened in chat.
+
+#### Deprecated
+
+No longer used, now that agents are connectors.
 
 ***
 

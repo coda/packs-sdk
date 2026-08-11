@@ -1333,7 +1333,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
     description?: string;
     /**
      * Instructions for LLMs on how to search this sync table. This overrides the description
-     * when the sync table is used as a knowledge search tool in an agent.
+     * when the sync table is used as a knowledge search tool in Superhuman Go.
      */
     instructions?: string;
     /**
