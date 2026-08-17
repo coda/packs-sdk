@@ -43,7 +43,7 @@ Creating a connector for your MCP server is simple, often requiring as little as
 
  Not every app has an MCP server, but most have a REST API. Write your own tools hosted on our servers and available in Superhuman Go just like MCP tools.
 
-[Build a custom tool][tuorial_fetcher]{ .md-button }
+[Build a custom tool][tutorial_fetcher]{ .md-button }
 </div>
 
 <div class="box-item" markdown>
@@ -158,5 +158,5 @@ Stuck, or want to see it done first? There's a [library of videos][videos] walki
 [formulas]: guides/blocks/formulas.md
 [blocks_table]: guides/overview.md#connectors
 [mcp]: guides/blocks/mcp.md
-[tuorial_fetcher]: tutorials/build/fetcher.md
+[tutorial_fetcher]: tutorials/build/fetcher.md
 [tutorial_sync]: tutorials/build/sync-table.md

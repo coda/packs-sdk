@@ -9,6 +9,7 @@ pack.addMCPServer({
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
   useDynamicClientRegistration: true,
+  useProofKeyForCodeExchange: true,
 });
 
 pack.addNetworkDomain("todoist.net");

@@ -167,7 +167,7 @@ You can find more best practices for naming building blocks in the guides for [f
 
 ### Write clear descriptions
 
-Every building block has a `description` field, and the value you set there has an impact on it's usability.
+Every building block has a `description` field, and the value you set there has an impact on its usability.
 
 - **:superhuman-go: Go** — The LLM reads descriptions to decide which building block to call and how to fill in its parameters.
 - **:superhuman-docs: Docs** — They become the documentation users see while working with your connector.
@@ -272,7 +272,7 @@ The exact set may vary from collection to collection, so use the guidance below 
         ```
 
         ```ts
-        --8<-- "samples/packs/todoist/simple.ts:sync"
+        --8<-- "samples/packs/todoist/simple.ts:getter"
         ```
 
 === "Action"

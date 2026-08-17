@@ -62,7 +62,7 @@ Each Pack is its own [serverless application][wikipedia_serverless], fully manag
 
 ## Who can use a Pack?
 
-A Pack is private to you until you decide otherwise. You can keep it for your own use, share it with your team, or [publish it][publishing] so that anyone can install it. Publishing publicly involves a review first, after which your Pack is listed in the [Superhuman Docs Gallery][gallery_packs] and the [Superhuman Go Store][go_store], where users can discover and install it.
+A Pack is private to you until you decide otherwise. You can keep it for your own use, share it with your team, or [publish it][publishing] so that anyone can install it. Publishing publicly involves a review first, after which your Pack is listed in the [Superhuman Store][go_store] or [Superhuman Docs Gallery][gallery_packs], where users can discover and install it.
 
 
 ## How do you build a Pack?
