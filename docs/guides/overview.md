@@ -6,118 +6,102 @@ cSpell:words: add-ons
 
 # What are Packs?
 
-_A Pack is an extension that adds new powers to your doc._
+_A Pack is an extension that adds new powers to Superhuman._
 
-What other platforms call plugins, add-ons, or extensions, we call "Packs". A Pack extends the core building blocks of Superhuman Docs, allowing users to build more powerful and integrated docs. Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
+What other platforms call plugins, add-ons, or extensions, we call "Packs". A Pack is how you extend Superhuman with your own code, adding new features or integrating it with other applications.
 
-Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on the platform's servers. We have a [gallery][gallery_packs] where users can discover and install Packs, as well as a robust set of [admin controls][help_admin].
-
-[Packs overview][packs_landing]{ .md-button }
-[Why build Packs?][packs_why]{ .md-button }
+Anyone can build a Pack, and you can use it yourself, share it with your team, or publish it to the world. Packs are built using our TypeScript SDK, uploaded to our servers, and run within Superhuman products.
 
 
-## What can Packs do?
+## What can a Pack deliver?
 
-Packs can extend Superhuman Docs in four specific ways:
+A Pack is a container for the things you want to add to Superhuman, and what your users get depends on what you put inside it. Today a Pack delivers one thing, a connector, and we'll be adding more over time.
 
-=== "Formulas"
+### Connectors
 
-    Packs can add new formulas for the [Superhuman formula language][formula_list]. These formulas can do simple calculations, call a library, or pull in data from an external source.
+A connector extends Superhuman with new capabilities, most often by integrating with an external application or service.
 
-    <figure>
-      <img src="site:images/overview_formula.png" srcset="site:images/overview_formula_2x.png 2x" alt="A custom formula in the formula editor">
-      <figcaption>A formula from the Google Calendar Pack which looks up when the user has busy time on their calendar.</figcaption>
-    </figure>
+The following Superhuman products support connectors today:
 
-    [Learn more][formulas]{ .md-button }
+- **:superhuman-go: Go** — The connector gives Go tools and knowledge it can use to answer questions and complete tasks.
+- **:superhuman-docs: Docs** — The connector adds new building blocks that you use directly in a doc to build something more powerful.
 
-=== "Actions"
+A single connector serves both products. If you already have a Pack built for :superhuman-docs: Docs, see the [Superhuman Go guide][migration_go] for how to make it work well in :superhuman-go: Go.
 
-    Packs can add new actions, which are a special type of formula that powers [buttons][help_buttons] and [automations][help_automations]. These actions typically make a change in an external application.
+A connector is assembled from building blocks, which support different features and usage patterns in each product.
 
-    <figure>
-      <img src="site:images/overview_action.png" srcset="site:images/overview_action_2x.png 2x" alt="A custom action in a button">
-      <figcaption>A button being configured with an action from the Google Calendar Pack that creates a new event in the user's calendar.</figcaption>
-    </figure>
-
-    [Learn more][actions]{ .md-button }
-
-=== "Column formats"
-
-    Packs can add new [column formats][help_format], which control how values are displayed within a table. They can simply reformat the data or enrich it with related information from an external source.
-
-    <figure>
-      <img src="site:images/overview_column_format.png" srcset="site:images/overview_column_format_2x.png 2x" class="screenshot" alt="A custom column format">
-      <figcaption>A column format from the Google Calendar Pack that displays rich information about an event provided its URL.</figcaption>
-    </figure>
-
-    [Learn more][column_formats]{ .md-button }
-
-=== "Pack tables"
-
-    Packs can add [Pack tables][help_pack_table], which are a special type of table that automatically syncs in data from an outside source. These tables are often used to bring in records from other apps or productivity tools.
-
-    <figure>
-      <img src="site:images/overview_sync_table.png" srcset="site:images/overview_sync_table_2x.png 2x" class="screenshot" alt="A Pack table that syncs from an external source">
-      <figcaption>A table from the Google Calendar Pack that pulls in the upcoming events on a user's calendar.</figcaption>
-    </figure>
-
-    [Learn more][sync_tables]{ .md-button }
-
-
-## Who can build Packs?
-
-Anyone with a Superhuman account is able to build a Pack, and getting started is as easy as clicking the "Create a Pack" button in the app. Our Pack Studio comes bundled with all the tools you'll need to write, build, and deploy a Pack, all without leaving your browser. And for more advanced developers we provide a command-line tool, allowing you to use your favorite IDE, tooling, and version control system.
-
-You will need to have a basic understanding of JavaScript or TypeScript to be successful, so if you're new to coding an [online JavaScript course][codecademy] might be a good place to start. We also have a large library of examples and templates built into the Pack Studio, plus a [friendly community][community] of fellow Pack makers that can help you along the way.
-
-[Build your first Pack][quickstart_web]{ .md-button }
+| Building block | What it does | :superhuman-go: Go | :superhuman-docs: Docs |
+| --- | --- | :-: | :-: |
+| [MCP][mcp] | Connect to a hosted MCP server and expose its tools | :material-check: | |
+| [Skills][skills] | Guide the LLM through a specific task or type of question | :material-check: | |
+| [Formulas][formulas] | Calculate a value or pull in data from an external source | :material-check: | :material-check: |
+| [Actions][actions] | Create, update, or delete data in an external application | :material-check: | :material-check: |
+| [Sync tables][sync_tables] | Pull in a large set of records and keep them up to date | :material-check: | :material-check: |
+| [Cards][cards] | Display structured data as rich cards and mentions | | :material-check: |
+| [Column formats][column_formats] | Change how values in a table column are displayed | | :material-check: |
 
 
 ## How do Packs work?
 
-Each Pack is its own [serverless application][wikipedia_serverless], fully managed and run by the platform. All you have to do is write the code and we'll take care of the rest.
+Each Pack is its own [serverless application][wikipedia_serverless], fully managed and run by the platform. A Pack is a different shape from a typical web application, and much of what you would normally build or operate yourself is handled for you.
 
-All Pack code is run on the server, ensuring a consistent and secure environment. Each execution of a Pack can run for at most a minute, but there are features that allow for longer running operations.
-
-Unlike other scripting languages, Packs don't automatically have access to all of the data within the doc. Instead users pass the Pack only the specific parameters it requires. Packs can then make requests to external APIs to fetch more data, including our own [Superhuman Docs API][api].
-
-``` mermaid
-sequenceDiagram
-  participant Doc as Doc (browser)
-  participant Pack as Pack (server)
-  participant API as External API
-  Doc->>+Pack: Execute Pack
-  Note left of Pack: Passes parameters
-  opt 0+ times
-    Pack->>API: HTTP request
-    API-->>Pack: Data
-  end
-  Pack-->>-Doc: Result
-```
-
-Packs are run in a custom JavaScript execution environment, compatible with the [ES2022 standard][mdn_ecmascript]. You can use all the modern JavaScript features, but browser- and Node-specific objects are not available (`window`, `fs`, etc).
+| Aspect | How it works in a Pack |
+| --- | --- |
+| **Hosting** | Fully managed and serverless. You upload a version and the platform runs it. |
+| **Language and runtime** | TypeScript, executed in a sandbox compatible with the [ES2022 standard][mdn_ecmascript]. Browser and Node globals like `window` and `fs` aren't available. |
+| **Dependencies** | Install [npm libraries][libraries] when building with the CLI. Many aren't compatible with the custom runtime or network interface. |
+| **User interface** | Packs don't ship their own UI. Building blocks appear through each product's existing interfaces, which affects how you [design][design] them. |
+| **Data access** | A Pack only receives the parameters that the building block asked for, and can't otherwise read a user's data in Superhuman. |
+| **Storage** | Packs are stateless and have no database of their own. [Sync table][sync_tables] records are stored by Superhuman, and everything else stays in the API you connect to. |
+| **Authentication** | Declare the [type of authentication][authentication] your API needs, and the platform runs the sign-in flow, stores the tokens, and applies them to your requests. Your code never sees the raw credentials. Users connect an account once and it's available to them in every product. |
+| **Networking** | Outbound HTTP through the built-in [fetcher][fetcher], which handles encoding and attaches credentials automatically. |
+| **Caching** | HTTP responses and tool results are [cached][caching] by default, with a TTL you control. |
+| **Logging** | Every execution is [logged][logging], scoped to a chat session or doc, and kept for about two weeks. |
+| **Testing** | Run building blocks on your own machine with the CLI, or [test][testing] a version live before releasing it. |
 
 
+## Who can use a Pack?
 
-[packs_landing]: https://docs.superhuman.com/packs
-[packs_why]: https://docs.superhuman.com/why-build-packs
-[gallery_slack]: https://coda.io/packs/slack-1000
-[formula_list]: https://docs.superhuman.com/formulas
-[help_buttons]: https://help.coda.io/hc/en-us/articles/39555758072717-Button-basics
-[help_automations]: https://help.coda.io/hc/en-us/articles/39555778179853-Automations-in-Coda
-[help_format]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
-[help_pack_table]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
-[codecademy]: https://www.codecademy.com/learn/introduction-to-javascript
+A Pack is private to you until you decide otherwise. You can keep it for your own use, share it with your team, or [publish it][publishing] so that anyone can install it. Publishing publicly involves a review first, after which your Pack is listed in the [Superhuman Docs Gallery][gallery_packs] and the [Superhuman Go Store][go_store], where users can discover and install it.
+
+
+## How do you build a Pack?
+
+Packs are written in TypeScript, and you can build them with your own toolchain or entirely in the browser.
+
+Most developers work locally with the [command line tool][cli], using the editor, tooling, and version control they already have. You can run your connector on your own machine to verify it's working, then upload a new version to the Superhuman servers.
+
+The [Pack Studio][quickstart_web] is a browser-based alternative that bundles the editor, build, and deploy steps together, with nothing to install. It's a quick way to prototype, and a Pack that starts there can be moved into a local project later.
+
+Either way, there's a library of [sample Packs][samples] covering every major part of the SDK, and a [community][community] of Pack makers to ask when you get stuck.
+
+[Get started with the CLI][quickstart_cli]{ .md-button .md-button--primary }
+[Get started in the browser][quickstart_web]{ .md-button }
+
+
+
 [community]: https://connect.superhuman.com/c/developers-central/making-packs/15
 [quickstart_web]: ../tutorials/get-started/web.md
 [quickstart_cli]: ../tutorials/get-started/cli.md
+[cli]: ../development/cli.md
+[samples]: ../samples/index.md
+[authentication]: basics/authentication/index.md
+[publishing]: ../development/publishing.md
+[libraries]: ../development/libraries.md
+[design]: design.md
+[fetcher]: basics/fetcher.md
+[caching]: advanced/caching.md
+[logging]: ../development/logging.md
+[testing]: ../development/testing.md
+[go_store]: https://superhuman.com/store/connectors
 [wikipedia_serverless]: https://en.wikipedia.org/wiki/Serverless_computing
 [mdn_ecmascript]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_Resources
-[api]: https://docs.superhuman.com/developers/apis/v1
 [formulas]: blocks/formulas.md
 [actions]: blocks/actions.md
 [column_formats]: blocks/column-formats.md
 [sync_tables]: blocks/sync-tables/index.md
-[help_admin]: https://help.coda.io/hc/en-us/articles/39555784421773-Enable-Pack-approvals-and-manage-requests
+[skills]: blocks/skills.md
+[mcp]: blocks/mcp.md
+[cards]: blocks/cards.md
+[migration_go]: ../support/migration/superhuman-go.md
 [gallery_packs]: https://docs.superhuman.com/gallery?filter=packs

@@ -1210,7 +1210,7 @@ export const Examples: Example[] = [
         name: 'With other building blocks',
         content:
           'A Pack that uses an MCP for most tools, but includes a sync table for indexing. This sample syncs information from Todoist.',
-        codeFile: './samples/packs/todoist/mcp.ts',
+        codeFile: './samples/packs/todoist/mcp_with_sync_table.ts',
       },
     ],
   },
