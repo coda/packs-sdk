@@ -20,6 +20,7 @@ import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
+import type {CustomAgentConfig} from '../types';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
@@ -2372,6 +2373,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   });
   const chatSkillSchema = skillSchema.partial();
 
+  const customAgentSchema = zodCompleteStrictObject<CustomAgentConfig>({
+    instructions: z.string().min(1).max(Limits.PromptLength),
+  });
+
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
   });
@@ -2526,6 +2531,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
     chatSkill: chatSkillSchema.optional(),
     benchInitializationSkill: chatSkillSchema.optional(),
+    customAgent: customAgentSchema.optional(),
     mcpServers: z
       .array(mcpServerSchema)
       .max(1)

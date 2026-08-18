@@ -6,6 +6,8 @@ import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {CustomAgentConfig} from './types';
+import type {CustomAgentDefinition} from './types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
@@ -48,8 +50,29 @@ import {wrapMetadataFunction} from './api';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder {
-  return new PackDefinitionBuilder(definition);
+export function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBuilder;
+export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+export function newPack(
+  arg?: NewCustomAgentOptions | Partial<PackVersionDefinition>,
+): PackDefinitionBuilder | CustomAgentDefinitionBuilder {
+  if (arg && (arg as NewCustomAgentOptions).isCustomAgent === true) {
+    const {isCustomAgent, ...definition} = arg as NewCustomAgentOptions;
+    return new CustomAgentPackDefinitionBuilder(definition);
+  }
+  return new PackDefinitionBuilder(arg as Partial<PackVersionDefinition> | undefined);
+}
+
+/**
+ * Options for creating a custom agent, via `sdk.newPack({isCustomAgent: true})`.
+ *
+ * `isCustomAgent` must be the literal `true` for the agent authoring methods to resolve. If you
+ * are generating agents in bulk from a dynamic flag, declare it `as const` or cast the result.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NewCustomAgentOptions extends Partial<PackVersionDefinition> {
+  isCustomAgent: true;
 }
 
 /**
@@ -106,6 +129,13 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   mcpServers: MCPServer[];
 
   /**
+   * See {@link PackVersionDefinition.customAgent}.
+   * @internal
+   * @hidden
+   */
+  customAgent?: CustomAgentConfig;
+
+  /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
    */
   defaultAuthentication?: Authentication;
@@ -149,6 +179,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       skillEntrypoints,
       suggestedPrompts,
       mcpServers,
+      customAgent,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -160,6 +191,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
+    this.customAgent = customAgent;
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
@@ -612,4 +644,133 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
 
     return this;
   }
+}
+
+/**
+ * A builder for a custom agent. Use `sdk.newPack({isCustomAgent: true})` to create one.
+ *
+ * This is the pack builder with the connector-authoring surface withheld. An agent ships no
+ * fetcher of its own, and tools that call other packs use those packs' authentication, so
+ * formulas, sync tables, column formats, authentication, network domains and MCP servers are
+ * not authorable here. They may be opened up later; because doing so only adds methods, it
+ * will not be a breaking change for agents written against this surface. The same goes for
+ * the agent's own surface: tools and triggers are not authorable yet and will be added here.
+ *
+ * The methods return `CustomAgentDefinitionBuilder` rather than `this` on purpose. A derived
+ * type (`Omit<PackDefinitionBuilder, ...>`) would resolve `this` back to the full builder, so
+ * the withheld methods would reappear after the first chained call.
+ *
+ * @internal
+ * @hidden
+ */
+export interface CustomAgentDefinitionBuilder extends CustomAgentDefinition {
+  /** See {@link PackVersionDefinition.version}. */
+  version?: string;
+
+  /**
+   * Sets this agent's instructions, i.e. its prompt.
+   *
+   * @example
+   * ```
+   * pack.setInstructions('You help a team run async standups. Keep replies short.');
+   * ```
+   */
+  setInstructions(instructions: string): CustomAgentDefinitionBuilder;
+
+  /**
+   * See {@link PackDefinitionBuilder.setVersion}.
+   */
+  setVersion(version: string): CustomAgentDefinitionBuilder;
+}
+
+/**
+ * The runtime implementation behind {@link CustomAgentDefinitionBuilder}.
+ *
+ * `CustomAgentDefinitionBuilder` is what hides the connector-authoring methods; a subclass
+ * cannot, because TypeScript does not allow a subclass to narrow the visibility of an
+ * inherited member. The overrides here exist so that callers who reach past the types — a
+ * cast, or plain JavaScript — fail loudly at build time instead of silently uploading a
+ * definition the server will not honor.
+ *
+ * Not exported: `newPack` is the only way to construct one.
+ *
+ * @internal
+ * @hidden
+ */
+class CustomAgentPackDefinitionBuilder extends PackDefinitionBuilder {
+  constructor(definition?: Partial<PackVersionDefinition>) {
+    super(definition);
+    // The agent declares itself by the presence of this field, even before it has any content.
+    // `packs validate` relies on that to tell "this was meant to be an agent and is incomplete"
+    // apart from "this is an ordinary pack", and the server relies on it to classify the pack.
+    this.customAgent = this.customAgent || {};
+  }
+
+  setInstructions(instructions: string): this {
+    this.customAgent = {...this.customAgent, instructions};
+    return this;
+  }
+
+  override addFormula(): never {
+    throw new Error(unavailableOnAgent('addFormula'));
+  }
+
+  override addSyncTable(): never {
+    throw new Error(unavailableOnAgent('addSyncTable'));
+  }
+
+  override addDynamicSyncTable(): never {
+    throw new Error(unavailableOnAgent('addDynamicSyncTable'));
+  }
+
+  override addColumnFormat(): never {
+    throw new Error(unavailableOnAgent('addColumnFormat'));
+  }
+
+  override addSkill(): never {
+    throw new Error(`addSkill() is not available on a custom agent. Use setInstructions() instead.`);
+  }
+
+  override addMCPServer(): never {
+    throw new Error(unavailableOnAgent('addMCPServer'));
+  }
+
+  override setChatSkill(): never {
+    throw new Error(`setChatSkill() is not available on a custom agent. Use setInstructions() instead.`);
+  }
+
+  override setBenchInitializationSkill(): never {
+    throw new Error(`setBenchInitializationSkill() is not available on a custom agent. Use setInstructions() instead.`);
+  }
+
+  override setSkillEntrypoints(): never {
+    throw new Error(unavailableOnAgent('setSkillEntrypoints'));
+  }
+
+  override addSuggestedPrompt(): never {
+    throw new Error(unavailableOnAgent('addSuggestedPrompt'));
+  }
+
+  override setUserAuthentication(): never {
+    throw new Error(unavailableOnAgent('setUserAuthentication'));
+  }
+
+  override setSystemAuthentication(): never {
+    throw new Error(unavailableOnAgent('setSystemAuthentication'));
+  }
+
+  override addAdminAuthentication(): never {
+    throw new Error(unavailableOnAgent('addAdminAuthentication'));
+  }
+
+  override addNetworkDomain(): never {
+    throw new Error(unavailableOnAgent('addNetworkDomain'));
+  }
+}
+
+function unavailableOnAgent(method: string): string {
+  return (
+    `${method}() is not available on a custom agent. ` +
+    `Agents are authored with setInstructions().`
+  );
 }
