@@ -40,19 +40,6 @@ import {setEndpointDefHelper} from './helpers/migration';
 import {wrapMetadataFunction} from './api';
 
 /**
- * Creates a new skeleton custom agent definition that can be added to.
- *
- * This overload is listed first because it is the more specific one; `newPack()` without the
- * flag is the ordinary pack entry point below.
- *
- * @example
- * ```
- * export const pack = newPack({isCustomAgent: true});
- * pack.setInstructions('You help a team run async standups. Keep replies short.');
- * ```
- */
-export function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBuilder;
-/**
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
@@ -63,28 +50,34 @@ export function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBu
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
-export function newPack(
-  arg?: NewCustomAgentOptions | Partial<PackVersionDefinition>,
-): PackDefinitionBuilder | CustomAgentDefinitionBuilder {
-  if (arg && (arg as NewCustomAgentOptions).isCustomAgent === true) {
-    const {isCustomAgent, ...definition} = arg as NewCustomAgentOptions;
-    return new CustomAgentDefinitionBuilderImpl(definition);
-  }
-  return new PackDefinitionBuilder(arg as Partial<PackVersionDefinition> | undefined);
+export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder {
+  return new PackDefinitionBuilder(definition);
 }
 
 /**
- * Options for creating a custom agent, via `sdk.newPack({isCustomAgent: true})`.
+ * Creates a new skeleton custom agent definition that can be added to.
  *
- * `isCustomAgent` must be the literal `true` for the agent authoring methods to resolve. If you
- * are generating agents in bulk from a dynamic flag, declare it `as const` or cast the result.
+ * An agent is still a pack: it is uploaded and released through the same commands, and the
+ * definition rides in the pack metadata. What differs is the authoring surface, which is why
+ * this is a separate entry point rather than a flag on {@link newPack}. Declaring the intent
+ * here rather than inferring it from what the author eventually calls means a forgotten
+ * `setInstructions` is caught as an incomplete agent instead of passing as an empty pack.
+ *
+ * It takes no seed definition on purpose. Accepting one would let connector fields — formulas,
+ * sync tables, authentication — reach the builder without going through the methods that
+ * withhold them.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
  *
  * @internal
  * @hidden
  */
-export interface NewCustomAgentOptions extends Partial<PackVersionDefinition> {
-  isCustomAgent: true;
+export function newAgent(): CustomAgentDefinitionBuilder {
+  return new CustomAgentDefinitionBuilderImpl();
 }
 
 /**
@@ -710,12 +703,17 @@ export interface CustomAgentDefinitionBuilder extends CustomAgentDefinition {
  * @hidden
  */
 class CustomAgentDefinitionBuilderImpl extends PackDefinitionBuilder {
-  constructor(definition?: Partial<PackVersionDefinition>) {
-    super(definition);
+  // Narrowed from optional: an agent always has one, from construction onward.
+  override customAgent: CustomAgentConfig;
+
+  constructor() {
+    // Deliberately seeded with nothing. The base constructor copies whatever it is given
+    // straight onto the builder, so anything accepted here would bypass the overrides below.
+    super();
     // The agent declares itself by the presence of this field, even before it has any content.
     // `packs validate` relies on that to tell "this was meant to be an agent and is incomplete"
     // apart from "this is an ordinary pack", and the server relies on it to classify the pack.
-    this.customAgent = this.customAgent || {};
+    this.customAgent = {};
   }
 
   setInstructions(instructions: string): this {

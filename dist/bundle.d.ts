@@ -6325,19 +6325,6 @@ export declare enum HttpStatusCode {
 	ServiceUnavailable = 503
 }
 /**
- * Creates a new skeleton custom agent definition that can be added to.
- *
- * This overload is listed first because it is the more specific one; `newPack()` without the
- * flag is the ordinary pack entry point below.
- *
- * @example
- * ```
- * export const pack = newPack({isCustomAgent: true});
- * pack.setInstructions('You help a team run async standups. Keep replies short.');
- * ```
- */
-export declare function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBuilder;
-/**
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
@@ -6350,17 +6337,28 @@ export declare function newPack(options: NewCustomAgentOptions): CustomAgentDefi
  */
 export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
 /**
- * Options for creating a custom agent, via `sdk.newPack({isCustomAgent: true})`.
+ * Creates a new skeleton custom agent definition that can be added to.
  *
- * `isCustomAgent` must be the literal `true` for the agent authoring methods to resolve. If you
- * are generating agents in bulk from a dynamic flag, declare it `as const` or cast the result.
+ * An agent is still a pack: it is uploaded and released through the same commands, and the
+ * definition rides in the pack metadata. What differs is the authoring surface, which is why
+ * this is a separate entry point rather than a flag on {@link newPack}. Declaring the intent
+ * here rather than inferring it from what the author eventually calls means a forgotten
+ * `setInstructions` is caught as an incomplete agent instead of passing as an empty pack.
+ *
+ * It takes no seed definition on purpose. Accepting one would let connector fields — formulas,
+ * sync tables, authentication — reach the builder without going through the methods that
+ * withhold them.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
  *
  * @internal
  * @hidden
  */
-export interface NewCustomAgentOptions extends Partial<PackVersionDefinition> {
-	isCustomAgent: true;
-}
+export declare function newAgent(): CustomAgentDefinitionBuilder;
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */

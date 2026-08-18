@@ -79,11 +79,6 @@ run "make docs" to regenerate this file.
     'DetailedIndexedProperty',
     'GlobalKnowledgeToolSource',
 
-    // The custom agent authoring surface, referenced by the newPack overload but deliberately
-    // not part of the public API yet.
-    'CustomAgentDefinitionBuilder',
-    'NewCustomAgentOptions',
-
     // Deprecated features we should remove from the SDK.
     'FeatureSet',
     'PackCategory',

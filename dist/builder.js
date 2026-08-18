@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PackDefinitionBuilder = exports.newPack = void 0;
+exports.PackDefinitionBuilder = exports.newAgent = exports.newPack = void 0;
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
 const api_1 = require("./api");
@@ -11,14 +11,47 @@ const api_5 = require("./api");
 const api_6 = require("./api");
 const migration_1 = require("./helpers/migration");
 const api_7 = require("./api");
-function newPack(arg) {
-    if (arg && arg.isCustomAgent === true) {
-        const { isCustomAgent, ...definition } = arg;
-        return new CustomAgentDefinitionBuilderImpl(definition);
-    }
-    return new PackDefinitionBuilder(arg);
+/**
+ * Creates a new skeleton pack definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newPack();
+ * pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
+ * pack.addSyncTable('MyTable', ...);
+ * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+ * ```
+ */
+function newPack(definition) {
+    return new PackDefinitionBuilder(definition);
 }
 exports.newPack = newPack;
+/**
+ * Creates a new skeleton custom agent definition that can be added to.
+ *
+ * An agent is still a pack: it is uploaded and released through the same commands, and the
+ * definition rides in the pack metadata. What differs is the authoring surface, which is why
+ * this is a separate entry point rather than a flag on {@link newPack}. Declaring the intent
+ * here rather than inferring it from what the author eventually calls means a forgotten
+ * `setInstructions` is caught as an incomplete agent instead of passing as an empty pack.
+ *
+ * It takes no seed definition on purpose. Accepting one would let connector fields — formulas,
+ * sync tables, authentication — reach the builder without going through the methods that
+ * withhold them.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+function newAgent() {
+    return new CustomAgentDefinitionBuilderImpl();
+}
+exports.newAgent = newAgent;
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
@@ -463,12 +496,14 @@ exports.PackDefinitionBuilder = PackDefinitionBuilder;
  * @hidden
  */
 class CustomAgentDefinitionBuilderImpl extends PackDefinitionBuilder {
-    constructor(definition) {
-        super(definition);
+    constructor() {
+        // Deliberately seeded with nothing. The base constructor copies whatever it is given
+        // straight onto the builder, so anything accepted here would bypass the overrides below.
+        super();
         // The agent declares itself by the presence of this field, even before it has any content.
         // `packs validate` relies on that to tell "this was meant to be an agent and is incomplete"
         // apart from "this is an ordinary pack", and the server relies on it to classify the pack.
-        this.customAgent = this.customAgent || {};
+        this.customAgent = {};
     }
     setInstructions(instructions) {
         var _a;
