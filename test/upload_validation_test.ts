@@ -4774,6 +4774,17 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('CodaApiHeaderBearerToken, valid grammarlyaws.com data-plane domain in auth networkDomain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.CodaApiHeaderBearerToken,
+          networkDomain: ['coda.io', 'grammarlyaws.com'],
+        },
+        networkDomains: ['coda.io', 'grammarlyaws.com'],
+      });
+      await validateJson(metadata);
+    });
+
     it('CodaApiHeaderBearerToken, validated even when a non-matching auth is checked first', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {type: AuthenticationType.None},
