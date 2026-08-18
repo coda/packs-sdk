@@ -2,6 +2,8 @@ import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { CustomAgentConfig } from './types';
+import type { CustomAgentDefinition } from './types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
@@ -25,6 +27,19 @@ import type { SystemAuthenticationDef } from './types';
 import type { UserAuthenticationDef } from './api_types';
 import type { ValueType } from './schema';
 /**
+ * Creates a new skeleton custom agent definition that can be added to.
+ *
+ * This overload is listed first because it is the more specific one; `newPack()` without the
+ * flag is the ordinary pack entry point below.
+ *
+ * @example
+ * ```
+ * export const pack = newPack({isCustomAgent: true});
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ */
+export declare function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBuilder;
+/**
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
@@ -36,6 +51,18 @@ import type { ValueType } from './schema';
  * ```
  */
 export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+/**
+ * Options for creating a custom agent, via `sdk.newPack({isCustomAgent: true})`.
+ *
+ * `isCustomAgent` must be the literal `true` for the agent authoring methods to resolve. If you
+ * are generating agents in bulk from a dynamic flag, declare it `as const` or cast the result.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NewCustomAgentOptions extends Partial<PackVersionDefinition> {
+    isCustomAgent: true;
+}
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
@@ -88,6 +115,12 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     mcpServers: MCPServer[];
+    /**
+     * See {@link PackVersionDefinition.customAgent}.
+     * @internal
+     * @hidden
+     */
+    customAgent?: CustomAgentConfig;
     /**
      * See {@link PackVersionDefinition.defaultAuthentication}.
      */
@@ -388,4 +421,38 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      */
     setVersion(version: string): this;
     private _setDefaultConnectionRequirement;
+}
+/**
+ * A builder for a custom agent. Use `sdk.newPack({isCustomAgent: true})` to create one.
+ *
+ * This is the pack builder with the connector-authoring surface withheld. An agent ships no
+ * fetcher of its own, and tools that call other packs use those packs' authentication, so
+ * formulas, sync tables, column formats, authentication, network domains and MCP servers are
+ * not authorable here. They may be opened up later; because doing so only adds methods, it
+ * will not be a breaking change for agents written against this surface. The same goes for
+ * the agent's own surface: tools and triggers are not authorable yet and will be added here.
+ *
+ * The methods return `CustomAgentDefinitionBuilder` rather than `this` on purpose. A derived
+ * type (`Omit<PackDefinitionBuilder, ...>`) would resolve `this` back to the full builder, so
+ * the withheld methods would reappear after the first chained call.
+ *
+ * @internal
+ * @hidden
+ */
+export interface CustomAgentDefinitionBuilder extends CustomAgentDefinition {
+    /** See {@link PackVersionDefinition.version}. */
+    version?: string;
+    /**
+     * Sets this agent's instructions, i.e. its prompt.
+     *
+     * @example
+     * ```
+     * pack.setInstructions('You help a team run async standups. Keep replies short.');
+     * ```
+     */
+    setInstructions(instructions: string): CustomAgentDefinitionBuilder;
+    /**
+     * See {@link PackDefinitionBuilder.setVersion}.
+     */
+    setVersion(version: string): CustomAgentDefinitionBuilder;
 }

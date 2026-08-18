@@ -10,11 +10,39 @@ search:
 
 # Function: newPack()
 
+## Call Signature
+
+> **newPack**(`options`): `CustomAgentDefinitionBuilder`
+
+Creates a new skeleton custom agent definition that can be added to.
+
+This overload is listed first because it is the more specific one; `newPack()` without the
+flag is the ordinary pack entry point below.
+
+### Example
+
+```
+export const pack = newPack({isCustomAgent: true});
+pack.setInstructions('You help a team run async standups. Keep replies short.');
+```
+
+### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `options` | `NewCustomAgentOptions` |
+
+### Returns
+
+`CustomAgentDefinitionBuilder`
+
+## Call Signature
+
 > **newPack**(`definition?`): [`PackDefinitionBuilder`](../classes/PackDefinitionBuilder.md)
 
 Creates a new skeleton pack definition that can be added to.
 
-## Example
+### Example
 
 ```
 export const pack = newPack();
@@ -23,12 +51,12 @@ pack.addSyncTable('MyTable', ...);
 pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
 ```
 
-## Parameters
+### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `definition?` | `Partial`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md)\> |
 
-## Returns
+### Returns
 
 [`PackDefinitionBuilder`](../classes/PackDefinitionBuilder.md)

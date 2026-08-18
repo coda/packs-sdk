@@ -11,19 +11,12 @@ const api_5 = require("./api");
 const api_6 = require("./api");
 const migration_1 = require("./helpers/migration");
 const api_7 = require("./api");
-/**
- * Creates a new skeleton pack definition that can be added to.
- *
- * @example
- * ```
- * export const pack = newPack();
- * pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
- * pack.addSyncTable('MyTable', ...);
- * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
- * ```
- */
-function newPack(definition) {
-    return new PackDefinitionBuilder(definition);
+function newPack(arg) {
+    if (arg && arg.isCustomAgent === true) {
+        const { isCustomAgent, ...definition } = arg;
+        return new CustomAgentDefinitionBuilderImpl(definition);
+    }
+    return new PackDefinitionBuilder(arg);
 }
 exports.newPack = newPack;
 /**
@@ -35,7 +28,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, } = definition || {};
+        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, customAgent, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -46,6 +39,7 @@ class PackDefinitionBuilder {
         this.suggestedPrompts = suggestedPrompts || [];
         this.networkDomains = networkDomains || [];
         this.mcpServers = mcpServers || [];
+        this.customAgent = customAgent;
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
         this.version = version;
@@ -454,3 +448,75 @@ class PackDefinitionBuilder {
     }
 }
 exports.PackDefinitionBuilder = PackDefinitionBuilder;
+/**
+ * The runtime implementation behind {@link CustomAgentDefinitionBuilder}.
+ *
+ * `CustomAgentDefinitionBuilder` is what hides the connector-authoring methods; a subclass
+ * cannot, because TypeScript does not allow a subclass to narrow the visibility of an
+ * inherited member. The overrides here exist so that callers who reach past the types — a
+ * cast, or plain JavaScript — fail loudly at build time instead of silently uploading a
+ * definition the server will not honor.
+ *
+ * Not exported: `newPack` is the only way to construct one.
+ *
+ * @internal
+ * @hidden
+ */
+class CustomAgentDefinitionBuilderImpl extends PackDefinitionBuilder {
+    constructor(definition) {
+        super(definition);
+        // The agent declares itself by the presence of this field, even before it has any content.
+        // `packs validate` relies on that to tell "this was meant to be an agent and is incomplete"
+        // apart from "this is an ordinary pack", and the server relies on it to classify the pack.
+        this.customAgent = this.customAgent || {};
+    }
+    setInstructions(instructions) {
+        this.customAgent = { ...this.customAgent, instructions };
+        return this;
+    }
+    addFormula() {
+        throw new Error(unavailableOnAgent('addFormula'));
+    }
+    addSyncTable() {
+        throw new Error(unavailableOnAgent('addSyncTable'));
+    }
+    addDynamicSyncTable() {
+        throw new Error(unavailableOnAgent('addDynamicSyncTable'));
+    }
+    addColumnFormat() {
+        throw new Error(unavailableOnAgent('addColumnFormat'));
+    }
+    addSkill() {
+        throw new Error(`addSkill() is not available on a custom agent. Use setInstructions() instead.`);
+    }
+    addMCPServer() {
+        throw new Error(unavailableOnAgent('addMCPServer'));
+    }
+    setChatSkill() {
+        throw new Error(`setChatSkill() is not available on a custom agent. Use setInstructions() instead.`);
+    }
+    setBenchInitializationSkill() {
+        throw new Error(`setBenchInitializationSkill() is not available on a custom agent. Use setInstructions() instead.`);
+    }
+    setSkillEntrypoints() {
+        throw new Error(unavailableOnAgent('setSkillEntrypoints'));
+    }
+    addSuggestedPrompt() {
+        throw new Error(unavailableOnAgent('addSuggestedPrompt'));
+    }
+    setUserAuthentication() {
+        throw new Error(unavailableOnAgent('setUserAuthentication'));
+    }
+    setSystemAuthentication() {
+        throw new Error(unavailableOnAgent('setSystemAuthentication'));
+    }
+    addAdminAuthentication() {
+        throw new Error(unavailableOnAgent('addAdminAuthentication'));
+    }
+    addNetworkDomain() {
+        throw new Error(unavailableOnAgent('addNetworkDomain'));
+    }
+}
+function unavailableOnAgent(method) {
+    return `${method}() is not available on a custom agent. Agents are authored with setInstructions().`;
+}

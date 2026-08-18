@@ -1567,6 +1567,20 @@ export interface SuggestedPrompt {
     prompt: string;
 }
 /**
+ * How a custom agent behaves: what it is told to do.
+ *
+ * Display fields (name, description, icon) are not part of this; they come from the pack's
+ * listing. Tools and triggers are not authorable yet; both will be added as optional fields,
+ * so neither is a breaking change for agents written against this shape.
+ *
+ * @internal
+ * @hidden
+ */
+export interface CustomAgentConfig {
+    /** The agent's instructions, i.e. its prompt. */
+    instructions?: string;
+}
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1665,6 +1679,29 @@ export interface PackVersionDefinition {
      * Definitions of MCP servers that this pack can connect to.
      */
     mcpServers?: MCPServer[];
+    /**
+     * The custom agent defined by this pack, if it defines one.
+     *
+     * Authored via `sdk.newPack({isCustomAgent: true})`. Its presence is what marks this pack
+     * as a custom agent, both for local validation and for the server on upload.
+     *
+     * @internal
+     * @hidden
+     */
+    customAgent?: CustomAgentConfig;
+}
+/**
+ * The definition of a custom agent. An agent is a pack, so this is a pack definition that
+ * carries a {@link CustomAgentConfig}.
+ *
+ * Mirrors {@link BasicPackDefinition}: `version` is omitted here because it is not known until
+ * the version is built, and is declared on {@link CustomAgentDefinitionBuilder} instead.
+ *
+ * @internal
+ * @hidden
+ */
+export interface CustomAgentDefinition extends BasicPackDefinition {
+    customAgent: CustomAgentConfig;
 }
 /**
  * @deprecated use `#PackVersionDefinition`

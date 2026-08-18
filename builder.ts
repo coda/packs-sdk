@@ -40,6 +40,19 @@ import {setEndpointDefHelper} from './helpers/migration';
 import {wrapMetadataFunction} from './api';
 
 /**
+ * Creates a new skeleton custom agent definition that can be added to.
+ *
+ * This overload is listed first because it is the more specific one; `newPack()` without the
+ * flag is the ordinary pack entry point below.
+ *
+ * @example
+ * ```
+ * export const pack = newPack({isCustomAgent: true});
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ */
+export function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBuilder;
+/**
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
@@ -50,7 +63,6 @@ import {wrapMetadataFunction} from './api';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBuilder;
 export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
 export function newPack(
   arg?: NewCustomAgentOptions | Partial<PackVersionDefinition>,

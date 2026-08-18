@@ -6121,6 +6121,20 @@ export interface SuggestedPrompt {
 	prompt: string;
 }
 /**
+ * How a custom agent behaves: what it is told to do.
+ *
+ * Display fields (name, description, icon) are not part of this; they come from the pack's
+ * listing. Tools and triggers are not authorable yet; both will be added as optional fields,
+ * so neither is a breaking change for agents written against this shape.
+ *
+ * @internal
+ * @hidden
+ */
+export interface CustomAgentConfig {
+	/** The agent's instructions, i.e. its prompt. */
+	instructions?: string;
+}
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -6219,6 +6233,29 @@ export interface PackVersionDefinition {
 	 * Definitions of MCP servers that this pack can connect to.
 	 */
 	mcpServers?: MCPServer[];
+	/**
+	 * The custom agent defined by this pack, if it defines one.
+	 *
+	 * Authored via `sdk.newPack({isCustomAgent: true})`. Its presence is what marks this pack
+	 * as a custom agent, both for local validation and for the server on upload.
+	 *
+	 * @internal
+	 * @hidden
+	 */
+	customAgent?: CustomAgentConfig;
+}
+/**
+ * The definition of a custom agent. An agent is a pack, so this is a pack definition that
+ * carries a {@link CustomAgentConfig}.
+ *
+ * Mirrors {@link BasicPackDefinition}: `version` is omitted here because it is not known until
+ * the version is built, and is declared on {@link CustomAgentDefinitionBuilder} instead.
+ *
+ * @internal
+ * @hidden
+ */
+export interface CustomAgentDefinition extends BasicPackDefinition {
+	customAgent: CustomAgentConfig;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6276,6 +6313,19 @@ export declare enum HttpStatusCode {
 	ServiceUnavailable = 503
 }
 /**
+ * Creates a new skeleton custom agent definition that can be added to.
+ *
+ * This overload is listed first because it is the more specific one; `newPack()` without the
+ * flag is the ordinary pack entry point below.
+ *
+ * @example
+ * ```
+ * export const pack = newPack({isCustomAgent: true});
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ */
+export declare function newPack(options: NewCustomAgentOptions): CustomAgentDefinitionBuilder;
+/**
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
@@ -6287,6 +6337,18 @@ export declare enum HttpStatusCode {
  * ```
  */
 export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+/**
+ * Options for creating a custom agent, via `sdk.newPack({isCustomAgent: true})`.
+ *
+ * `isCustomAgent` must be the literal `true` for the agent authoring methods to resolve. If you
+ * are generating agents in bulk from a dynamic flag, declare it `as const` or cast the result.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NewCustomAgentOptions extends Partial<PackVersionDefinition> {
+	isCustomAgent: true;
+}
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
@@ -6339,6 +6401,12 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	mcpServers: MCPServer[];
+	/**
+	 * See {@link PackVersionDefinition.customAgent}.
+	 * @internal
+	 * @hidden
+	 */
+	customAgent?: CustomAgentConfig;
 	/**
 	 * See {@link PackVersionDefinition.defaultAuthentication}.
 	 */
@@ -6639,6 +6707,40 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	setVersion(version: string): this;
 	private _setDefaultConnectionRequirement;
+}
+/**
+ * A builder for a custom agent. Use `sdk.newPack({isCustomAgent: true})` to create one.
+ *
+ * This is the pack builder with the connector-authoring surface withheld. An agent ships no
+ * fetcher of its own, and tools that call other packs use those packs' authentication, so
+ * formulas, sync tables, column formats, authentication, network domains and MCP servers are
+ * not authorable here. They may be opened up later; because doing so only adds methods, it
+ * will not be a breaking change for agents written against this surface. The same goes for
+ * the agent's own surface: tools and triggers are not authorable yet and will be added here.
+ *
+ * The methods return `CustomAgentDefinitionBuilder` rather than `this` on purpose. A derived
+ * type (`Omit<PackDefinitionBuilder, ...>`) would resolve `this` back to the full builder, so
+ * the withheld methods would reappear after the first chained call.
+ *
+ * @internal
+ * @hidden
+ */
+export interface CustomAgentDefinitionBuilder extends CustomAgentDefinition {
+	/** See {@link PackVersionDefinition.version}. */
+	version?: string;
+	/**
+	 * Sets this agent's instructions, i.e. its prompt.
+	 *
+	 * @example
+	 * ```
+	 * pack.setInstructions('You help a team run async standups. Keep replies short.');
+	 * ```
+	 */
+	setInstructions(instructions: string): CustomAgentDefinitionBuilder;
+	/**
+	 * See {@link PackDefinitionBuilder.setVersion}.
+	 */
+	setVersion(version: string): CustomAgentDefinitionBuilder;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
