@@ -1872,7 +1872,7 @@ export interface PackVersionDefinition {
  * @hidden
  */
 export interface CustomAgentDefinition extends BasicPackDefinition {
-  customAgent: {instructions?: string;};
+  customAgent: CustomAgentConfig;
 }
 
 /**

@@ -57,7 +57,7 @@ export function newPack(
 ): PackDefinitionBuilder | CustomAgentDefinitionBuilder {
   if (arg && (arg as NewCustomAgentOptions).isCustomAgent === true) {
     const {isCustomAgent, ...definition} = arg as NewCustomAgentOptions;
-    return new CustomAgentPackDefinitionBuilder(definition);
+    return new CustomAgentDefinitionBuilderImpl(definition);
   }
   return new PackDefinitionBuilder(arg as Partial<PackVersionDefinition> | undefined);
 }
@@ -697,7 +697,7 @@ export interface CustomAgentDefinitionBuilder extends CustomAgentDefinition {
  * @internal
  * @hidden
  */
-class CustomAgentPackDefinitionBuilder extends PackDefinitionBuilder {
+class CustomAgentDefinitionBuilderImpl extends PackDefinitionBuilder {
   constructor(definition?: Partial<PackVersionDefinition>) {
     super(definition);
     // The agent declares itself by the presence of this field, even before it has any content.
