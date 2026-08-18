@@ -46,7 +46,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     For Todoist this URL is
 
     ```
-    https://todoist.com/oauth/authorize
+    https://app.todoist.com/oauth/authorize
     ```
 
     The `client_id`, `scope`, and `state` parameters mentioned in the documentation will be added automatically by the Pack.
@@ -71,7 +71,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     For Todoist this URL is
 
     ```
-    https://todoist.com/oauth/access_token
+    https://api.todoist.com/oauth/access_token
     ```
 
     The `client_id`, `client_secret`, and `code` parameters mentioned in the documentation will be added automatically by the Pack.
@@ -249,9 +249,9 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
       execute: async function ([], context) {
         let response = await context.fetcher.fetch({
           method: "GET",
-          url: "https://api.todoist.com/rest/v2/tasks",
+          url: "https://api.todoist.com/api/v1/tasks",
         });
-        let tasks = response.body;
+        let tasks = response.body.results;
         let results = [];
         for (let task of tasks) {
           results.push(task.content)
@@ -312,8 +312,8 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
 
     pack.setUserAuthentication({
       type: sdk.AuthenticationType.OAuth2,
-      authorizationUrl: "https://todoist.com/oauth/authorize",
-      tokenUrl: "https://todoist.com/oauth/access_token",
+      authorizationUrl: "https://app.todoist.com/oauth/authorize",
+      tokenUrl: "https://api.todoist.com/oauth/access_token",
     });
 
     pack.addFormula({
@@ -343,8 +343,8 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
 
     pack.setUserAuthentication({
       type: sdk.AuthenticationType.OAuth2,
-      authorizationUrl: "https://todoist.com/oauth/authorize",
-      tokenUrl: "https://todoist.com/oauth/access_token",
+      authorizationUrl: "https://app.todoist.com/oauth/authorize",
+      tokenUrl: "https://api.todoist.com/oauth/access_token",
       scopes: ["data:read"],
       scopeDelimiter: ",",
     });
@@ -372,8 +372,8 @@ All the code is written, but we're not ready to start using the Pack just yet. B
 
     pack.setUserAuthentication({
       type: sdk.AuthenticationType.OAuth2,
-      authorizationUrl: "https://todoist.com/oauth/authorize",
-      tokenUrl: "https://todoist.com/oauth/access_token",
+      authorizationUrl: "https://app.todoist.com/oauth/authorize",
+      tokenUrl: "https://api.todoist.com/oauth/access_token",
       scopes: ["data:read"],
       scopeDelimiter: ",",
     });
@@ -387,9 +387,9 @@ All the code is written, but we're not ready to start using the Pack just yet. B
       execute: async function ([], context) {
         let response = await context.fetcher.fetch({
           method: "GET",
-          url: "https://api.todoist.com/rest/v2/tasks",
+          url: "https://api.todoist.com/api/v1/tasks",
         });
-        let tasks = response.body;
+        let tasks = response.body.results;
         let results = [];
         for (let task of tasks) {
           results.push(task.content)
@@ -595,7 +595,7 @@ Now that you have an understanding of how to use OAuth2 in Packs, here are some 
 [todoist_oauth]: https://developer.todoist.com/guides/#oauth
 [todoist_console]: https://developer.todoist.com/appconsole.html
 [oauth_standard]: https://datatracker.ietf.org/doc/html/rfc6749
-[todoist_tasks]: https://developer.todoist.com/rest/v2/#get-active-tasks
+[todoist_tasks]: https://developer.todoist.com/api/v1/#tag/Tasks
 [authentication]: ../../guides/basics/authentication/index.md
 [samples_apis]: ../../samples/topic/apis.md
 [oauth_guide]: ../../guides/basics/authentication/oauth2.md

@@ -25,7 +25,7 @@ const TaskSchema = sdk.makeObjectSchema({
     completed: {
       description: "If the task has been completed.",
       type: sdk.ValueType.Boolean,
-      fromKey: "is_completed",
+      fromKey: "checked",
       mutable: true,
     },
     id: {
@@ -50,9 +50,12 @@ pack.addSyncTable({
     execute: async function (args, context) {
       let response = await context.fetcher.fetch({
         method: "GET",
-        url: "https://api.todoist.com/rest/v2/tasks",
+        url: "https://api.todoist.com/api/v1/tasks",
       });
-      let tasks = response.body;
+      let tasks = response.body.results.map(task => ({
+        ...task,
+        url: "https://app.todoist.com/app/task/" + task.id,
+      }));
       return {
         result: tasks,
       };
@@ -67,7 +70,7 @@ pack.addSyncTable({
       // Send all of the commands to the sync endpoint.
       let response = await context.fetcher.fetch({
         method: "POST",
-        url: "https://api.todoist.com/sync/v9/sync",
+        url: "https://api.todoist.com/api/v1/sync",
         form: {
           commands: JSON.stringify(commandSets.flat()),
         },
@@ -107,9 +110,9 @@ function generateCommands(update: sdk.GenericSyncUpdate): any[] {
     args: newValue,
   });
   // Update the completion status, if it's changed.
-  if (previousValue.is_completed !== newValue.is_completed) {
+  if (previousValue.checked !== newValue.checked) {
     commands.push({
-      type: newValue.is_completed ? "item_complete" : "item_uncomplete",
+      type: newValue.checked ? "item_complete" : "item_uncomplete",
       uuid: Math.random().toString(36),
       args: {
         id: newValue.id,
@@ -123,9 +126,12 @@ function generateCommands(update: sdk.GenericSyncUpdate): any[] {
 async function getTask(context: sdk.ExecutionContext, id: string) {
   let response = await context.fetcher.fetch({
     method: "GET",
-    url: `https://api.todoist.com/rest/v2/tasks/${id}`,
+    url: `https://api.todoist.com/api/v1/tasks/${id}`,
   });
-  return response.body;
+  return {
+    ...response.body,
+    url: "https://app.todoist.com/app/task/" + response.body.id,
+  };
 }
 
 // Allow the pack to make requests to Todoist.

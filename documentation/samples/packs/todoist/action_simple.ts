@@ -21,7 +21,7 @@ pack.addFormula({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content: name }),
     });
-    return "https://todoist.com/app/task/" + response.body.id;
+    return "https://app.todoist.com/app/task/" + response.body.id;
   },
 });
 

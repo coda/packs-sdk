@@ -9,14 +9,11 @@ pack.setUserAuthentication({
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
-      resource_types: JSON.stringify(["user"]),
-    });
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: url,
+      url: "https://api.todoist.com/api/v1/user",
     });
-    return response.body.user?.full_name;
+    return response.body.full_name;
   },
 });
 

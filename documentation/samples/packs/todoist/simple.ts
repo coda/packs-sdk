@@ -4,29 +4,39 @@ export const pack = sdk.newPack();
 /*
 --8<-- [start:json]
 {
-  "creator_id": "2671355",
-  "created_at": "2019-12-11T22:36:50.000000Z",
-  "assignee_id": "2671362",
-  "assigner_id": "2671355",
-  "comment_count": 10,
-  "is_completed": false,
-  "content": "Buy Milk",
-  "description": "",
+  "user_id": "2671355",
+  "id": "6X7rfFVPjhvv84XG",
+  "project_id": "6Xx8rMQZ5Wc9CqcH",
+  "section_id": null,
+  "parent_id": null,
+  "added_by_uid": "2671355",
+  "assigned_by_uid": null,
+  "responsible_uid": null,
+  "labels": ["Food", "Shopping"],
+  "deadline": null,
+  "duration": null,
+  "is_collapsed": false,
+  "checked": false,
+  "is_deleted": false,
+  "added_at": "2019-12-11T22:36:50.000000Z",
+  "completed_at": null,
+  "completed_by_uid": null,
+  "updated_at": "2019-12-11T22:36:50.000000Z",
   "due": {
     "date": "2016-09-01",
-    "is_recurring": false,
-    "datetime": "2016-09-01T12:00:00.000000Z",
+    "timezone": null,
     "string": "tomorrow at 12",
-    "timezone": "Europe/Moscow"
+    "lang": "en",
+    "is_recurring": false
   },
-  "id": "2995104339",
-  "labels": ["Food", "Shopping"],
-  "order": 1,
   "priority": 1,
-  "project_id": "2203306141",
-  "section_id": "7025",
-  "parent_id": "2995104589",
-  "url": "https://todoist.com/showTask?id=2995104339"
+  "child_order": 1,
+  "content": "Buy Milk",
+  "description": "",
+  "note_count": 10,
+  "day_order": -1,
+  "completed_count": 0,
+  "postponed_count": 0
 }
 --8<-- [end:json]
 */
@@ -74,38 +84,27 @@ pack.addSyncTable({
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
       }),
-      sdk.makeParameter({
-        type: sdk.ParameterType.String,
-        name: "project",
-        description: "Limit tasks to a specific project.",
-        optional: true,
-        autocomplete: async function (context, search) {
-          let url = "https://api.todoist.com/rest/v2/projects";
-          let response = await context.fetcher.fetch({
-            method: "GET",
-            url: url,
-          });
-          let projects = response.body;
-          return sdk.autocompleteSearchObjects(search, projects, "name", "id");
-        },
-      }),
     ],
-    execute: async function ([filter, project], context) {
-      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
-        filter: filter,
-        project_id: project,
-      });
+    execute: async function ([filter], context) {
+      let url = "https://api.todoist.com/api/v1/tasks";
+      if (filter) {
+        // Filter queries are handled by a separate endpoint.
+        url = sdk.withQueryParams(
+          "https://api.todoist.com/api/v1/tasks/filter",
+          { query: filter },
+        );
+      }
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
       });
 
       let results = [];
-      for (let task of response.body) {
+      for (let task of response.body.results) {
         results.push({
           name: task.content,
           description: task.description,
-          url: task.url,
+          url: "https://app.todoist.com/app/task/" + task.id,
           id: task.id,
         });
       }
@@ -119,7 +118,7 @@ pack.addSyncTable({
 
 /*
 --8<-- [start:get]
-GET https://api.todoist.com/rest/v2/tasks/<taskId>
+GET https://api.todoist.com/api/v1/tasks/<taskId>
 --8<-- [end:get]
 */
 
@@ -140,14 +139,21 @@ pack.addFormula({
   execute: async function ([url], context) {
     let taskId = extractTaskId(url);
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
+      url: "https://api.todoist.com/api/v1/tasks/" + taskId,
       method: "GET",
     });
-    return response.body;
+    let task = response.body;
+    return {
+      ...task,
+      url: "https://app.todoist.com/app/task/" + task.id,
+    };
   },
 });
 
 const TaskUrlPatterns: RegExp[] = [
+  // The current URL format, where the ID follows a slug of the task name.
+  new RegExp("^https://app.todoist.com/app/task/(?:.*-)?([0-9a-zA-Z]+)$"),
+  // Legacy URL formats, which only used numeric IDs.
   new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
@@ -190,7 +196,7 @@ pack.addFormula({
 
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks",
+      url: "https://api.todoist.com/api/v1/tasks",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -201,7 +207,16 @@ pack.addFormula({
     });
     // Return values are optional but recommended. Returning a URL or other
     // unique identifier is recommended when creating a new entity.
-    return response.body.url;
+    return "https://app.todoist.com/app/task/" + response.body.id;
   },
 });
 // --8<-- [end:action]
+
+// Allow the pack to make requests to Todoist.
+pack.addNetworkDomain("todoist.com");
+
+// Setup authentication using a Todoist API token.
+pack.setUserAuthentication({
+  type: sdk.AuthenticationType.HeaderBearerToken,
+  instructionsUrl: "https://todoist.com/app/settings/integrations",
+});

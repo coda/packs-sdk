@@ -94,19 +94,26 @@ pack.addSyncTable({
     ],
     execute: async function (args, context) {
       let [filter] = args;
-      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
-        filter: filter,
-      });
+      let url = "https://api.todoist.com/api/v1/tasks";
+      if (filter) {
+        // Filter queries are handled by a separate endpoint.
+        url = sdk.withQueryParams(
+          "https://api.todoist.com/api/v1/tasks/filter",
+          { query: filter },
+        );
+      }
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
       });
-      let rows = response.body.map(task => {
-          return {
-            ...task,
-            // Convert the priority to a string like "P1".
-            priority: "P" + (5 - task.priority),
-          };
+      let rows = response.body.results.map(task => {
+        return {
+          ...task,
+          url: "https://app.todoist.com/app/task/" + task.id,
+          // Convert the priority to a string like "P1".
+          priority: "P" + (5 - task.priority),
+          due: task.due?.date,
+        };
       });
       return {
         result: rows,

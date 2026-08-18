@@ -2,12 +2,20 @@ import * as sdk from "@codahq/packs-sdk";
 
 // #region Constants
 
+const ApiUrl = "https://api.todoist.com/api/v1";
+
 const ProjectUrlPatterns: RegExp[] = [
+  // The current URL format, where the ID follows a slug of the project name.
+  new RegExp("^https://app.todoist.com/app/project/(?:.*-)?([0-9a-zA-Z]+)$"),
+  // Legacy URL formats, which only used numeric IDs.
   new RegExp("^https://todoist.com/app/project/([0-9]+)$"),
   new RegExp("^https://todoist.com/showProject\\?id=([0-9]+)"),
 ];
 
 const TaskUrlPatterns: RegExp[] = [
+  // The current URL format, where the ID follows a slug of the task name.
+  new RegExp("^https://app.todoist.com/app/task/(?:.*-)?([0-9a-zA-Z]+)$"),
+  // Legacy URL formats, which only used numeric IDs.
   new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
@@ -26,21 +34,18 @@ pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
   // OAuth2 URLs and scopes are found in the Todoist OAuth guide:
   // https://developer.todoist.com/guides/#oauth
-  authorizationUrl: "https://todoist.com/oauth/authorize",
-  tokenUrl: "https://todoist.com/oauth/access_token",
+  authorizationUrl: "https://app.todoist.com/oauth/authorize",
+  tokenUrl: "https://api.todoist.com/oauth/access_token",
   scopes: ["data:read_write"],
   scopeDelimiter: ",",
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
-      resource_types: JSON.stringify(["user"]),
-    });
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: url,
+      url: sdk.joinUrl(ApiUrl, "/user"),
     });
-    return response.body.user?.full_name;
+    return response.body.full_name;
   },
 });
 
@@ -52,15 +57,16 @@ pack.setUserAuthentication({
 const DueSchema = sdk.makeObjectSchema({
   properties: {
     date: {
-      description: "The date the task is due.",
+      description: "When the task is due.",
       type: sdk.ValueType.String,
-      codaType: sdk.ValueHintType.Date,
-    },
-    time: {
-      description: "The specific moment the task is due.",
-      type: sdk.ValueType.String,
+      // The API returns either a date or a datetime here, depending on if the
+      // task has a specific time set.
       codaType: sdk.ValueHintType.DateTime,
-      fromKey: "datetime",
+    },
+    recurring: {
+      description: "If the task repeats on a schedule.",
+      type: sdk.ValueType.Boolean,
+      fromKey: "is_recurring",
     },
     display: {
       description: "The display value for the due date.",
@@ -146,12 +152,13 @@ const TaskSchema = sdk.makeObjectSchema({
     completed: {
       description: "If the task has been completed.",
       type: sdk.ValueType.Boolean,
-      fromKey: "is_completed",
+      fromKey: "checked",
       mutable: true,
     },
     order: {
       description: "The position of the task in the project or parent task.",
       type: sdk.ValueType.Number,
+      fromKey: "child_order",
       mutable: true,
     },
     priority: {
@@ -212,6 +219,7 @@ const TaskReferenceSchema =
 function formatProjectForSchema(project: any, withReferences = false) {
   let result: any = {
     ...project,
+    url: getProjectUrl(project.id),
   };
   if (withReferences && project.parent_id) {
     result.parentProject = {
@@ -226,6 +234,7 @@ function formatProjectForSchema(project: any, withReferences = false) {
 function formatTaskForSchema(task: any, withReferences = false) {
   let result: any = {
     ...task,
+    url: getTaskUrl(task.id),
     // Convert the priority to a string like "P1".
     priority: "P" + (5 - task.priority),
   };
@@ -278,7 +287,7 @@ pack.addFormula({
   execute: async function ([url], context) {
     let projectId = extractProjectId(url);
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/projects/" + projectId,
+      url: sdk.joinUrl(ApiUrl, "/projects/", projectId),
       method: "GET",
     });
     return formatProjectForSchema(response.body);
@@ -300,7 +309,7 @@ pack.addFormula({
   execute: async function ([url], context) {
     let taskId = extractTaskId(url);
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
+      url: sdk.joinUrl(ApiUrl, "/tasks/", taskId),
       method: "GET",
     });
     return formatTaskForSchema(response.body);
@@ -343,7 +352,7 @@ pack.addFormula({
   isAction: true,
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/projects",
+      url: sdk.joinUrl(ApiUrl, "/projects"),
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -352,7 +361,7 @@ pack.addFormula({
         name: name,
       }),
     });
-    return response.body.url;
+    return getProjectUrl(response.body.id);
   },
 });
 
@@ -377,7 +386,7 @@ pack.addFormula({
   isAction: true,
   execute: async function ([name, projectId], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks",
+      url: sdk.joinUrl(ApiUrl, "/tasks"),
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -387,7 +396,7 @@ pack.addFormula({
         project_id: projectId,
       }),
     });
-    return response.body.url;
+    return getTaskUrl(response.body.id);
   },
 });
 
@@ -420,7 +429,7 @@ pack.addFormula({
   schema: sdk.withIdentity(TaskSchema, "Task"),
   isAction: true,
   execute: async function ([taskId, date, endOfDay = false], context) {
-    let url = "https://api.todoist.com/rest/v2/tasks/" + taskId;
+    let url = sdk.joinUrl(ApiUrl, "/tasks/", taskId);
     let payload: any = {
       id: taskId,
     };
@@ -455,14 +464,14 @@ pack.addSyncTable({
     description: "Sync projects",
     parameters: [],
     execute: async function ([], context) {
-      let url = "https://api.todoist.com/rest/v2/projects";
+      let url = sdk.joinUrl(ApiUrl, "/projects");
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
       });
 
       let results: any[] = [];
-      for (let project of response.body) {
+      for (let project of response.body.results) {
         results.push(formatProjectForSchema(project, true));
       }
       return {
@@ -476,7 +485,7 @@ pack.addSyncTable({
       let project = update.newValue;
       let response = await context.fetcher.fetch({
         method: "POST",
-        url: `https://api.todoist.com/rest/v2/projects/${project.id}`,
+        url: sdk.joinUrl(ApiUrl, "/projects/", project.id),
         headers: {
           "Content-Type": "application/json",
         },
@@ -505,34 +514,22 @@ pack.addSyncTable({
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
       }),
-      sdk.makeParameter({
-        type: sdk.ParameterType.String,
-        name: "project",
-        description: "Limit tasks to a specific project.",
-        optional: true,
-        autocomplete: async function (context, search) {
-          let url = "https://api.todoist.com/rest/v2/projects";
-          let response = await context.fetcher.fetch({
-            method: "GET",
-            url: url,
-          });
-          let projects = response.body;
-          return sdk.autocompleteSearchObjects(search, projects, "name", "id");
-        },
-      }),
     ],
-    execute: async function ([filter, project], context) {
-      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
-        filter: filter,
-        project_id: project,
-      });
+    execute: async function ([filter], context) {
+      let url = sdk.joinUrl(ApiUrl, "/tasks");
+      if (filter) {
+        // Filter queries are handled by a separate endpoint.
+        url = sdk.withQueryParams(sdk.joinUrl(ApiUrl, "/tasks/filter"), {
+          query: filter,
+        });
+      }
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
       });
 
       let results: any[] = [];
-      for (let task of response.body) {
+      for (let task of response.body.results) {
         results.push(formatTaskForSchema(task, true));
       }
       return {
@@ -548,7 +545,7 @@ pack.addSyncTable({
       // Send all of the commands to the sync endpoint.
       let response = await context.fetcher.fetch({
         method: "POST",
-        url: "https://api.todoist.com/sync/v9/sync",
+        url: sdk.joinUrl(ApiUrl, "/sync"),
         form: {
           commands: JSON.stringify(commandSets.flat()),
         },
@@ -569,7 +566,7 @@ pack.addSyncTable({
         // If there were no errors, fetch the updated task and return it.
         let response = await context.fetcher.fetch({
           method: "GET",
-          url: `https://api.todoist.com/rest/v2/tasks/${taskId}`,
+          url: sdk.joinUrl(ApiUrl, "/tasks/", taskId),
           cacheTtlSecs: 0,
         });
         return formatTaskForSchema(response.body, true);
@@ -607,9 +604,9 @@ function generateTaskCommands(update: sdk.GenericSyncUpdate): any[] {
   }
 
   // Update the completion status, if it's changed.
-  if (previousValue.is_completed !== newValue.is_completed) {
+  if (previousValue.checked !== newValue.checked) {
     commands.push({
-      type: newValue.is_completed ? "item_complete" : "item_uncomplete",
+      type: newValue.checked ? "item_complete" : "item_uncomplete",
       uuid: getUniqueId(),
       args: {
         id: newValue.id,
@@ -642,6 +639,14 @@ function extractTaskId(taskUrl: string) {
     }
   }
   throw new sdk.UserVisibleError("Invalid task URL: " + taskUrl);
+}
+
+function getProjectUrl(projectId: string) {
+  return "https://app.todoist.com/app/project/" + projectId;
+}
+
+function getTaskUrl(taskId: string) {
+  return "https://app.todoist.com/app/task/" + taskId;
 }
 
 function getUniqueId() {

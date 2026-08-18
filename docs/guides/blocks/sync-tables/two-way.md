@@ -112,7 +112,7 @@ executeUpdate: async function (args, updates, context) {
   // Update the task in Todoist.
   let response = await context.fetcher.fetch({
     method: "POST",
-    url: `https://api.todoist.com/rest/v2/tasks/${task.id}`,
+    url: `https://api.todoist.com/api/v1/tasks/${task.id}`,
     headers: {
       "Content-Type": "application/json",
     },

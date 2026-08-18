@@ -17,7 +17,7 @@ pack.addFormula({
 
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks",
+      url: "https://api.todoist.com/api/v1/tasks",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +28,7 @@ pack.addFormula({
     });
     // Return values are optional but recommended. Returning a URL or other
     // unique identifier is recommended when creating a new entity.
-    return response.body.url;
+    return "https://app.todoist.com/app/task/" + response.body.id;
   },
 });
 

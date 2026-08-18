@@ -43,38 +43,27 @@ pack.addSyncTable({
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
       }),
-      sdk.makeParameter({
-        type: sdk.ParameterType.String,
-        name: "project",
-        description: "Limit tasks to a specific project.",
-        optional: true,
-        autocomplete: async function (context, search) {
-          let url = "https://api.todoist.com/rest/v2/projects";
-          let response = await context.fetcher.fetch({
-            method: "GET",
-            url: url,
-          });
-          let projects = response.body;
-          return sdk.autocompleteSearchObjects(search, projects, "name", "id");
-        },
-      }),
     ],
-    execute: async function ([filter, project], context) {
-      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
-        filter: filter,
-        project_id: project,
-      });
+    execute: async function ([filter], context) {
+      let url = "https://api.todoist.com/api/v1/tasks";
+      if (filter) {
+        // Filter queries are handled by a separate endpoint.
+        url = sdk.withQueryParams(
+          "https://api.todoist.com/api/v1/tasks/filter",
+          { query: filter },
+        );
+      }
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
       });
 
       let results = [];
-      for (let task of response.body) {
+      for (let task of response.body.results) {
         results.push({
           name: task.content,
           description: task.description,
-          url: task.url,
+          url: "https://app.todoist.com/app/task/" + task.id,
           id: task.id,
         });
       }

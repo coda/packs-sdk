@@ -25,7 +25,7 @@ const TaskSchema = sdk.makeObjectSchema({
     completed: {
       description: "If the task has been completed.",
       type: sdk.ValueType.Boolean,
-      fromKey: "is_completed",
+      fromKey: "checked",
       mutable: true,
     },
     id: {
@@ -50,9 +50,12 @@ pack.addSyncTable({
     execute: async function (args, context) {
       let response = await context.fetcher.fetch({
         method: "GET",
-        url: "https://api.todoist.com/rest/v2/tasks",
+        url: "https://api.todoist.com/api/v1/tasks",
       });
-      let tasks = response.body;
+      let tasks = response.body.results.map(task => ({
+        ...task,
+        url: "https://app.todoist.com/app/task/" + task.id,
+      }));
       return {
         result: tasks,
       };
@@ -90,17 +93,17 @@ async function updateTask(context: sdk.ExecutionContext,
   let taskId = newValue.id;
 
   // Update the completion status, if it has changed.
-  if (previousValue.is_completed !== newValue.is_completed) {
-    let action = newValue.is_completed ? "close" : "reopen";
+  if (previousValue.checked !== newValue.checked) {
+    let action = newValue.checked ? "close" : "reopen";
     await context.fetcher.fetch({
       method: "POST",
-      url: `https://api.todoist.com/rest/v2/tasks/${taskId}/${action}`,
+      url: `https://api.todoist.com/api/v1/tasks/${taskId}/${action}`,
     });
   }
 
   // Update the other properties of the task.
   let response = await context.fetcher.fetch({
-    url: `https://api.todoist.com/rest/v2/tasks/${taskId}`,
+    url: `https://api.todoist.com/api/v1/tasks/${taskId}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -109,7 +112,10 @@ async function updateTask(context: sdk.ExecutionContext,
   });
 
   // Return the updated task.
-  return response.body;
+  return {
+    ...response.body,
+    url: "https://app.todoist.com/app/task/" + response.body.id,
+  };
 }
 
 // Allow the pack to make requests to Todoist.
