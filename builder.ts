@@ -769,8 +769,5 @@ class CustomAgentDefinitionBuilderImpl extends PackDefinitionBuilder {
 }
 
 function unavailableOnAgent(method: string): string {
-  return (
-    `${method}() is not available on a custom agent. ` +
-    `Agents are authored with setInstructions().`
-  );
+  return `${method}() is not available on a custom agent. Agents are authored with setInstructions().`;
 }
