@@ -2373,8 +2373,19 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   });
   const chatSkillSchema = skillSchema.partial();
 
+  // An agent author supplies behavior only. The display fields are filled in from the pack
+  // listing server-side, so everything is optional here and the prompt is required separately,
+  // to give the author an error that names the method they missed.
   const customAgentSchema = zodCompleteStrictObject<CustomAgentConfig>({
-    instructions: z.string().min(1).max(Limits.PromptLength),
+    skill: skillSchema.partial().optional(),
+  }).superRefine((data, context) => {
+    if (!data.skill?.prompt) {
+      context.addIssue({
+        code: 'custom',
+        path: ['skill', 'prompt'],
+        message: 'A custom agent must have instructions. Call setInstructions() on the agent.',
+      });
+    }
   });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({

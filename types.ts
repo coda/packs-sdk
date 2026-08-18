@@ -1730,19 +1730,30 @@ export interface SuggestedPrompt {
 }
 
 /**
- * How a custom agent behaves: what it is told to do.
+ * How a custom agent behaves.
  *
- * Display fields (name, description, icon) are not part of this; they come from the pack's
- * listing. Tools and triggers are not authorable yet; both will be added as optional fields,
- * so neither is a breaking change for agents written against this shape.
+ * This mirrors the `customAgentDefinition` payload the agent builder already produces and the
+ * agent runtime already reads, so an SDK-authored agent and a builder-authored one are the same
+ * shape. Triggers are not authorable yet; they will be added alongside `skill`.
  *
  * @internal
  * @hidden
  */
 export interface CustomAgentConfig {
-  /** The agent's instructions, i.e. its prompt. */
-  instructions?: string;
-  /** tools, triggers to be added */
+  /**
+   * What the agent is told to do and what it may use.
+   *
+   * Partial because an author can only supply behavior. The display fields — `name`,
+   * `displayName`, `description` — are not available here: the pack's name lives on its listing
+   * server-side, and the local manifest carries only a pack id. They are filled in when the
+   * definition is written, which also means renaming the listing updates the agent rather than
+   * freezing a copy into whichever version happened to be uploaded.
+   *
+   * Note that `name` is load-bearing at runtime — it is passed through as the pack name when the
+   * agent is built — so whoever writes the definition has to supply one. It is validated as an
+   * identifier, so a listing name like "My Standup Agent" cannot be copied across verbatim.
+   */
+  skill?: Partial<Skill>;
 }
 
 /**

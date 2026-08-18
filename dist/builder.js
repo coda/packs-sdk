@@ -471,7 +471,8 @@ class CustomAgentDefinitionBuilderImpl extends PackDefinitionBuilder {
         this.customAgent = this.customAgent || {};
     }
     setInstructions(instructions) {
-        this.customAgent = { ...this.customAgent, instructions };
+        var _a;
+        this.customAgent = { ...this.customAgent, skill: { ...(_a = this.customAgent) === null || _a === void 0 ? void 0 : _a.skill, prompt: instructions } };
         return this;
     }
     addFormula() {
