@@ -1,6 +1,6 @@
 ---
 nav: Home
-description: A Pack is an extension that adds new powers to your doc. With a little JavaScript, anyone can create and publish one.
+description: Extend Superhuman with your own code, creating connectors to external data and actions.
 hide:
   - navigation
   - toc
@@ -8,120 +8,155 @@ hide:
 
 # Build Packs for Superhuman
 
-A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Superhuman Docs, so you can customize how your doc looks, works, and integrates.
+A Pack is a plugin for Superhuman, allowing you to extend the user experience with your own code.
+
+Packs are primarily used to build connectors, which allow users to bring another application's data and actions into the products where they work.
+
+Build once, and the same Pack will work across :superhuman-go: Go and :superhuman-docs: Docs.
 
 <section class="landing-row" markdown>
 
 <div class="landing-item" markdown>
-## :material-toy-brick-outline: Let's build building blocks together.
+## Bring your MCP server to Go
 
-With a little JavaScript, anyone can create and publish a Pack to the Gallery. All you need to do is write the code and the platform will deploy and host the Pack for you.
+Superhuman Go supports the MCP standard, so any app that hosts a server can plug straight in. MCP servers are distributed as connectors, and once installed Go can access all of the tools they provide.
 
-Packs can be created for personal use, shared with a team, or published to the world. Everything from simple utilities to rich integrations can be built with Packs.
+Creating a connector for your MCP server is simple, often requiring as little as a dozen lines of code. When it's ready, you can publish it to the store so anyone can discover and install it.
 
-[Learn more][overview]{ .md-button .md-button--primary }
+[List your MCP][mcp]{ .md-button .md-button--primary }
 </div>
 
 <div class="landing-item" markdown>
-<video style="width:auto" loop muted autoplay alt="Illustration video of using a Pack." class="screenshot"><source src="site:images/home_demo.mp4" type="video/mp4"></source></video>
-</div>
-
-</section>
-
----
-
-<section class="landing-row landing-row-reverse" markdown>
-
-<div class="landing-item" markdown>
-## :octicons-stopwatch-16: Build your first Pack in minutes.
-
-Using the Pack Studio you can write, build, and deploy your Pack all from your browser. Nothing to download or install.
-
-[Get started][get_started]{ .md-button .md-button--primary }
-
-Or for you power users, build a Pack using the `packs` command line tool on your [local machine][tutorial_cli], [GitHub :octicons-mark-github-16:][tutorial_github], or [Replit :simple-replit:][tutorial_replit].
-
-</div>
-
-<div class="landing-item" markdown>
-<video style="width:auto" loop muted autoplay alt="Creating a Pack in the Pack Studio." class="screenshot"><source src="site:images/web_ide_build.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Using MCP tools in Superhuman Go" class="screenshot"><source src="site:images/go_mcp.mp4" type="video/mp4"></source></video>
 </div>
 
 </section>
 
 <br>
+
+## What you can build
+
+<section class="box-row" markdown>
+
+<div class="box-item" markdown>
+### :material-toolbox: Build tools for any REST API
+
+ Not every app has an MCP server, but most have a REST API. Write your own tools hosted on our servers and available in Superhuman Go just like MCP tools.
+
+[Build a custom tool][tutorial_fetcher]{ .md-button }
+</div>
+
+<div class="box-item" markdown>
+### :material-text-box-search: Answer questions from your data
+
+Sync your records into the knowledge layer and Superhuman Go can search them, cite them, and answer from them in the middle of a conversation.
+
+[Build a sync table][tutorial_sync]{ .md-button }
+</div>
+
+<div class="box-item" markdown>
+### :material-plus-box: Extend what a doc can do
+
+ Create custom formulas and sync tables that fit right into the Superhuman Docs experience. Users work with your app's data and actions without leaving their doc.
+
+[Building blocks][blocks_table]{ .md-button }
+</div>
+
+</section>
+
+<br>
+
+## Let's see the code
+
+A Pack is a TypeScript file containing metadata and logic. Each of these is a complete, working connector.
+
+=== "Connect to MCP server"
+
+    ```ts
+    --8<-- "samples/packs/todoist/mcp.ts"
+    ```
+
+=== "Create custom tools"
+
+    ```ts
+    --8<-- "samples/packs/todoist/action_simple.ts"
+    ```
+
+=== "Sync records"
+
+    ```ts
+    --8<-- "samples/packs/todoist/sync_table_simple.ts"
+    ```
+
+[Browse all samples][samples]{ .md-button }
+
+<br>
+
+## Start building
 
 <section class="box-row" markdown>
 
 <div class="box-item" markdown>
 ### :octicons-terminal-16: Command line tool
 
-Use the CLI to develop Packs on your local machine, where you can use the IDE, tooling, and version control of your choice.
+Develop on your own machine with the editor, tooling, and version control you already use. Run your connector locally, then upload a version when you're ready.
 
-[Install CLI][cli]{ .md-button }
+[Get started with the CLI][quickstart_cli]{ .md-button .md-button--primary }
 </div>
 
 <div class="box-item" markdown>
-### :material-application-braces-outline: Sample code
+### :material-application-braces-outline: Pack Studio
 
-From Math to GitHub to Cat Photos, we've got dozens of examples written covering all major aspects of the SDK.
+Write, build, and deploy from your browser with nothing to install. A quick way to prototype, and you can move to a local project later.
 
-[Browse samples][samples]{ .md-button }
+[Build in the browser][quickstart_web]{ .md-button }
 </div>
 
 <div class="box-item" markdown>
-### :fontawesome-solid-people-group: Community
+### :material-school-outline: Tutorials
 
-Our passionate community of Pack makers and Superhuman experts can help answer your questions or share tips to get you started.
+Step-by-step lessons that go further than a quickstart, walking you through core features of the SDK and the most common use cases.
 
-[Join the community][community]{ .md-button }
+[Browse tutorials][tutorials]{ .md-button }
 </div>
 
 </section>
 
 <br>
 
-<section class="landing-row" markdown>
+<section class="landing-row landing-row-reverse" markdown>
 
 <div class="landing-item" markdown>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/z8J6kBxAod4" title="YouTube video player: Your team hub needs more photos of dogs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+## :fontawesome-regular-lightbulb: See what others have built.
+
+Connectors are listed in the [Superhuman Go Store][store] and the [Superhuman Docs Gallery][gallery], where anyone can install them. Try a few to get a feel for what yours could do.
+
+[Browse the Store][store]{ .md-button }
 </div>
 
 <div class="landing-item" markdown>
-## :material-youtube: Grab the popcorn.
-
-Sit back, relax, and watch as Developer Advocate Eric Koleda builds a Pack from scratch in under 5 minutes and 20 lines of code. After that check out other videos covering topics like building blocks and the CLI.
-
-[More videos][videos]{ .md-button }
-</div>
-
-</section>
-
-<section class="landing-row" markdown>
-
-<div class="landing-item" markdown>
-## :fontawesome-regular-lightbulb: Get inspired.
-
-Makers have been busy building Packs of all types, and many have published their work to the Gallery. Try installing a few Packs to get a sense for what you could build.
-
-[Browse the Gallery][gallery]{ .md-button }
-</div>
-
-<div class="landing-item" markdown>
-![Packs in the Gallery](site:images/home_gallery.png)
+<img src="site:images/store_connectors.png" srcset="site:images/store_connectors_2x.png 2x" class="screenshot" alt="Connectors listed in the Superhuman Go Store.">
 </div>
 
 </section>
+
+<br>
+
+Stuck, or want to see it done first? There's a [library of videos][videos] walking through the basics, and a [community][community] of developers happy to answer questions.
 
 
 [overview]: guides/overview.md
-[get_started]: tutorials/get-started/web.md
-[cli]: development/cli.md
+[quickstart_cli]: tutorials/get-started/cli.md
+[quickstart_web]: tutorials/get-started/web.md
 [samples]: samples/index.md
-[changelog]: reference/changes.md
+[tutorials]: tutorials/index.md
 [community]: https://connect.superhuman.com/c/developers-central/making-packs/15
-[gallery]: https://docs.superhuman.com/gallery?filter=packs
 [videos]: tutorials/videos.md
-[tutorial_cli]: tutorials/get-started/cli.md
-[tutorial_github]: tutorials/get-started/github.md
-[tutorial_replit]: tutorials/get-started/replit.md
+[gallery]: https://docs.superhuman.com/gallery?filter=packs
+[store]: https://superhuman.com/store/connectors
+[sync_tables]: guides/blocks/sync-tables/index.md
+[formulas]: guides/blocks/formulas.md
+[blocks_table]: guides/overview.md#connectors
+[mcp]: guides/blocks/mcp.md
+[tutorial_fetcher]: tutorials/build/fetcher.md
+[tutorial_sync]: tutorials/build/sync-table.md
