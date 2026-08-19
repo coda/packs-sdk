@@ -3189,6 +3189,42 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       });
+    })
+    .superRefine((data, context) => {
+      // A custom agent ships no connector building blocks of its own: it has no fetcher, and
+      // tools that reach other packs run under those packs' authentication. The agent builder
+      // withholds the methods that would add them, but that is only a guard for authors using
+      // the typed surface, so the same rule is enforced here on the uploaded metadata.
+      if (!(data as PackVersionMetadata).customAgent) {
+        return;
+      }
+      const connectorBuildingBlocks: Array<[keyof PackVersionMetadata, string]> = [
+        ['formulas', 'formulas'],
+        ['syncTables', 'sync tables'],
+        ['formats', 'column formats'],
+        ['skills', 'skills'],
+        ['mcpServers', 'MCP servers'],
+        ['networkDomains', 'network domains'],
+      ];
+      for (const [field, label] of connectorBuildingBlocks) {
+        if (((data as any)[field] || []).length) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `A custom agent cannot also define ${label}.`,
+          });
+        }
+      }
+      for (const field of ['defaultAuthentication', 'systemConnectionAuthentication'] as const) {
+        const authentication = (data as any)[field];
+        if (authentication && authentication.type !== AuthenticationType.None) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `A custom agent cannot also define authentication.`,
+          });
+        }
+      }
     });
 
   return {legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema};

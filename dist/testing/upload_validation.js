@@ -2562,6 +2562,42 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         });
+    })
+        .superRefine((data, context) => {
+        // A custom agent ships no connector building blocks of its own: it has no fetcher, and
+        // tools that reach other packs run under those packs' authentication. The agent builder
+        // withholds the methods that would add them, but that is only a guard for authors using
+        // the typed surface, so the same rule is enforced here on the uploaded metadata.
+        if (!data.customAgent) {
+            return;
+        }
+        const connectorBuildingBlocks = [
+            ['formulas', 'formulas'],
+            ['syncTables', 'sync tables'],
+            ['formats', 'column formats'],
+            ['skills', 'skills'],
+            ['mcpServers', 'MCP servers'],
+            ['networkDomains', 'network domains'],
+        ];
+        for (const [field, label] of connectorBuildingBlocks) {
+            if ((data[field] || []).length) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `A custom agent cannot also define ${label}.`,
+                });
+            }
+        }
+        for (const field of ['defaultAuthentication', 'systemConnectionAuthentication']) {
+            const authentication = data[field];
+            if (authentication && authentication.type !== types_1.AuthenticationType.None) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `A custom agent cannot also define authentication.`,
+                });
+            }
+        }
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };
 }

@@ -1,6 +1,7 @@
 import './test_helper';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import type {CustomAgentDefinitionBuilder} from '../builder';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
 import type {GenericObjectSchema} from '../schema';
@@ -8,7 +9,8 @@ import {KnowledgeToolSourceType} from '../types';
 import type {MetadataFormulaDef} from '../api';
 import type {ObjectFormulaDef} from '../api';
 import type {ObjectSchema} from '../schema';
-import type {PackDefinitionBuilder} from '../builder';
+import {PackDefinitionBuilder} from '../builder';
+import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '..';
@@ -19,10 +21,12 @@ import {ToolType} from '../types';
 import {ValueHintType} from '..';
 import {ValueType} from '../schema';
 import {assertCondition} from '..';
+import {compilePackMetadata} from '../helpers/metadata';
 import {makeMetadataFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeParameter} from '../api';
 import {makeSchema} from '../schema';
+import {newAgent} from '../builder';
 import {newPack} from '../builder';
 
 describe('Builder', () => {
@@ -597,5 +601,81 @@ describe('Builder', () => {
       });
       assert.equal((pack.formulas[0].parameters[0] as any).instructions, 'param-instructions');
     });
+  });
+});
+
+describe('Agent builder', () => {
+  let agent: CustomAgentDefinitionBuilder;
+
+  beforeEach(() => {
+    agent = newAgent();
+  });
+
+  it('declares itself before it has any content', () => {
+    // The empty object is the signal. Without it a forgotten setInstructions would be
+    // indistinguishable from an ordinary pack, and would upload as one.
+    assert.deepEqual(agent.customAgent, {});
+  });
+
+  it('sets instructions as the skill prompt', () => {
+    agent.setInstructions('You help a team run async standups.');
+    assert.deepEqual(agent.customAgent, {skill: {prompt: 'You help a team run async standups.'}});
+  });
+
+  it('keeps the last instructions set', () => {
+    agent.setInstructions('First.').setInstructions('Second.');
+    assert.deepEqual(agent.customAgent, {skill: {prompt: 'Second.'}});
+  });
+
+  it('survives compilePackMetadata rather than being stripped', () => {
+    agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
+    const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+    assert.deepEqual(metadata.customAgent, {skill: {prompt: 'You help a team run async standups.'}});
+  });
+
+  it('does not add a customAgent field to an ordinary pack', () => {
+    const metadata = compilePackMetadata(newPack().setVersion('1.0.0') as PackVersionDefinition);
+    assert.isUndefined(metadata.customAgent);
+  });
+
+  it('compiles with no connector building blocks of its own', () => {
+    agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
+    const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+    assert.deepEqual(metadata.formulas, []);
+    assert.deepEqual(metadata.syncTables, []);
+    assert.deepEqual(metadata.formats, []);
+    assert.deepEqual(metadata.networkDomains, []);
+    assert.isUndefined(metadata.defaultAuthentication);
+  });
+
+  describe('withheld surface', () => {
+    it('is not reachable through the types', () => {
+      // Compile-time assertions: `tsc` fails the build if any of these stops being an error,
+      // because the @ts-expect-error itself then becomes the error. Deliberately never called —
+      // at runtime the object really is a full pack builder, which is exactly why the type is
+      // what has to withhold the connector surface.
+      function checkedByTscOnly(builder: CustomAgentDefinitionBuilder) {
+        // @ts-expect-error connector building blocks are not authorable on an agent
+        builder.addFormula({});
+        // @ts-expect-error nor are their fields, which would otherwise be writable and serialized
+        builder.formulas.push();
+        // @ts-expect-error an agent takes no seed definition, which would bypass both of the above
+        newAgent({formulas: []});
+      }
+      assert.isFunction(checkedByTscOnly);
+    });
+
+    // The runtime guard, for authors who reach past the types — a cast, or plain JavaScript.
+    // Enumerated from the prototype rather than listed, so a method added to
+    // PackDefinitionBuilder later cannot quietly become authorable on an agent.
+    const allowed = new Set(['constructor', 'setInstructions', 'setVersion']);
+
+    for (const method of Object.getOwnPropertyNames(PackDefinitionBuilder.prototype).filter(
+      name => !allowed.has(name) && !name.startsWith('_'),
+    )) {
+      it(`${method}() throws`, () => {
+        assert.throws(() => (agent as any)[method]({}), new RegExp(`${method}\\(\\) is not available`));
+      });
+    }
   });
 });

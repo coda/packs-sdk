@@ -6257,19 +6257,6 @@ export interface PackVersionDefinition {
 	customAgent?: CustomAgentConfig;
 }
 /**
- * The definition of a custom agent. An agent is a pack, so this is a pack definition that
- * carries a {@link CustomAgentConfig}.
- *
- * Mirrors {@link BasicPackDefinition}: `version` is omitted here because it is not known until
- * the version is built, and is declared on {@link CustomAgentDefinitionBuilder} instead.
- *
- * @internal
- * @hidden
- */
-export interface CustomAgentDefinition extends BasicPackDefinition {
-	customAgent: CustomAgentConfig;
-}
-/**
  * @deprecated use `#PackVersionDefinition`
  *
  * The legacy complete definition of a Pack including un-versioned metadata.
@@ -6719,23 +6706,30 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	private _setDefaultConnectionRequirement;
 }
 /**
- * A builder for a custom agent. Use `sdk.newPack({isCustomAgent: true})` to create one.
+ * A builder for a custom agent. Use {@link newAgent} to create one.
  *
- * This is the pack builder with the connector-authoring surface withheld. An agent ships no
- * fetcher of its own, and tools that call other packs use those packs' authentication, so
- * formulas, sync tables, column formats, authentication, network domains and MCP servers are
- * not authorable here. They may be opened up later; because doing so only adds methods, it
- * will not be a breaking change for agents written against this surface. The same goes for
- * the agent's own surface: tools and triggers are not authorable yet and will be added here.
+ * The connector-authoring surface is withheld. An agent ships no fetcher of its own, and tools
+ * that call other packs use those packs' authentication, so formulas, sync tables, column
+ * formats, authentication, network domains and MCP servers are not authorable here. They may be
+ * opened up later; because doing so only adds members, it will not be a breaking change for
+ * agents written against this surface. The same goes for the agent's own surface: tools and
+ * triggers are not authorable yet and will be added here.
  *
- * The methods return `CustomAgentDefinitionBuilder` rather than `this` on purpose. A derived
- * type (`Omit<PackDefinitionBuilder, ...>`) would resolve `this` back to the full builder, so
- * the withheld methods would reappear after the first chained call.
+ * Deliberately does not inherit the pack definition shape. Doing so would withhold the methods
+ * but leave the fields, so `agent.formulas.push(...)` would type-check and be serialized without
+ * ever passing through a method that could refuse it. The runtime object is still a complete
+ * pack definition — the CLI reads it as one — but an author is only shown what they can author.
+ *
+ * For the same reason the methods return `CustomAgentDefinitionBuilder` rather than `this`: a
+ * derived type (`Omit<PackDefinitionBuilder, ...>`) resolves `this` back to the full builder, so
+ * the withheld members reappear after the first chained call.
  *
  * @internal
  * @hidden
  */
-export interface CustomAgentDefinitionBuilder extends CustomAgentDefinition {
+export interface CustomAgentDefinitionBuilder {
+	/** See {@link PackVersionDefinition.customAgent}. Always present on an agent builder. */
+	customAgent: CustomAgentConfig;
 	/** See {@link PackVersionDefinition.version}. */
 	version?: string;
 	/**

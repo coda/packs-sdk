@@ -8069,6 +8069,92 @@ describe('Pack metadata Validation', async () => {
     });
   });
 
+  describe('validateCustomAgent', () => {
+    // The shared fixture is a connector: it has a network domain and authentication. An agent
+    // has neither, so start from a cleared one rather than fighting the defaults in each case.
+    function createFakeAgentMetadata(opts: Partial<PackVersionMetadata> = {}) {
+      return createFakePackVersionMetadata({
+        networkDomains: [],
+        defaultAuthentication: undefined,
+        ...opts,
+      });
+    }
+
+    it('validates an agent carrying only instructions', async () => {
+      const metadata = createFakeAgentMetadata({
+        customAgent: {skill: {prompt: 'You help a team run async standups.'}},
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.customAgent, {skill: {prompt: 'You help a team run async standups.'}});
+    });
+
+    it('rejects an agent that declared itself but never set instructions', async () => {
+      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({customAgent: {}}));
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'customAgent.skill.prompt',
+          message: 'A custom agent must have instructions. Call setInstructions() on the agent.',
+        },
+      ]);
+    });
+
+    it('rejects an agent whose skill is present but empty', async () => {
+      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({customAgent: {skill: {}}}));
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'customAgent.skill.prompt',
+          message: 'A custom agent must have instructions. Call setInstructions() on the agent.',
+        },
+      ]);
+    });
+
+    it('keeps the skill itself validated, so a bad tool is still caught', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          customAgent: {skill: {prompt: 'Do a thing.', tools: [{type: 'NotARealTool'} as any]}},
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    // The agent builder withholds the methods that would add these, but that only guards authors
+    // using the typed surface. Plain JavaScript, a cast, or a hand-written manifest all reach here.
+    it('rejects connector building blocks alongside an agent', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          customAgent: {skill: {prompt: 'Do a thing.'}},
+          formulaNamespace: 'namespace',
+          formulas: [createFakePackFormulaMetadata({name: 'Sneaky'})],
+          networkDomains: ['example.com'],
+        }),
+      );
+      assert.deepEqual(err.validationErrors, [
+        {path: 'formulas', message: 'A custom agent cannot also define formulas.'},
+        {path: 'networkDomains', message: 'A custom agent cannot also define network domains.'},
+      ]);
+    });
+
+    it('rejects authentication alongside an agent', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          customAgent: {skill: {prompt: 'Do a thing.'}},
+          defaultAuthentication: {type: AuthenticationType.HeaderBearerToken},
+        }),
+      );
+      // Declaring authentication without a network domain trips a pre-existing rule too, so
+      // check for the agent-specific error rather than the whole set.
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultAuthentication',
+        message: 'A custom agent cannot also define authentication.',
+      });
+    });
+
+    it('leaves ordinary packs alone', async () => {
+      const result = await validateJson(createFakePackVersionMetadata());
+      assert.isUndefined(result.customAgent);
+    });
+  });
+
   describe('deprecation warnings', () => {
     const sdkVersionTriggeringDeprecationWarnings = '1.0.0';
 

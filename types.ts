@@ -1873,20 +1873,6 @@ export interface PackVersionDefinition {
 }
 
 /**
- * The definition of a custom agent. An agent is a pack, so this is a pack definition that
- * carries a {@link CustomAgentConfig}.
- *
- * Mirrors {@link BasicPackDefinition}: `version` is omitted here because it is not known until
- * the version is built, and is declared on {@link CustomAgentDefinitionBuilder} instead.
- *
- * @internal
- * @hidden
- */
-export interface CustomAgentDefinition extends BasicPackDefinition {
-  customAgent: CustomAgentConfig;
-}
-
-/**
  * @deprecated use `#PackVersionDefinition`
  *
  * The legacy complete definition of a Pack including un-versioned metadata.
