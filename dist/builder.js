@@ -490,7 +490,7 @@ exports.PackDefinitionBuilder = PackDefinitionBuilder;
  * cast, or plain JavaScript — fail loudly at build time instead of silently uploading a
  * definition the server will not honor.
  *
- * Not exported: `newPack` is the only way to construct one.
+ * Not exported: {@link newAgent} is the only way to construct one.
  *
  * @internal
  * @hidden

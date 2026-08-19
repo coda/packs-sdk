@@ -1694,8 +1694,9 @@ export interface PackVersionDefinition {
     /**
      * The custom agent defined by this pack, if it defines one.
      *
-     * Authored via `sdk.newPack({isCustomAgent: true})`. Its presence is what marks this pack
-     * as a custom agent, both for local validation and for the server on upload.
+     * Authored via `sdk.newAgent()`. The presence of this field is what marks a pack as a custom
+     * agent, both for local validation and for the server on upload — the factory is how it comes
+     * to be stamped, not what classifies the pack.
      *
      * @internal
      * @hidden
