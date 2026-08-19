@@ -44,14 +44,14 @@ pack.addFormula({
 
   execute: async function ([taskId], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
+      url: "https://api.todoist.com/api/v1/tasks/" + taskId,
       method: "GET",
     });
     let task = response.body;
     return {
       name: task.content,
       description: task.description,
-      url: task.url,
+      url: "https://app.todoist.com/app/task/" + task.id,
       id: task.id,
     };
   },

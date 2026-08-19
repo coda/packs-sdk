@@ -3,6 +3,9 @@ import * as sdk from "@codahq/packs-sdk";
 // Regular expressions that match Todoist task URLs. Used by the column format
 // and also the formula that powers it.
 const TaskUrlPatterns: RegExp[] = [
+  // The current URL format, where the ID follows a slug of the task name.
+  new RegExp("^https://app.todoist.com/app/task/(?:.*-)?([0-9a-zA-Z]+)$"),
+  // Legacy URL formats, which only used numeric IDs.
   new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
@@ -66,14 +69,14 @@ pack.addFormula({
   execute: async function ([url], context) {
     let taskId = extractTaskId(url);
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
+      url: "https://api.todoist.com/api/v1/tasks/" + taskId,
       method: "GET",
     });
     let task = response.body;
     return {
       name: task.content,
       description: task.description,
-      url: task.url,
+      url: "https://app.todoist.com/app/task/" + task.id,
       id: task.id,
     };
   },

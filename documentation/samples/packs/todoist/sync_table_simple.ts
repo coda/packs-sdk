@@ -33,7 +33,7 @@ pack.addSyncTable({
       return {
         result: tasks.map(task => ({
           ...task,
-          url: "https://todoist.com/app/task/" + task.id,
+          url: "https://app.todoist.com/app/task/" + task.id,
         })),
       };
     },

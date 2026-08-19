@@ -100,7 +100,7 @@ pack.addFormula({
 
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v2/tasks",
+      url: "https://api.todoist.com/api/v1/tasks",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -111,7 +111,7 @@ pack.addFormula({
     });
     // Return values are optional but recommended. Returning a URL or other
     // unique identifier is recommended when creating a new entity.
-    return response.body.url;
+    return "https://app.todoist.com/app/task/" + response.body.id;
   },
 });
 
@@ -186,7 +186,7 @@ pack.addFormula({
   isAction: true,
 
   execute: async function ([taskId, name], context) {
-    let url = "https://api.todoist.com/rest/v2/tasks/" + taskId;
+    let url = "https://api.todoist.com/api/v1/tasks/" + taskId;
     await context.fetcher.fetch({
       url: url,
       method: "POST",
@@ -208,7 +208,7 @@ pack.addFormula({
     return {
       name: task.content,
       description: task.description,
-      url: task.url,
+      url: "https://app.todoist.com/app/task/" + task.id,
       id: task.id,
     };
   },
@@ -223,18 +223,18 @@ pack.addSyncTable({
     description: "Sync tasks",
     parameters: [],
     execute: async function ([], context) {
-      let url = "https://api.todoist.com/rest/v2/tasks";
+      let url = "https://api.todoist.com/api/v1/tasks";
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
       });
 
       let results = [];
-      for (let task of response.body) {
+      for (let task of response.body.results) {
         results.push({
           name: task.content,
           description: task.description,
-          url: task.url,
+          url: "https://app.todoist.com/app/task/" + task.id,
           id: task.id,
         });
       }

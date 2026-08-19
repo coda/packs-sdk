@@ -29,14 +29,11 @@ pack.setUserAuthentication({
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
-      resource_types: JSON.stringify(["user"]),
-    });
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: url,
+      url: "https://api.todoist.com/api/v1/user",
     });
-    return response.body.user?.full_name;
+    return response.body.full_name;
   },
 });
 
@@ -320,20 +317,17 @@ export const pack = sdk.newPack();
 // See https://developer.todoist.com/guides/#oauth
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
-  authorizationUrl: "https://todoist.com/oauth/authorize",
-  tokenUrl: "https://todoist.com/oauth/access_token",
+  authorizationUrl: "https://app.todoist.com/oauth/authorize",
+  tokenUrl: "https://api.todoist.com/oauth/access_token",
   scopes: ["data:read_write"],
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
-      resource_types: JSON.stringify(["user"]),
-    });
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: url,
+      url: "https://api.todoist.com/api/v1/user",
     });
-    return response.body.user?.full_name;
+    return response.body.full_name;
   },
 });
 

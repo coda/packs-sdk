@@ -268,7 +268,7 @@ The exact set may vary from collection to collection, so use the guidance below 
     ??? example "Example: Todoist `Task()` formula"
 
         ```
-        GET https://api.todoist.com/rest/v2/tasks/<taskId>
+        GET https://api.todoist.com/api/v1/tasks/<taskId>
         ```
 
         ```ts
@@ -292,7 +292,7 @@ The exact set may vary from collection to collection, so use the guidance below 
     ??? example "Example: Todoist `AddTask()` action formula"
 
         ```
-        POST https://api.todoist.com/rest/v2/tasks
+        POST https://api.todoist.com/api/v1/tasks
         {
           "content": "Buy milk"
         }
@@ -315,13 +315,8 @@ The exact set may vary from collection to collection, so use the guidance below 
     ??? example "Example: Todoist `Tasks` sync table"
 
         ```
-        GET https://api.todoist.com/rest/v2/tasks?
-            project_id=<project ID>&
-            section_id=<section ID>&
-            label=<label name>&
-            filter=<filter string>&
-            lang=<language code>&
-            ids=<list of IDs>
+        GET https://api.todoist.com/api/v1/tasks
+        GET https://api.todoist.com/api/v1/tasks/filter?query=<filter string>
         ```
 
         ```ts
@@ -337,7 +332,7 @@ The exact set may vary from collection to collection, so use the guidance below 
 [formulas]: ./blocks/formulas.md
 [actions]: ./blocks/actions.md
 [mcp]: ./blocks/mcp.md
-[todoist_reference]: https://developer.todoist.com/rest/v2/#overview
+[todoist_reference]: https://developer.todoist.com/api/v1/
 [formulas_naming]: ./blocks/formulas.md#naming
 [actions_naming]: ./blocks/actions.md#naming
 [sync_tables_naming]: ./blocks/sync-tables/index.md#naming
