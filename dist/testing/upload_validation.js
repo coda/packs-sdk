@@ -1831,13 +1831,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     // The skill's display fields come from the pack listing, so only the prompt is required here.
     // It's checked separately so the error can name the method the author missed.
     const agentSchema = zodCompleteStrictObject({
-        skill: skillSchema.partial().optional(),
+        prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
+        tools: z
+            .array(toolSchema)
+            .optional()
+            .superRefine((tools, context) => {
+            for (const duplicate of findDuplicateTools((tools || []))) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [duplicate.index],
+                    message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
+                });
+            }
+        }),
     }).superRefine((data, context) => {
-        var _a;
-        if (!((_a = data.skill) === null || _a === void 0 ? void 0 : _a.prompt)) {
+        if (!data.prompt) {
             context.addIssue({
                 code: 'custom',
-                path: ['skill', 'prompt'],
+                path: ['prompt'],
                 message: 'An agent must have instructions. Call setInstructions() on the agent.',
             });
         }

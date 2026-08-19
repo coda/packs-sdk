@@ -1572,11 +1572,15 @@ export interface SuggestedPrompt {
  * @internal
  * @hidden
  */
-export interface AgentConfig {
+export interface AgentDefinition {
     /**
-     * The agent's behavior. Its name and description come from the pack's listing, not here.
+     * What the agent is told to do.
      */
-    skill?: Partial<Skill>;
+    prompt?: string;
+    /**
+     * The tools the agent may use.
+     */
+    tools?: Tool[];
 }
 /**
  * The definition of the contents of a Pack at a specific version. This is the
@@ -1683,7 +1687,7 @@ export interface PackVersionDefinition {
      * @internal
      * @hidden
      */
-    agent?: AgentConfig;
+    agent?: AgentDefinition;
 }
 /**
  * @deprecated use `#PackVersionDefinition`

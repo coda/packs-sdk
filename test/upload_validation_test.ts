@@ -8081,36 +8081,36 @@ describe('Pack metadata Validation', async () => {
 
     it('validates an agent carrying only instructions', async () => {
       const metadata = createFakeAgentMetadata({
-        agent: {skill: {prompt: 'You help a team run async standups.'}},
+        agent: {prompt: 'You help a team run async standups.'},
       });
       const result = await validateJson(metadata);
-      assert.deepEqual(result.agent, {skill: {prompt: 'You help a team run async standups.'}});
+      assert.deepEqual(result.agent, {prompt: 'You help a team run async standups.'});
     });
 
     it('rejects an agent that declared itself but never set instructions', async () => {
       const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {}}));
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'agent.skill.prompt',
+          path: 'agent.prompt',
           message: 'An agent must have instructions. Call setInstructions() on the agent.',
         },
       ]);
     });
 
-    it('rejects an agent whose skill is present but empty', async () => {
-      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {skill: {}}}));
+    it('rejects an agent with an empty definition', async () => {
+      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {}}));
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'agent.skill.prompt',
+          path: 'agent.prompt',
           message: 'An agent must have instructions. Call setInstructions() on the agent.',
         },
       ]);
     });
 
-    it('keeps the skill itself validated, so a bad tool is still caught', async () => {
+    it('still validates each tool', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {skill: {prompt: 'Do a thing.', tools: [{type: 'NotARealTool'} as any]}},
+          agent: {prompt: 'Do a thing.', tools: [{type: 'NotARealTool'} as any]},
         }),
       );
       assert.isNotEmpty(err.validationErrors);
@@ -8120,7 +8120,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects connector building blocks alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {skill: {prompt: 'Do a thing.'}},
+          agent: {prompt: 'Do a thing.'},
           formulaNamespace: 'namespace',
           formulas: [createFakePackFormulaMetadata({name: 'Sneaky'})],
           networkDomains: ['example.com'],
@@ -8135,7 +8135,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects authentication alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {skill: {prompt: 'Do a thing.'}},
+          agent: {prompt: 'Do a thing.'},
           defaultAuthentication: {type: AuthenticationType.HeaderBearerToken},
         }),
       );

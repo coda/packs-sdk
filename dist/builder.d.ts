@@ -1,6 +1,6 @@
 import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
-import type { AgentConfig } from './types';
+import type { AgentDefinition } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
 import type { DynamicSyncTableOptions } from './api';
@@ -133,7 +133,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      * @internal
      * @hidden
      */
-    agent?: AgentConfig;
+    agent?: AgentDefinition;
     /**
      * See {@link PackVersionDefinition.defaultAuthentication}.
      */
@@ -427,7 +427,7 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     /**
      * See {@link PackVersionDefinition.agent}.
      */
-    agent: AgentConfig;
+    agent: AgentDefinition;
     /**
      * Sets this agent's instructions.
      *

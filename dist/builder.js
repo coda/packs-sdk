@@ -504,7 +504,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setInstructions(instructions) {
-        this.agent = { ...this.agent, skill: { ...this.agent.skill, prompt: instructions } };
+        this.agent = { ...this.agent, prompt: instructions };
         return this;
     }
 }

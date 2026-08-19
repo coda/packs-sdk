@@ -2,7 +2,7 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
-import type {AgentConfig} from '../types';
+import type {AgentDefinition} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -2375,13 +2375,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   // The skill's display fields come from the pack listing, so only the prompt is required here.
   // It's checked separately so the error can name the method the author missed.
-  const agentSchema = zodCompleteStrictObject<AgentConfig>({
-    skill: skillSchema.partial().optional(),
+  const agentSchema = zodCompleteStrictObject<AgentDefinition>({
+    prompt: z.string().min(1).max(Limits.PromptLength).optional(),
+    tools: z
+      .array(toolSchema)
+      .optional()
+      .superRefine((tools, context) => {
+        for (const duplicate of findDuplicateTools((tools || []) as Tool[])) {
+          context.addIssue({
+            code: 'custom',
+            path: [duplicate.index],
+            message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
+          });
+        }
+      }),
   }).superRefine((data, context) => {
-    if (!data.skill?.prompt) {
+    if (!data.prompt) {
       context.addIssue({
         code: 'custom',
-        path: ['skill', 'prompt'],
+        path: ['prompt'],
         message: 'An agent must have instructions. Call setInstructions() on the agent.',
       });
     }

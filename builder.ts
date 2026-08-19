@@ -1,6 +1,6 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
-import type {AgentConfig} from './types';
+import type {AgentDefinition} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
@@ -158,7 +158,7 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
    * @internal
    * @hidden
    */
-  agent?: AgentConfig;
+  agent?: AgentDefinition;
 
   /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
@@ -660,7 +660,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   /**
    * See {@link PackVersionDefinition.agent}.
    */
-  agent: AgentConfig = {};
+  agent: AgentDefinition = {};
 
   /**
    * Sets this agent's instructions.
@@ -671,7 +671,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setInstructions(instructions: string): this {
-    this.agent = {...this.agent, skill: {...this.agent.skill, prompt: instructions}};
+    this.agent = {...this.agent, prompt: instructions};
     return this;
   }
 }

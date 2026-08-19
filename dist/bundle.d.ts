@@ -6126,11 +6126,15 @@ export interface SuggestedPrompt {
  * @internal
  * @hidden
  */
-export interface AgentConfig {
+export interface AgentDefinition {
 	/**
-	 * The agent's behavior. Its name and description come from the pack's listing, not here.
+	 * What the agent is told to do.
 	 */
-	skill?: Partial<Skill>;
+	prompt?: string;
+	/**
+	 * The tools the agent may use.
+	 */
+	tools?: Tool[];
 }
 /**
  * The definition of the contents of a Pack at a specific version. This is the
@@ -6237,7 +6241,7 @@ export interface PackVersionDefinition {
 	 * @internal
 	 * @hidden
 	 */
-	agent?: AgentConfig;
+	agent?: AgentDefinition;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6396,7 +6400,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 * @internal
 	 * @hidden
 	 */
-	agent?: AgentConfig;
+	agent?: AgentDefinition;
 	/**
 	 * See {@link PackVersionDefinition.defaultAuthentication}.
 	 */
@@ -6684,7 +6688,7 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
 	 * See {@link PackVersionDefinition.agent}.
 	 */
-	agent: AgentConfig;
+	agent: AgentDefinition;
 	/**
 	 * Sets this agent's instructions.
 	 *
