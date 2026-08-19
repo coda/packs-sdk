@@ -6121,28 +6121,14 @@ export interface SuggestedPrompt {
 	prompt: string;
 }
 /**
- * How a custom agent behaves.
- *
- * This mirrors the `customAgentDefinition` payload the agent builder already produces and the
- * agent runtime already reads, so an SDK-authored agent and a builder-authored one are the same
- * shape. Triggers are not authorable yet; they will be added alongside `skill`.
+ * The definition of an agent.
  *
  * @internal
  * @hidden
  */
-export interface CustomAgentConfig {
+export interface AgentConfig {
 	/**
-	 * What the agent is told to do and what it may use.
-	 *
-	 * Partial because an author can only supply behavior. The display fields — `name`,
-	 * `displayName`, `description` — are not available here: the pack's name lives on its listing
-	 * server-side, and the local manifest carries only a pack id. They are filled in when the
-	 * definition is written, which also means renaming the listing updates the agent rather than
-	 * freezing a copy into whichever version happened to be uploaded.
-	 *
-	 * Note that `name` is load-bearing at runtime — it is passed through as the pack name when the
-	 * agent is built — so whoever writes the definition has to supply one. It is validated as an
-	 * identifier, so a listing name like "My Standup Agent" cannot be copied across verbatim.
+	 * The agent's behavior. Its name and description come from the pack's listing, not here.
 	 */
 	skill?: Partial<Skill>;
 }
@@ -6246,16 +6232,12 @@ export interface PackVersionDefinition {
 	 */
 	mcpServers?: MCPServer[];
 	/**
-	 * The custom agent defined by this pack, if it defines one.
-	 *
-	 * Authored via `sdk.newAgent()`. The presence of this field is what marks a pack as a custom
-	 * agent, both for local validation and for the server on upload — the factory is how it comes
-	 * to be stamped, not what classifies the pack.
+	 * The agent defined by this pack, if it defines one. Authored via `sdk.newAgent()`.
 	 *
 	 * @internal
 	 * @hidden
 	 */
-	customAgent?: CustomAgentConfig;
+	agent?: AgentConfig;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6325,17 +6307,7 @@ export declare enum HttpStatusCode {
  */
 export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
 /**
- * Creates a new skeleton custom agent definition that can be added to.
- *
- * An agent is still a pack: it is uploaded and released through the same commands, and the
- * definition rides in the pack metadata. What differs is the authoring surface, which is why
- * this is a separate entry point rather than a flag on {@link newPack}. Declaring the intent
- * here rather than inferring it from what the author eventually calls means a forgotten
- * `setInstructions` is caught as an incomplete agent instead of passing as an empty pack.
- *
- * It takes no seed definition on purpose. Accepting one would let connector fields — formulas,
- * sync tables, authentication — reach the builder without going through the methods that
- * withhold them.
+ * Creates a new skeleton agent definition that can be added to.
  *
  * @example
  * ```
@@ -6346,11 +6318,31 @@ export declare function newPack(definition?: Partial<PackVersionDefinition>): Pa
  * @internal
  * @hidden
  */
-export declare function newAgent(): CustomAgentDefinitionBuilder;
+export declare function newAgent(): AgentDefinitionBuilder;
+declare class BaseDefinitionBuilder {
+	/**
+	 * See {@link PackVersionDefinition.version}.
+	 */
+	version?: string;
+	/**
+	 * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+	 *
+	 * This is optional, and you only need to provide a version if you are manually doing
+	 * semantic versioning, or using the CLI. If using the web editor, you can omit this
+	 * and the web editor will automatically provide an appropriate semantic version
+	 * each time you build a version.
+	 *
+	 * @example
+	 * ```
+	 * pack.setVersion('1.2.3');
+	 * ```
+	 */
+	setVersion(version: string): this;
+}
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-export declare class PackDefinitionBuilder implements BasicPackDefinition {
+export declare class PackDefinitionBuilder extends BaseDefinitionBuilder implements BasicPackDefinition {
 	/**
 	 * See {@link PackVersionDefinition.formulas}.
 	 */
@@ -6400,11 +6392,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	mcpServers: MCPServer[];
 	/**
-	 * See {@link PackVersionDefinition.customAgent}.
+	 * See {@link PackVersionDefinition.agent}.
 	 * @internal
 	 * @hidden
 	 */
-	customAgent?: CustomAgentConfig;
+	agent?: AgentConfig;
 	/**
 	 * See {@link PackVersionDefinition.defaultAuthentication}.
 	 */
@@ -6418,10 +6410,6 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	adminAuthentications?: AdminAuthentication[];
-	/**
-	 * See {@link PackVersionDefinition.version}.
-	 */
-	version?: string;
 	/** @deprecated */
 	formulaNamespace?: string;
 	private _defaultConnectionRequirement;
@@ -6690,62 +6678,22 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	addNetworkDomain(...domain: string[]): this;
-	/**
-	 * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-	 *
-	 * This is optional, and you only need to provide a version if you are manually doing
-	 * semantic versioning, or using the CLI. If using the web editor, you can omit this
-	 * and the web editor will automatically provide an appropriate semantic version
-	 * each time you build a version.
-	 *
-	 * @example
-	 * ```
-	 * pack.setVersion('1.2.3');
-	 * ```
-	 */
-	setVersion(version: string): this;
 	private _setDefaultConnectionRequirement;
 }
-/**
- * A builder for a custom agent. Use {@link newAgent} to create one.
- *
- * The connector-authoring surface is withheld. An agent ships no fetcher of its own, and tools
- * that call other packs use those packs' authentication, so formulas, sync tables, column
- * formats, authentication, network domains and MCP servers are not authorable here. They may be
- * opened up later; because doing so only adds members, it will not be a breaking change for
- * agents written against this surface. The same goes for the agent's own surface: tools and
- * triggers are not authorable yet and will be added here.
- *
- * Deliberately does not inherit the pack definition shape. Doing so would withhold the methods
- * but leave the fields, so `agent.formulas.push(...)` would type-check and be serialized without
- * ever passing through a method that could refuse it. The runtime object is still a complete
- * pack definition — the CLI reads it as one — but an author is only shown what they can author.
- *
- * For the same reason the methods return `CustomAgentDefinitionBuilder` rather than `this`: a
- * derived type (`Omit<PackDefinitionBuilder, ...>`) resolves `this` back to the full builder, so
- * the withheld members reappear after the first chained call.
- *
- * @internal
- * @hidden
- */
-export interface CustomAgentDefinitionBuilder {
-	/** See {@link PackVersionDefinition.customAgent}. Always present on an agent builder. */
-	customAgent: CustomAgentConfig;
-	/** See {@link PackVersionDefinition.version}. */
-	version?: string;
+declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
-	 * Sets this agent's instructions, i.e. its prompt.
+	 * See {@link PackVersionDefinition.agent}.
+	 */
+	agent: AgentConfig;
+	/**
+	 * Sets this agent's instructions.
 	 *
 	 * @example
 	 * ```
 	 * pack.setInstructions('You help a team run async standups. Keep replies short.');
 	 * ```
 	 */
-	setInstructions(instructions: string): CustomAgentDefinitionBuilder;
-	/**
-	 * See {@link PackDefinitionBuilder.setVersion}.
-	 */
-	setVersion(version: string): CustomAgentDefinitionBuilder;
+	setInstructions(instructions: string): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {

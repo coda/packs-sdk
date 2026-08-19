@@ -1,12 +1,12 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
+import type {AgentConfig} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
-import type {CustomAgentConfig} from './types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
@@ -54,17 +54,7 @@ export function newPack(definition?: Partial<PackVersionDefinition>): PackDefini
 }
 
 /**
- * Creates a new skeleton custom agent definition that can be added to.
- *
- * An agent is still a pack: it is uploaded and released through the same commands, and the
- * definition rides in the pack metadata. What differs is the authoring surface, which is why
- * this is a separate entry point rather than a flag on {@link newPack}. Declaring the intent
- * here rather than inferring it from what the author eventually calls means a forgotten
- * `setInstructions` is caught as an incomplete agent instead of passing as an empty pack.
- *
- * It takes no seed definition on purpose. Accepting one would let connector fields — formulas,
- * sync tables, authentication — reach the builder without going through the methods that
- * withhold them.
+ * Creates a new skeleton agent definition that can be added to.
  *
  * @example
  * ```
@@ -75,14 +65,45 @@ export function newPack(definition?: Partial<PackVersionDefinition>): PackDefini
  * @internal
  * @hidden
  */
-export function newAgent(): CustomAgentDefinitionBuilder {
-  return new CustomAgentDefinitionBuilderImpl();
+export function newAgent(): AgentDefinitionBuilder {
+  return new AgentDefinitionBuilder();
+}
+
+/**
+ * Fields and methods shared by {@link PackDefinitionBuilder} and {@link AgentDefinitionBuilder}.
+ *
+ * @internal
+ * @hidden
+ */
+export class BaseDefinitionBuilder {
+  /**
+   * See {@link PackVersionDefinition.version}.
+   */
+  version?: string;
+
+  /**
+   * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+   *
+   * This is optional, and you only need to provide a version if you are manually doing
+   * semantic versioning, or using the CLI. If using the web editor, you can omit this
+   * and the web editor will automatically provide an appropriate semantic version
+   * each time you build a version.
+   *
+   * @example
+   * ```
+   * pack.setVersion('1.2.3');
+   * ```
+   */
+  setVersion(version: string): this {
+    this.version = version;
+    return this;
+  }
 }
 
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-export class PackDefinitionBuilder implements BasicPackDefinition {
+export class PackDefinitionBuilder extends BaseDefinitionBuilder implements BasicPackDefinition {
   /**
    * See {@link PackVersionDefinition.formulas}.
    */
@@ -133,11 +154,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   mcpServers: MCPServer[];
 
   /**
-   * See {@link PackVersionDefinition.customAgent}.
+   * See {@link PackVersionDefinition.agent}.
    * @internal
    * @hidden
    */
-  customAgent?: CustomAgentConfig;
+  agent?: AgentConfig;
 
   /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
@@ -154,10 +175,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   adminAuthentications?: AdminAuthentication[];
 
-  /**
-   * See {@link PackVersionDefinition.version}.
-   */
-  version?: string;
   /** @deprecated */
   formulaNamespace?: string;
 
@@ -168,6 +185,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * rather than constructing a builder directly.
    */
   constructor(definition?: Partial<PackVersionDefinition>) {
+    super();
     const {
       formulas,
       formats,
@@ -183,7 +201,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       skillEntrypoints,
       suggestedPrompts,
       mcpServers,
-      customAgent,
+      agent,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -195,7 +213,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
-    this.customAgent = customAgent;
+    this.agent = agent;
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
@@ -579,24 +597,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  /**
-   * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-   *
-   * This is optional, and you only need to provide a version if you are manually doing
-   * semantic versioning, or using the CLI. If using the web editor, you can omit this
-   * and the web editor will automatically provide an appropriate semantic version
-   * each time you build a version.
-   *
-   * @example
-   * ```
-   * pack.setVersion('1.2.3');
-   * ```
-   */
-  setVersion(version: string): this {
-    this.version = version;
-    return this;
-  }
-
   private _setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this {
     this._defaultConnectionRequirement = connectionRequirement;
 
@@ -651,140 +651,27 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
 }
 
 /**
- * A builder for a custom agent. Use {@link newAgent} to create one.
- *
- * The connector-authoring surface is withheld. An agent ships no fetcher of its own, and tools
- * that call other packs use those packs' authentication, so formulas, sync tables, column
- * formats, authentication, network domains and MCP servers are not authorable here. They may be
- * opened up later; because doing so only adds members, it will not be a breaking change for
- * agents written against this surface. The same goes for the agent's own surface: tools and
- * triggers are not authorable yet and will be added here.
- *
- * Deliberately does not inherit the pack definition shape. Doing so would withhold the methods
- * but leave the fields, so `agent.formulas.push(...)` would type-check and be serialized without
- * ever passing through a method that could refuse it. The runtime object is still a complete
- * pack definition — the CLI reads it as one — but an author is only shown what they can author.
- *
- * For the same reason the methods return `CustomAgentDefinitionBuilder` rather than `this`: a
- * derived type (`Omit<PackDefinitionBuilder, ...>`) resolves `this` back to the full builder, so
- * the withheld members reappear after the first chained call.
+ * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
  *
  * @internal
  * @hidden
  */
-export interface CustomAgentDefinitionBuilder {
-  /** See {@link PackVersionDefinition.customAgent}. Always present on an agent builder. */
-  customAgent: CustomAgentConfig;
-
-  /** See {@link PackVersionDefinition.version}. */
-  version?: string;
+export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
+  /**
+   * See {@link PackVersionDefinition.agent}.
+   */
+  agent: AgentConfig = {};
 
   /**
-   * Sets this agent's instructions, i.e. its prompt.
+   * Sets this agent's instructions.
    *
    * @example
    * ```
    * pack.setInstructions('You help a team run async standups. Keep replies short.');
    * ```
    */
-  setInstructions(instructions: string): CustomAgentDefinitionBuilder;
-
-  /**
-   * See {@link PackDefinitionBuilder.setVersion}.
-   */
-  setVersion(version: string): CustomAgentDefinitionBuilder;
-}
-
-/**
- * The runtime implementation behind {@link CustomAgentDefinitionBuilder}.
- *
- * `CustomAgentDefinitionBuilder` is what hides the connector-authoring methods; a subclass
- * cannot, because TypeScript does not allow a subclass to narrow the visibility of an
- * inherited member. The overrides here exist so that callers who reach past the types — a
- * cast, or plain JavaScript — fail loudly at build time instead of silently uploading a
- * definition the server will not honor.
- *
- * Not exported: {@link newAgent} is the only way to construct one.
- *
- * @internal
- * @hidden
- */
-class CustomAgentDefinitionBuilderImpl extends PackDefinitionBuilder {
-  // Narrowed from optional: an agent always has one, from construction onward.
-  override customAgent: CustomAgentConfig;
-
-  constructor() {
-    // Deliberately seeded with nothing. The base constructor copies whatever it is given
-    // straight onto the builder, so anything accepted here would bypass the overrides below.
-    super();
-    // The agent declares itself by the presence of this field, even before it has any content.
-    // `packs validate` relies on that to tell "this was meant to be an agent and is incomplete"
-    // apart from "this is an ordinary pack", and the server relies on it to classify the pack.
-    this.customAgent = {};
-  }
-
   setInstructions(instructions: string): this {
-    this.customAgent = {...this.customAgent, skill: {...this.customAgent?.skill, prompt: instructions}};
+    this.agent = {...this.agent, skill: {...this.agent.skill, prompt: instructions}};
     return this;
   }
-
-  override addFormula(): never {
-    throw new Error(unavailableOnAgent('addFormula'));
-  }
-
-  override addSyncTable(): never {
-    throw new Error(unavailableOnAgent('addSyncTable'));
-  }
-
-  override addDynamicSyncTable(): never {
-    throw new Error(unavailableOnAgent('addDynamicSyncTable'));
-  }
-
-  override addColumnFormat(): never {
-    throw new Error(unavailableOnAgent('addColumnFormat'));
-  }
-
-  override addSkill(): never {
-    throw new Error(`addSkill() is not available on a custom agent. Use setInstructions() instead.`);
-  }
-
-  override addMCPServer(): never {
-    throw new Error(unavailableOnAgent('addMCPServer'));
-  }
-
-  override setChatSkill(): never {
-    throw new Error(`setChatSkill() is not available on a custom agent. Use setInstructions() instead.`);
-  }
-
-  override setBenchInitializationSkill(): never {
-    throw new Error(`setBenchInitializationSkill() is not available on a custom agent. Use setInstructions() instead.`);
-  }
-
-  override setSkillEntrypoints(): never {
-    throw new Error(unavailableOnAgent('setSkillEntrypoints'));
-  }
-
-  override addSuggestedPrompt(): never {
-    throw new Error(unavailableOnAgent('addSuggestedPrompt'));
-  }
-
-  override setUserAuthentication(): never {
-    throw new Error(unavailableOnAgent('setUserAuthentication'));
-  }
-
-  override setSystemAuthentication(): never {
-    throw new Error(unavailableOnAgent('setSystemAuthentication'));
-  }
-
-  override addAdminAuthentication(): never {
-    throw new Error(unavailableOnAgent('addAdminAuthentication'));
-  }
-
-  override addNetworkDomain(): never {
-    throw new Error(unavailableOnAgent('addNetworkDomain'));
-  }
-}
-
-function unavailableOnAgent(method: string): string {
-  return `${method}() is not available on a custom agent. Agents are authored with setInstructions().`;
 }

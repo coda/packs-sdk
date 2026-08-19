@@ -2,6 +2,7 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
+import type {AgentConfig} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -20,7 +21,6 @@ import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
-import type {CustomAgentConfig} from '../types';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
@@ -2373,17 +2373,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   });
   const chatSkillSchema = skillSchema.partial();
 
-  // An agent author supplies behavior only. The display fields are filled in from the pack
-  // listing server-side, so everything is optional here and the prompt is required separately,
-  // to give the author an error that names the method they missed.
-  const customAgentSchema = zodCompleteStrictObject<CustomAgentConfig>({
+  // The skill's display fields come from the pack listing, so only the prompt is required here.
+  // It's checked separately so the error can name the method the author missed.
+  const agentSchema = zodCompleteStrictObject<AgentConfig>({
     skill: skillSchema.partial().optional(),
   }).superRefine((data, context) => {
     if (!data.skill?.prompt) {
       context.addIssue({
         code: 'custom',
         path: ['skill', 'prompt'],
-        message: 'A custom agent must have instructions. Call setInstructions() on the agent.',
+        message: 'An agent must have instructions. Call setInstructions() on the agent.',
       });
     }
   });
@@ -2542,7 +2541,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
     chatSkill: chatSkillSchema.optional(),
     benchInitializationSkill: chatSkillSchema.optional(),
-    customAgent: customAgentSchema.optional(),
+    agent: agentSchema.optional(),
     mcpServers: z
       .array(mcpServerSchema)
       .max(1)
@@ -3191,11 +3190,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       });
     })
     .superRefine((data, context) => {
-      // A custom agent ships no connector building blocks of its own: it has no fetcher, and
-      // tools that reach other packs run under those packs' authentication. The agent builder
-      // withholds the methods that would add them, but that is only a guard for authors using
-      // the typed surface, so the same rule is enforced here on the uploaded metadata.
-      if (!(data as PackVersionMetadata).customAgent) {
+      // Agents don't ship connector building blocks. The agent builder can't add them, but a
+      // hand-written manifest can, so check here too.
+      if (!(data as PackVersionMetadata).agent) {
         return;
       }
       const connectorBuildingBlocks: Array<[keyof PackVersionMetadata, string]> = [
@@ -3211,7 +3208,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: 'custom',
             path: [field],
-            message: `A custom agent cannot also define ${label}.`,
+            message: `An agent cannot also define ${label}.`,
           });
         }
       }
@@ -3221,7 +3218,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: 'custom',
             path: [field],
-            message: `A custom agent cannot also define authentication.`,
+            message: `An agent cannot also define authentication.`,
           });
         }
       }

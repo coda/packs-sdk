@@ -1567,28 +1567,14 @@ export interface SuggestedPrompt {
     prompt: string;
 }
 /**
- * How a custom agent behaves.
- *
- * This mirrors the `customAgentDefinition` payload the agent builder already produces and the
- * agent runtime already reads, so an SDK-authored agent and a builder-authored one are the same
- * shape. Triggers are not authorable yet; they will be added alongside `skill`.
+ * The definition of an agent.
  *
  * @internal
  * @hidden
  */
-export interface CustomAgentConfig {
+export interface AgentConfig {
     /**
-     * What the agent is told to do and what it may use.
-     *
-     * Partial because an author can only supply behavior. The display fields — `name`,
-     * `displayName`, `description` — are not available here: the pack's name lives on its listing
-     * server-side, and the local manifest carries only a pack id. They are filled in when the
-     * definition is written, which also means renaming the listing updates the agent rather than
-     * freezing a copy into whichever version happened to be uploaded.
-     *
-     * Note that `name` is load-bearing at runtime — it is passed through as the pack name when the
-     * agent is built — so whoever writes the definition has to supply one. It is validated as an
-     * identifier, so a listing name like "My Standup Agent" cannot be copied across verbatim.
+     * The agent's behavior. Its name and description come from the pack's listing, not here.
      */
     skill?: Partial<Skill>;
 }
@@ -1692,16 +1678,12 @@ export interface PackVersionDefinition {
      */
     mcpServers?: MCPServer[];
     /**
-     * The custom agent defined by this pack, if it defines one.
-     *
-     * Authored via `sdk.newAgent()`. The presence of this field is what marks a pack as a custom
-     * agent, both for local validation and for the server on upload — the factory is how it comes
-     * to be stamped, not what classifies the pack.
+     * The agent defined by this pack, if it defines one. Authored via `sdk.newAgent()`.
      *
      * @internal
      * @hidden
      */
-    customAgent?: CustomAgentConfig;
+    agent?: AgentConfig;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
