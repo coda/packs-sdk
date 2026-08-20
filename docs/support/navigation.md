@@ -29,6 +29,29 @@ Replace `{PACK_ID}` with the ID of the Pack containing the connector.
 
 ## :superhuman-docs: Docs
 
+### Pack list {:#pack-list}
+
+To view the list of Packs you have created or have been shared with you:
+
+1.  Open [Superhuman Docs](https://docs.superhuman.com/docs)
+1.  Click your workspace name to open its dropdown. If you are a member of multiple workspaces, instead click the three dots next to a workspace.
+1.  Click the **Packs** menu item
+
+
+### Create a Pack {:#create-pack}
+
+To create a new Pack:
+
+1.  Open [Superhuman Docs](https://docs.superhuman.com/docs)
+1.  Click your workspace name to open its dropdown. If you are a member of multiple workspaces, instead click the three dots next to a workspace.
+1.  Click the **Packs** menu item
+1.  Click the **Create Pack** button in the upper right
+
+!!! tip "Creating a Pack directly"
+
+    Type **[pack.new](https://pack.new)** into your browser to skip these steps and create a new Pack in your default workspace.
+
+
 ### Pack side panel {:#connector-panel}
 
 After installing a Pack, you can open its side panel by:

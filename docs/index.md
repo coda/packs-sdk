@@ -23,7 +23,7 @@ Superhuman Go supports the MCP standard, so any app that hosts a server can plug
 
 Creating a connector for your MCP server is simple, often requiring as little as a dozen lines of code. When it's ready, you can publish it to the store so anyone can discover and install it.
 
-[List your MCP][mcp]{ .md-button .md-button--primary }
+[List your MCP][mcp_tutorial]{ .md-button .md-button--primary }
 </div>
 
 <div class="landing-item" markdown>
@@ -160,3 +160,4 @@ Stuck, or want to see it done first? There's a [library of videos][videos] walki
 [mcp]: guides/blocks/mcp.md
 [tutorial_fetcher]: tutorials/build/fetcher.md
 [tutorial_sync]: tutorials/build/sync-table.md
+[mcp_tutorial]: tutorials/build/mcp.md
