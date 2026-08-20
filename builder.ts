@@ -671,7 +671,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setInstructions(instructions: string): this {
-    this.agent = {...this.agent, prompt: instructions};
+    this.agent.prompt = instructions;
     return this;
   }
 }
