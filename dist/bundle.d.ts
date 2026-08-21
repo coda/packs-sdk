@@ -6415,7 +6415,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
 	 * rather than constructing a builder directly.
 	 */
-	constructor(definition?: Partial<PackVersionDefinition>);
+	constructor(definition?: Partial<Omit<PackVersionDefinition, "agent">>);
 	/**
 	 * Adds a formula definition to this pack.
 	 *
@@ -6710,6 +6710,12 @@ export interface PackFormatMetadata extends Omit<Format, "matchers"> {
 }
 /** @hidden */
 export type SkillMetadata = Omit<Skill, "prompt">;
+/**
+ * An agent definition without its instructions, for the browser-facing metadata.
+ * @internal
+ * @hidden
+ */
+export type AgentMetadata = Omit<AgentDefinition, "instructions">;
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormula"> & {
 	getOptions?: MetadataFormulaMetadata;
@@ -6748,7 +6754,7 @@ export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 /** @hidden */
 export type ExternalSkill = SkillMetadata;
-export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills">;
+export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills" | "agent">;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {
@@ -6773,6 +6779,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	formats?: ExternalPackFormat[];
 	syncTables?: ExternalSyncTable[];
 	skills?: ExternalSkill[];
+	agent?: AgentMetadata;
 }
 /** @hidden */
 export type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;

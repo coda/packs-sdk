@@ -2579,16 +2579,31 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (!data.agent) {
             return;
         }
-        const connectorBuildingBlocks = [
+        const listFields = [
             ['formulas', 'formulas'],
             ['syncTables', 'sync tables'],
             ['formats', 'column formats'],
             ['skills', 'skills'],
             ['mcpServers', 'MCP servers'],
             ['networkDomains', 'network domains'],
+            ['suggestedPrompts', 'suggested prompts'],
         ];
-        for (const [field, label] of connectorBuildingBlocks) {
+        for (const [field, label] of listFields) {
             if ((data[field] || []).length) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `An agent cannot also define ${label}.`,
+                });
+            }
+        }
+        const singleFields = [
+            ['chatSkill', 'a chat skill'],
+            ['benchInitializationSkill', 'a bench initialization skill'],
+            ['skillEntrypoints', 'skill entrypoints'],
+        ];
+        for (const [field, label] of singleFields) {
+            if (data[field]) {
                 context.addIssue({
                     code: 'custom',
                     path: [field],

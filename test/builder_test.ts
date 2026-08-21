@@ -656,6 +656,8 @@ describe('Agent builder', () => {
       function checkedByTscOnly(builder: AgentDefinitionBuilder) {
         // @ts-expect-error only newAgent() can stamp an agent
         newPack({agent: {instructions: 'x'}});
+        // @ts-expect-error nor can the builder be constructed with one
+        new PackDefinitionBuilder({agent: {instructions: 'x'}});
         // @ts-expect-error connector building blocks are not authorable on an agent
         builder.addFormula({});
         // @ts-expect-error nor are their fields

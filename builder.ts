@@ -177,7 +177,7 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
    * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
    * rather than constructing a builder directly.
    */
-  constructor(definition?: Partial<PackVersionDefinition>) {
+  constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>) {
     super();
     const {
       formulas,

@@ -3207,16 +3207,31 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       if (!(data as PackVersionMetadata).agent) {
         return;
       }
-      const connectorBuildingBlocks: Array<[keyof PackVersionMetadata, string]> = [
+      const listFields: Array<[keyof PackVersionMetadata, string]> = [
         ['formulas', 'formulas'],
         ['syncTables', 'sync tables'],
         ['formats', 'column formats'],
         ['skills', 'skills'],
         ['mcpServers', 'MCP servers'],
         ['networkDomains', 'network domains'],
+        ['suggestedPrompts', 'suggested prompts'],
       ];
-      for (const [field, label] of connectorBuildingBlocks) {
+      for (const [field, label] of listFields) {
         if (((data as any)[field] || []).length) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `An agent cannot also define ${label}.`,
+          });
+        }
+      }
+      const singleFields: Array<[keyof PackVersionMetadata, string]> = [
+        ['chatSkill', 'a chat skill'],
+        ['benchInitializationSkill', 'a bench initialization skill'],
+        ['skillEntrypoints', 'skill entrypoints'],
+      ];
+      for (const [field, label] of singleFields) {
+        if ((data as any)[field]) {
           context.addIssue({
             code: 'custom',
             path: [field],

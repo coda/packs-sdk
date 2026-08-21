@@ -148,7 +148,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
      * rather than constructing a builder directly.
      */
-    constructor(definition?: Partial<PackVersionDefinition>);
+    constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>);
     /**
      * Adds a formula definition to this pack.
      *

@@ -8146,6 +8146,38 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
+    it('rejects the deprecated skill surface alongside an agent', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.'},
+          chatSkill: {prompt: 'Sneaky.'},
+          skillEntrypoints: {defaultChat: {skillName: 'sneaky'}},
+        }),
+      );
+      // skillEntrypoints trips a pre-existing rule about naming a real skill too, so check for ours.
+      assert.deepInclude(err.validationErrors!, {
+        path: 'chatSkill',
+        message: 'An agent cannot also define a chat skill.',
+      });
+      assert.deepInclude(err.validationErrors!, {
+        path: 'skillEntrypoints',
+        message: 'An agent cannot also define skill entrypoints.',
+      });
+    });
+
+    it('rejects suggested prompts alongside an agent', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.'},
+          suggestedPrompts: [{name: 'p', displayName: 'P', prompt: 'Do it.'}],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'suggestedPrompts',
+        message: 'An agent cannot also define suggested prompts.',
+      });
+    });
+
     it('leaves ordinary packs alone', async () => {
       const result = await validateJson(createFakePackVersionMetadata());
       assert.isUndefined(result.agent);
