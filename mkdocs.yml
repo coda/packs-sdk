@@ -387,6 +387,10 @@ plugins:
           "agents/features/chat.md": "support/migration/superhuman-go.md"
           "agents/features/context.md": "support/migration/superhuman-go.md"
 
+          # 2026-08-19: Delete the GitHub Codespaces and Replit tutorials.
+          "tutorials/get-started/github.md": "tutorials/get-started/cli.md"
+          "tutorials/get-started/replit.md": "tutorials/get-started/cli.md"
+
     # Generate an RSS feed for the blog.
     # See: https://guts.github.io/mkdocs-rss-plugin/
     - rss:

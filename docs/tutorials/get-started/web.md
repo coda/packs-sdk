@@ -21,8 +21,9 @@ If you're new to Superhuman Docs, [sign up][coda_sign_up] for a free account and
 The Pack Studio is built right in to the Superhuman Docs application. To get there:
 
 1. Open [Superhuman Docs][coda_home] in your browser.
-1. Click on **Packs** in the navigation menu on the left. If you are a member of multiple workspaces you will need to select a workspace first.
-1. Click the **Create a Pack** button in the upper right.
+1. Click your workspace name to open its dropdown. If you are a member of multiple workspaces, instead click the three dots next to a workspace.
+1. Click the **Packs** menu item.
+1. Click the **Create Pack** button in the upper right.
 
 !!! tip
     Type **[pack.new](https://pack.new)** into your browser to quickly create a new Pack.
@@ -91,8 +92,8 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 
 
 [coda_sign_up]: https://docs.superhuman.com/signup
-[hc_doc_maker]: https://help.coda.io/hc/en-us/articles/39556004184077-Roles-in-Coda-Doc-Makers-Admins-and-Editors
 [coda_home]: https://docs.superhuman.com/docs
+[hc_doc_maker]: https://help.coda.io/hc/en-us/articles/39556004184077-Roles-in-Coda-Doc-Makers-Admins-and-Editors
 [samples_hello_world]: ../../samples/full/hello-world.md
 [samples]: ../../samples/topic/formula.md
 [guides]: ../../guides/blocks/formulas.md
