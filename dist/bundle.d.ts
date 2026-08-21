@@ -6130,7 +6130,7 @@ export interface AgentDefinition {
 	/**
 	 * What the agent is told to do.
 	 */
-	prompt?: string;
+	instructions?: string;
 	/**
 	 * The tools the agent may use.
 	 */

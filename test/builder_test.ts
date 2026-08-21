@@ -618,20 +618,20 @@ describe('Agent builder', () => {
     assert.deepEqual(agent.agent, {});
   });
 
-  it('sets instructions as the prompt', () => {
+  it('sets instructions', () => {
     agent.setInstructions('You help a team run async standups.');
-    assert.deepEqual(agent.agent, {prompt: 'You help a team run async standups.'});
+    assert.deepEqual(agent.agent, {instructions: 'You help a team run async standups.'});
   });
 
   it('keeps the last instructions set', () => {
     agent.setInstructions('First.').setInstructions('Second.');
-    assert.deepEqual(agent.agent, {prompt: 'Second.'});
+    assert.deepEqual(agent.agent, {instructions: 'Second.'});
   });
 
   it('survives compilePackMetadata rather than being stripped', () => {
     agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
     const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
-    assert.deepEqual(metadata.agent, {prompt: 'You help a team run async standups.'});
+    assert.deepEqual(metadata.agent, {instructions: 'You help a team run async standups.'});
   });
 
   it('does not add a agent field to an ordinary pack', () => {

@@ -8081,17 +8081,17 @@ describe('Pack metadata Validation', async () => {
 
     it('validates an agent carrying only instructions', async () => {
       const metadata = createFakeAgentMetadata({
-        agent: {prompt: 'You help a team run async standups.'},
+        agent: {instructions: 'You help a team run async standups.'},
       });
       const result = await validateJson(metadata);
-      assert.deepEqual(result.agent, {prompt: 'You help a team run async standups.'});
+      assert.deepEqual(result.agent, {instructions: 'You help a team run async standups.'});
     });
 
     it('rejects an agent that declared itself but never set instructions', async () => {
       const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {}}));
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'agent.prompt',
+          path: 'agent.instructions',
           message: 'An agent must have instructions. Call setInstructions() on the agent.',
         },
       ]);
@@ -8101,7 +8101,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {}}));
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'agent.prompt',
+          path: 'agent.instructions',
           message: 'An agent must have instructions. Call setInstructions() on the agent.',
         },
       ]);
@@ -8110,7 +8110,7 @@ describe('Pack metadata Validation', async () => {
     it('still validates each tool', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {prompt: 'Do a thing.', tools: [{type: 'NotARealTool'} as any]},
+          agent: {instructions: 'Do a thing.', tools: [{type: 'NotARealTool'} as any]},
         }),
       );
       assert.isNotEmpty(err.validationErrors);
@@ -8120,7 +8120,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects connector building blocks alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {prompt: 'Do a thing.'},
+          agent: {instructions: 'Do a thing.'},
           formulaNamespace: 'namespace',
           formulas: [createFakePackFormulaMetadata({name: 'Sneaky'})],
           networkDomains: ['example.com'],
@@ -8135,7 +8135,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects authentication alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {prompt: 'Do a thing.'},
+          agent: {instructions: 'Do a thing.'},
           defaultAuthentication: {type: AuthenticationType.HeaderBearerToken},
         }),
       );

@@ -1831,7 +1831,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     // The skill's display fields come from the pack listing, so only the prompt is required here.
     // It's checked separately so the error can name the method the author missed.
     const agentSchema = zodCompleteStrictObject({
-        prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
+        instructions: z.string().min(1).max(exports.Limits.PromptLength).optional(),
         tools: z
             .array(toolSchema)
             .optional()
@@ -1845,10 +1845,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
         }),
     }).superRefine((data, context) => {
-        if (!data.prompt) {
+        if (!data.instructions) {
             context.addIssue({
                 code: 'custom',
-                path: ['prompt'],
+                path: ['instructions'],
                 message: 'An agent must have instructions. Call setInstructions() on the agent.',
             });
         }
