@@ -19,10 +19,16 @@ def define_env(env):
     Set shadow=False for cropped fragments of the UI, which are shown inline
     without the rounded corners and drop shadow of a full screenshot.
     """
-    docsDir = env.conf["docs_dir"]
+    docsDir = os.path.normpath(env.conf["docs_dir"])
     if path.startswith("/"):
       path = path[1:]
-    if not os.path.isfile(os.path.join(docsDir, path)):
+
+    # The site: URL below can only resolve to something the site serves, so
+    # reject paths that point outside of the docs directory.
+    fullPath = os.path.normpath(os.path.join(docsDir, path))
+    if not fullPath.startswith(docsDir + os.sep):
+      raise ValueError(f"Image path is outside of the docs directory: {path}")
+    if not os.path.isfile(fullPath):
       log.warning(f"Image not found: {path}")
     root, extension = os.path.splitext(path)
     retinaPath = f"{root}_2x{extension}"
