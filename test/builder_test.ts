@@ -654,6 +654,8 @@ describe('Agent builder', () => {
       // Checked by tsc, not at runtime: if one of these stops being an error, the directive
       // above it becomes the error and the build fails. Never actually called.
       function checkedByTscOnly(builder: AgentDefinitionBuilder) {
+        // @ts-expect-error only newAgent() can stamp an agent
+        newPack({agent: {instructions: 'x'}});
         // @ts-expect-error connector building blocks are not authorable on an agent
         builder.addFormula({});
         // @ts-expect-error nor are their fields

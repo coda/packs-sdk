@@ -36,7 +36,7 @@ import type { ValueType } from './schema';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>): PackDefinitionBuilder;
 /**
  * Creates a new skeleton agent definition that can be added to.
  *
@@ -128,12 +128,6 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      * @hidden
      */
     mcpServers: MCPServer[];
-    /**
-     * See {@link PackVersionDefinition.agent}.
-     * @internal
-     * @hidden
-     */
-    agent?: AgentDefinition;
     /**
      * See {@link PackVersionDefinition.defaultAuthentication}.
      */

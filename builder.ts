@@ -49,7 +49,7 @@ import {wrapMetadataFunction} from './api';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder {
+export function newPack(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>): PackDefinitionBuilder {
   return new PackDefinitionBuilder(definition);
 }
 
@@ -154,13 +154,6 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
   mcpServers: MCPServer[];
 
   /**
-   * See {@link PackVersionDefinition.agent}.
-   * @internal
-   * @hidden
-   */
-  agent?: AgentDefinition;
-
-  /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
    */
   defaultAuthentication?: Authentication;
@@ -201,7 +194,6 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
       skillEntrypoints,
       suggestedPrompts,
       mcpServers,
-      agent,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -213,7 +205,6 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
-    this.agent = agent;
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
