@@ -10,9 +10,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name != 'main' && github.ref || github.run_id }}
   cancel-in-progress: true
 
-env:
-  AWS_REGION: us-west-2
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -80,168 +77,37 @@ jobs:
       - name: Validate samples
         run: make validate-samples
 
-  build-docs-head:
-    runs-on: ubuntu-latest
+  publish-docs-head:
     if: github.ref_name == 'main'
-    environment:
-      name: head-documentation
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup_node
-      - uses: ./.github/actions/setup_python
-
-      - name: Cache mkdocs
-        uses: actions/cache@v4
-        with:
-          path: .cache
-          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
-
-      - name: Build docs
-        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://docs.qa-sh.io/packs/build/latest/" make docs
-
-      - name: Upload site artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-head
-          path: site
-
-  push-head-docs:
-    runs-on: ubuntu-latest
-    environment:
-      name: head-documentation
-    needs: build-docs-head
     permissions:
       id-token: write
       contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup_node
+    uses: ./.github/workflows/publish-docs.yml
+    with:
+      env: head
+      site-url: https://docs.qa-sh.io/packs/build/latest/
+      role-to-assume: arn:aws:iam::020355488663:role/automation/CICDRole
 
-      - name: Download site artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site-head
-          path: site
-
-      - name: Configure AWS credentials
-        uses: ./.github/actions/setup_aws_profile
-        with:
-          role-to-assume: arn:aws:iam::020355488663:role/automation/CICDRole
-          profile-name: head
-          aws-region: ${{ env.AWS_REGION }}
-          role-session-name: github-actions-packs-sdk-push-head-docs
-
-      - name: Deploy to Head
-        run: make publish-docs-head FLAGS=--forceUpload
-
-  build-docs-staging:
-    runs-on: ubuntu-latest
-    environment:
-      name: staging-documentation
+  publish-docs-staging:
     if: github.actor != 'github-actions[bot]'
-    needs: push-head-docs
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup_node
-      - uses: ./.github/actions/setup_python
-
-      - name: Cache mkdocs
-        uses: actions/cache@v4
-        with:
-          path: .cache
-          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
-
-      - name: Build docs
-        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://docs.pp-sh.io/packs/build/latest/" make docs
-
-      - name: Upload site artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-staging
-          path: site
-
-  push-staging-docs:
-    runs-on: ubuntu-latest
-    environment:
-      name: staging-documentation
-    if: github.actor != 'github-actions[bot]'
-    needs: [push-head-docs, build-docs-staging]
+    needs: publish-docs-head
     permissions:
       id-token: write
       contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup_node
+    uses: ./.github/workflows/publish-docs.yml
+    with:
+      env: staging
+      site-url: https://docs.pp-sh.io/packs/build/latest/
+      role-to-assume: arn:aws:iam::053716345611:role/automation/CICDRole
 
-      - name: Download site artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site-staging
-          path: site
-
-      - name: Configure AWS credentials
-        uses: ./.github/actions/setup_aws_profile
-        with:
-          role-to-assume: arn:aws:iam::053716345611:role/automation/CICDRole
-          profile-name: staging
-          aws-region: ${{ env.AWS_REGION }}
-          role-session-name: github-actions-packs-sdk-push-staging-docs
-
-      - name: Deploy to Staging
-        run: make publish-docs-staging FLAGS=--forceUpload
-
-  build-docs-prod:
-    runs-on: ubuntu-latest
-    environment:
-      name: prod-documentation
+  publish-docs-prod:
     if: github.actor != 'github-actions[bot]'
-    needs: push-staging-docs
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup_node
-      - uses: ./.github/actions/setup_python
-
-      - name: Cache mkdocs
-        uses: actions/cache@v4
-        with:
-          path: .cache
-          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
-
-      - name: Build docs
-        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://docs.superhuman.com/packs/build/latest/" make docs
-
-      - name: Upload site artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-prod
-          path: site
-
-  push-prod-docs:
-    runs-on: ubuntu-latest
-    environment:
-      name: prod-documentation
-    if: github.actor != 'github-actions[bot]'
-    needs: [push-staging-docs, build-docs-prod]
+    needs: publish-docs-staging
     permissions:
       id-token: write
       contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup_node
-
-      - name: Download site artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site-prod
-          path: site
-
-      - name: Configure AWS credentials
-        uses: ./.github/actions/setup_aws_profile
-        with:
-          role-to-assume: arn:aws:iam::029208794193:role/automation/CICDRole
-          profile-name: prod
-          aws-region: ${{ env.AWS_REGION }}
-          role-session-name: github-actions-packs-sdk-push-prod-docs
-
-      - name: Deploy to Production
-        run: make publish-docs-prod FLAGS=--forceUpload
+    uses: ./.github/workflows/publish-docs.yml
+    with:
+      env: prod
+      site-url: https://docs.superhuman.com/packs/build/latest/
+      role-to-assume: arn:aws:iam::029208794193:role/automation/CICDRole

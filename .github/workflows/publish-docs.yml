@@ -1,0 +1,65 @@
+name: Publish Docs
+
+# Builds and publishes the documentation site to a single environment.
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: >-
+          Target environment. Drives the GitHub environment (<env>-documentation),
+          the AWS profile name, and the `publish-docs-<env>` make target.
+        required: true
+        type: string
+      site-url:
+        description: 'Base URL the site is built against (MK_DOCS_SITE_URL).'
+        required: true
+        type: string
+      role-to-assume:
+        description: 'ARN of the IAM role to assume for the upload.'
+        required: true
+        type: string
+      aws-region:
+        description: 'AWS region for the profile.'
+        required: false
+        type: string
+        default: us-west-2
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.env }}-documentation
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Cache mkdocs
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
+
+      - name: Build docs
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="${{ inputs.site-url }}" make docs
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ inputs.env }}
+          path: site
+
+      - name: Configure AWS credentials
+        uses: ./.github/actions/setup_aws_profile
+        with:
+          role-to-assume: ${{ inputs.role-to-assume }}
+          profile-name: ${{ inputs.env }}
+          aws-region: ${{ inputs.aws-region }}
+          role-session-name: github-actions-packs-sdk-push-${{ inputs.env }}-docs
+
+      - name: Publish
+        run: make publish-docs-${{ inputs.env }} FLAGS=--forceUpload
