@@ -270,7 +270,7 @@ The connector now exists on the platform, so it's time to install it and see wha
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_mcp_search.png" srcset="site:images/tutorial_mcp_search_2x.png 2x" class="screenshot" alt="Searching for the connector in Go">
+    {{screenshot("images/tutorial_mcp_search.png", "Searching for the connector in Go")}}
 
     </div>
     </section>
@@ -286,7 +286,7 @@ The connector now exists on the platform, so it's time to install it and see wha
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_mcp_signin.png" srcset="site:images/tutorial_mcp_signin_2x.png 2x" class="screenshot" alt="Begin the signin process.">
+    {{screenshot("images/tutorial_mcp_signin.png", "Begin the signin process.")}}
 
     </div>
     </section>
@@ -302,7 +302,7 @@ The connector now exists on the platform, so it's time to install it and see wha
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_mcp_authorize.png" srcset="site:images/tutorial_mcp_authorize_2x.png 2x" class="screenshot" alt="Authorizing access to your Todoist account">
+    {{screenshot("images/tutorial_mcp_authorize.png", "Authorizing access to your Todoist account")}}
 
     </div>
     </section>
@@ -324,7 +324,7 @@ The connector now exists on the platform, so it's time to install it and see wha
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_mcp_tasks.png" srcset="site:images/tutorial_mcp_tasks_2x.png 2x" class="screenshot" alt="Go listing your tasks in Todoist.">
+    {{screenshot("images/tutorial_mcp_tasks.png", "Go listing your tasks in Todoist.")}}
 
     </div>
     </section>
@@ -348,7 +348,7 @@ The connector now exists on the platform, so it's time to install it and see wha
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_mcp_create_task.png" srcset="site:images/tutorial_mcp_create_task_2x.png 2x" class="screenshot" alt="Confirming an action before it runs">
+    {{screenshot("images/tutorial_mcp_create_task.png", "Confirming an action before it runs")}}
 
     </div>
     </section>

@@ -20,7 +20,7 @@ description: Allow users to edit the contents of a sync table and push those cha
 
 To enable two-way sync on a sync table that supports it you need to toggle on the option **Enable Edits** in the sync table settings. Doing so reveals additional options that control when updates are sent and which account is used.
 
-<img src="site:images/two_way_enable.png" srcset="site:images/two_way_enable_2x.png 2x" class="screenshot" alt="Enabling edits on a sync table.">
+{{screenshot("images/two_way_enable.png", "Enabling edits on a sync table.")}}
 
 Certain columns of the table will now be editable, and you can change cell values them as you would for a normal Superhuman Docs table. Use the **Update rows** link to push the changes back to the data source.
 
@@ -312,7 +312,7 @@ When processing updates in batches be sure to return the same number of results 
 
 Similar to [parameter autocomplete][parameters_autocomplete], you can provide a suggested set of options for mutable properties, which will be shown to the user when they are editing a corresponding cell.
 
-<img src="site:images/two_way_autocomplete.png" srcset="site:images/two_way_autocomplete_2x.png 2x" class="screenshot" alt="Suggested property options in a cell.">
+{{screenshot("images/two_way_autocomplete.png", "Suggested property options in a cell.")}}
 
 !!! info "The hint `SelectList` or `Reference` is required"
 
@@ -445,7 +445,7 @@ The `allowNewValues` setting can only be enabled for `String` properties, as the
 
 When a row fails to update Superhuman Docs will show an error message attached to that row. The pending edits will be retained, so that users can adjust them and try again.
 
-<img src="site:images/two_way_error.png" srcset="site:images/two_way_error_2x.png 2x" class="screenshot" alt="Error attached to a row.">
+{{screenshot("images/two_way_error.png", "Error attached to a row.")}}
 
 To associate an error with a row return it at the corresponding index in the `result` array. For tables that use single row updates (`maxUpdateBatchSize == 1`) if you throw a `UserVisibleError` it will be associated with the row automatically. In all other cases a thrown error will be treated as a failure of the entire sync and cancel any remaining row updates.
 

@@ -257,6 +257,9 @@ importers:
       globals:
         specifier: ^15.0.0
         version: 15.15.0
+      image-dimensions:
+        specifier: ^2.5.1
+        version: 2.5.1
       js-yaml:
         specifier: 4.2.0
         version: 4.2.0
@@ -3080,6 +3083,11 @@ packages:
   ignore@7.0.5:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
+
+  image-dimensions@2.5.1:
+    resolution: {integrity: sha512-It7CkTNp7IYA8jhvGgz8K18OAbHF3/Juk8RNEyTyMFfolJOIU1Y2wGDnzDQPbGCjyxVF/++pwIZE0BKJUEOb1g==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -8498,6 +8506,8 @@ snapshots:
   ignore@6.0.2: {}
 
   ignore@7.0.5: {}
+
+  image-dimensions@2.5.1: {}
 
   import-fresh@3.3.0:
     dependencies:

@@ -111,7 +111,7 @@ return sdk.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
 
 Chat replies can include images, which will be automatically scaled to fit the width of the side panel.
 
-<img src="site:images/agent_image.png" srcset="site:images/agent_image_2x.png 2x" alt="A screenshot of chat response containing an image." class="screenshot">
+{{screenshot("images/agent_image.png", "A screenshot of chat response containing an image.")}}
 
 For security reasons, images will only be rendered if the URL is either:
 
