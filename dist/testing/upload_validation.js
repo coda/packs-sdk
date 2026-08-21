@@ -2040,7 +2040,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (authentication.type !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
                     continue;
                 }
-                const allowedFirstPartyDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
+                const allowedFirstPartyDomains = [
+                    'coda.io',
+                    'localhost',
+                    'superhuman.com',
+                    'pp-sh.io',
+                    'qa-sh.io',
+                    'grammarlyaws.com',
+                ];
                 const isFirstPartyDomain = (domain) => allowedFirstPartyDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
                 const hasNonFirstPartyNetwork = (_a = metadata.networkDomains) === null || _a === void 0 ? void 0 : _a.some((domain) => !isFirstPartyDomain(domain));
                 if (!hasNonFirstPartyNetwork) {
