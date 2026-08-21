@@ -2607,7 +2607,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             continue;
           }
 
-          const allowedFirstPartyDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
+          const allowedFirstPartyDomains = [
+            'coda.io',
+            'localhost',
+            'superhuman.com',
+            'pp-sh.io',
+            'qa-sh.io',
+            'grammarlyaws.com',
+          ];
           const isFirstPartyDomain = (domain: string) =>
             allowedFirstPartyDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
 
