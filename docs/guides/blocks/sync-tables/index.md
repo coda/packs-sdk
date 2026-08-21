@@ -23,7 +23,7 @@ Before a sync table can pull in data it must be added and configured.
 
     Sync tables are configured when installing the connector, during which time the user can also set parameters. Once the connector is installed, the platform will begin indexing the data into the knowledge layer. See the [Indexing guide][indexing] for more information.
 
-    <img src="site:images/sync_table_usage_go.png" srcset="site:images/sync_table_usage_go_2x.png 2x" class="screenshot" alt="Sync table setup in Go.">
+    {{screenshot("images/sync_table_usage_go.png", "Sync table setup in Go.")}}
 
 === ":superhuman-docs: Docs"
 
@@ -55,13 +55,13 @@ A single sync table can be populated by more than one sync, letting you pull in 
 
     You add additional syncs while configuring the connector on the installation screen. With the table selected, click **Options** > **Add sync setting** to create additional syncs.
 
-    <img src="site:images/sync_table_multiple_go.png" srcset="site:images/sync_table_multiple_go_2x.png 2x" class="screenshot" alt="Configuring multiple syncs in Superhuman Go">
+    {{screenshot("images/sync_table_multiple_go.png", "Configuring multiple syncs in Superhuman Go")}}
 
 === ":superhuman-docs: Docs"
 
     A sync table can only be added to a document once, so to add more you open the table's **Options** pane and click **Add another sync**. The rows from each sync are appended to the same table, and you can use views and filters to display them separately.
 
-    <img src="site:images/sync_table_multiple_docs.png" srcset="site:images/sync_table_multiple_docs_2x.png 2x" class="screenshot" alt="Adding another sync in Superhuman Docs">
+    {{screenshot("images/sync_table_multiple_docs.png", "Adding another sync in Superhuman Docs")}}
 
 !!! info "Not supported for dynamic sync tables"
     Multiple syncs are only available for regular sync tables, not [dynamic sync tables][dynamic_sync_tables].
@@ -280,7 +280,7 @@ It's often the case that the different synced items in a Pack are related to eac
 
 A reference must specify the identity of the target table as well as the ID of the target row. If that row has already been synced to the doc, then the reference is replaced with the data from that row. Otherwise a grayed out chip is displayed, indicating that the referenced row hasn't been synced yet.
 
-<img src="site:images/sync_table_reference.png" srcset="site:images/sync_table_reference_2x.png 2x" class="screenshot" alt="How sync table references look in the doc">
+{{screenshot("images/sync_table_reference.png", "How sync table references look in the doc")}}
 
 See the [Schemas guide][schema_references] for more information on how to create references in your table schema.
 
@@ -315,7 +315,7 @@ Although only [featured columns][schemas_featured_columns] are shown in the tabl
 
 For very large schemas all of these unused properties can come with a performance cost however, so users have the option to choose the exact set of columns they want to sync. This can be done by clicking the **Sync more properties** button in the sync table settings, and is launched automatically when creating the sync table with a very large schema.
 
-<img src="site:images/sync_table_select_columns.png" srcset="site:images/sync_table_select_columns_2x.png 2x" class="screenshot" alt="Selecting columns of a sync table">
+{{screenshot("images/sync_table_select_columns.png", "Selecting columns of a sync table")}}
 
 Users can choose from top-level properties in the schema, and only those they select will be persisted in the document during the sync.
 

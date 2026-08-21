@@ -27,7 +27,7 @@ Connector logs show the execution of the individual building blocks in a connect
 
     The logs are grouped by the Go session where the connector was used, with the most recent session at the top. To get the latest results, click the refresh button in the upper right of the logs panel.
 
-    <img src="site:images/connector_logs.png" srcset="site:images/connector_logs_2x.png 2x" class="screenshot" alt="A screenshot of the connector logs drawer in Go.">
+    {{screenshot("images/connector_logs.png", "A screenshot of the connector logs drawer in Go.")}}
 
 === ":superhuman-docs: Docs"
 
@@ -39,7 +39,7 @@ Connector logs show the execution of the individual building blocks in a connect
 
     The logs are grouped by invocation, with the latest entries at the top. New log entries are displayed automatically, usually a few seconds after the connector is run — there's no need to refresh the page or reopen the panel.
 
-    <img src="site:images/connector_logs_docs.png" srcset="site:images/connector_logs_docs_2x.png 2x" class="screenshot" alt="A screenshot of the connector logs in Docs.">
+    {{screenshot("images/connector_logs_docs.png", "A screenshot of the connector logs in Docs.")}}
 
     The panel will only show the logs from one connector at a time. To change the selected connector you can click the connector name at the top of the panel and select a new one from the dropdown.
 
@@ -55,7 +55,7 @@ To access the ingestion logs:
 
 Select a table from the **Datasource** dropdown to see the logs for that sync table. You can see the recent syncs for the table, and drill down into individual executions of the sync table and any associated logs.
 
-<img src="site:images/agent_ingestion_logs.png" srcset="site:images/agent_ingestion_logs_2x.png 2x" class="screenshot" alt="A screenshot of the ingestion logs drawer for a connector.">
+{{screenshot("images/agent_ingestion_logs.png", "A screenshot of the ingestion logs drawer for a connector.")}}
 
 
 ## Adding log messages
@@ -92,7 +92,7 @@ However you open them, connector logs share a common structure. This section exp
 
 Every time your connector is run it generates an invocation, which groups together all of the other logs that come from the connector while it was executing.
 
-<img src="site:images/pmt_overview.png" srcset="site:images/pmt_overview_2x.png 2x" class="screenshot" alt="Invocation logs">
+{{screenshot("images/pmt_overview.png", "Invocation logs")}}
 
 Each invocation has a brief description, if it was successful or failed, approximately when it was run, and what version of the connector was run (if not the latest).
 
@@ -110,7 +110,7 @@ A new invocation is logged each time your connector is run, for example when a f
 
 Clicking on an invocation expands it to reveal individual log entries.
 
-<img src="site:images/pmt_entries.png" srcset="site:images/pmt_entries_2x.png 2x" class="screenshot" alt="Log entries">
+{{screenshot("images/pmt_entries.png", "Log entries")}}
 
 The first entry will always be an **Overview** of the invocation. Additional entries are shown in reverse chronological order (latest entries at the top), and are added when your connector makes a fetcher request or [logs a message](#adding-log-messages). If your connector encounters an error the execution will stop and no further log entries will be added.
 
@@ -119,13 +119,13 @@ The first entry will always be an **Overview** of the invocation. Additional ent
 
 Clicking on a log entry expands it to reveal additional details.
 
-<img src="site:images/pmt_details.png" srcset="site:images/pmt_details_2x.png 2x" class="screenshot" alt="Log entry details">
+{{screenshot("images/pmt_details.png", "Log entry details")}}
 
 These details include information you can use directly (**Version**, etc), as well as internal details that may be useful when working with support (**Request ID**, etc). The **Overview** log entry will include a **Duration** field containing the total execution time.
 
 Failed invocations will include some additional detail in the **Overview** entry.
 
-<img src="site:images/pmt_details_error.png" srcset="site:images/pmt_details_error_2x.png 2x" class="screenshot" alt="Log entry details for a failed invocation">
+{{screenshot("images/pmt_details_error.png", "Log entry details for a failed invocation")}}
 
 Specifically the **Error** field will include the error message, and the **Stack trace** field will include the line number where the error happened (`code.ts:18:23` means line 18, character 23).
 
@@ -134,7 +134,7 @@ Specifically the **Error** field will include the error message, and the **Stack
 
 Log entries for fetcher requests include an extra link at the bottom called **Show HTTP request details**. Clicking this link will open a dialog that shows the full details of the request, including the headers and bodies of the request and response.
 
-<img src="site:images/pmt_http.png" srcset="site:images/pmt_http_2x.png 2x" class="screenshot" alt="HTTP request details dialog">
+{{screenshot("images/pmt_http.png", "HTTP request details dialog")}}
 
 Just like in your connector's code, [some headers are redacted][fetcher_headers] as well as any user credentials.
 
@@ -143,7 +143,7 @@ Just like in your connector's code, [some headers are redacted][fetcher_headers]
 
 You can search for logs using the magnifying glass icon at the top of the panel.
 
-<img src="site:images/pmt_search.png" srcset="site:images/pmt_search_2x.png 2x" class="screenshot" alt="Searching for log entries">
+{{screenshot("images/pmt_search.png", "Searching for log entries")}}
 
 Search results are no longer grouped by invocation, but instead a flat list of entries from across all invocations. You can expand an entry and click the **View related logs** link to view all of the log entries from that invocation.
 

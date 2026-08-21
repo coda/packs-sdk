@@ -174,13 +174,13 @@ let PersonSchema = sdk.makeObjectSchema({
 
         When inspecting the property in the formula editor.
 
-        <img src="site:images/schemas_descriptions.png" srcset="site:images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
+        {{screenshot("images/schemas_descriptions.png", "A schema property description being shown in the formula editor")}}
 
     === "Column description"
 
         When used in sync tables or column formats, schema properties can be broken out into their own columns, and the property's description will be used as the initial value for the column's description. This column description is set once when the column is added to the table, and it can later be edited or removed by the user.
 
-        <img src="site:images/schemas_column_descriptions.png" srcset="site:images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
+        {{screenshot("images/schemas_column_descriptions.png", "A column description being shown in a sync table")}}
 
 ??? tip "Add descriptions to object properties"
 
@@ -398,7 +398,7 @@ let TaskSchema = sdk.makeObjectSchema({
 });
 ```
 
-<img src="site:images/schemas_attribution.png" srcset="site:images/schemas_attribution_2x.png 2x" class="screenshot" alt="How attribution is displayed on hover">
+{{screenshot("images/schemas_attribution.png", "How attribution is displayed on hover")}}
 
 
 ## Schemas in sync tables
@@ -638,7 +638,7 @@ let MovieSchema = sdk.makeObjectSchema({
 });
 ```
 
-<img src="site:images/schemas_labels_default.png" srcset="site:images/schemas_labels_default_2x.png 2x" class="screenshot" alt="Default labels for subtitle properties">
+{{screenshot("images/schemas_labels_default.png", "Default labels for subtitle properties")}}
 
 However, there are times when the default label isn't a great fit. For instance you may want to put the property name after the value (`10 bugs` instead of `Bugs: 10`) or remove the label completely (`P1` instead of `Priority: P1`).
 
@@ -666,7 +666,7 @@ let MovieSchema = sdk.makeObjectSchema({
 });
 ```
 
-<img src="site:images/schemas_labels_custom.png" srcset="site:images/schemas_labels_custom_2x.png 2x" class="screenshot" alt="Custom labels for subtitle properties">
+{{screenshot("images/schemas_labels_custom.png", "Custom labels for subtitle properties")}}
 
 
 ### Property placeholders
@@ -686,7 +686,7 @@ let MovieSchema = sdk.makeObjectSchema({
 });
 ```
 
-<img src="site:images/schemas_placeholders.png" srcset="site:images/schemas_placeholders_2x.png 2x" class="screenshot" alt="Placeholders for subtitle properties">
+{{screenshot("images/schemas_placeholders.png", "Placeholders for subtitle properties")}}
 
 A property will be considered empty and fallback to the placeholder when its value is one of the following: `null`, `undefined`, `""`, `[]`, `{}`. The placeholder is only used to render the card, and when using the Superhuman formula language to access the property it will still return the original value. Placeholders are currently only supported on the following fields:
 
