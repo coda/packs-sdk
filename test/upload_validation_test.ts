@@ -8178,6 +8178,35 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
+    it('rejects admin authentication alongside an agent', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.'},
+          adminAuthentications: [
+            {
+              authentication: {type: AuthenticationType.HeaderBearerToken},
+              name: 'adminAuth',
+              displayName: 'Admin Auth',
+              description: 'Admin authentication',
+            },
+          ],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'adminAuthentications',
+        message: 'An agent cannot also define admin authentication.',
+      });
+    });
+
+    it('rejects keys the agent definition does not have', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', name: 'Standup'} as any,
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
     it('leaves ordinary packs alone', async () => {
       const result = await validateJson(createFakePackVersionMetadata());
       assert.isUndefined(result.agent);

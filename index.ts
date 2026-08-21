@@ -59,6 +59,7 @@ export type {PackSyncTable} from './compiled_types';
 export type {PackMetadata} from './compiled_types';
 export type {PackVersionMetadata} from './compiled_types';
 export type {SkillMetadata} from './compiled_types';
+export type {AgentMetadata} from './compiled_types';
 
 // Browser interfaces
 export type {ExternalPackFormat} from './compiled_types';
@@ -314,6 +315,7 @@ export type {MailAndCalendarTool} from './types';
 export type {WebSearchTool} from './types';
 export type {MCPServer} from './types';
 export type {PartialSkillDef} from './types';
+export type {AgentDefinition} from './types';
 export type {Skill} from './types';
 export type {SkillModelConfiguration} from './types';
 export {SkillModel} from './types';

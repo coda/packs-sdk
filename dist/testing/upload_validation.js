@@ -1828,8 +1828,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         models: z.array(skillModelConfigurationSchema).optional(),
     });
     const chatSkillSchema = skillSchema.partial();
-    // The skill's display fields come from the pack listing, so only the prompt is required here.
-    // It's checked separately so the error can name the method the author missed.
+    // The listing owns the display fields, so only the instructions are required here.
     const agentSchema = zodCompleteStrictObject({
         instructions: z.string().min(1).max(exports.Limits.PromptLength).optional(),
         tools: z
@@ -2587,6 +2586,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             ['mcpServers', 'MCP servers'],
             ['networkDomains', 'network domains'],
             ['suggestedPrompts', 'suggested prompts'],
+            ['adminAuthentications', 'admin authentication'],
         ];
         for (const [field, label] of listFields) {
             if ((data[field] || []).length) {

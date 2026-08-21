@@ -5,6 +5,7 @@ import {BaseDefinitionBuilder} from '../builder';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
+import type {ExternalPackVersionMetadata} from '../compiled_types';
 import type {GenericObjectSchema} from '../schema';
 import {KnowledgeToolSourceType} from '../types';
 import type {MetadataFormulaDef} from '../api';
@@ -658,6 +659,8 @@ describe('Agent builder', () => {
         newPack({agent: {instructions: 'x'}});
         // @ts-expect-error nor can the builder be constructed with one
         new PackDefinitionBuilder({agent: {instructions: 'x'}});
+        // @ts-expect-error the browser-facing metadata must not carry the instructions
+        (undefined as unknown as ExternalPackVersionMetadata).agent!.instructions;
         // @ts-expect-error connector building blocks are not authorable on an agent
         builder.addFormula({});
         // @ts-expect-error nor are their fields
