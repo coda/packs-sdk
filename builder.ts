@@ -1,5 +1,6 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
+import type {AgentDefinition} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
@@ -48,14 +49,61 @@ import {wrapMetadataFunction} from './api';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder {
+export function newPack(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>): PackDefinitionBuilder {
   return new PackDefinitionBuilder(definition);
+}
+
+/**
+ * Creates a new skeleton agent definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export function newAgent(): AgentDefinitionBuilder {
+  return new AgentDefinitionBuilder();
+}
+
+/**
+ * Fields and methods shared by {@link PackDefinitionBuilder} and {@link AgentDefinitionBuilder}.
+ *
+ * @internal
+ * @hidden
+ */
+export class BaseDefinitionBuilder {
+  /**
+   * See {@link PackVersionDefinition.version}.
+   */
+  version?: string;
+
+  /**
+   * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+   *
+   * This is optional, and you only need to provide a version if you are manually doing
+   * semantic versioning, or using the CLI. If using the web editor, you can omit this
+   * and the web editor will automatically provide an appropriate semantic version
+   * each time you build a version.
+   *
+   * @example
+   * ```
+   * pack.setVersion('1.2.3');
+   * ```
+   */
+  setVersion(version: string): this {
+    this.version = version;
+    return this;
+  }
 }
 
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-export class PackDefinitionBuilder implements BasicPackDefinition {
+export class PackDefinitionBuilder extends BaseDefinitionBuilder implements BasicPackDefinition {
   /**
    * See {@link PackVersionDefinition.formulas}.
    */
@@ -120,10 +168,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   adminAuthentications?: AdminAuthentication[];
 
-  /**
-   * See {@link PackVersionDefinition.version}.
-   */
-  version?: string;
   /** @deprecated */
   formulaNamespace?: string;
 
@@ -133,7 +177,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
    * rather than constructing a builder directly.
    */
-  constructor(definition?: Partial<PackVersionDefinition>) {
+  constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>) {
+    super();
     const {
       formulas,
       formats,
@@ -543,24 +588,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  /**
-   * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-   *
-   * This is optional, and you only need to provide a version if you are manually doing
-   * semantic versioning, or using the CLI. If using the web editor, you can omit this
-   * and the web editor will automatically provide an appropriate semantic version
-   * each time you build a version.
-   *
-   * @example
-   * ```
-   * pack.setVersion('1.2.3');
-   * ```
-   */
-  setVersion(version: string): this {
-    this.version = version;
-    return this;
-  }
-
   private _setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this {
     this._defaultConnectionRequirement = connectionRequirement;
 
@@ -610,6 +637,32 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       }
     });
 
+    return this;
+  }
+}
+
+/**
+ * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
+ *
+ * @internal
+ * @hidden
+ */
+export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
+  /**
+   * See {@link PackVersionDefinition.agent}.
+   */
+  agent: AgentDefinition = {};
+
+  /**
+   * Sets this agent's instructions.
+   *
+   * @example
+   * ```
+   * pack.setInstructions('You help a team run async standups. Keep replies short.');
+   * ```
+   */
+  setInstructions(instructions: string): this {
+    this.agent.instructions = instructions;
     return this;
   }
 }

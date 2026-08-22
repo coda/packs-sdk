@@ -1,5 +1,6 @@
 import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
+import type { AgentDefinition } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
 import type { DynamicSyncTableOptions } from './api';
@@ -35,11 +36,50 @@ import type { ValueType } from './schema';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>): PackDefinitionBuilder;
+/**
+ * Creates a new skeleton agent definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export declare function newAgent(): AgentDefinitionBuilder;
+/**
+ * Fields and methods shared by {@link PackDefinitionBuilder} and {@link AgentDefinitionBuilder}.
+ *
+ * @internal
+ * @hidden
+ */
+export declare class BaseDefinitionBuilder {
+    /**
+     * See {@link PackVersionDefinition.version}.
+     */
+    version?: string;
+    /**
+     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+     *
+     * This is optional, and you only need to provide a version if you are manually doing
+     * semantic versioning, or using the CLI. If using the web editor, you can omit this
+     * and the web editor will automatically provide an appropriate semantic version
+     * each time you build a version.
+     *
+     * @example
+     * ```
+     * pack.setVersion('1.2.3');
+     * ```
+     */
+    setVersion(version: string): this;
+}
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-export declare class PackDefinitionBuilder implements BasicPackDefinition {
+export declare class PackDefinitionBuilder extends BaseDefinitionBuilder implements BasicPackDefinition {
     /**
      * See {@link PackVersionDefinition.formulas}.
      */
@@ -101,10 +141,6 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     adminAuthentications?: AdminAuthentication[];
-    /**
-     * See {@link PackVersionDefinition.version}.
-     */
-    version?: string;
     /** @deprecated */
     formulaNamespace?: string;
     private _defaultConnectionRequirement;
@@ -112,7 +148,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
      * rather than constructing a builder directly.
      */
-    constructor(definition?: Partial<PackVersionDefinition>);
+    constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>);
     /**
      * Adds a formula definition to this pack.
      *
@@ -373,19 +409,26 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      */
     addNetworkDomain(...domain: string[]): this;
+    private _setDefaultConnectionRequirement;
+}
+/**
+ * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
+ *
+ * @internal
+ * @hidden
+ */
+export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     /**
-     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-     *
-     * This is optional, and you only need to provide a version if you are manually doing
-     * semantic versioning, or using the CLI. If using the web editor, you can omit this
-     * and the web editor will automatically provide an appropriate semantic version
-     * each time you build a version.
+     * See {@link PackVersionDefinition.agent}.
+     */
+    agent: AgentDefinition;
+    /**
+     * Sets this agent's instructions.
      *
      * @example
      * ```
-     * pack.setVersion('1.2.3');
+     * pack.setInstructions('You help a team run async standups. Keep replies short.');
      * ```
      */
-    setVersion(version: string): this;
-    private _setDefaultConnectionRequirement;
+    setInstructions(instructions: string): this;
 }

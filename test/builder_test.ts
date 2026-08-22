@@ -1,14 +1,18 @@
 import './test_helper';
+import type {AgentDefinitionBuilder} from '../builder';
 import {AuthenticationType} from '../types';
+import {BaseDefinitionBuilder} from '../builder';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
+import type {ExternalPackVersionMetadata} from '../compiled_types';
 import type {GenericObjectSchema} from '../schema';
 import {KnowledgeToolSourceType} from '../types';
 import type {MetadataFormulaDef} from '../api';
 import type {ObjectFormulaDef} from '../api';
 import type {ObjectSchema} from '../schema';
-import type {PackDefinitionBuilder} from '../builder';
+import {PackDefinitionBuilder} from '../builder';
+import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '..';
@@ -19,10 +23,12 @@ import {ToolType} from '../types';
 import {ValueHintType} from '..';
 import {ValueType} from '../schema';
 import {assertCondition} from '..';
+import {compilePackMetadata} from '../helpers/metadata';
 import {makeMetadataFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeParameter} from '../api';
 import {makeSchema} from '../schema';
+import {newAgent} from '../builder';
 import {newPack} from '../builder';
 
 describe('Builder', () => {
@@ -596,6 +602,90 @@ describe('Builder', () => {
         execute: () => '',
       });
       assert.equal((pack.formulas[0].parameters[0] as any).instructions, 'param-instructions');
+    });
+  });
+});
+
+describe('Agent builder', () => {
+  let agent: AgentDefinitionBuilder;
+
+  beforeEach(() => {
+    agent = newAgent();
+  });
+
+  it('declares itself before it has any content', () => {
+    // The empty object is what marks this as an agent, so a forgotten setInstructions is
+    // caught by validation instead of uploading as an ordinary pack.
+    assert.deepEqual(agent.agent, {});
+  });
+
+  it('sets instructions', () => {
+    agent.setInstructions('You help a team run async standups.');
+    assert.deepEqual(agent.agent, {instructions: 'You help a team run async standups.'});
+  });
+
+  it('keeps the last instructions set', () => {
+    agent.setInstructions('First.').setInstructions('Second.');
+    assert.deepEqual(agent.agent, {instructions: 'Second.'});
+  });
+
+  it('survives compilePackMetadata rather than being stripped', () => {
+    agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
+    const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+    assert.deepEqual(metadata.agent, {instructions: 'You help a team run async standups.'});
+  });
+
+  it('does not add a agent field to an ordinary pack', () => {
+    const metadata = compilePackMetadata(newPack().setVersion('1.0.0') as PackVersionDefinition);
+    assert.isUndefined(metadata.agent);
+  });
+
+  it('compiles with no connector building blocks of its own', () => {
+    agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
+    const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+    assert.deepEqual(metadata.formulas, []);
+    assert.deepEqual(metadata.syncTables, []);
+    assert.deepEqual(metadata.formats, []);
+    assert.isUndefined(metadata.networkDomains);
+    assert.isUndefined(metadata.defaultAuthentication);
+  });
+
+  describe('withheld surface', () => {
+    it('is not reachable through the types', () => {
+      // Checked by tsc, not at runtime: if one of these stops being an error, the directive
+      // above it becomes the error and the build fails. Never actually called.
+      function checkedByTscOnly(builder: AgentDefinitionBuilder) {
+        // @ts-expect-error only newAgent() can stamp an agent
+        newPack({agent: {instructions: 'x'}});
+        // @ts-expect-error nor can the builder be constructed with one
+        new PackDefinitionBuilder({agent: {instructions: 'x'}});
+        // @ts-expect-error the browser-facing metadata must not carry the instructions
+        (undefined as unknown as ExternalPackVersionMetadata).agent!.instructions;
+        // @ts-expect-error connector building blocks are not authorable on an agent
+        builder.addFormula({});
+        // @ts-expect-error nor are their fields
+        builder.formulas.push();
+        // @ts-expect-error an agent takes no seed definition
+        newAgent({formulas: []});
+      }
+      assert.isFunction(checkedByTscOnly);
+    });
+
+    it('is not reachable at runtime either', () => {
+      // Enumerated rather than hardcoded, so a method added to PackDefinitionBuilder later
+      // can't quietly become reachable on an agent.
+      const packOnly = Object.getOwnPropertyNames(PackDefinitionBuilder.prototype).filter(
+        name => name !== 'constructor' && !name.startsWith('_'),
+      );
+      const reachable = packOnly.filter(name => (agent as any)[name] !== undefined);
+      assert.deepEqual(reachable, [], 'nothing pack-only is reachable on an agent');
+    });
+
+    it('shares nothing else through the base class', () => {
+      assert.deepEqual(
+        Object.getOwnPropertyNames(BaseDefinitionBuilder.prototype).filter(name => name !== 'constructor'),
+        ['setVersion'],
+      );
     });
   });
 });

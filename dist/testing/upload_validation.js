@@ -1828,6 +1828,30 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         models: z.array(skillModelConfigurationSchema).optional(),
     });
     const chatSkillSchema = skillSchema.partial();
+    // The listing owns the display fields, so only the instructions are required here.
+    const agentSchema = zodCompleteStrictObject({
+        instructions: z.string().min(1).max(exports.Limits.PromptLength).optional(),
+        tools: z
+            .array(toolSchema)
+            .optional()
+            .superRefine((tools, context) => {
+            for (const duplicate of findDuplicateTools((tools || []))) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [duplicate.index],
+                    message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
+                });
+            }
+        }),
+    }).superRefine((data, context) => {
+        if (!data.instructions) {
+            context.addIssue({
+                code: 'custom',
+                path: ['instructions'],
+                message: 'An agent must have instructions. Call setInstructions() on the agent.',
+            });
+        }
+    });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
     });
@@ -1968,6 +1992,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
         chatSkill: chatSkillSchema.optional(),
         benchInitializationSkill: chatSkillSchema.optional(),
+        agent: agentSchema.optional(),
         mcpServers: z
             .array(mcpServerSchema)
             .max(1)
@@ -2546,6 +2571,56 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         });
+    })
+        .superRefine((data, context) => {
+        // Agents don't ship connector building blocks. The agent builder can't add them, but a
+        // hand-written manifest can, so check here too.
+        if (!data.agent) {
+            return;
+        }
+        const listFields = [
+            ['formulas', 'formulas'],
+            ['syncTables', 'sync tables'],
+            ['formats', 'column formats'],
+            ['skills', 'skills'],
+            ['mcpServers', 'MCP servers'],
+            ['networkDomains', 'network domains'],
+            ['suggestedPrompts', 'suggested prompts'],
+            ['adminAuthentications', 'admin authentication'],
+        ];
+        for (const [field, label] of listFields) {
+            if ((data[field] || []).length) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `An agent cannot also define ${label}.`,
+                });
+            }
+        }
+        const singleFields = [
+            ['chatSkill', 'a chat skill'],
+            ['benchInitializationSkill', 'a bench initialization skill'],
+            ['skillEntrypoints', 'skill entrypoints'],
+        ];
+        for (const [field, label] of singleFields) {
+            if (data[field]) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `An agent cannot also define ${label}.`,
+                });
+            }
+        }
+        for (const field of ['defaultAuthentication', 'systemConnectionAuthentication']) {
+            const authentication = data[field];
+            if (authentication && authentication.type !== types_1.AuthenticationType.None) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `An agent cannot also define authentication.`,
+                });
+            }
+        }
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };
 }

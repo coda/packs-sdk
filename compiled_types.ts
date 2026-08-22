@@ -1,5 +1,6 @@
 import type {AWSAccessKeyAuthentication} from './types';
 import type {AWSAssumeRoleAuthentication} from './types';
+import type {AgentDefinition} from './types';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
 import type {CodaApiBearerTokenAuthentication} from './types';
@@ -54,6 +55,13 @@ export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
 
 /** @hidden */
 export type SkillMetadata = Omit<Skill, 'prompt'>;
+
+/**
+ * An agent definition without its instructions, for the browser-facing metadata.
+ * @internal
+ * @hidden
+ */
+export type AgentMetadata = Omit<AgentDefinition, 'instructions'>;
 
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
@@ -154,7 +162,13 @@ export type ExternalSkill = SkillMetadata;
 
 type BasePackVersionMetadata = Omit<
   PackVersionMetadata,
-  'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables' | 'skills'
+  | 'defaultAuthentication'
+  | 'systemConnectionAuthentication'
+  | 'formulas'
+  | 'formats'
+  | 'syncTables'
+  | 'skills'
+  | 'agent'
 >;
 
 // Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.
@@ -181,6 +195,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
   formats?: ExternalPackFormat[];
   syncTables?: ExternalSyncTable[];
   skills?: ExternalSkill[];
+  agent?: AgentMetadata;
 }
 
 // Further stripped-down version of `PackMetadata` that contains only what the browser needs.

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PackDefinitionBuilder = exports.newPack = void 0;
+exports.AgentDefinitionBuilder = exports.PackDefinitionBuilder = exports.BaseDefinitionBuilder = exports.newAgent = exports.newPack = void 0;
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
 const api_1 = require("./api");
@@ -27,14 +27,57 @@ function newPack(definition) {
 }
 exports.newPack = newPack;
 /**
+ * Creates a new skeleton agent definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+function newAgent() {
+    return new AgentDefinitionBuilder();
+}
+exports.newAgent = newAgent;
+/**
+ * Fields and methods shared by {@link PackDefinitionBuilder} and {@link AgentDefinitionBuilder}.
+ *
+ * @internal
+ * @hidden
+ */
+class BaseDefinitionBuilder {
+    /**
+     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+     *
+     * This is optional, and you only need to provide a version if you are manually doing
+     * semantic versioning, or using the CLI. If using the web editor, you can omit this
+     * and the web editor will automatically provide an appropriate semantic version
+     * each time you build a version.
+     *
+     * @example
+     * ```
+     * pack.setVersion('1.2.3');
+     * ```
+     */
+    setVersion(version) {
+        this.version = version;
+        return this;
+    }
+}
+exports.BaseDefinitionBuilder = BaseDefinitionBuilder;
+/**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-class PackDefinitionBuilder {
+class PackDefinitionBuilder extends BaseDefinitionBuilder {
     /**
      * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
      * rather than constructing a builder directly.
      */
     constructor(definition) {
+        super();
         const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
@@ -390,23 +433,6 @@ class PackDefinitionBuilder {
         this.networkDomains.push(...domain);
         return this;
     }
-    /**
-     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-     *
-     * This is optional, and you only need to provide a version if you are manually doing
-     * semantic versioning, or using the CLI. If using the web editor, you can omit this
-     * and the web editor will automatically provide an appropriate semantic version
-     * each time you build a version.
-     *
-     * @example
-     * ```
-     * pack.setVersion('1.2.3');
-     * ```
-     */
-    setVersion(version) {
-        this.version = version;
-        return this;
-    }
     _setDefaultConnectionRequirement(connectionRequirement) {
         this._defaultConnectionRequirement = connectionRequirement;
         // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
@@ -454,3 +480,31 @@ class PackDefinitionBuilder {
     }
 }
 exports.PackDefinitionBuilder = PackDefinitionBuilder;
+/**
+ * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
+ *
+ * @internal
+ * @hidden
+ */
+class AgentDefinitionBuilder extends BaseDefinitionBuilder {
+    constructor() {
+        super(...arguments);
+        /**
+         * See {@link PackVersionDefinition.agent}.
+         */
+        this.agent = {};
+    }
+    /**
+     * Sets this agent's instructions.
+     *
+     * @example
+     * ```
+     * pack.setInstructions('You help a team run async standups. Keep replies short.');
+     * ```
+     */
+    setInstructions(instructions) {
+        this.agent.instructions = instructions;
+        return this;
+    }
+}
+exports.AgentDefinitionBuilder = AgentDefinitionBuilder;

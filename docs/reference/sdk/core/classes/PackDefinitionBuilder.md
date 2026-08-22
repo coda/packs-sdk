@@ -12,6 +12,10 @@ search:
 
 A class that assists in constructing a pack definition. Use [newPack](../functions/newPack.md) to create one.
 
+## Extends
+
+- `BaseDefinitionBuilder`
+
 ## Implements
 
 - [`BasicPackDefinition`](../type-aliases/BasicPackDefinition.md)
@@ -29,11 +33,15 @@ rather than constructing a builder directly.
 
 | Parameter | Type |
 | ------ | ------ |
-| `definition?` | `Partial`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md)\> |
+| `definition?` | `Partial`\<`Omit`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), `"agent"`\>\> |
 
 #### Returns
 
 `PackDefinitionBuilder`
+
+#### Overrides
+
+`BaseDefinitionBuilder.constructor`
 
 ## Properties
 
@@ -154,6 +162,10 @@ See [PackVersionDefinition.systemConnectionAuthentication](../interfaces/PackVer
 > `optional` **version**: `string`
 
 See [PackVersionDefinition.version](../interfaces/PackVersionDefinition.md#version).
+
+#### Inherited from
+
+`BaseDefinitionBuilder.version`
 
 ## Methods
 
@@ -668,3 +680,7 @@ pack.setVersion('1.2.3');
 #### Returns
 
 `this`
+
+#### Inherited from
+
+`BaseDefinitionBuilder.setVersion`

@@ -2,6 +2,7 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
+import type {AgentDefinition} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -2372,6 +2373,31 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   });
   const chatSkillSchema = skillSchema.partial();
 
+  // The listing owns the display fields, so only the instructions are required here.
+  const agentSchema = zodCompleteStrictObject<AgentDefinition>({
+    instructions: z.string().min(1).max(Limits.PromptLength).optional(),
+    tools: z
+      .array(toolSchema)
+      .optional()
+      .superRefine((tools, context) => {
+        for (const duplicate of findDuplicateTools((tools || []) as Tool[])) {
+          context.addIssue({
+            code: 'custom',
+            path: [duplicate.index],
+            message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
+          });
+        }
+      }),
+  }).superRefine((data, context) => {
+    if (!data.instructions) {
+      context.addIssue({
+        code: 'custom',
+        path: ['instructions'],
+        message: 'An agent must have instructions. Call setInstructions() on the agent.',
+      });
+    }
+  });
+
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
   });
@@ -2526,6 +2552,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
     chatSkill: chatSkillSchema.optional(),
     benchInitializationSkill: chatSkillSchema.optional(),
+    agent: agentSchema.optional(),
     mcpServers: z
       .array(mcpServerSchema)
       .max(1)
@@ -3172,6 +3199,56 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       });
+    })
+    .superRefine((data, context) => {
+      // Agents don't ship connector building blocks. The agent builder can't add them, but a
+      // hand-written manifest can, so check here too.
+      if (!(data as PackVersionMetadata).agent) {
+        return;
+      }
+      const listFields: Array<[keyof PackVersionMetadata, string]> = [
+        ['formulas', 'formulas'],
+        ['syncTables', 'sync tables'],
+        ['formats', 'column formats'],
+        ['skills', 'skills'],
+        ['mcpServers', 'MCP servers'],
+        ['networkDomains', 'network domains'],
+        ['suggestedPrompts', 'suggested prompts'],
+        ['adminAuthentications', 'admin authentication'],
+      ];
+      for (const [field, label] of listFields) {
+        if (((data as any)[field] || []).length) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `An agent cannot also define ${label}.`,
+          });
+        }
+      }
+      const singleFields: Array<[keyof PackVersionMetadata, string]> = [
+        ['chatSkill', 'a chat skill'],
+        ['benchInitializationSkill', 'a bench initialization skill'],
+        ['skillEntrypoints', 'skill entrypoints'],
+      ];
+      for (const [field, label] of singleFields) {
+        if ((data as any)[field]) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `An agent cannot also define ${label}.`,
+          });
+        }
+      }
+      for (const field of ['defaultAuthentication', 'systemConnectionAuthentication'] as const) {
+        const authentication = (data as any)[field];
+        if (authentication && authentication.type !== AuthenticationType.None) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `An agent cannot also define authentication.`,
+          });
+        }
+      }
     });
 
   return {legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema};

@@ -1730,6 +1730,23 @@ export interface SuggestedPrompt {
 }
 
 /**
+ * The definition of an agent.
+ *
+ * @internal
+ * @hidden
+ */
+export interface AgentDefinition {
+  /**
+   * What the agent is told to do.
+   */
+  instructions?: string;
+  /**
+   * The tools the agent may use.
+   */
+  tools?: Tool[];
+}
+
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1833,6 +1850,13 @@ export interface PackVersionDefinition {
    * Definitions of MCP servers that this pack can connect to.
    */
   mcpServers?: MCPServer[];
+  /**
+   * The agent defined by this pack, if it defines one. Authored via `sdk.newAgent()`.
+   *
+   * @internal
+   * @hidden
+   */
+  agent?: AgentDefinition;
 }
 
 /**

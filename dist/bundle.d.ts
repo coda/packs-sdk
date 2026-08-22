@@ -6121,6 +6121,22 @@ export interface SuggestedPrompt {
 	prompt: string;
 }
 /**
+ * The definition of an agent.
+ *
+ * @internal
+ * @hidden
+ */
+export interface AgentDefinition {
+	/**
+	 * What the agent is told to do.
+	 */
+	instructions?: string;
+	/**
+	 * The tools the agent may use.
+	 */
+	tools?: Tool[];
+}
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -6219,6 +6235,13 @@ export interface PackVersionDefinition {
 	 * Definitions of MCP servers that this pack can connect to.
 	 */
 	mcpServers?: MCPServer[];
+	/**
+	 * The agent defined by this pack, if it defines one. Authored via `sdk.newAgent()`.
+	 *
+	 * @internal
+	 * @hidden
+	 */
+	agent?: AgentDefinition;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6286,11 +6309,44 @@ export declare enum HttpStatusCode {
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, "agent">>): PackDefinitionBuilder;
+/**
+ * Creates a new skeleton agent definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export declare function newAgent(): AgentDefinitionBuilder;
+declare class BaseDefinitionBuilder {
+	/**
+	 * See {@link PackVersionDefinition.version}.
+	 */
+	version?: string;
+	/**
+	 * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+	 *
+	 * This is optional, and you only need to provide a version if you are manually doing
+	 * semantic versioning, or using the CLI. If using the web editor, you can omit this
+	 * and the web editor will automatically provide an appropriate semantic version
+	 * each time you build a version.
+	 *
+	 * @example
+	 * ```
+	 * pack.setVersion('1.2.3');
+	 * ```
+	 */
+	setVersion(version: string): this;
+}
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-export declare class PackDefinitionBuilder implements BasicPackDefinition {
+export declare class PackDefinitionBuilder extends BaseDefinitionBuilder implements BasicPackDefinition {
 	/**
 	 * See {@link PackVersionDefinition.formulas}.
 	 */
@@ -6352,10 +6408,6 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	adminAuthentications?: AdminAuthentication[];
-	/**
-	 * See {@link PackVersionDefinition.version}.
-	 */
-	version?: string;
 	/** @deprecated */
 	formulaNamespace?: string;
 	private _defaultConnectionRequirement;
@@ -6363,7 +6415,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
 	 * rather than constructing a builder directly.
 	 */
-	constructor(definition?: Partial<PackVersionDefinition>);
+	constructor(definition?: Partial<Omit<PackVersionDefinition, "agent">>);
 	/**
 	 * Adds a formula definition to this pack.
 	 *
@@ -6624,21 +6676,22 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	addNetworkDomain(...domain: string[]): this;
+	private _setDefaultConnectionRequirement;
+}
+declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
-	 * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-	 *
-	 * This is optional, and you only need to provide a version if you are manually doing
-	 * semantic versioning, or using the CLI. If using the web editor, you can omit this
-	 * and the web editor will automatically provide an appropriate semantic version
-	 * each time you build a version.
+	 * See {@link PackVersionDefinition.agent}.
+	 */
+	agent: AgentDefinition;
+	/**
+	 * Sets this agent's instructions.
 	 *
 	 * @example
 	 * ```
-	 * pack.setVersion('1.2.3');
+	 * pack.setInstructions('You help a team run async standups. Keep replies short.');
 	 * ```
 	 */
-	setVersion(version: string): this;
-	private _setDefaultConnectionRequirement;
+	setInstructions(instructions: string): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
@@ -6657,6 +6710,12 @@ export interface PackFormatMetadata extends Omit<Format, "matchers"> {
 }
 /** @hidden */
 export type SkillMetadata = Omit<Skill, "prompt">;
+/**
+ * An agent definition without its instructions, for the browser-facing metadata.
+ * @internal
+ * @hidden
+ */
+export type AgentMetadata = Omit<AgentDefinition, "instructions">;
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormula"> & {
 	getOptions?: MetadataFormulaMetadata;
@@ -6695,7 +6754,7 @@ export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 /** @hidden */
 export type ExternalSkill = SkillMetadata;
-export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills">;
+export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills" | "agent">;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {
@@ -6720,6 +6779,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	formats?: ExternalPackFormat[];
 	syncTables?: ExternalSyncTable[];
 	skills?: ExternalSkill[];
+	agent?: AgentMetadata;
 }
 /** @hidden */
 export type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
