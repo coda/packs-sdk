@@ -1739,7 +1739,7 @@ export interface AgentDefinition {
   /**
    * What the agent is told to do.
    */
-  instructions?: string;
+  instructions: string;
   /**
    * The tools the agent may use.
    */

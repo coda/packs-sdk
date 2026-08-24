@@ -6130,7 +6130,7 @@ export interface AgentDefinition {
 	/**
 	 * What the agent is told to do.
 	 */
-	instructions?: string;
+	instructions: string;
 	/**
 	 * The tools the agent may use.
 	 */
@@ -6682,7 +6682,7 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
 	 * See {@link PackVersionDefinition.agent}.
 	 */
-	agent: AgentDefinition;
+	agent: Partial<AgentDefinition>;
 	/**
 	 * Sets this agent's instructions.
 	 *

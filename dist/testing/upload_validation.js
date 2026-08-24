@@ -1830,7 +1830,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const chatSkillSchema = skillSchema.partial();
     // The listing owns the display fields, so only the instructions are required here.
     const agentSchema = zodCompleteStrictObject({
-        instructions: z.string().min(1).max(exports.Limits.PromptLength).optional(),
+        instructions: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z
             .array(toolSchema)
             .optional()
@@ -1843,14 +1843,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-    }).superRefine((data, context) => {
-        if (!data.instructions) {
-            context.addIssue({
-                code: 'custom',
-                path: ['instructions'],
-                message: 'An agent must have instructions. Call setInstructions() on the agent.',
-            });
-        }
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),

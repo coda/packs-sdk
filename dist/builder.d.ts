@@ -421,7 +421,7 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     /**
      * See {@link PackVersionDefinition.agent}.
      */
-    agent: AgentDefinition;
+    agent: Partial<AgentDefinition>;
     /**
      * Sets this agent's instructions.
      *

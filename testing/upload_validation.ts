@@ -2375,7 +2375,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   // The listing owns the display fields, so only the instructions are required here.
   const agentSchema = zodCompleteStrictObject<AgentDefinition>({
-    instructions: z.string().min(1).max(Limits.PromptLength).optional(),
+    instructions: z.string().min(1).max(Limits.PromptLength),
     tools: z
       .array(toolSchema)
       .optional()
@@ -2388,14 +2388,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
-  }).superRefine((data, context) => {
-    if (!data.instructions) {
-      context.addIssue({
-        code: 'custom',
-        path: ['instructions'],
-        message: 'An agent must have instructions. Call setInstructions() on the agent.',
-      });
-    }
   });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
