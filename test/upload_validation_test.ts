@@ -8087,12 +8087,24 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(result.agent, {instructions: 'You help a team run async standups.'});
     });
 
-    // The builder can't produce this — `instructions` is required on `AgentDefinition` — but a
-    // hand-written manifest can.
+    // Neither is reachable through the builder, but a hand-written manifest can produce both.
     it('rejects an agent that declared itself but never set instructions', async () => {
       const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {} as any}));
       assert.deepEqual(err.validationErrors, [
-        {path: 'agent.instructions', message: 'Missing required field agent.instructions.'},
+        {
+          path: 'agent.instructions',
+          message: 'An agent must have instructions. Call setInstructions() on the agent.',
+        },
+      ]);
+    });
+
+    it('rejects an agent whose instructions are empty', async () => {
+      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {instructions: ''}}));
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'agent.instructions',
+          message: 'An agent must have instructions. Call setInstructions() on the agent.',
+        },
       ]);
     });
 
