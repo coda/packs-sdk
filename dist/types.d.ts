@@ -1574,9 +1574,9 @@ export interface SuggestedPrompt {
  */
 export interface AgentDefinition {
     /**
-     * What the agent is told to do.
+     * What the agent is told to do. A missing `setInstructions()` fails at `packs validate`.
      */
-    instructions?: string;
+    instructions: string;
     /**
      * The tools the agent may use.
      */

@@ -8098,8 +8098,9 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(result.agent, {instructions: 'You help a team run async standups.'});
     });
 
+    // Neither is reachable through the builder, but a hand-written manifest can produce both.
     it('rejects an agent that declared itself but never set instructions', async () => {
-      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {}}));
+      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {} as any}));
       assert.deepEqual(err.validationErrors, [
         {
           path: 'agent.instructions',
@@ -8108,8 +8109,8 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
-    it('rejects an agent with an empty definition', async () => {
-      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {}}));
+    it('rejects an agent whose instructions are empty', async () => {
+      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {instructions: ''}}));
       assert.deepEqual(err.validationErrors, [
         {
           path: 'agent.instructions',

@@ -6128,9 +6128,9 @@ export interface SuggestedPrompt {
  */
 export interface AgentDefinition {
 	/**
-	 * What the agent is told to do.
+	 * What the agent is told to do. A missing `setInstructions()` fails at `packs validate`.
 	 */
-	instructions?: string;
+	instructions: string;
 	/**
 	 * The tools the agent may use.
 	 */
@@ -6682,7 +6682,7 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
 	 * See {@link PackVersionDefinition.agent}.
 	 */
-	agent: AgentDefinition;
+	agent: Partial<AgentDefinition>;
 	/**
 	 * Sets this agent's instructions.
 	 *

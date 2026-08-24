@@ -2373,9 +2373,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   });
   const chatSkillSchema = skillSchema.partial();
 
-  // The listing owns the display fields, so only the instructions are required here.
+  // Missing and empty are separate Zod failures, so both carry the same message.
+  const MissingInstructions = 'An agent must have instructions. Call setInstructions() on the agent.';
+
   const agentSchema = zodCompleteStrictObject<AgentDefinition>({
-    instructions: z.string().min(1).max(Limits.PromptLength).optional(),
+    instructions: z.string({error: MissingInstructions}).min(1, MissingInstructions).max(Limits.PromptLength),
     tools: z
       .array(toolSchema)
       .optional()
@@ -2388,14 +2390,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
-  }).superRefine((data, context) => {
-    if (!data.instructions) {
-      context.addIssue({
-        code: 'custom',
-        path: ['instructions'],
-        message: 'An agent must have instructions. Call setInstructions() on the agent.',
-      });
-    }
   });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
@@ -3208,8 +3202,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       });
     })
     .superRefine((data, context) => {
-      // Agents don't ship connector building blocks. The agent builder can't add them, but a
-      // hand-written manifest can, so check here too.
+      // The builder can't add these to an agent, but a hand-written manifest can.
       if (!(data as PackVersionMetadata).agent) {
         return;
       }
