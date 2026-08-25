@@ -1,6 +1,7 @@
 import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { AgentDefinition } from './types';
+import type { AgentToolsDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
 import type { DynamicSyncTableOptions } from './api';
@@ -431,4 +432,14 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setInstructions(instructions: string): this;
+    /**
+     * Sets the tools this agent can use. Anything left out is off.
+     *
+     * @example
+     * ```
+     * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+     * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+     * ```
+     */
+    setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
 }

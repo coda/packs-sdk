@@ -1,4 +1,5 @@
 import {testHelper} from './test_helper';
+import type {AgentTool} from '../types';
 import type {AllToolTypes} from '../types';
 import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
@@ -41,6 +42,7 @@ import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
 import type {Tool} from '../types';
+import {ToolConsentMode} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import {UntilNowDateRanges} from '../api_types';
@@ -8090,12 +8092,12 @@ describe('Pack metadata Validation', async () => {
       });
     }
 
-    it('validates an agent carrying only instructions', async () => {
+    it('validates an agent carrying only instructions, filling in an empty tool list', async () => {
       const metadata = createFakeAgentMetadata({
-        agent: {instructions: 'You help a team run async standups.'},
+        agent: {instructions: 'You help a team run async standups.', tools: []},
       });
       const result = await validateJson(metadata);
-      assert.deepEqual(result.agent, {instructions: 'You help a team run async standups.'});
+      assert.deepEqual(result.agent, {instructions: 'You help a team run async standups.', tools: []});
     });
 
     // Neither is reachable through the builder, but a hand-written manifest can produce both.
@@ -8110,7 +8112,7 @@ describe('Pack metadata Validation', async () => {
     });
 
     it('rejects an agent whose instructions are empty', async () => {
-      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {instructions: ''}}));
+      const err = await validateJsonAndAssertFails(createFakeAgentMetadata({agent: {instructions: '', tools: []}}));
       assert.deepEqual(err.validationErrors, [
         {
           path: 'agent.instructions',
@@ -8132,7 +8134,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects connector building blocks alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.'},
+          agent: {instructions: 'Do a thing.', tools: []},
           formulaNamespace: 'namespace',
           formulas: [createFakePackFormulaMetadata({name: 'Sneaky'})],
           networkDomains: ['example.com'],
@@ -8147,7 +8149,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects authentication alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.'},
+          agent: {instructions: 'Do a thing.', tools: []},
           defaultAuthentication: {type: AuthenticationType.HeaderBearerToken},
         }),
       );
@@ -8161,7 +8163,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects the deprecated skill surface alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.'},
+          agent: {instructions: 'Do a thing.', tools: []},
           chatSkill: {prompt: 'Sneaky.'},
           skillEntrypoints: {defaultChat: {skillName: 'sneaky'}},
         }),
@@ -8180,7 +8182,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects suggested prompts alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.'},
+          agent: {instructions: 'Do a thing.', tools: []},
           suggestedPrompts: [{name: 'p', displayName: 'P', prompt: 'Do it.'}],
         }),
       );
@@ -8193,7 +8195,7 @@ describe('Pack metadata Validation', async () => {
     it('rejects admin authentication alongside an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.'},
+          agent: {instructions: 'Do a thing.', tools: []},
           adminAuthentications: [
             {
               authentication: {type: AuthenticationType.HeaderBearerToken},
@@ -8217,6 +8219,138 @@ describe('Pack metadata Validation', async () => {
         }),
       );
       assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('validates an agent carrying every tool it can use', async () => {
+      const tools: AgentTool[] = [
+        {type: ToolType.CodaDocsAndTables},
+        {type: ToolType.WebSearch, allowedDomains: ['docs.example.com']},
+        {type: ToolType.MailAndCalendar},
+        {type: ToolType.Pack, packId: 1234, formulas: [{formulaName: 'CreateTask'}]},
+      ];
+      const metadata = createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}});
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.agent?.tools, tools);
+    });
+
+    // Only a hand-written manifest reaches validation with these.
+    it('rejects a connector that does not name its pack', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools: [{type: ToolType.Pack} as any]}}),
+      );
+      assert.deepEqual(err.validationErrors, [
+        {path: 'agent.tools[0].packId', message: 'Missing required field agent.tools[0].packId.'},
+      ]);
+    });
+
+    it('takes the per-formula config the in-app builder writes', async () => {
+      const tools: AgentTool[] = [
+        {
+          type: ToolType.Pack,
+          packId: 1,
+          formulas: [{formulaName: 'Foo', enabled: true, approvalMode: ToolConsentMode.Auto}],
+        },
+      ];
+      const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
+      assert.deepEqual(result.agent?.tools, tools);
+    });
+
+    it('takes the Docs approval modes the in-app builder writes', async () => {
+      const tools: AgentTool[] = [
+        {
+          type: ToolType.CodaDocsAndTables,
+          readApprovalMode: ToolConsentMode.Auto,
+          writeApprovalMode: ToolConsentMode.AlwaysAsk,
+        },
+      ];
+      const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
+      assert.deepEqual(result.agent?.tools, tools);
+    });
+
+    it('takes the Mail and web search approval modes the in-app builder writes', async () => {
+      const tools: AgentTool[] = [
+        {type: ToolType.MailAndCalendar, readApprovalMode: ToolConsentMode.Auto},
+        {type: ToolType.WebSearch, approvalMode: ToolConsentMode.AlwaysAsk},
+      ];
+      const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
+      assert.deepEqual(result.agent?.tools, tools);
+    });
+
+    it('rejects tool types an agent cannot use', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: [{type: ToolType.ContactResolution} as any]},
+        }),
+      );
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'agent.tools[0].type',
+          message: 'An agent can only use the Docs, Mail, web search, and Pack tools.',
+        },
+      ]);
+    });
+
+    it('rejects a second copy of a one-per-agent tool', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {
+            instructions: 'Do a thing.',
+            tools: [{type: ToolType.CodaDocsAndTables}, {type: ToolType.CodaDocsAndTables}],
+          },
+        }),
+      );
+      assert.deepEqual(err.validationErrors, [
+        {path: 'agent.tools[1]', message: 'An agent can only use the CodaDocsAndTables tool once.'},
+      ]);
+    });
+
+    it('rejects two web search tools that differ only by domain list', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {
+            instructions: 'Do a thing.',
+            tools: [
+              {type: ToolType.WebSearch, allowedDomains: ['a.example.com']},
+              {type: ToolType.WebSearch, allowedDomains: ['b.example.com']},
+            ],
+          },
+        }),
+      );
+      assert.deepEqual(err.validationErrors, [
+        {path: 'agent.tools[1]', message: 'An agent can only use the WebSearch tool once.'},
+      ]);
+    });
+
+    it('rejects naming the same connector pack twice', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {
+            instructions: 'Do a thing.',
+            tools: [
+              {type: ToolType.Pack, packId: 7, formulas: [{formulaName: 'Foo'}]},
+              {type: ToolType.Pack, packId: 7, formulas: [{formulaName: 'Bar'}]},
+            ],
+          },
+        }),
+      );
+      assert.deepEqual(err.validationErrors, [
+        {path: 'agent.tools[1]', message: 'An agent can only name pack 7 once.'},
+      ]);
+    });
+
+    it('takes two different connector packs', async () => {
+      const result = await validateJson(
+        createFakeAgentMetadata({
+          agent: {
+            instructions: 'Do a thing.',
+            tools: [
+              {type: ToolType.Pack, packId: 7},
+              {type: ToolType.Pack, packId: 8},
+            ],
+          },
+        }),
+      );
+      assert.lengthOf(result.agent!.tools, 2);
     });
 
     it('leaves ordinary packs alone', async () => {
