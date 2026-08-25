@@ -4,9 +4,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.17.2] - 2026-08-24
+
 ### Changed
 
-- Deprecated `setChatSkill`, `setBenchInitializationSkill`, and `addSuggestedPrompt`. These features no longer function now that the SDK is used to create connectors, not agents.
+- Deprecated `setChatSkill`, `setBenchInitializationSkill`, and `addSuggestedPrompt`. Connector packs no longer define an agent through those APIs.
 
 ## [1.17.1] - 2026-07-28
 
@@ -1085,7 +1087,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.17.1...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.17.2...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1165,3 +1167,4 @@ await myHelper(context);
 [1.16.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.16.0
 [1.17.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.0
 [1.17.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.1
+[1.17.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.2
