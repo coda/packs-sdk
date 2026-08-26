@@ -326,7 +326,6 @@ export type {KnowledgeToolSource} from './types';
 export {KnowledgeToolSourceType} from './types';
 export type {ScreenAnnotation} from './types';
 export {ScreenAnnotationType} from './types';
-export {ToolConsentMode} from './types';
 export {ToolType} from './types';
 export {EmbeddedContentType} from './types';
 export type {EmbeddedContent} from './types';

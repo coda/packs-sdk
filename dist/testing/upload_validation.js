@@ -63,7 +63,6 @@ const types_9 = require("../types");
 const api_types_7 = require("../api_types");
 const types_10 = require("../types");
 const types_11 = require("../types");
-const types_12 = require("../types");
 const api_types_8 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
@@ -1714,7 +1713,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
     });
     const packToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.Pack),
+        type: z.literal(types_11.ToolType.Pack),
         packId: z.number().optional(),
         formulas: z
             .array(zodCompleteStrictObject({
@@ -1731,7 +1730,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }),
             description: z.string().optional(),
             enabled: z.boolean().optional(),
-            approvalMode: z.nativeEnum(types_11.ToolConsentMode).optional(),
         }))
             .optional(),
     });
@@ -1745,7 +1743,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
     ]);
     const knowledgeToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.Knowledge),
+        type: z.literal(types_11.ToolType.Knowledge),
         source: knowledgeToolSourceSchema,
     });
     const screenAnnotationSchema = z.discriminatedUnion('type', [
@@ -1757,7 +1755,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
     ]);
     const screenAnnotationToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.ScreenAnnotation),
+        type: z.literal(types_11.ToolType.ScreenAnnotation),
         annotation: screenAnnotationSchema,
     });
     const embeddedContentSchema = z.discriminatedUnion('type', [
@@ -1772,31 +1770,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
     ]);
     const embeddedContentToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.EmbeddedContent),
+        type: z.literal(types_11.ToolType.EmbeddedContent),
         embeddedContent: embeddedContentSchema,
     });
     const mcpToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.MCP),
+        type: z.literal(types_11.ToolType.MCP),
         serverNames: z.array(z.string()).optional(),
         packId: z.number().optional(),
     });
     const contactResolutionToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.ContactResolution),
+        type: z.literal(types_11.ToolType.ContactResolution),
     });
-    const toolConsentModeSchema = z.nativeEnum(types_11.ToolConsentMode);
     const codaDocsToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.CodaDocsAndTables),
-        readApprovalMode: toolConsentModeSchema.optional(),
-        writeApprovalMode: toolConsentModeSchema.optional(),
+        type: z.literal(types_11.ToolType.CodaDocsAndTables),
     });
     const mailAndCalendarToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.MailAndCalendar),
-        readApprovalMode: toolConsentModeSchema.optional(),
-        writeApprovalMode: toolConsentModeSchema.optional(),
+        type: z.literal(types_11.ToolType.MailAndCalendar),
     });
     const webSearchToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_12.ToolType.WebSearch),
-        approvalMode: toolConsentModeSchema.optional(),
+        type: z.literal(types_11.ToolType.WebSearch),
         allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
     });
     const skillModelConfigurationSchema = zodCompleteStrictObject({
@@ -1849,12 +1841,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .superRefine((tools, context) => {
             const seen = new Set();
             tools.forEach((tool, index) => {
-                const key = tool.type === types_12.ToolType.Pack ? `${tool.type}:${tool.packId}` : tool.type;
+                const key = tool.type === types_11.ToolType.Pack ? `${tool.type}:${tool.packId}` : tool.type;
                 if (seen.has(key)) {
                     context.addIssue({
                         code: 'custom',
                         path: [index],
-                        message: tool.type === types_12.ToolType.Pack
+                        message: tool.type === types_11.ToolType.Pack
                             ? `An agent can only name pack ${tool.packId} once.`
                             : `An agent can only use the ${tool.type} tool once.`,
                     });
@@ -2239,7 +2231,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     // Cross-pack tool calls (with packId set) are not validated here, though they will
                     // fail at runtime for third-party packs since only first-party Coda agents can
                     // access formulas from other packs.
-                    if (tool.type === types_12.ToolType.Pack && !tool.packId && tool.formulas) {
+                    if (tool.type === types_11.ToolType.Pack && !tool.packId && tool.formulas) {
                         tool.formulas.forEach((formula, formulaIndex) => {
                             const { formulaName } = formula;
                             if (!formulaNames.has(formulaName)) {
@@ -2563,7 +2555,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     })
         .superRefine((data, context) => {
         const metadata = data;
-        const hasMcpToolWithoutPackId = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_12.ToolType.MCP && !tool.packId));
+        const hasMcpToolWithoutPackId = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_11.ToolType.MCP && !tool.packId));
         if (hasMcpToolWithoutPackId && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
             context.addIssue({
                 code: 'custom',

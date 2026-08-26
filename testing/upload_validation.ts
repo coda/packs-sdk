@@ -126,7 +126,6 @@ import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
 import type {Tool} from '../types';
-import {ToolConsentMode} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
@@ -2249,7 +2248,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           formulaName: string;
           description?: string;
           enabled?: boolean;
-          approvalMode?: ToolConsentMode;
         }>({
           formulaName: z
             .string()
@@ -2264,7 +2262,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }),
           description: z.string().optional(),
           enabled: z.boolean().optional(),
-          approvalMode: z.nativeEnum(ToolConsentMode).optional(),
         }),
       )
       .optional(),
@@ -2326,22 +2323,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.ContactResolution),
   });
 
-  const toolConsentModeSchema = z.nativeEnum(ToolConsentMode);
   const codaDocsToolSchema = zodCompleteStrictObject<CodaDocsAndTablesTool>({
     type: z.literal(ToolType.CodaDocsAndTables),
-    readApprovalMode: toolConsentModeSchema.optional(),
-    writeApprovalMode: toolConsentModeSchema.optional(),
   });
 
   const mailAndCalendarToolSchema = zodCompleteStrictObject<MailAndCalendarTool>({
     type: z.literal(ToolType.MailAndCalendar),
-    readApprovalMode: toolConsentModeSchema.optional(),
-    writeApprovalMode: toolConsentModeSchema.optional(),
   });
 
   const webSearchToolSchema = zodCompleteStrictObject<WebSearchTool>({
     type: z.literal(ToolType.WebSearch),
-    approvalMode: toolConsentModeSchema.optional(),
     allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
   });
 

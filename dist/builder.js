@@ -519,28 +519,14 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     setTools({ docs, mail, webSearch, connectors }) {
         const tools = [];
         if (webSearch) {
-            const options = typeof webSearch === 'object' ? webSearch : {};
-            tools.push({
-                type: types_2.ToolType.WebSearch,
-                ...(options.allowedDomains ? { allowedDomains: options.allowedDomains } : {}),
-                ...(options.approvalMode ? { approvalMode: options.approvalMode } : {}),
-            });
+            const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
+            tools.push({ type: types_2.ToolType.WebSearch, ...(allowedDomains ? { allowedDomains } : {}) });
         }
         if (docs) {
-            const modes = typeof docs === 'object' ? docs : {};
-            tools.push({
-                type: types_2.ToolType.CodaDocsAndTables,
-                ...(modes.readApprovalMode ? { readApprovalMode: modes.readApprovalMode } : {}),
-                ...(modes.writeApprovalMode ? { writeApprovalMode: modes.writeApprovalMode } : {}),
-            });
+            tools.push({ type: types_2.ToolType.CodaDocsAndTables });
         }
         if (mail) {
-            const modes = typeof mail === 'object' ? mail : {};
-            tools.push({
-                type: types_2.ToolType.MailAndCalendar,
-                ...(modes.readApprovalMode ? { readApprovalMode: modes.readApprovalMode } : {}),
-                ...(modes.writeApprovalMode ? { writeApprovalMode: modes.writeApprovalMode } : {}),
-            });
+            tools.push({ type: types_2.ToolType.MailAndCalendar });
         }
         for (const connector of connectors || []) {
             tools.push({

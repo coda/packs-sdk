@@ -681,28 +681,14 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   setTools({docs, mail, webSearch, connectors}: AgentToolsDef): this {
     const tools: AgentTool[] = [];
     if (webSearch) {
-      const options = typeof webSearch === 'object' ? webSearch : {};
-      tools.push({
-        type: ToolType.WebSearch,
-        ...(options.allowedDomains ? {allowedDomains: options.allowedDomains} : {}),
-        ...(options.approvalMode ? {approvalMode: options.approvalMode} : {}),
-      });
+      const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
+      tools.push({type: ToolType.WebSearch, ...(allowedDomains ? {allowedDomains} : {})});
     }
     if (docs) {
-      const modes = typeof docs === 'object' ? docs : {};
-      tools.push({
-        type: ToolType.CodaDocsAndTables,
-        ...(modes.readApprovalMode ? {readApprovalMode: modes.readApprovalMode} : {}),
-        ...(modes.writeApprovalMode ? {writeApprovalMode: modes.writeApprovalMode} : {}),
-      });
+      tools.push({type: ToolType.CodaDocsAndTables});
     }
     if (mail) {
-      const modes = typeof mail === 'object' ? mail : {};
-      tools.push({
-        type: ToolType.MailAndCalendar,
-        ...(modes.readApprovalMode ? {readApprovalMode: modes.readApprovalMode} : {}),
-        ...(modes.writeApprovalMode ? {writeApprovalMode: modes.writeApprovalMode} : {}),
-      });
+      tools.push({type: ToolType.MailAndCalendar});
     }
     for (const connector of connectors || []) {
       tools.push({

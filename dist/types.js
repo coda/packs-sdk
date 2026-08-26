@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.ToolConsentMode = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -219,18 +219,6 @@ var SyncInterval;
     SyncInterval["Hourly"] = "Hourly";
     SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
 })(SyncInterval || (exports.SyncInterval = SyncInterval = {}));
-/**
- * Whether a tool asks the user before it acts.
- *
- * @hidden In development
- */
-var ToolConsentMode;
-(function (ToolConsentMode) {
-    /** Act without asking. */
-    ToolConsentMode["Auto"] = "auto";
-    /** Ask every time. */
-    ToolConsentMode["AlwaysAsk"] = "alwaysAsk";
-})(ToolConsentMode || (exports.ToolConsentMode = ToolConsentMode = {}));
 /**
  * The types of tools that can be used in a skill.
  */

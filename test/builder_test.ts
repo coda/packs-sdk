@@ -19,7 +19,6 @@ import {PostSetupType} from '..';
 import type {Skill} from '../types';
 import type {StringPackFormula} from '../api';
 import type {SyncTableOptions} from '../api';
-import {ToolConsentMode} from '../types';
 import {ToolType} from '../types';
 import {ValueHintType} from '..';
 import {ValueType} from '../schema';
@@ -715,33 +714,11 @@ describe('Agent builder', () => {
       ]);
     });
 
-    it('passes the Docs approval modes through', () => {
-      agent.setTools({docs: {readApprovalMode: ToolConsentMode.Auto}});
-      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables, readApprovalMode: ToolConsentMode.Auto}]);
-    });
-
-    it('leaves the Docs approval modes out when they were not set', () => {
-      agent.setTools({docs: true});
-      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);
-    });
-
-    it('passes the per-formula config through', () => {
-      agent.setTools({
-        connectors: [{packId: 1, formulas: [{formulaName: 'Foo', approvalMode: ToolConsentMode.AlwaysAsk}]}],
-      });
+    it('passes the per-formula enabled flag through', () => {
+      agent.setTools({connectors: [{packId: 1, formulas: [{formulaName: 'Foo', enabled: false}]}]});
       assert.deepEqual(agent.agent.tools, [
-        {type: ToolType.Pack, packId: 1, formulas: [{formulaName: 'Foo', approvalMode: ToolConsentMode.AlwaysAsk}]},
+        {type: ToolType.Pack, packId: 1, formulas: [{formulaName: 'Foo', enabled: false}]},
       ]);
-    });
-
-    it('passes the Mail approval modes through', () => {
-      agent.setTools({mail: {writeApprovalMode: ToolConsentMode.Auto}});
-      assert.deepEqual(agent.agent.tools, [{type: ToolType.MailAndCalendar, writeApprovalMode: ToolConsentMode.Auto}]);
-    });
-
-    it('passes the web search approval mode through', () => {
-      agent.setTools({webSearch: {approvalMode: ToolConsentMode.AlwaysAsk}});
-      assert.deepEqual(agent.agent.tools, [{type: ToolType.WebSearch, approvalMode: ToolConsentMode.AlwaysAsk}]);
     });
 
     it('keeps the last call', () => {

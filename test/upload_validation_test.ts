@@ -42,7 +42,6 @@ import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
 import type {Tool} from '../types';
-import {ToolConsentMode} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import {UntilNowDateRanges} from '../api_types';
@@ -8243,35 +8242,8 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
-    it('takes the per-formula config the in-app builder writes', async () => {
-      const tools: AgentTool[] = [
-        {
-          type: ToolType.Pack,
-          packId: 1,
-          formulas: [{formulaName: 'Foo', enabled: true, approvalMode: ToolConsentMode.Auto}],
-        },
-      ];
-      const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
-      assert.deepEqual(result.agent?.tools, tools);
-    });
-
-    it('takes the Docs approval modes the in-app builder writes', async () => {
-      const tools: AgentTool[] = [
-        {
-          type: ToolType.CodaDocsAndTables,
-          readApprovalMode: ToolConsentMode.Auto,
-          writeApprovalMode: ToolConsentMode.AlwaysAsk,
-        },
-      ];
-      const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
-      assert.deepEqual(result.agent?.tools, tools);
-    });
-
-    it('takes the Mail and web search approval modes the in-app builder writes', async () => {
-      const tools: AgentTool[] = [
-        {type: ToolType.MailAndCalendar, readApprovalMode: ToolConsentMode.Auto},
-        {type: ToolType.WebSearch, approvalMode: ToolConsentMode.AlwaysAsk},
-      ];
+    it('takes the per-formula enabled flag', async () => {
+      const tools: AgentTool[] = [{type: ToolType.Pack, packId: 1, formulas: [{formulaName: 'Foo', enabled: false}]}];
       const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
       assert.deepEqual(result.agent?.tools, tools);
     });

@@ -1235,18 +1235,6 @@ export interface RateLimits {
 export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 
 /**
- * Whether a tool asks the user before it acts.
- *
- * @hidden In development
- */
-export enum ToolConsentMode {
-  /** Act without asking. */
-  Auto = 'auto',
-  /** Ask every time. */
-  AlwaysAsk = 'alwaysAsk',
-}
-
-/**
  * The types of tools that can be used in a skill.
  */
 export enum ToolType {
@@ -1329,11 +1317,6 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
      * @hidden In development
      */
     enabled?: boolean;
-    /**
-     * Whether this formula asks before it runs.
-     * @hidden In development
-     */
-    approvalMode?: ToolConsentMode;
   }>;
 }
 
@@ -1472,23 +1455,13 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
  * Tool that provides access to Superhuman Docs documents and tables capabilities.
  * @internal
  */
-export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {
-  /** Whether reading asks first. */
-  readApprovalMode?: ToolConsentMode;
-  /** Whether writing asks first. */
-  writeApprovalMode?: ToolConsentMode;
-}
+export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {}
 
 /**
  * Tool that provides access to Superhuman Mail email and calendar capabilities.
  * @internal
  */
-export interface MailAndCalendarTool extends BaseTool<ToolType.MailAndCalendar> {
-  /** Whether reading mail asks first. */
-  readApprovalMode?: ToolConsentMode;
-  /** Whether sending mail asks first. */
-  writeApprovalMode?: ToolConsentMode;
-}
+export interface MailAndCalendarTool extends BaseTool<ToolType.MailAndCalendar> {}
 
 /**
  * Tool that enables searching the public internet for up-to-date information.
@@ -1514,12 +1487,6 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
    * ```
    */
   allowedDomains?: string[];
-  /**
-   * Whether an unknown URL asks first.
-   *
-   * @hidden In development
-   */
-  approvalMode?: ToolConsentMode;
 }
 
 /**
@@ -1806,15 +1773,15 @@ export interface AgentToolsDef {
   /**
    * Read and write Superhuman Docs documents and tables.
    */
-  docs?: boolean | {readApprovalMode?: ToolConsentMode; writeApprovalMode?: ToolConsentMode};
+  docs?: boolean;
   /**
    * Read and send Superhuman Mail email, and read the calendar.
    */
-  mail?: boolean | {readApprovalMode?: ToolConsentMode; writeApprovalMode?: ToolConsentMode};
+  mail?: boolean;
   /**
    * Search the public internet, optionally restricted to `allowedDomains`.
    */
-  webSearch?: boolean | {allowedDomains?: string[]; approvalMode?: ToolConsentMode};
+  webSearch?: boolean | {allowedDomains?: string[]};
   /**
    * Connector packs this agent can call, one entry per pack.
    */
@@ -1826,7 +1793,7 @@ export interface AgentToolsDef {
     /**
      * The formulas to offer, if not all of them.
      */
-    formulas?: Array<{formulaName: string; enabled?: boolean; approvalMode?: ToolConsentMode}>;
+    formulas?: Array<{formulaName: string; enabled?: boolean}>;
   }>;
 }
 
