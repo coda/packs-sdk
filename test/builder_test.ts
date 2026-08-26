@@ -714,13 +714,6 @@ describe('Agent builder', () => {
       ]);
     });
 
-    it('passes the per-formula enabled flag through', () => {
-      agent.setTools({connectors: [{packId: 1, formulas: [{formulaName: 'Foo', enabled: false}]}]});
-      assert.deepEqual(agent.agent.tools, [
-        {type: ToolType.Pack, packId: 1, formulas: [{formulaName: 'Foo', enabled: false}]},
-      ]);
-    });
-
     it('keeps the last call', () => {
       agent.setTools({mail: true}).setTools({docs: true});
       assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);

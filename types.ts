@@ -1793,7 +1793,7 @@ export interface AgentToolsDef {
     /**
      * The formulas to offer, if not all of them.
      */
-    formulas?: Array<{formulaName: string; enabled?: boolean}>;
+    formulas?: Array<{formulaName: string}>;
   }>;
 }
 

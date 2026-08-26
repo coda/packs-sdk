@@ -1630,7 +1630,6 @@ export interface AgentToolsDef {
          */
         formulas?: Array<{
             formulaName: string;
-            enabled?: boolean;
         }>;
     }>;
 }
