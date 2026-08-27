@@ -3,6 +3,7 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import type {AgentDefinition} from '../types';
+import type {AgentTool} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -2246,6 +2247,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         zodCompleteStrictObject<{
           formulaName: string;
           description?: string;
+          enabled?: boolean;
         }>({
           formulaName: z
             .string()
@@ -2259,6 +2261,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               }
             }),
           description: z.string().optional(),
+          enabled: z.boolean().optional(),
         }),
       )
       .optional(),
@@ -2376,19 +2379,34 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   // Missing and empty are separate Zod failures, so both carry the same message.
   const MissingInstructions = 'An agent must have instructions. Call setInstructions() on the agent.';
 
+  const agentToolSchema = z.discriminatedUnion(
+    'type',
+    [packToolSchema.extend({packId: z.number()}), codaDocsToolSchema, mailAndCalendarToolSchema, webSearchToolSchema],
+    {error: 'An agent can only use the Docs, Mail, web search, and Pack tools.'},
+  );
+
   const agentSchema = zodCompleteStrictObject<AgentDefinition>({
     instructions: z.string({error: MissingInstructions}).min(1, MissingInstructions).max(Limits.PromptLength),
     tools: z
-      .array(toolSchema)
+      .array(agentToolSchema)
       .optional()
+      .default([])
       .superRefine((tools, context) => {
-        for (const duplicate of findDuplicateTools((tools || []) as Tool[])) {
-          context.addIssue({
-            code: 'custom',
-            path: [duplicate.index],
-            message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
-          });
-        }
+        const seen = new Set<string>();
+        (tools as AgentTool[]).forEach((tool, index) => {
+          const key = tool.type === ToolType.Pack ? `${tool.type}:${tool.packId}` : tool.type;
+          if (seen.has(key)) {
+            context.addIssue({
+              code: 'custom',
+              path: [index],
+              message:
+                tool.type === ToolType.Pack
+                  ? `An agent can only name pack ${tool.packId} once.`
+                  : `An agent can only use the ${tool.type} tool once.`,
+            });
+          }
+          seen.add(key);
+        });
       }),
   });
 

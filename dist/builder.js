@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AgentDefinitionBuilder = exports.PackDefinitionBuilder = exports.BaseDefinitionBuilder = exports.newAgent = exports.newPack = void 0;
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
+const types_2 = require("./types");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -492,7 +493,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         /**
          * See {@link PackVersionDefinition.agent}.
          */
-        this.agent = {};
+        this.agent = { tools: [] };
     }
     /**
      * Sets this agent's instructions.
@@ -504,6 +505,37 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      */
     setInstructions(instructions) {
         this.agent.instructions = instructions;
+        return this;
+    }
+    /**
+     * Sets the tools this agent can use. Anything left out is off.
+     *
+     * @example
+     * ```
+     * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+     * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+     * ```
+     */
+    setTools({ docs, mail, webSearch, connectors }) {
+        const tools = [];
+        if (webSearch) {
+            const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
+            tools.push({ type: types_2.ToolType.WebSearch, ...(allowedDomains ? { allowedDomains } : {}) });
+        }
+        if (docs) {
+            tools.push({ type: types_2.ToolType.CodaDocsAndTables });
+        }
+        if (mail) {
+            tools.push({ type: types_2.ToolType.MailAndCalendar });
+        }
+        for (const connector of connectors || []) {
+            tools.push({
+                type: types_2.ToolType.Pack,
+                packId: connector.packId,
+                ...(connector.formulas ? { formulas: connector.formulas } : {}),
+            });
+        }
+        this.agent.tools = tools;
         return this;
     }
 }

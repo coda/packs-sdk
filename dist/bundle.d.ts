@@ -5730,6 +5730,11 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
 	formulas?: Array<{
 		/** The name of the formula to use as a tool. */
 		formulaName: string;
+		/**
+		 * Whether the formula is offered. Defaults to true.
+		 * @hidden In development
+		 */
+		enabled?: boolean;
 	}>;
 }
 /**
@@ -6132,9 +6137,55 @@ export interface AgentDefinition {
 	 */
 	instructions: string;
 	/**
-	 * The tools the agent may use.
+	 * The tools the agent may use. An empty list means no tools, not a default set.
 	 */
-	tools?: Tool[];
+	tools: AgentTool[];
+}
+/**
+ * A tool an agent can use.
+ *
+ * @internal
+ * @hidden
+ */
+export type AgentTool = CodaDocsAndTablesTool | MailAndCalendarTool | WebSearchTool | (Omit<PackTool, "packId"> & {
+	packId: number;
+});
+/**
+ * The tools an agent can use, as written on the builder.
+ *
+ * @internal
+ * @hidden
+ */
+export interface AgentToolsDef {
+	/**
+	 * Read and write Superhuman Docs documents and tables.
+	 */
+	docs?: boolean;
+	/**
+	 * Read and send Superhuman Mail email, and read the calendar.
+	 */
+	mail?: boolean;
+	/**
+	 * Search the public internet, optionally restricted to `allowedDomains`.
+	 */
+	webSearch?: boolean | {
+		allowedDomains?: string[];
+	};
+	/**
+	 * Connector packs this agent can call, one entry per pack.
+	 */
+	connectors?: Array<{
+		/**
+		 * The id of the connector pack.
+		 */
+		packId: number;
+		/**
+		 * The formulas to offer, if not all of them.
+		 */
+		formulas?: Array<{
+			formulaName: string;
+		}>;
+	}>;
 }
 /**
  * The definition of the contents of a Pack at a specific version. This is the
@@ -6692,6 +6743,16 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 */
 	setInstructions(instructions: string): this;
+	/**
+	 * Sets the tools this agent can use. Anything left out is off.
+	 *
+	 * @example
+	 * ```
+	 * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+	 * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+	 * ```
+	 */
+	setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {

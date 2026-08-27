@@ -1729,6 +1729,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
             }),
             description: z.string().optional(),
+            enabled: z.boolean().optional(),
         }))
             .optional(),
     });
@@ -1830,19 +1831,28 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const chatSkillSchema = skillSchema.partial();
     // Missing and empty are separate Zod failures, so both carry the same message.
     const MissingInstructions = 'An agent must have instructions. Call setInstructions() on the agent.';
+    const agentToolSchema = z.discriminatedUnion('type', [packToolSchema.extend({ packId: z.number() }), codaDocsToolSchema, mailAndCalendarToolSchema, webSearchToolSchema], { error: 'An agent can only use the Docs, Mail, web search, and Pack tools.' });
     const agentSchema = zodCompleteStrictObject({
         instructions: z.string({ error: MissingInstructions }).min(1, MissingInstructions).max(exports.Limits.PromptLength),
         tools: z
-            .array(toolSchema)
+            .array(agentToolSchema)
             .optional()
+            .default([])
             .superRefine((tools, context) => {
-            for (const duplicate of findDuplicateTools((tools || []))) {
-                context.addIssue({
-                    code: 'custom',
-                    path: [duplicate.index],
-                    message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
-                });
-            }
+            const seen = new Set();
+            tools.forEach((tool, index) => {
+                const key = tool.type === types_11.ToolType.Pack ? `${tool.type}:${tool.packId}` : tool.type;
+                if (seen.has(key)) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: [index],
+                        message: tool.type === types_11.ToolType.Pack
+                            ? `An agent can only name pack ${tool.packId} once.`
+                            : `An agent can only use the ${tool.type} tool once.`,
+                    });
+                }
+                seen.add(key);
+            });
         }),
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({

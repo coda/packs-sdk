@@ -614,25 +614,24 @@ describe('Agent builder', () => {
   });
 
   it('declares itself before it has any content', () => {
-    // The empty object is what marks this as an agent, so a forgotten setInstructions is
-    // caught by validation instead of uploading as an ordinary pack.
-    assert.deepEqual(agent.agent, {});
+    // The definition's presence is what marks this as an agent.
+    assert.deepEqual(agent.agent, {tools: []});
   });
 
   it('sets instructions', () => {
     agent.setInstructions('You help a team run async standups.');
-    assert.deepEqual(agent.agent, {instructions: 'You help a team run async standups.'});
+    assert.deepEqual(agent.agent, {tools: [], instructions: 'You help a team run async standups.'});
   });
 
   it('keeps the last instructions set', () => {
     agent.setInstructions('First.').setInstructions('Second.');
-    assert.deepEqual(agent.agent, {instructions: 'Second.'});
+    assert.deepEqual(agent.agent, {tools: [], instructions: 'Second.'});
   });
 
   it('survives compilePackMetadata rather than being stripped', () => {
     agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
     const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
-    assert.deepEqual(metadata.agent, {instructions: 'You help a team run async standups.'});
+    assert.deepEqual(metadata.agent, {tools: [], instructions: 'You help a team run async standups.'});
   });
 
   it('does not add a agent field to an ordinary pack', () => {
@@ -648,6 +647,96 @@ describe('Agent builder', () => {
     assert.deepEqual(metadata.formats, []);
     assert.isUndefined(metadata.networkDomains);
     assert.isUndefined(metadata.defaultAuthentication);
+  });
+
+  describe('tools', () => {
+    it('starts with an empty tool list rather than no list at all', () => {
+      agent.setInstructions('Do a thing.');
+      assert.deepEqual(agent.agent.tools, []);
+    });
+
+    it('builds a tool for each capability turned on', () => {
+      agent.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.WebSearch, allowedDomains: ['docs.example.com']},
+        {type: ToolType.CodaDocsAndTables},
+        {type: ToolType.MailAndCalendar},
+      ]);
+    });
+
+    it('leaves out what was left out', () => {
+      agent.setTools({docs: true});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);
+    });
+
+    it('treats false the same as absent', () => {
+      agent.setTools({docs: true, mail: false});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);
+    });
+
+    it('takes web search without a domain restriction', () => {
+      agent.setTools({webSearch: true});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.WebSearch}]);
+    });
+
+    it('keeps an empty domain list, so validation can tell the author it is wrong', () => {
+      agent.setTools({webSearch: {allowedDomains: []}});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.WebSearch, allowedDomains: []}]);
+    });
+
+    it('adds a connector pack', () => {
+      agent.setTools({connectors: [{packId: 1234}]});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.Pack, packId: 1234}]);
+    });
+
+    it('limits a connector to specific formulas', () => {
+      agent.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.Pack, packId: 1234, formulas: [{formulaName: 'CreateTask'}]},
+      ]);
+    });
+
+    it('takes more than one connector', () => {
+      agent.setTools({connectors: [{packId: 1}, {packId: 2}]});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.Pack, packId: 1},
+        {type: ToolType.Pack, packId: 2},
+      ]);
+    });
+
+    it('puts connectors after the built-in tools, the way the in-app builder does', () => {
+      agent.setTools({docs: true, webSearch: true, mail: true, connectors: [{packId: 1234}]});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.WebSearch},
+        {type: ToolType.CodaDocsAndTables},
+        {type: ToolType.MailAndCalendar},
+        {type: ToolType.Pack, packId: 1234},
+      ]);
+    });
+
+    it('keeps the last call', () => {
+      agent.setTools({mail: true}).setTools({docs: true});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);
+    });
+
+    it('takes everything off again', () => {
+      agent.setTools({docs: true}).setTools({});
+      assert.deepEqual(agent.agent.tools, []);
+    });
+
+    it('leaves instructions alone', () => {
+      agent.setInstructions('Do a thing.').setTools({docs: true});
+      assert.deepEqual(agent.agent, {instructions: 'Do a thing.', tools: [{type: ToolType.CodaDocsAndTables}]});
+    });
+
+    it('carries tools through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').setTools({docs: true}).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.agent, {
+        instructions: 'Do a thing.',
+        tools: [{type: ToolType.CodaDocsAndTables}],
+      });
+    });
   });
 
   describe('withheld surface', () => {
@@ -667,6 +756,8 @@ describe('Agent builder', () => {
         builder.formulas.push();
         // @ts-expect-error an agent takes no seed definition
         newAgent({formulas: []});
+        // @ts-expect-error MCP belongs on a connector packId, not as a top-level boolean
+        builder.setTools({mcp: true});
       }
       assert.isFunction(checkedByTscOnly);
     });

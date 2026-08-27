@@ -1,6 +1,8 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
 import type {AgentDefinition} from './types';
+import type {AgentTool} from './types';
+import type {AgentToolsDef} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
@@ -27,6 +29,7 @@ import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
+import {ToolType} from './types';
 import type {UserAuthenticationDef} from './api_types';
 import type {ValueType} from './schema';
 import {isDynamicSyncTable} from './api';
@@ -651,7 +654,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   /**
    * See {@link PackVersionDefinition.agent}.
    */
-  agent: Partial<AgentDefinition> = {};
+  agent: Partial<AgentDefinition> = {tools: []};
 
   /**
    * Sets this agent's instructions.
@@ -663,6 +666,38 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    */
   setInstructions(instructions: string): this {
     this.agent.instructions = instructions;
+    return this;
+  }
+
+  /**
+   * Sets the tools this agent can use. Anything left out is off.
+   *
+   * @example
+   * ```
+   * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+   * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+   * ```
+   */
+  setTools({docs, mail, webSearch, connectors}: AgentToolsDef): this {
+    const tools: AgentTool[] = [];
+    if (webSearch) {
+      const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
+      tools.push({type: ToolType.WebSearch, ...(allowedDomains ? {allowedDomains} : {})});
+    }
+    if (docs) {
+      tools.push({type: ToolType.CodaDocsAndTables});
+    }
+    if (mail) {
+      tools.push({type: ToolType.MailAndCalendar});
+    }
+    for (const connector of connectors || []) {
+      tools.push({
+        type: ToolType.Pack,
+        packId: connector.packId,
+        ...(connector.formulas ? {formulas: connector.formulas} : {}),
+      });
+    }
+    this.agent.tools = tools;
     return this;
   }
 }
