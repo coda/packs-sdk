@@ -79,7 +79,8 @@ export async function injectAsyncFunction(
   };
 
   await context.evalClosure(
-    `${stubName} = async function(...args) {
+    `'use strict';
+     ${stubName} = async function(...args) {
         return coda.handleErrorAsync(async () => {
          const result = await $0.apply(
            undefined,
@@ -109,7 +110,8 @@ export async function injectLogFunction(
   };
 
   await context.evalClosure(
-    `${stubName} = function(...args) {
+    `'use strict';
+     ${stubName} = function(...args) {
         coda.handleError(() => {
           $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], {arguments: {copy: true}});
         });
@@ -130,7 +132,8 @@ export async function injectFetcherFunction(
   };
 
   await context.evalClosure(
-    `${stubName} = async function(fetchRequest) {
+    `'use strict';
+     ${stubName} = async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
          const fetchResult = await $0.apply(
            undefined,
@@ -204,7 +207,8 @@ export async function injectSerializer(context: Context, stubName: string) {
   const serializeFn = (arg: any) => v8.serialize(arg).toString('base64');
   const deserializeFn = (arg: any) => v8.deserialize(Buffer.from(arg, 'base64'));
   await context.evalClosure(
-    `${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+    `'use strict';
+     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
     [serializeFn],
     {
       arguments: {reference: true},
@@ -212,7 +216,8 @@ export async function injectSerializer(context: Context, stubName: string) {
   );
 
   await context.evalClosure(
-    `${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+    `'use strict';
+     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
     [deserializeFn],
     {
       arguments: {reference: true},
