@@ -55,7 +55,8 @@ async function injectAsyncFunction(context, stubName, func) {
         const result = await func(...args.map(arg => (0, marshaling_2.unmarshalValue)(arg)));
         return (0, marshaling_1.marshalValue)(result);
     };
-    await context.evalClosure(`${stubName} = async function(...args) {
+    await context.evalClosure(`'use strict';
+     ${stubName} = async function(...args) {
         return coda.handleErrorAsync(async () => {
          const result = await $0.apply(
            undefined,
@@ -76,7 +77,8 @@ async function injectLogFunction(context, stubName, func) {
     const stub = (marshaledArgs) => {
         func(...marshaledArgs.map(marshaling_2.unmarshalValue));
     };
-    await context.evalClosure(`${stubName} = function(...args) {
+    await context.evalClosure(`'use strict';
+     ${stubName} = function(...args) {
         coda.handleError(() => {
           $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], {arguments: {copy: true}});
         });
@@ -88,7 +90,8 @@ async function injectFetcherFunction(context, stubName, func) {
         const result = await func((0, marshaling_2.unmarshalValue)(marshaledValue));
         return (0, marshaling_1.marshalValue)(result);
     };
-    await context.evalClosure(`${stubName} = async function(fetchRequest) {
+    await context.evalClosure(`'use strict';
+     ${stubName} = async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
          const fetchResult = await $0.apply(
            undefined,
@@ -139,10 +142,12 @@ exports.executeThunk = executeThunk;
 async function injectSerializer(context, stubName) {
     const serializeFn = (arg) => v8_1.default.serialize(arg).toString('base64');
     const deserializeFn = (arg) => v8_1.default.deserialize(Buffer.from(arg, 'base64'));
-    await context.evalClosure(`${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [serializeFn], {
+    await context.evalClosure(`'use strict';
+     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [serializeFn], {
         arguments: { reference: true },
     });
-    await context.evalClosure(`${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [deserializeFn], {
+    await context.evalClosure(`'use strict';
+     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [deserializeFn], {
         arguments: { reference: true },
     });
 }

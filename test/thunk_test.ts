@@ -209,11 +209,7 @@ describeVmOnly('Thunk', () => {
       });
     `);
 
-    await injectAsyncFunction(
-      ivmContext,
-      'executionContext.temporaryBlobStorage.storeUrl',
-      async () => undefined,
-    );
+    await injectAsyncFunction(ivmContext, 'executionContext.temporaryBlobStorage.storeUrl', async () => undefined);
 
     const leaked = await ivmContext.eval('typeof globalThis.__leaked');
     assert.equal(leaked, 'undefined');
