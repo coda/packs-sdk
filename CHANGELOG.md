@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Internal changes to the custom agent definition, covering the tools an agent can be granted. Not currently available externally.
+
 ## [1.17.2] - 2026-08-24
 
 ### Changed
