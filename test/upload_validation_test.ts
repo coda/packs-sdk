@@ -8,8 +8,8 @@ import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {ContentCategorizationType} from '../schema';
 import {ContextualTriggerAssistMode} from '../types';
-import {ContextualTriggerGranularity} from '../types';
-import {ContextualTriggerStrategy} from '../types';
+import {ContextualTriggerDecorationStyle} from '../types';
+import {ContextualTriggerSuggestionColor} from '../types';
 import {ContextualTriggerSurface} from '../types';
 import {CurrencyFormat} from '..';
 import {DataIndexing} from '../api_types';
@@ -8350,19 +8350,16 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(result.defaultTriggers, [contextualTrigger]);
     });
 
-    it('validates one naming assist mode, surfaces, and an evaluation config', async () => {
+    it('validates one naming assist mode, surfaces, and blocked domains', async () => {
       const contextualTrigger: DefaultTriggerDefinition = {
         kind: DefaultTriggerKind.WhileWriting,
         condition: 'Offer a citation when the user asserts a statistic',
         enabled: true,
         assistMode: ContextualTriggerAssistMode.OnDemand,
+        suggestionColor: ContextualTriggerSuggestionColor.Purple,
+        decorationStyle: ContextualTriggerDecorationStyle.Underline,
         surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
         blockedDomains: ['internal.example.com'],
-        evaluationConfig: {
-          strategy: ContextualTriggerStrategy.Regex,
-          granularity: ContextualTriggerGranularity.Sentence,
-          regexPattern: '\\d+%',
-        },
       };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
@@ -8392,7 +8389,8 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
-    it('rejects an evaluation config for a strategy it does not match', async () => {
+    // The evaluator and context-gate shapes are computed server-side, so a pack can't declare them.
+    it('rejects runtime-only keys the authoring surface does not have', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
@@ -8401,8 +8399,8 @@ describe('Pack metadata Validation', async () => {
               kind: DefaultTriggerKind.WhileWriting,
               condition: 'Do a thing.',
               enabled: true,
-              evaluationConfig: {strategy: ContextualTriggerStrategy.Llm, regexPattern: '\\d+%'} as any,
-            },
+              evaluationConfig: {strategy: 'REGEX', granularity: 'SENTENCE', regexPattern: '\\d+%'},
+            } as any,
           ],
         }),
       );

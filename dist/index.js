@@ -13,7 +13,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.IndexingStrategy = exports.ImageOutline = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.ResponseSizeTooLargeError = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.InvocationSource = exports.UpdateOutcome = exports.DataIndexing = exports.ConnectionRequirement = exports.OptionsType = exports.PackDefinitionBuilder = exports.newAgent = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
-exports.EmbeddedContentType = exports.ToolType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.SkillModel = exports.ContextualTriggerDomainCategory = exports.ContextualTriggerSignalTask = exports.ContextualTriggerSignalRegister = exports.ContextualTriggerStrategy = exports.ContextualTriggerGranularity = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.DefaultTriggerKind = exports.PermissionSyncMode = exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = void 0;
+exports.EmbeddedContentType = exports.ToolType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.SkillModel = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.DefaultTriggerKind = exports.PermissionSyncMode = exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -152,22 +152,12 @@ Object.defineProperty(exports, "ContextualTriggerDecorationStyle", { enumerable:
 var types_8 = require("./types");
 Object.defineProperty(exports, "ContextualTriggerSurface", { enumerable: true, get: function () { return types_8.ContextualTriggerSurface; } });
 var types_9 = require("./types");
-Object.defineProperty(exports, "ContextualTriggerGranularity", { enumerable: true, get: function () { return types_9.ContextualTriggerGranularity; } });
+Object.defineProperty(exports, "SkillModel", { enumerable: true, get: function () { return types_9.SkillModel; } });
 var types_10 = require("./types");
-Object.defineProperty(exports, "ContextualTriggerStrategy", { enumerable: true, get: function () { return types_10.ContextualTriggerStrategy; } });
+Object.defineProperty(exports, "KnowledgeToolSourceType", { enumerable: true, get: function () { return types_10.KnowledgeToolSourceType; } });
 var types_11 = require("./types");
-Object.defineProperty(exports, "ContextualTriggerSignalRegister", { enumerable: true, get: function () { return types_11.ContextualTriggerSignalRegister; } });
+Object.defineProperty(exports, "ScreenAnnotationType", { enumerable: true, get: function () { return types_11.ScreenAnnotationType; } });
 var types_12 = require("./types");
-Object.defineProperty(exports, "ContextualTriggerSignalTask", { enumerable: true, get: function () { return types_12.ContextualTriggerSignalTask; } });
+Object.defineProperty(exports, "ToolType", { enumerable: true, get: function () { return types_12.ToolType; } });
 var types_13 = require("./types");
-Object.defineProperty(exports, "ContextualTriggerDomainCategory", { enumerable: true, get: function () { return types_13.ContextualTriggerDomainCategory; } });
-var types_14 = require("./types");
-Object.defineProperty(exports, "SkillModel", { enumerable: true, get: function () { return types_14.SkillModel; } });
-var types_15 = require("./types");
-Object.defineProperty(exports, "KnowledgeToolSourceType", { enumerable: true, get: function () { return types_15.KnowledgeToolSourceType; } });
-var types_16 = require("./types");
-Object.defineProperty(exports, "ScreenAnnotationType", { enumerable: true, get: function () { return types_16.ScreenAnnotationType; } });
-var types_17 = require("./types");
-Object.defineProperty(exports, "ToolType", { enumerable: true, get: function () { return types_17.ToolType; } });
-var types_18 = require("./types");
-Object.defineProperty(exports, "EmbeddedContentType", { enumerable: true, get: function () { return types_18.EmbeddedContentType; } });
+Object.defineProperty(exports, "EmbeddedContentType", { enumerable: true, get: function () { return types_13.EmbeddedContentType; } });

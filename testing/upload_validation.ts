@@ -21,14 +21,7 @@ import {ConnectionRequirement} from '../api_types';
 import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
 import {ContextualTriggerAssistMode} from '../types';
-import type {ContextualTriggerContextRules} from '../types';
 import {ContextualTriggerDecorationStyle} from '../types';
-import {ContextualTriggerDomainCategory} from '../types';
-import type {ContextualTriggerEvaluationConfig} from '../types';
-import {ContextualTriggerGranularity} from '../types';
-import {ContextualTriggerSignalRegister} from '../types';
-import {ContextualTriggerSignalTask} from '../types';
-import {ContextualTriggerStrategy} from '../types';
 import {ContextualTriggerSuggestionColor} from '../types';
 import {ContextualTriggerSurface} from '../types';
 import {CurrencyFormat} from '../schema';
@@ -2432,39 +2425,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
     });
 
-  const contextRulesSchema = zodCompleteStrictObject<ContextualTriggerContextRules>({
-    signalRegister: z.array(z.nativeEnum(ContextualTriggerSignalRegister)),
-    signalTask: z.array(z.nativeEnum(ContextualTriggerSignalTask)),
-    domain: z.array(domainSchema).max(Limits.MaxBlockedDomains),
-    domainCategory: z.array(z.nativeEnum(ContextualTriggerDomainCategory)),
-    domainBlocked: z.boolean().optional(),
-  });
-
-  const evaluationConfigSchema = z.discriminatedUnion('strategy', [
-    zodCompleteStrictObject<Extract<ContextualTriggerEvaluationConfig, {strategy: ContextualTriggerStrategy.Regex}>>({
-      strategy: z.literal(ContextualTriggerStrategy.Regex),
-      granularity: z.nativeEnum(ContextualTriggerGranularity),
-      regexPattern: z.string().min(1),
-    }),
-    zodCompleteStrictObject<
-      Extract<ContextualTriggerEvaluationConfig, {strategy: ContextualTriggerStrategy.SemanticCentroid}>
-    >({
-      strategy: z.literal(ContextualTriggerStrategy.SemanticCentroid),
-      granularity: z.nativeEnum(ContextualTriggerGranularity),
-      semanticCentroid: z.object({
-        centroid: z.array(z.number()),
-        threshold: z.number(),
-        calibrationPrecision: z.number(),
-        calibrationRecall: z.number(),
-        calibrationExamples: z.object({positive: z.array(z.string()), hardNegative: z.array(z.string())}),
-      }),
-    }),
-    zodCompleteStrictObject<Extract<ContextualTriggerEvaluationConfig, {strategy: ContextualTriggerStrategy.Llm}>>({
-      strategy: z.literal(ContextualTriggerStrategy.Llm),
-      granularity: z.nativeEnum(ContextualTriggerGranularity),
-    }),
-  ]);
-
   const whileWritingTriggerSchema = zodCompleteStrictObject<WhileWritingTriggerDefinition>({
     condition: z.string().min(1).max(Limits.ConditionLength),
     enabled: z.boolean(),
@@ -2473,8 +2433,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     decorationStyle: z.nativeEnum(ContextualTriggerDecorationStyle).optional(),
     surfaces: z.array(z.nativeEnum(ContextualTriggerSurface)).optional(),
     blockedDomains: z.array(domainSchema).max(Limits.MaxBlockedDomains).optional(),
-    contextRules: contextRulesSchema.optional(),
-    evaluationConfig: evaluationConfigSchema.optional(),
   });
 
   const defaultTriggerSchema = z.discriminatedUnion('kind', [
