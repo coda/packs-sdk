@@ -33,7 +33,7 @@ rather than constructing a builder directly.
 
 | Parameter | Type |
 | ------ | ------ |
-| `definition?` | `Partial`\<`Omit`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), `"agent"`\>\> |
+| `definition?` | `Partial`\<`Omit`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), `"agent"` \| `"defaultTriggers"`\>\> |
 
 #### Returns
 

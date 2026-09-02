@@ -6188,6 +6188,245 @@ export interface AgentToolsDef {
 	}>;
 }
 /**
+ * When a while-writing trigger offers proactive help, vs. only on request.
+ * Absent defaults to `Proactive`.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerAssistMode {
+	OnDemand = "on_demand",
+	Proactive = "proactive"
+}
+/**
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerSuggestionColor {
+	Blue = "blue",
+	Green = "green",
+	Mulberry = "mulberry",
+	Neutral = "neutral",
+	Orange = "orange",
+	Purple = "purple",
+	Red = "red",
+	Yellow = "yellow"
+}
+/**
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerDecorationStyle {
+	Auto = "auto",
+	Underline = "underline",
+	Vbar = "vbar"
+}
+/**
+ * Where a while-writing agent may offer help.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerSurface {
+	ChatAndMessages = "chat_messages",
+	CodingEnvironment = "coding_environment",
+	CustomerService = "customer_service",
+	Docs = "docs",
+	Email = "email",
+	SearchAndBrowser = "search_browser",
+	SocialMedia = "social_media"
+}
+/**
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerGranularity {
+	Sentence = "SENTENCE",
+	Paragraph = "PARAGRAPH"
+}
+/**
+ * Which evaluator decides whether a while-writing trigger's condition is met.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerStrategy {
+	Regex = "REGEX",
+	SemanticCentroid = "SEMANTIC_CENTROID",
+	Llm = "LLM"
+}
+/** @internal @hidden */
+export declare enum ContextualTriggerSignalRegister {
+	Business = "Business",
+	Education = "Education",
+	Legal = "Legal",
+	Personal = "Personal",
+	Creative = "Creative",
+	Technical = "Technical",
+	Journalism = "Journalism",
+	Religion = "Religion"
+}
+/** @internal @hidden */
+export declare enum ContextualTriggerSignalTask {
+	CoverLetter = "Cover Letter",
+	Resume = "Resume",
+	Coding = "Coding",
+	AiChat = "AI Chat",
+	CollegeApplicationEssay = "College application essay",
+	SchoolAssignment = "School assignment",
+	StudentEssay = "Student Essay",
+	ClassNotes = "Class Notes",
+	MeetingNotes = "Meeting notes",
+	JobPosting = "Job posting",
+	Recruiting = "Recruiting",
+	ClassWorksheet = "Class worksheet",
+	CustomerSupportCommunication = "Customer support communication",
+	CustomerSupportDocumentation = "Customer support documentation",
+	ReviewFeedback = "Review / feedback",
+	InternalAnnouncement = "Internal announcement",
+	SocialNetworking = "Social Networking",
+	MeetingAgenda = "Meeting Agenda",
+	BusinessProposal = "Business Proposal",
+	Blog = "Blog",
+	SocialMedia = "Social Media",
+	PromotionArticle = "Promotion Article",
+	Ad = "Ad",
+	ResearchPaper = "Research paper",
+	LessonPlan = "Lesson Plan",
+	AssignmentRubric = "Assignment Rubric",
+	CurriculumSyllabus = "Curriculum/Syllabus",
+	CoordinationCommunication = "Coordination communication",
+	BusinessForm = "Business Form",
+	TechnicalDocumentation = "Technical documentation",
+	DesignProposal = "Design Proposal",
+	Diary = "Diary",
+	PersonalNote = "Personal note",
+	Fiction = "Fiction",
+	Poem = "Poem",
+	Song = "Song",
+	Play = "Play",
+	Editorial = "Editorial",
+	News = "News",
+	HowTo = "How-to",
+	Wiki = "Wiki",
+	Contract = "Contract",
+	DoctorReport = "Doctor report",
+	Prescription = "Prescription",
+	GeneralCommunication = "General Communication",
+	Notes = "Notes",
+	Outline = "Outline"
+}
+/** @internal @hidden */
+export declare enum ContextualTriggerDomainCategory {
+	AcademicWriting = "Academic Writing",
+	AiChatbots = "AI Chatbots",
+	AiDetection = "AI Detection",
+	BusinessCommunicationAndMessaging = "Business Communication and Messaging",
+	Collaboration = "Collaboration",
+	CrmAndCustomerService = "CRM & Customer Service",
+	DesignAndCreativeTools = "Design and Creative Tools",
+	Ecommerce = "Ecommerce",
+	EducationTrainingAndOnlineLearning = "Education, Training, & Online Learning",
+	Email = "Email",
+	FinanceAndHrTools = "Finance & HR Tools",
+	GeneralWriting = "General Writing",
+	InternetBrowser = "Internet Browser",
+	JobBoardsRecruiting = "Job Boards / Recruiting",
+	Marketing = "Marketing",
+	NewsAndBloggingPlatforms = "News & Blogging Platforms",
+	NoteTaking = "Note-taking",
+	Other = "Other",
+	PersonalMessaging = "Personal Messaging",
+	SearchEngine = "Search Engine",
+	SocialMedia = "Social Media",
+	SoftwareDevelopment = "Software Development",
+	SpreadsheetsPresentationsAndProductivity = "Spreadsheets, Presentations and Productivity",
+	Translation = "Translation",
+	Utility = "Utility",
+	WritingAid = "Writing Aid"
+}
+/**
+ * Which content a while-writing trigger applies to, independent of its text evaluator.
+ *
+ * @internal
+ * @hidden
+ */
+export interface ContextualTriggerContextRules {
+	signalRegister: ContextualTriggerSignalRegister[];
+	signalTask: ContextualTriggerSignalTask[];
+	domain: string[];
+	domainCategory: ContextualTriggerDomainCategory[];
+	/** Scopes `domain` to a blocklist. `domainCategory` is always an allowlist. */
+	domainBlocked?: boolean;
+}
+/**
+ * A calibrated embedding centroid the runtime already accepts. Not a documented authoring path;
+ * present so a pack can persist one it already has rather than lose it on round-trip.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SemanticCentroid {
+	centroid: number[];
+	threshold: number;
+	calibrationPrecision: number;
+	calibrationRecall: number;
+	calibrationExamples: {
+		positive: string[];
+		hardNegative: string[];
+	};
+}
+/**
+ * The text evaluator for a while-writing trigger, and at what granularity it runs.
+ *
+ * @internal
+ * @hidden
+ */
+export type ContextualTriggerEvaluationConfig = {
+	strategy: ContextualTriggerStrategy.Regex;
+	granularity: ContextualTriggerGranularity;
+	regexPattern: string;
+} | {
+	strategy: ContextualTriggerStrategy.SemanticCentroid;
+	granularity: ContextualTriggerGranularity;
+	semanticCentroid: SemanticCentroid;
+} | {
+	strategy: ContextualTriggerStrategy.Llm;
+	granularity: ContextualTriggerGranularity;
+};
+/**
+ * A default while-writing trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export interface WhileWritingTriggerDefinition {
+	/** Natural language condition the trigger fires on, e.g. "Offer a citation when the user asserts a statistic". */
+	condition: string;
+	/** Whether the trigger starts on for new agent instances. */
+	enabled: boolean;
+	assistMode?: ContextualTriggerAssistMode;
+	suggestionColor?: ContextualTriggerSuggestionColor;
+	decorationStyle?: ContextualTriggerDecorationStyle;
+	surfaces?: ContextualTriggerSurface[];
+	/** Domains this trigger will not activate on. Max 50. */
+	blockedDomains?: string[];
+	contextRules?: ContextualTriggerContextRules;
+	evaluationConfig?: ContextualTriggerEvaluationConfig;
+}
+/**
+ * The triggers an agent ships with. Each one is a default the user can edit after installing.
+ *
+ * @internal
+ * @hidden
+ */
+export interface DefaultTriggersDefinition {
+	/**
+	 * The while-writing trigger the agent runs on.
+	 */
+	contextualTrigger?: WhileWritingTriggerDefinition;
+}
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -6293,6 +6532,13 @@ export interface PackVersionDefinition {
 	 * @hidden
 	 */
 	agent?: AgentDefinition;
+	/**
+	 * The triggers this pack's agent ships with, if it defines any. Authored via `sdk.newAgent()`.
+	 *
+	 * @internal
+	 * @hidden
+	 */
+	defaultTriggers?: DefaultTriggersDefinition;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6360,7 +6606,7 @@ export declare enum HttpStatusCode {
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, "agent">>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, "agent" | "defaultTriggers">>): PackDefinitionBuilder;
 /**
  * Creates a new skeleton agent definition that can be added to.
  *
@@ -6466,7 +6712,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
 	 * rather than constructing a builder directly.
 	 */
-	constructor(definition?: Partial<Omit<PackVersionDefinition, "agent">>);
+	constructor(definition?: Partial<Omit<PackVersionDefinition, "agent" | "defaultTriggers">>);
 	/**
 	 * Adds a formula definition to this pack.
 	 *
@@ -6735,6 +6981,10 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 */
 	agent: Partial<AgentDefinition>;
 	/**
+	 * See {@link PackVersionDefinition.defaultTriggers}.
+	 */
+	defaultTriggers?: DefaultTriggersDefinition;
+	/**
 	 * Sets this agent's instructions.
 	 *
 	 * @example
@@ -6753,6 +7003,19 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 */
 	setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+	/**
+	 * Sets the while-writing trigger this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.setDefaultWhileWritingTrigger({
+	 *   condition: 'Offer a citation when the user asserts a statistic',
+	 *   enabled: true,
+	 *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+	 * });
+	 * ```
+	 */
+	setDefaultWhileWritingTrigger(contextualTrigger: WhileWritingTriggerDefinition): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
@@ -6815,7 +7078,7 @@ export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 /** @hidden */
 export type ExternalSkill = SkillMetadata;
-export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills" | "agent">;
+export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills" | "agent" | "defaultTriggers">;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {

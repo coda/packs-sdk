@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.ContextualTriggerDomainCategory = exports.ContextualTriggerSignalTask = exports.ContextualTriggerSignalRegister = exports.ContextualTriggerStrategy = exports.ContextualTriggerGranularity = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -329,6 +329,173 @@ var SkillModel;
     /** OpenAI GPT-5 series models. */
     SkillModel["OpenAIGPT5"] = "OpenAIGPT5";
 })(SkillModel || (exports.SkillModel = SkillModel = {}));
+/**
+ * When a while-writing trigger offers proactive help, vs. only on request.
+ * Absent defaults to `Proactive`.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerAssistMode;
+(function (ContextualTriggerAssistMode) {
+    ContextualTriggerAssistMode["OnDemand"] = "on_demand";
+    ContextualTriggerAssistMode["Proactive"] = "proactive";
+})(ContextualTriggerAssistMode || (exports.ContextualTriggerAssistMode = ContextualTriggerAssistMode = {}));
+/**
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerSuggestionColor;
+(function (ContextualTriggerSuggestionColor) {
+    ContextualTriggerSuggestionColor["Blue"] = "blue";
+    ContextualTriggerSuggestionColor["Green"] = "green";
+    ContextualTriggerSuggestionColor["Mulberry"] = "mulberry";
+    ContextualTriggerSuggestionColor["Neutral"] = "neutral";
+    ContextualTriggerSuggestionColor["Orange"] = "orange";
+    ContextualTriggerSuggestionColor["Purple"] = "purple";
+    ContextualTriggerSuggestionColor["Red"] = "red";
+    ContextualTriggerSuggestionColor["Yellow"] = "yellow";
+})(ContextualTriggerSuggestionColor || (exports.ContextualTriggerSuggestionColor = ContextualTriggerSuggestionColor = {}));
+/**
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerDecorationStyle;
+(function (ContextualTriggerDecorationStyle) {
+    ContextualTriggerDecorationStyle["Auto"] = "auto";
+    ContextualTriggerDecorationStyle["Underline"] = "underline";
+    ContextualTriggerDecorationStyle["Vbar"] = "vbar";
+})(ContextualTriggerDecorationStyle || (exports.ContextualTriggerDecorationStyle = ContextualTriggerDecorationStyle = {}));
+/**
+ * Where a while-writing agent may offer help.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerSurface;
+(function (ContextualTriggerSurface) {
+    ContextualTriggerSurface["ChatAndMessages"] = "chat_messages";
+    ContextualTriggerSurface["CodingEnvironment"] = "coding_environment";
+    ContextualTriggerSurface["CustomerService"] = "customer_service";
+    ContextualTriggerSurface["Docs"] = "docs";
+    ContextualTriggerSurface["Email"] = "email";
+    ContextualTriggerSurface["SearchAndBrowser"] = "search_browser";
+    ContextualTriggerSurface["SocialMedia"] = "social_media";
+})(ContextualTriggerSurface || (exports.ContextualTriggerSurface = ContextualTriggerSurface = {}));
+/**
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerGranularity;
+(function (ContextualTriggerGranularity) {
+    ContextualTriggerGranularity["Sentence"] = "SENTENCE";
+    ContextualTriggerGranularity["Paragraph"] = "PARAGRAPH";
+})(ContextualTriggerGranularity || (exports.ContextualTriggerGranularity = ContextualTriggerGranularity = {}));
+/**
+ * Which evaluator decides whether a while-writing trigger's condition is met.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerStrategy;
+(function (ContextualTriggerStrategy) {
+    ContextualTriggerStrategy["Regex"] = "REGEX";
+    ContextualTriggerStrategy["SemanticCentroid"] = "SEMANTIC_CENTROID";
+    ContextualTriggerStrategy["Llm"] = "LLM";
+})(ContextualTriggerStrategy || (exports.ContextualTriggerStrategy = ContextualTriggerStrategy = {}));
+/** @internal @hidden */
+var ContextualTriggerSignalRegister;
+(function (ContextualTriggerSignalRegister) {
+    ContextualTriggerSignalRegister["Business"] = "Business";
+    ContextualTriggerSignalRegister["Education"] = "Education";
+    ContextualTriggerSignalRegister["Legal"] = "Legal";
+    ContextualTriggerSignalRegister["Personal"] = "Personal";
+    ContextualTriggerSignalRegister["Creative"] = "Creative";
+    ContextualTriggerSignalRegister["Technical"] = "Technical";
+    ContextualTriggerSignalRegister["Journalism"] = "Journalism";
+    ContextualTriggerSignalRegister["Religion"] = "Religion";
+})(ContextualTriggerSignalRegister || (exports.ContextualTriggerSignalRegister = ContextualTriggerSignalRegister = {}));
+/** @internal @hidden */
+var ContextualTriggerSignalTask;
+(function (ContextualTriggerSignalTask) {
+    ContextualTriggerSignalTask["CoverLetter"] = "Cover Letter";
+    ContextualTriggerSignalTask["Resume"] = "Resume";
+    ContextualTriggerSignalTask["Coding"] = "Coding";
+    ContextualTriggerSignalTask["AiChat"] = "AI Chat";
+    ContextualTriggerSignalTask["CollegeApplicationEssay"] = "College application essay";
+    ContextualTriggerSignalTask["SchoolAssignment"] = "School assignment";
+    ContextualTriggerSignalTask["StudentEssay"] = "Student Essay";
+    ContextualTriggerSignalTask["ClassNotes"] = "Class Notes";
+    ContextualTriggerSignalTask["MeetingNotes"] = "Meeting notes";
+    ContextualTriggerSignalTask["JobPosting"] = "Job posting";
+    ContextualTriggerSignalTask["Recruiting"] = "Recruiting";
+    ContextualTriggerSignalTask["ClassWorksheet"] = "Class worksheet";
+    ContextualTriggerSignalTask["CustomerSupportCommunication"] = "Customer support communication";
+    ContextualTriggerSignalTask["CustomerSupportDocumentation"] = "Customer support documentation";
+    ContextualTriggerSignalTask["ReviewFeedback"] = "Review / feedback";
+    ContextualTriggerSignalTask["InternalAnnouncement"] = "Internal announcement";
+    ContextualTriggerSignalTask["SocialNetworking"] = "Social Networking";
+    ContextualTriggerSignalTask["MeetingAgenda"] = "Meeting Agenda";
+    ContextualTriggerSignalTask["BusinessProposal"] = "Business Proposal";
+    ContextualTriggerSignalTask["Blog"] = "Blog";
+    ContextualTriggerSignalTask["SocialMedia"] = "Social Media";
+    ContextualTriggerSignalTask["PromotionArticle"] = "Promotion Article";
+    ContextualTriggerSignalTask["Ad"] = "Ad";
+    ContextualTriggerSignalTask["ResearchPaper"] = "Research paper";
+    ContextualTriggerSignalTask["LessonPlan"] = "Lesson Plan";
+    ContextualTriggerSignalTask["AssignmentRubric"] = "Assignment Rubric";
+    ContextualTriggerSignalTask["CurriculumSyllabus"] = "Curriculum/Syllabus";
+    ContextualTriggerSignalTask["CoordinationCommunication"] = "Coordination communication";
+    ContextualTriggerSignalTask["BusinessForm"] = "Business Form";
+    ContextualTriggerSignalTask["TechnicalDocumentation"] = "Technical documentation";
+    ContextualTriggerSignalTask["DesignProposal"] = "Design Proposal";
+    ContextualTriggerSignalTask["Diary"] = "Diary";
+    ContextualTriggerSignalTask["PersonalNote"] = "Personal note";
+    ContextualTriggerSignalTask["Fiction"] = "Fiction";
+    ContextualTriggerSignalTask["Poem"] = "Poem";
+    ContextualTriggerSignalTask["Song"] = "Song";
+    ContextualTriggerSignalTask["Play"] = "Play";
+    ContextualTriggerSignalTask["Editorial"] = "Editorial";
+    ContextualTriggerSignalTask["News"] = "News";
+    ContextualTriggerSignalTask["HowTo"] = "How-to";
+    ContextualTriggerSignalTask["Wiki"] = "Wiki";
+    ContextualTriggerSignalTask["Contract"] = "Contract";
+    ContextualTriggerSignalTask["DoctorReport"] = "Doctor report";
+    ContextualTriggerSignalTask["Prescription"] = "Prescription";
+    ContextualTriggerSignalTask["GeneralCommunication"] = "General Communication";
+    ContextualTriggerSignalTask["Notes"] = "Notes";
+    ContextualTriggerSignalTask["Outline"] = "Outline";
+})(ContextualTriggerSignalTask || (exports.ContextualTriggerSignalTask = ContextualTriggerSignalTask = {}));
+/** @internal @hidden */
+var ContextualTriggerDomainCategory;
+(function (ContextualTriggerDomainCategory) {
+    ContextualTriggerDomainCategory["AcademicWriting"] = "Academic Writing";
+    ContextualTriggerDomainCategory["AiChatbots"] = "AI Chatbots";
+    ContextualTriggerDomainCategory["AiDetection"] = "AI Detection";
+    ContextualTriggerDomainCategory["BusinessCommunicationAndMessaging"] = "Business Communication and Messaging";
+    ContextualTriggerDomainCategory["Collaboration"] = "Collaboration";
+    ContextualTriggerDomainCategory["CrmAndCustomerService"] = "CRM & Customer Service";
+    ContextualTriggerDomainCategory["DesignAndCreativeTools"] = "Design and Creative Tools";
+    ContextualTriggerDomainCategory["Ecommerce"] = "Ecommerce";
+    ContextualTriggerDomainCategory["EducationTrainingAndOnlineLearning"] = "Education, Training, & Online Learning";
+    ContextualTriggerDomainCategory["Email"] = "Email";
+    ContextualTriggerDomainCategory["FinanceAndHrTools"] = "Finance & HR Tools";
+    ContextualTriggerDomainCategory["GeneralWriting"] = "General Writing";
+    ContextualTriggerDomainCategory["InternetBrowser"] = "Internet Browser";
+    ContextualTriggerDomainCategory["JobBoardsRecruiting"] = "Job Boards / Recruiting";
+    ContextualTriggerDomainCategory["Marketing"] = "Marketing";
+    ContextualTriggerDomainCategory["NewsAndBloggingPlatforms"] = "News & Blogging Platforms";
+    ContextualTriggerDomainCategory["NoteTaking"] = "Note-taking";
+    ContextualTriggerDomainCategory["Other"] = "Other";
+    ContextualTriggerDomainCategory["PersonalMessaging"] = "Personal Messaging";
+    ContextualTriggerDomainCategory["SearchEngine"] = "Search Engine";
+    ContextualTriggerDomainCategory["SocialMedia"] = "Social Media";
+    ContextualTriggerDomainCategory["SoftwareDevelopment"] = "Software Development";
+    ContextualTriggerDomainCategory["SpreadsheetsPresentationsAndProductivity"] = "Spreadsheets, Presentations and Productivity";
+    ContextualTriggerDomainCategory["Translation"] = "Translation";
+    ContextualTriggerDomainCategory["Utility"] = "Utility";
+    ContextualTriggerDomainCategory["WritingAid"] = "Writing Aid";
+})(ContextualTriggerDomainCategory || (exports.ContextualTriggerDomainCategory = ContextualTriggerDomainCategory = {}));
 /**
  * An enum of the HTTP status codes.
  */

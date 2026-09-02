@@ -538,5 +538,21 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         this.agent.tools = tools;
         return this;
     }
+    /**
+     * Sets the while-writing trigger this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.setDefaultWhileWritingTrigger({
+     *   condition: 'Offer a citation when the user asserts a statistic',
+     *   enabled: true,
+     *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+     * });
+     * ```
+     */
+    setDefaultWhileWritingTrigger(contextualTrigger) {
+        this.defaultTriggers = { ...this.defaultTriggers, contextualTrigger };
+        return this;
+    }
 }
 exports.AgentDefinitionBuilder = AgentDefinitionBuilder;
