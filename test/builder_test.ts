@@ -5,6 +5,7 @@ import {BaseDefinitionBuilder} from '../builder';
 import {ConnectionRequirement} from '../api_types';
 import {ContextualTriggerAssistMode} from '../types';
 import {ContextualTriggerSurface} from '../types';
+import {DefaultTriggerKind} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
 import type {ExternalPackVersionMetadata} from '../compiled_types';
@@ -751,7 +752,7 @@ describe('Agent builder', () => {
 
     it('sets a trigger', () => {
       agent.setDefaultWhileWritingTrigger(contextualTrigger);
-      assert.deepEqual(agent.defaultTriggers, {contextualTrigger});
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}]);
     });
 
     it('takes assist mode and surfaces', () => {
@@ -760,20 +761,21 @@ describe('Agent builder', () => {
         assistMode: ContextualTriggerAssistMode.OnDemand,
         surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
       });
-      assert.deepEqual(agent.defaultTriggers, {
-        contextualTrigger: {
+      assert.deepEqual(agent.defaultTriggers, [
+        {
+          kind: DefaultTriggerKind.WhileWriting,
           ...contextualTrigger,
           assistMode: ContextualTriggerAssistMode.OnDemand,
           surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
         },
-      });
+      ]);
     });
 
-    it('keeps the last call', () => {
+    it('replaces rather than appends on a second call', () => {
       agent
         .setDefaultWhileWritingTrigger({...contextualTrigger, enabled: false})
         .setDefaultWhileWritingTrigger(contextualTrigger);
-      assert.deepEqual(agent.defaultTriggers, {contextualTrigger});
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}]);
     });
 
     it('leaves the agent definition alone', () => {
@@ -784,7 +786,7 @@ describe('Agent builder', () => {
     it('carries through compilePackMetadata', () => {
       agent.setInstructions('Do a thing.').setDefaultWhileWritingTrigger(contextualTrigger).setVersion('1.0.0');
       const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
-      assert.deepEqual(metadata.defaultTriggers, {contextualTrigger});
+      assert.deepEqual(metadata.defaultTriggers, [{kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}]);
     });
 
     it('does not add a defaultTriggers field to an ordinary pack', () => {

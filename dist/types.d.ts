@@ -1861,17 +1861,32 @@ export interface WhileWritingTriggerDefinition {
     evaluationConfig?: ContextualTriggerEvaluationConfig;
 }
 /**
+ * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
+ * enum as they become authorable.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum DefaultTriggerKind {
+    WhileWriting = "whileWriting"
+}
+/**
+ * A single default trigger a pack's agent ships with, tagged with its kind so more kinds can
+ * join this union later.
+ *
+ * @internal
+ * @hidden
+ */
+export type DefaultTriggerDefinition = {
+    kind: DefaultTriggerKind.WhileWriting;
+} & WhileWritingTriggerDefinition;
+/**
  * The triggers an agent ships with. Each one is a default the user can edit after installing.
  *
  * @internal
  * @hidden
  */
-export interface DefaultTriggersDefinition {
-    /**
-     * The while-writing trigger the agent runs on.
-     */
-    contextualTrigger?: WhileWritingTriggerDefinition;
-}
+export type DefaultTriggersDefinition = DefaultTriggerDefinition[];
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.

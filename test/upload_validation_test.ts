@@ -13,6 +13,8 @@ import {ContextualTriggerStrategy} from '../types';
 import {ContextualTriggerSurface} from '../types';
 import {CurrencyFormat} from '..';
 import {DataIndexing} from '../api_types';
+import type {DefaultTriggerDefinition} from '../types';
+import {DefaultTriggerKind} from '../types';
 import {DurationUnit} from '..';
 import {EmbeddedContentType} from '../types';
 import type {GenericSyncTable} from '../api';
@@ -51,7 +53,6 @@ import {Type} from '../api_types';
 import {UntilNowDateRanges} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
-import type {WhileWritingTriggerDefinition} from '../types';
 import {_hasCycle} from '../testing/upload_validation';
 import {assertCondition} from '..';
 import {compileFormulaMetadata} from '../helpers/metadata';
@@ -8336,17 +8337,22 @@ describe('Pack metadata Validation', async () => {
     });
 
     it('validates a default while-writing trigger', async () => {
-      const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic', enabled: true};
+      const contextualTrigger = {
+        kind: DefaultTriggerKind.WhileWriting,
+        condition: 'Offer a citation when the user asserts a statistic',
+        enabled: true,
+      };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
-        defaultTriggers: {contextualTrigger},
+        defaultTriggers: [contextualTrigger],
       });
       const result = await validateJson(metadata);
-      assert.deepEqual(result.defaultTriggers, {contextualTrigger});
+      assert.deepEqual(result.defaultTriggers, [contextualTrigger]);
     });
 
     it('validates one naming assist mode, surfaces, and an evaluation config', async () => {
-      const contextualTrigger: WhileWritingTriggerDefinition = {
+      const contextualTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.WhileWriting,
         condition: 'Offer a citation when the user asserts a statistic',
         enabled: true,
         assistMode: ContextualTriggerAssistMode.OnDemand,
@@ -8360,27 +8366,28 @@ describe('Pack metadata Validation', async () => {
       };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
-        defaultTriggers: {contextualTrigger},
+        defaultTriggers: [contextualTrigger],
       });
       const result = await validateJson(metadata);
-      assert.deepEqual(result.defaultTriggers, {contextualTrigger});
+      assert.deepEqual(result.defaultTriggers, [contextualTrigger]);
     });
 
     it('rejects more than 50 blocked domains', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers: {
-            contextualTrigger: {
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.WhileWriting,
               condition: 'Do a thing.',
               enabled: true,
               blockedDomains: Array.from({length: 51}, (_, i) => `example${i}.com`),
             },
-          },
+          ],
         }),
       );
       assert.deepInclude(err.validationErrors!, {
-        path: 'defaultTriggers.contextualTrigger.blockedDomains',
+        path: 'defaultTriggers[0].blockedDomains',
         message: 'Too big: expected array to have <=50 items',
       });
     });
@@ -8389,23 +8396,38 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers: {
-            contextualTrigger: {
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.WhileWriting,
               condition: 'Do a thing.',
               enabled: true,
               evaluationConfig: {strategy: ContextualTriggerStrategy.Llm, regexPattern: '\\d+%'} as any,
             },
-          },
+          ],
         }),
       );
       assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects two default triggers of the same kind', async () => {
+      const contextualTrigger = {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.', enabled: true};
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [contextualTrigger, contextualTrigger],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[1]',
+        message: 'An agent can only declare one whileWriting default trigger.',
+      });
     });
 
     it('rejects default triggers on a pack that is not an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: undefined,
-          defaultTriggers: {contextualTrigger: {condition: 'Do a thing.', enabled: true}},
+          defaultTriggers: [{kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.', enabled: true}],
         }),
       );
       assert.deepInclude(err.validationErrors!, {

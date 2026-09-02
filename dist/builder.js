@@ -4,6 +4,7 @@ exports.AgentDefinitionBuilder = exports.PackDefinitionBuilder = exports.BaseDef
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
 const types_2 = require("./types");
+const types_3 = require("./types");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -520,17 +521,17 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         const tools = [];
         if (webSearch) {
             const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
-            tools.push({ type: types_2.ToolType.WebSearch, ...(allowedDomains ? { allowedDomains } : {}) });
+            tools.push({ type: types_3.ToolType.WebSearch, ...(allowedDomains ? { allowedDomains } : {}) });
         }
         if (docs) {
-            tools.push({ type: types_2.ToolType.CodaDocsAndTables });
+            tools.push({ type: types_3.ToolType.CodaDocsAndTables });
         }
         if (mail) {
-            tools.push({ type: types_2.ToolType.MailAndCalendar });
+            tools.push({ type: types_3.ToolType.MailAndCalendar });
         }
         for (const connector of connectors || []) {
             tools.push({
-                type: types_2.ToolType.Pack,
+                type: types_3.ToolType.Pack,
                 packId: connector.packId,
                 ...(connector.formulas ? { formulas: connector.formulas } : {}),
             });
@@ -551,7 +552,9 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setDefaultWhileWritingTrigger(contextualTrigger) {
-        this.defaultTriggers = { ...this.defaultTriggers, contextualTrigger };
+        var _a;
+        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.WhileWriting);
+        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger }];
         return this;
     }
 }

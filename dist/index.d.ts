@@ -281,6 +281,8 @@ export type { MCPServer } from './types';
 export type { PartialSkillDef } from './types';
 export type { AgentDefinition } from './types';
 export type { DefaultTriggersDefinition } from './types';
+export type { DefaultTriggerDefinition } from './types';
+export { DefaultTriggerKind } from './types';
 export type { WhileWritingTriggerDefinition } from './types';
 export { ContextualTriggerAssistMode } from './types';
 export { ContextualTriggerSuggestionColor } from './types';

@@ -9,6 +9,7 @@ import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import {DefaultTriggerKind} from './types';
 import type {DefaultTriggersDefinition} from './types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
@@ -722,7 +723,10 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setDefaultWhileWritingTrigger(contextualTrigger: WhileWritingTriggerDefinition): this {
-    this.defaultTriggers = {...this.defaultTriggers, contextualTrigger};
+    const otherTriggers = (this.defaultTriggers ?? []).filter(
+      trigger => trigger.kind !== DefaultTriggerKind.WhileWriting,
+    );
+    this.defaultTriggers = [...otherTriggers, {kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}];
     return this;
   }
 }

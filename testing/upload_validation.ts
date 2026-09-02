@@ -37,6 +37,7 @@ import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
 import {DataIndexing} from '../api_types';
+import {DefaultTriggerKind} from '../types';
 import type {DefaultTriggersDefinition} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
@@ -2476,9 +2477,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     evaluationConfig: evaluationConfigSchema.optional(),
   });
 
-  const defaultTriggersSchema = zodCompleteStrictObject<DefaultTriggersDefinition>({
-    contextualTrigger: whileWritingTriggerSchema.optional(),
-  });
+  const defaultTriggerSchema = z.discriminatedUnion('kind', [
+    whileWritingTriggerSchema.extend({kind: z.literal(DefaultTriggerKind.WhileWriting)}),
+  ]);
+
+  const defaultTriggersSchema: z.ZodType<DefaultTriggersDefinition> = z
+    .array(defaultTriggerSchema)
+    .superRefine((triggers, context) => {
+      const seen = new Set<string>();
+      triggers.forEach((trigger, index) => {
+        if (seen.has(trigger.kind)) {
+          context.addIssue({
+            code: 'custom',
+            path: [index],
+            message: `An agent can only declare one ${trigger.kind} default trigger.`,
+          });
+        }
+        seen.add(trigger.kind);
+      });
+    });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
@@ -3293,7 +3310,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     .superRefine((data, context) => {
       // The builder can't add these to an agent, but a hand-written manifest can.
       if (!(data as PackVersionMetadata).agent) {
-        if ((data as PackVersionMetadata).defaultTriggers) {
+        if (((data as PackVersionMetadata).defaultTriggers || []).length) {
           context.addIssue({
             code: 'custom',
             path: ['defaultTriggers'],

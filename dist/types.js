@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.ContextualTriggerDomainCategory = exports.ContextualTriggerSignalTask = exports.ContextualTriggerSignalRegister = exports.ContextualTriggerStrategy = exports.ContextualTriggerGranularity = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.DefaultTriggerKind = exports.ContextualTriggerDomainCategory = exports.ContextualTriggerSignalTask = exports.ContextualTriggerSignalRegister = exports.ContextualTriggerStrategy = exports.ContextualTriggerGranularity = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -496,6 +496,17 @@ var ContextualTriggerDomainCategory;
     ContextualTriggerDomainCategory["Utility"] = "Utility";
     ContextualTriggerDomainCategory["WritingAid"] = "Writing Aid";
 })(ContextualTriggerDomainCategory || (exports.ContextualTriggerDomainCategory = ContextualTriggerDomainCategory = {}));
+/**
+ * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
+ * enum as they become authorable.
+ *
+ * @internal
+ * @hidden
+ */
+var DefaultTriggerKind;
+(function (DefaultTriggerKind) {
+    DefaultTriggerKind["WhileWriting"] = "whileWriting";
+})(DefaultTriggerKind || (exports.DefaultTriggerKind = DefaultTriggerKind = {}));
 /**
  * An enum of the HTTP status codes.
  */
