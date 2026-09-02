@@ -9,6 +9,7 @@ import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {DefaultTriggersDefinition} from './types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
@@ -32,6 +33,7 @@ import type {SystemAuthenticationDef} from './types';
 import {ToolType} from './types';
 import type {UserAuthenticationDef} from './api_types';
 import type {ValueType} from './schema';
+import type {WhileWritingTriggerDefinition} from './types';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
@@ -52,7 +54,9 @@ import {wrapMetadataFunction} from './api';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export function newPack(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>): PackDefinitionBuilder {
+export function newPack(
+  definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>,
+): PackDefinitionBuilder {
   return new PackDefinitionBuilder(definition);
 }
 
@@ -180,7 +184,7 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
    * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
    * rather than constructing a builder directly.
    */
-  constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent'>>) {
+  constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>) {
     super();
     const {
       formulas,
@@ -655,6 +659,10 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * See {@link PackVersionDefinition.agent}.
    */
   agent: Partial<AgentDefinition> = {tools: []};
+  /**
+   * See {@link PackVersionDefinition.defaultTriggers}.
+   */
+  defaultTriggers?: DefaultTriggersDefinition;
 
   /**
    * Sets this agent's instructions.
@@ -698,6 +706,23 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
       });
     }
     this.agent.tools = tools;
+    return this;
+  }
+
+  /**
+   * Sets the while-writing trigger this agent runs on.
+   *
+   * @example
+   * ```
+   * pack.setDefaultWhileWritingTrigger({
+   *   condition: 'Offer a citation when the user asserts a statistic',
+   *   enabled: true,
+   *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+   * });
+   * ```
+   */
+  setDefaultWhileWritingTrigger(contextualTrigger: WhileWritingTriggerDefinition): this {
+    this.defaultTriggers = {...this.defaultTriggers, contextualTrigger};
     return this;
   }
 }

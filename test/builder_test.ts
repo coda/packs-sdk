@@ -3,6 +3,8 @@ import type {AgentDefinitionBuilder} from '../builder';
 import {AuthenticationType} from '../types';
 import {BaseDefinitionBuilder} from '../builder';
 import {ConnectionRequirement} from '../api_types';
+import {ContextualTriggerAssistMode} from '../types';
+import {ContextualTriggerSurface} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
 import type {ExternalPackVersionMetadata} from '../compiled_types';
@@ -739,6 +741,58 @@ describe('Agent builder', () => {
     });
   });
 
+  describe('default while-writing trigger', () => {
+    const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic', enabled: true};
+
+    it('has none until one is set', () => {
+      agent.setInstructions('Do a thing.');
+      assert.isUndefined(agent.defaultTriggers);
+    });
+
+    it('sets a trigger', () => {
+      agent.setDefaultWhileWritingTrigger(contextualTrigger);
+      assert.deepEqual(agent.defaultTriggers, {contextualTrigger});
+    });
+
+    it('takes assist mode and surfaces', () => {
+      agent.setDefaultWhileWritingTrigger({
+        ...contextualTrigger,
+        assistMode: ContextualTriggerAssistMode.OnDemand,
+        surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
+      });
+      assert.deepEqual(agent.defaultTriggers, {
+        contextualTrigger: {
+          ...contextualTrigger,
+          assistMode: ContextualTriggerAssistMode.OnDemand,
+          surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
+        },
+      });
+    });
+
+    it('keeps the last call', () => {
+      agent
+        .setDefaultWhileWritingTrigger({...contextualTrigger, enabled: false})
+        .setDefaultWhileWritingTrigger(contextualTrigger);
+      assert.deepEqual(agent.defaultTriggers, {contextualTrigger});
+    });
+
+    it('leaves the agent definition alone', () => {
+      agent.setInstructions('Do a thing.').setDefaultWhileWritingTrigger(contextualTrigger);
+      assert.deepEqual(agent.agent, {instructions: 'Do a thing.', tools: []});
+    });
+
+    it('carries through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').setDefaultWhileWritingTrigger(contextualTrigger).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.defaultTriggers, {contextualTrigger});
+    });
+
+    it('does not add a defaultTriggers field to an ordinary pack', () => {
+      const metadata = compilePackMetadata(newPack().setVersion('1.0.0') as PackVersionDefinition);
+      assert.isUndefined(metadata.defaultTriggers);
+    });
+  });
+
   describe('withheld surface', () => {
     it('is not reachable through the types', () => {
       // Checked by tsc, not at runtime: if one of these stops being an error, the directive
@@ -758,6 +812,8 @@ describe('Agent builder', () => {
         newAgent({formulas: []});
         // @ts-expect-error MCP belongs on a connector packId, not as a top-level boolean
         builder.setTools({mcp: true});
+        // @ts-expect-error only newAgent() can stamp default triggers
+        newPack({defaultTriggers: {}});
       }
       assert.isFunction(checkedByTscOnly);
     });

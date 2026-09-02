@@ -20,12 +20,24 @@ import type {CommentContentCategorization} from '../schema';
 import {ConnectionRequirement} from '../api_types';
 import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
+import {ContextualTriggerAssistMode} from '../types';
+import type {ContextualTriggerContextRules} from '../types';
+import {ContextualTriggerDecorationStyle} from '../types';
+import {ContextualTriggerDomainCategory} from '../types';
+import type {ContextualTriggerEvaluationConfig} from '../types';
+import {ContextualTriggerGranularity} from '../types';
+import {ContextualTriggerSignalRegister} from '../types';
+import {ContextualTriggerSignalTask} from '../types';
+import {ContextualTriggerStrategy} from '../types';
+import {ContextualTriggerSuggestionColor} from '../types';
+import {ContextualTriggerSurface} from '../types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
 import {DataIndexing} from '../api_types';
+import type {DefaultTriggersDefinition} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
@@ -137,6 +149,7 @@ import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import type {WebSearchTool} from '../types';
+import type {WhileWritingTriggerDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
@@ -181,6 +194,8 @@ export const Limits = {
   BuildingBlockName: 50,
   BuildingBlockDescription: 1000,
   ColumnMatcherRegex: 300,
+  ConditionLength: 2000,
+  MaxBlockedDomains: 50,
   MaxSkillCount: 15,
   MaxSuggestedPromptsPerPack: 3,
   NumColumnMatchersPerFormat: 10,
@@ -2410,6 +2425,61 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
   });
 
+  const domainSchema = z
+    .string()
+    .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
+      message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+    });
+
+  const contextRulesSchema = zodCompleteStrictObject<ContextualTriggerContextRules>({
+    signalRegister: z.array(z.nativeEnum(ContextualTriggerSignalRegister)),
+    signalTask: z.array(z.nativeEnum(ContextualTriggerSignalTask)),
+    domain: z.array(domainSchema).max(Limits.MaxBlockedDomains),
+    domainCategory: z.array(z.nativeEnum(ContextualTriggerDomainCategory)),
+    domainBlocked: z.boolean().optional(),
+  });
+
+  const evaluationConfigSchema = z.discriminatedUnion('strategy', [
+    zodCompleteStrictObject<Extract<ContextualTriggerEvaluationConfig, {strategy: ContextualTriggerStrategy.Regex}>>({
+      strategy: z.literal(ContextualTriggerStrategy.Regex),
+      granularity: z.nativeEnum(ContextualTriggerGranularity),
+      regexPattern: z.string().min(1),
+    }),
+    zodCompleteStrictObject<
+      Extract<ContextualTriggerEvaluationConfig, {strategy: ContextualTriggerStrategy.SemanticCentroid}>
+    >({
+      strategy: z.literal(ContextualTriggerStrategy.SemanticCentroid),
+      granularity: z.nativeEnum(ContextualTriggerGranularity),
+      semanticCentroid: z.object({
+        centroid: z.array(z.number()),
+        threshold: z.number(),
+        calibrationPrecision: z.number(),
+        calibrationRecall: z.number(),
+        calibrationExamples: z.object({positive: z.array(z.string()), hardNegative: z.array(z.string())}),
+      }),
+    }),
+    zodCompleteStrictObject<Extract<ContextualTriggerEvaluationConfig, {strategy: ContextualTriggerStrategy.Llm}>>({
+      strategy: z.literal(ContextualTriggerStrategy.Llm),
+      granularity: z.nativeEnum(ContextualTriggerGranularity),
+    }),
+  ]);
+
+  const whileWritingTriggerSchema = zodCompleteStrictObject<WhileWritingTriggerDefinition>({
+    condition: z.string().min(1).max(Limits.ConditionLength),
+    enabled: z.boolean(),
+    assistMode: z.nativeEnum(ContextualTriggerAssistMode).optional(),
+    suggestionColor: z.nativeEnum(ContextualTriggerSuggestionColor).optional(),
+    decorationStyle: z.nativeEnum(ContextualTriggerDecorationStyle).optional(),
+    surfaces: z.array(z.nativeEnum(ContextualTriggerSurface)).optional(),
+    blockedDomains: z.array(domainSchema).max(Limits.MaxBlockedDomains).optional(),
+    contextRules: contextRulesSchema.optional(),
+    evaluationConfig: evaluationConfigSchema.optional(),
+  });
+
+  const defaultTriggersSchema = zodCompleteStrictObject<DefaultTriggersDefinition>({
+    contextualTrigger: whileWritingTriggerSchema.optional(),
+  });
+
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
   });
@@ -2565,6 +2635,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     chatSkill: chatSkillSchema.optional(),
     benchInitializationSkill: chatSkillSchema.optional(),
     agent: agentSchema.optional(),
+    defaultTriggers: defaultTriggersSchema.optional(),
     mcpServers: z
       .array(mcpServerSchema)
       .max(1)
@@ -3222,6 +3293,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     .superRefine((data, context) => {
       // The builder can't add these to an agent, but a hand-written manifest can.
       if (!(data as PackVersionMetadata).agent) {
+        if ((data as PackVersionMetadata).defaultTriggers) {
+          context.addIssue({
+            code: 'custom',
+            path: ['defaultTriggers'],
+            message: 'Only an agent can define default triggers.',
+          });
+        }
         return;
       }
       const listFields: Array<[keyof PackVersionMetadata, string]> = [
