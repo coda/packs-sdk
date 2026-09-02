@@ -9,8 +9,8 @@ import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {DefaultTriggerDefinition} from './types';
 import {DefaultTriggerKind} from './types';
-import type {DefaultTriggersDefinition} from './types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
@@ -663,7 +663,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   /**
    * See {@link PackVersionDefinition.defaultTriggers}.
    */
-  defaultTriggers?: DefaultTriggersDefinition;
+  defaultTriggers?: DefaultTriggerDefinition[];
 
   /**
    * Sets this agent's instructions.

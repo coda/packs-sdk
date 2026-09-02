@@ -6275,13 +6275,6 @@ export type DefaultTriggerDefinition = {
 	kind: DefaultTriggerKind.WhileWriting;
 } & WhileWritingTriggerDefinition;
 /**
- * The triggers an agent ships with. Each one is a default the user can edit after installing.
- *
- * @internal
- * @hidden
- */
-export type DefaultTriggersDefinition = DefaultTriggerDefinition[];
-/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -6393,7 +6386,7 @@ export interface PackVersionDefinition {
 	 * @internal
 	 * @hidden
 	 */
-	defaultTriggers?: DefaultTriggersDefinition;
+	defaultTriggers?: DefaultTriggerDefinition[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6838,7 +6831,7 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
 	 * See {@link PackVersionDefinition.defaultTriggers}.
 	 */
-	defaultTriggers?: DefaultTriggersDefinition;
+	defaultTriggers?: DefaultTriggerDefinition[];
 	/**
 	 * Sets this agent's instructions.
 	 *

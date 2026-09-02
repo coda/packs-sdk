@@ -8389,7 +8389,6 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
-    // The evaluator and context-gate shapes are computed server-side, so a pack can't declare them.
     it('rejects runtime-only keys the authoring surface does not have', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({

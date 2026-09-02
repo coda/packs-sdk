@@ -30,8 +30,8 @@ import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
 import {DataIndexing} from '../api_types';
+import type {DefaultTriggerDefinition} from '../types';
 import {DefaultTriggerKind} from '../types';
-import type {DefaultTriggersDefinition} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
@@ -2439,7 +2439,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     whileWritingTriggerSchema.extend({kind: z.literal(DefaultTriggerKind.WhileWriting)}),
   ]);
 
-  const defaultTriggersSchema: z.ZodType<DefaultTriggersDefinition> = z
+  const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z
     .array(defaultTriggerSchema)
     .superRefine((triggers, context) => {
       const seen = new Set<string>();
