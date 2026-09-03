@@ -6270,8 +6270,8 @@ export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
  */
 export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.Schedule> {
 	/**
-	 * The recurrence, as an RFC 5545 `RRULE`. An optional `DTSTART` line pins the start, and its
-	 * `TZID` pins the timezone; install supplies whichever of the two the rule leaves out.
+	 * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line anchoring the start and a
+	 * `TZID` on it naming the timezone.
 	 */
 	rruleString: string;
 }
@@ -6892,7 +6892,9 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 *
 	 * @example
 	 * ```
-	 * pack.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'});
+	 * pack.setDefaultScheduleTrigger({
+	 *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+	 * });
 	 * ```
 	 */
 	setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, "kind">): this;

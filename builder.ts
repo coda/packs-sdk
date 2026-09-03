@@ -735,7 +735,9 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    *
    * @example
    * ```
-   * pack.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'});
+   * pack.setDefaultScheduleTrigger({
+   *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+   * });
    * ```
    */
   setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, 'kind'>): this {

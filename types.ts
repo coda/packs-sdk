@@ -1886,8 +1886,8 @@ export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
  */
 export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.Schedule> {
   /**
-   * The recurrence, as an RFC 5545 `RRULE`. An optional `DTSTART` line pins the start, and its
-   * `TZID` pins the timezone; install supplies whichever of the two the rule leaves out.
+   * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line anchoring the start and a
+   * `TZID` on it naming the timezone.
    */
   rruleString: string;
 }
