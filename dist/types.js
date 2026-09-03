@@ -342,6 +342,8 @@ var ContextualTriggerAssistMode;
     ContextualTriggerAssistMode["Proactive"] = "proactive";
 })(ContextualTriggerAssistMode || (exports.ContextualTriggerAssistMode = ContextualTriggerAssistMode = {}));
 /**
+ * The color a while-writing trigger's suggestion renders in. Absent defaults to `Purple`.
+ *
  * @internal
  * @hidden
  */
@@ -357,6 +359,9 @@ var ContextualTriggerSuggestionColor;
     ContextualTriggerSuggestionColor["Yellow"] = "yellow";
 })(ContextualTriggerSuggestionColor || (exports.ContextualTriggerSuggestionColor = ContextualTriggerSuggestionColor = {}));
 /**
+ * How a while-writing trigger's suggestion renders. Absent defaults to `Auto`, which leaves the
+ * choice to the client.
+ *
  * @internal
  * @hidden
  */
@@ -367,7 +372,7 @@ var ContextualTriggerDecorationStyle;
     ContextualTriggerDecorationStyle["Vbar"] = "vbar";
 })(ContextualTriggerDecorationStyle || (exports.ContextualTriggerDecorationStyle = ContextualTriggerDecorationStyle = {}));
 /**
- * Where a while-writing agent may offer help.
+ * Where a while-writing agent may offer help. Absent defaults to every surface.
  *
  * @internal
  * @hidden

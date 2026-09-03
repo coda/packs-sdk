@@ -6199,6 +6199,8 @@ export declare enum ContextualTriggerAssistMode {
 	Proactive = "proactive"
 }
 /**
+ * The color a while-writing trigger's suggestion renders in. Absent defaults to `Purple`.
+ *
  * @internal
  * @hidden
  */
@@ -6213,6 +6215,9 @@ export declare enum ContextualTriggerSuggestionColor {
 	Yellow = "yellow"
 }
 /**
+ * How a while-writing trigger's suggestion renders. Absent defaults to `Auto`, which leaves the
+ * choice to the client.
+ *
  * @internal
  * @hidden
  */
@@ -6222,7 +6227,7 @@ export declare enum ContextualTriggerDecorationStyle {
 	Vbar = "vbar"
 }
 /**
- * Where a while-writing agent may offer help.
+ * Where a while-writing agent may offer help. Absent defaults to every surface.
  *
  * @internal
  * @hidden
