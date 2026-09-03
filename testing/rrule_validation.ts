@@ -19,17 +19,14 @@ const RulePartNames = [
   'BYSETPOS',
 ];
 
-// The ranges each numeric rule part takes, as [min, max].
-const NumericRulePartRanges: Array<[string, number, number]> = [
-  ['BYHOUR', 0, 23],
-  ['BYMINUTE', 0, 59],
-  ['BYMONTH', 1, 12],
-  ['BYMONTHDAY', -31, 31],
-  ['BYSETPOS', -366, 366],
+// The values each numeric rule part takes, as the RFC 5545 ranges it allows.
+const NumericRulePartRanges: Array<[string, ...Array<[number, number]>]> = [
+  ['BYHOUR', [0, 23]],
+  ['BYMINUTE', [0, 59]],
+  ['BYMONTH', [1, 12]],
+  ['BYMONTHDAY', [-31, -1], [1, 31]],
+  ['BYSETPOS', [-366, -1], [1, 366]],
 ];
-
-// RFC 5545 excludes 0 from these parts' ranges.
-const RulePartsWithoutZero = ['BYMONTHDAY', 'BYSETPOS'];
 
 const DateTimePattern = /^\d{8}(T\d{6}Z?)?$/;
 const WeekdayPattern = new RegExp(`^[+-]?\\d{0,2}(${Weekdays.join('|')})$`);
@@ -111,13 +108,13 @@ export function validateRRuleString(rruleString: string): string | undefined {
   }
 
   const numbers = new Map<string, number[]>();
-  for (const [key, min, max] of NumericRulePartRanges) {
+  for (const [key, ...ranges] of NumericRulePartRanges) {
     const value = parts.get(key);
     if (value === undefined) {
       continue;
     }
-    const parsed = parseNumberList(value, min, max);
-    if (!parsed || (RulePartsWithoutZero.includes(key) && parsed.includes(0))) {
+    const parsed = parseNumberList(value, ranges);
+    if (!parsed) {
       return `A schedule trigger has an invalid ${key}.`;
     }
     numbers.set(key, parsed);
@@ -138,7 +135,8 @@ export function validateRRuleString(rruleString: string): string | undefined {
   return gaps.some(gap => gap < MinutesPerHour) ? TooFrequent : undefined;
 }
 
-function parseNumberList(value: string, min: number, max: number): number[] | undefined {
+function parseNumberList(value: string, ranges: Array<[number, number]>): number[] | undefined {
   const numbers = value.split(',').map(entry => (/^-?\d+$/.test(entry) ? Number(entry) : NaN));
-  return numbers.every(entry => entry >= min && entry <= max) ? numbers : undefined;
+  const inRange = (entry: number) => ranges.some(([min, max]) => entry >= min && entry <= max);
+  return numbers.every(inRange) ? numbers : undefined;
 }
