@@ -1,6 +1,6 @@
-// Validation for the RFC 5545 recurrence a pack declares in `defaultTriggers.scheduleTrigger`.
+// Validation for the RFC 5545 recurrence a pack declares in a `schedule` default trigger.
 
-const Frequencies = ['HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
+const Frequencies = ['HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY'];
 const SubHourlyFrequencies = ['MINUTELY', 'SECONDLY'];
 const Weekdays = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
@@ -27,6 +27,9 @@ const NumericRulePartRanges: Array<[string, number, number]> = [
   ['BYMONTHDAY', -31, 31],
   ['BYSETPOS', -366, 366],
 ];
+
+// RFC 5545 excludes 0 from these parts' ranges.
+const RulePartsWithoutZero = ['BYMONTHDAY', 'BYSETPOS'];
 
 const DateTimePattern = /^\d{8}(T\d{6}Z?)?$/;
 const WeekdayPattern = new RegExp(`^[+-]?\\d{0,2}(${Weekdays.join('|')})$`);
@@ -114,7 +117,7 @@ export function validateRRuleString(rruleString: string): string | undefined {
       continue;
     }
     const parsed = parseNumberList(value, min, max);
-    if (!parsed) {
+    if (!parsed || (RulePartsWithoutZero.includes(key) && parsed.includes(0))) {
       return `A schedule trigger has an invalid ${key}.`;
     }
     numbers.set(key, parsed);

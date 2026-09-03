@@ -66,6 +66,24 @@ describe('validateRRuleString', () => {
       );
     });
 
+    it('rejects 0 where RFC 5545 leaves it out of the range', () => {
+      assert.equal(
+        validateRRuleString('RRULE:FREQ=MONTHLY;BYMONTHDAY=0'),
+        'A schedule trigger has an invalid BYMONTHDAY.',
+      );
+      assert.equal(
+        validateRRuleString('RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=0'),
+        'A schedule trigger has an invalid BYSETPOS.',
+      );
+    });
+
+    it('rejects yearly, which the server reads back as a daily cadence', () => {
+      assert.equal(
+        validateRRuleString('RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=1'),
+        'A schedule trigger does not support FREQ=YEARLY.',
+      );
+    });
+
     it('rejects a value out of range', () => {
       assert.equal(validateRRuleString('RRULE:FREQ=DAILY;BYHOUR=24'), 'A schedule trigger has an invalid BYHOUR.');
       assert.equal(validateRRuleString('RRULE:FREQ=DAILY;INTERVAL=0'), 'A schedule trigger has an invalid INTERVAL.');
