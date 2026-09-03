@@ -15,6 +15,7 @@ import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
 import type { PartialSkillDef } from './types';
+import type { ScheduleTriggerDefinition } from './types';
 import type { Schema } from './schema';
 import type { Skill } from './types';
 import type { SkillEntrypoints } from './types';
@@ -460,4 +461,13 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, 'kind'>): this;
+    /**
+     * Sets the schedule this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'});
+     * ```
+     */
+    setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, 'kind'>): this;
 }

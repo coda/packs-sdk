@@ -1856,13 +1856,14 @@ export enum ContextualTriggerSurface {
 }
 
 /**
- * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
- * enum as they become authorable.
+ * Which kind of default trigger an entry declares. More kinds (event, ...) join this enum as
+ * they become authorable.
  *
  * @internal
  * @hidden
  */
 export enum DefaultTriggerKind {
+  Schedule = 'schedule',
   WhileWriting = 'whileWriting',
 }
 
@@ -1875,6 +1876,20 @@ export enum DefaultTriggerKind {
 export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
   /** The kind identifier for this trigger. */
   kind: T;
+}
+
+/**
+ * A default schedule trigger a pack's agent ships with. Adopters receive it paused.
+ *
+ * @internal
+ * @hidden
+ */
+export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.Schedule> {
+  /**
+   * The recurrence, as an RFC 5545 `RRULE`. An optional `DTSTART` line pins the start, and its
+   * `TZID` pins the timezone; install supplies whichever of the two the rule leaves out.
+   */
+  rruleString: string;
 }
 
 /**
@@ -1900,7 +1915,7 @@ export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<Defaul
  * @internal
  * @hidden
  */
-export type DefaultTriggerDefinition = WhileWritingTriggerDefinition;
+export type DefaultTriggerDefinition = ScheduleTriggerDefinition | WhileWritingTriggerDefinition;
 
 /**
  * The definition of the contents of a Pack at a specific version. This is the

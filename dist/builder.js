@@ -556,5 +556,19 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger }];
         return this;
     }
+    /**
+     * Sets the schedule this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'});
+     * ```
+     */
+    setDefaultScheduleTrigger(scheduleTrigger) {
+        var _a;
+        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.Schedule);
+        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.Schedule, ...scheduleTrigger }];
+        return this;
+    }
 }
 exports.AgentDefinitionBuilder = AgentDefinitionBuilder;
