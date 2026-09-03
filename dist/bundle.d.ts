@@ -6242,24 +6242,6 @@ export declare enum ContextualTriggerSurface {
 	SocialMedia = "social_media"
 }
 /**
- * A default while-writing trigger a pack's agent ships with.
- *
- * @internal
- * @hidden
- */
-export interface WhileWritingTriggerDefinition {
-	/** Natural language condition the trigger fires on, e.g. "Offer a citation when the user asserts a statistic". */
-	condition: string;
-	/** Whether the trigger starts on for new agent instances. */
-	enabled: boolean;
-	assistMode?: ContextualTriggerAssistMode;
-	suggestionColor?: ContextualTriggerSuggestionColor;
-	decorationStyle?: ContextualTriggerDecorationStyle;
-	surfaces?: ContextualTriggerSurface[];
-	/** Domains this trigger will not activate on. Max 50. */
-	blockedDomains?: string[];
-}
-/**
  * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
  * enum as they become authorable.
  *
@@ -6270,15 +6252,38 @@ export declare enum DefaultTriggerKind {
 	WhileWriting = "whileWriting"
 }
 /**
- * A single default trigger a pack's agent ships with, tagged with its kind so more kinds can
- * join this union later.
+ * Base interface for all default trigger definitions.
  *
  * @internal
  * @hidden
  */
-export type DefaultTriggerDefinition = {
-	kind: DefaultTriggerKind.WhileWriting;
-} & WhileWritingTriggerDefinition;
+export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
+	/** The kind identifier for this trigger. */
+	kind: T;
+}
+/**
+ * A default while-writing trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.WhileWriting> {
+	/** Natural language condition the trigger fires on, e.g. "Offer a citation when the user asserts a statistic". */
+	condition: string;
+	assistMode?: ContextualTriggerAssistMode;
+	suggestionColor?: ContextualTriggerSuggestionColor;
+	decorationStyle?: ContextualTriggerDecorationStyle;
+	surfaces?: ContextualTriggerSurface[];
+	/** Domains this trigger will not activate on. Max 50. */
+	blockedDomains?: string[];
+}
+/**
+ * A single default trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export type DefaultTriggerDefinition = WhileWritingTriggerDefinition;
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
@@ -6863,12 +6868,11 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 * pack.setDefaultWhileWritingTrigger({
 	 *   condition: 'Offer a citation when the user asserts a statistic',
-	 *   enabled: true,
 	 *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
 	 * });
 	 * ```
 	 */
-	setDefaultWhileWritingTrigger(contextualTrigger: WhileWritingTriggerDefinition): this;
+	setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, "kind">): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {

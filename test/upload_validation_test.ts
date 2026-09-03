@@ -8340,7 +8340,6 @@ describe('Pack metadata Validation', async () => {
       const contextualTrigger = {
         kind: DefaultTriggerKind.WhileWriting,
         condition: 'Offer a citation when the user asserts a statistic',
-        enabled: true,
       };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
@@ -8354,7 +8353,6 @@ describe('Pack metadata Validation', async () => {
       const contextualTrigger: DefaultTriggerDefinition = {
         kind: DefaultTriggerKind.WhileWriting,
         condition: 'Offer a citation when the user asserts a statistic',
-        enabled: true,
         assistMode: ContextualTriggerAssistMode.OnDemand,
         suggestionColor: ContextualTriggerSuggestionColor.Purple,
         decorationStyle: ContextualTriggerDecorationStyle.Underline,
@@ -8377,7 +8375,6 @@ describe('Pack metadata Validation', async () => {
             {
               kind: DefaultTriggerKind.WhileWriting,
               condition: 'Do a thing.',
-              enabled: true,
               blockedDomains: Array.from({length: 51}, (_, i) => `example${i}.com`),
             },
           ],
@@ -8397,7 +8394,6 @@ describe('Pack metadata Validation', async () => {
             {
               kind: DefaultTriggerKind.WhileWriting,
               condition: 'Do a thing.',
-              enabled: true,
               evaluationConfig: {strategy: 'REGEX', granularity: 'SENTENCE', regexPattern: '\\d+%'},
             } as any,
           ],
@@ -8407,7 +8403,7 @@ describe('Pack metadata Validation', async () => {
     });
 
     it('rejects two default triggers of the same kind', async () => {
-      const contextualTrigger = {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.', enabled: true};
+      const contextualTrigger = {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'};
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
@@ -8424,7 +8420,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: undefined,
-          defaultTriggers: [{kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.', enabled: true}],
+          defaultTriggers: [{kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'}],
         }),
       );
       assert.deepInclude(err.validationErrors!, {

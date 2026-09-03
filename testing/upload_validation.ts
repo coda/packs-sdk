@@ -2426,8 +2426,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     });
 
   const whileWritingTriggerSchema = zodCompleteStrictObject<WhileWritingTriggerDefinition>({
+    kind: z.literal(DefaultTriggerKind.WhileWriting),
     condition: z.string().min(1).max(Limits.ConditionLength),
-    enabled: z.boolean(),
     assistMode: z.nativeEnum(ContextualTriggerAssistMode).optional(),
     suggestionColor: z.nativeEnum(ContextualTriggerSuggestionColor).optional(),
     decorationStyle: z.nativeEnum(ContextualTriggerDecorationStyle).optional(),
@@ -2435,9 +2435,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     blockedDomains: z.array(domainSchema).max(Limits.MaxBlockedDomains).optional(),
   });
 
-  const defaultTriggerSchema = z.discriminatedUnion('kind', [
-    whileWritingTriggerSchema.extend({kind: z.literal(DefaultTriggerKind.WhileWriting)}),
-  ]);
+  const defaultTriggerSchema = z.discriminatedUnion('kind', [whileWritingTriggerSchema]);
 
   const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z
     .array(defaultTriggerSchema)

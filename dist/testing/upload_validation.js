@@ -1868,17 +1868,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
     });
     const whileWritingTriggerSchema = zodCompleteStrictObject({
+        kind: z.literal(types_6.DefaultTriggerKind.WhileWriting),
         condition: z.string().min(1).max(exports.Limits.ConditionLength),
-        enabled: z.boolean(),
         assistMode: z.nativeEnum(types_2.ContextualTriggerAssistMode).optional(),
         suggestionColor: z.nativeEnum(types_4.ContextualTriggerSuggestionColor).optional(),
         decorationStyle: z.nativeEnum(types_3.ContextualTriggerDecorationStyle).optional(),
         surfaces: z.array(z.nativeEnum(types_5.ContextualTriggerSurface)).optional(),
         blockedDomains: z.array(domainSchema).max(exports.Limits.MaxBlockedDomains).optional(),
     });
-    const defaultTriggerSchema = z.discriminatedUnion('kind', [
-        whileWritingTriggerSchema.extend({ kind: z.literal(types_6.DefaultTriggerKind.WhileWriting) }),
-    ]);
+    const defaultTriggerSchema = z.discriminatedUnion('kind', [whileWritingTriggerSchema]);
     const defaultTriggersSchema = z
         .array(defaultTriggerSchema)
         .superRefine((triggers, context) => {

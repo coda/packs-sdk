@@ -546,7 +546,6 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      * pack.setDefaultWhileWritingTrigger({
      *   condition: 'Offer a citation when the user asserts a statistic',
-     *   enabled: true,
      *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
      * });
      * ```

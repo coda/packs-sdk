@@ -455,10 +455,9 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      * pack.setDefaultWhileWritingTrigger({
      *   condition: 'Offer a citation when the user asserts a statistic',
-     *   enabled: true,
      *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
      * });
      * ```
      */
-    setDefaultWhileWritingTrigger(contextualTrigger: WhileWritingTriggerDefinition): this;
+    setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, 'kind'>): this;
 }

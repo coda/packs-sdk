@@ -743,7 +743,7 @@ describe('Agent builder', () => {
   });
 
   describe('default while-writing trigger', () => {
-    const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic', enabled: true};
+    const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic'};
 
     it('has none until one is set', () => {
       agent.setInstructions('Do a thing.');
@@ -773,7 +773,7 @@ describe('Agent builder', () => {
 
     it('replaces rather than appends on a second call', () => {
       agent
-        .setDefaultWhileWritingTrigger({...contextualTrigger, enabled: false})
+        .setDefaultWhileWritingTrigger({...contextualTrigger, surfaces: [ContextualTriggerSurface.Docs]})
         .setDefaultWhileWritingTrigger(contextualTrigger);
       assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}]);
     });
