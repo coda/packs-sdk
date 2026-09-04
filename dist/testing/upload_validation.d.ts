@@ -19,9 +19,18 @@ export declare const Limits: {
     BuildingBlockDescription: number;
     ColumnMatcherRegex: number;
     ConditionLength: number;
+    KeywordLength: number;
+    MailFilterAddressValue: number;
+    MailFilterTextValue: number;
     MaxBlockedDomains: number;
+    MaxDefaultTriggers: number;
+    MaxFilterConditions: number;
+    MaxKeywords: number;
     MaxSkillCount: number;
     MaxSuggestedPromptsPerPack: number;
+    NotetakerParticipantValue: number;
+    NotetakerRecurringEventIdValue: number;
+    NotetakerTagValue: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
     PermissionsBatchSize: number;

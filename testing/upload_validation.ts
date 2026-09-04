@@ -33,6 +33,8 @@ import {DataIndexing} from '../api_types';
 import type {DefaultTriggerDefinition} from '../types';
 import {DefaultTriggerKind} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
+import type {DocsEventTriggerDefinition} from '../types';
+import {DocsEventType} from '../types';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
@@ -42,7 +44,10 @@ import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import type {EmbeddedContentTool} from '../types';
 import {EmbeddedContentType} from '../types';
+import {EventTriggerType} from '../types';
 import {FeatureSet} from '../types';
+import {FilterCombinator} from '../types';
+import {FilterOperator} from '../types';
 import type {FormulaOptions} from '../api';
 import {FormulaPurpose} from '../api_types';
 import type {GenericObjectSchema} from '../schema';
@@ -64,13 +69,28 @@ import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MCPServer} from '../types';
 import type {MCPTool} from '../types';
+import type {MailAddressFilterCondition} from '../types';
 import type {MailAndCalendarTool} from '../types';
+import type {MailEventFilters} from '../types';
+import {MailEventType} from '../types';
+import {MailFilterField} from '../types';
+import type {MailLabelAddedTriggerDefinition} from '../types';
+import type {MailMessageEventTriggerDefinition} from '../types';
+import type {MailTextFilterCondition} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
+import type {NotetakerAddressFilterCondition} from '../types';
+import type {NotetakerBooleanFilterCondition} from '../types';
+import type {NotetakerEventFilters} from '../types';
+import type {NotetakerEventTriggerDefinition} from '../types';
+import {NotetakerEventType} from '../types';
+import {NotetakerFilterField} from '../types';
+import type {NotetakerIdFilterCondition} from '../types';
+import type {NotetakerNumericFilterCondition} from '../types';
 import type {NumericDateSchema} from '../schema';
 import type {NumericDateTimeSchema} from '../schema';
 import type {NumericDurationSchema} from '../schema';
@@ -116,6 +136,10 @@ import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
 import {SkillModel} from '../types';
 import type {SkillModelConfiguration} from '../types';
+import type {SlackAgentMentionTriggerDefinition} from '../types';
+import {SlackEventType} from '../types';
+import type {SlackMessageKeywordTriggerDefinition} from '../types';
+import {SlackTriggerAudience} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -191,9 +215,18 @@ export const Limits = {
   BuildingBlockDescription: 1000,
   ColumnMatcherRegex: 300,
   ConditionLength: 2000,
+  KeywordLength: 200,
+  MailFilterAddressValue: 320,
+  MailFilterTextValue: 998,
   MaxBlockedDomains: 50,
+  MaxDefaultTriggers: 20,
+  MaxFilterConditions: 20,
+  MaxKeywords: 50,
   MaxSkillCount: 15,
   MaxSuggestedPromptsPerPack: 3,
+  NotetakerParticipantValue: 320,
+  NotetakerRecurringEventIdValue: 1024,
+  NotetakerTagValue: 128,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
@@ -2451,13 +2484,163 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
   });
 
-  const defaultTriggerSchema = z.discriminatedUnion('kind', [scheduleTriggerSchema, whileWritingTriggerSchema]);
+  // The operator vocabulary each field family accepts, mirroring the stored contract.
+  const addressFilterOperatorSchema = z.enum([
+    FilterOperator.TextContains,
+    FilterOperator.TextDoesNotContain,
+    FilterOperator.TextDoesNotEqual,
+    FilterOperator.TextEquals,
+  ]);
+  const textFilterOperatorSchema = z.enum([FilterOperator.TextContains, FilterOperator.TextDoesNotContain]);
+  const idFilterOperatorSchema = z.enum([FilterOperator.TextDoesNotEqual, FilterOperator.TextEquals]);
+  const numericFilterOperatorSchema = z.enum([
+    FilterOperator.NumberAtLeast,
+    FilterOperator.NumberAtMost,
+    FilterOperator.NumberEquals,
+  ]);
+  const keywordSchema = z.string().min(1).max(Limits.KeywordLength);
+  const eventTriggerKindSchema = z.literal(DefaultTriggerKind.Event);
+
+  const mailAddressFilterConditionSchema = zodCompleteStrictObject<MailAddressFilterCondition>({
+    field: z.enum([MailFilterField.From, MailFilterField.To]),
+    operator: addressFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.MailFilterAddressValue),
+  });
+
+  const mailTextFilterConditionSchema = zodCompleteStrictObject<MailTextFilterCondition>({
+    field: z.enum([MailFilterField.Body, MailFilterField.Subject]),
+    operator: textFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.MailFilterTextValue),
+  });
+
+  const mailEventFiltersSchema = zodCompleteStrictObject<MailEventFilters>({
+    conditions: z
+      .array(z.discriminatedUnion('field', [mailAddressFilterConditionSchema, mailTextFilterConditionSchema]))
+      .min(1)
+      .max(Limits.MaxFilterConditions),
+    combinator: z.nativeEnum(FilterCombinator).optional(),
+  });
+
+  const mailMessageEventTriggerSchema = zodCompleteStrictObject<MailMessageEventTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Mail),
+    mailEventType: z.enum([MailEventType.MessageReceived, MailEventType.MessageSent]),
+    filters: mailEventFiltersSchema.optional(),
+  });
+
+  // Label filters name provider label IDs, which are not portable, so the adopter's install picks
+  // the labels and this trigger carries only the event.
+  const mailLabelAddedTriggerSchema = zodCompleteStrictObject<MailLabelAddedTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Mail),
+    mailEventType: z.literal(MailEventType.LabelAdded),
+  });
+
+  const mailEventTriggerSchema = z.discriminatedUnion('mailEventType', [
+    mailMessageEventTriggerSchema,
+    mailLabelAddedTriggerSchema,
+  ]);
+
+  const slackMessageKeywordTriggerSchema = zodCompleteStrictObject<SlackMessageKeywordTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Slack),
+    eventType: z.literal(SlackEventType.MessageKeyword),
+    audience: z.nativeEnum(SlackTriggerAudience).optional(),
+    monitorThreadFollowUps: z.boolean().optional(),
+    keywords: z.array(keywordSchema).max(Limits.MaxKeywords).optional(),
+  });
+
+  const slackAgentMentionTriggerSchema = zodCompleteStrictObject<SlackAgentMentionTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Slack),
+    eventType: z.literal(SlackEventType.AgentMentioned),
+    audience: z.nativeEnum(SlackTriggerAudience).optional(),
+    monitorThreadFollowUps: z.boolean().optional(),
+  });
+
+  const slackEventTriggerSchema = z.discriminatedUnion('eventType', [
+    slackMessageKeywordTriggerSchema,
+    slackAgentMentionTriggerSchema,
+  ]);
+
+  const docsEventTriggerSchema = zodCompleteStrictObject<DocsEventTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Docs),
+    docEventType: z.nativeEnum(DocsEventType),
+  });
+
+  const notetakerAddressFilterConditionSchema = zodCompleteStrictObject<NotetakerAddressFilterCondition>({
+    field: z.enum([NotetakerFilterField.Participant, NotetakerFilterField.ProjectTag]),
+    operator: addressFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.NotetakerParticipantValue),
+  });
+
+  const notetakerIdFilterConditionSchema = zodCompleteStrictObject<NotetakerIdFilterCondition>({
+    field: z.enum([NotetakerFilterField.MeetingType, NotetakerFilterField.RecurringEventId]),
+    operator: idFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.NotetakerRecurringEventIdValue),
+  });
+
+  const notetakerNumericFilterConditionSchema = zodCompleteStrictObject<NotetakerNumericFilterCondition>({
+    field: z.enum([NotetakerFilterField.DurationMinutes, NotetakerFilterField.ParticipantCount]),
+    operator: numericFilterOperatorSchema,
+    value: z.string().regex(/^\d{1,4}$/, 'A count must be a whole number of up to four digits.'),
+  });
+
+  const notetakerBooleanFilterConditionSchema = zodCompleteStrictObject<NotetakerBooleanFilterCondition>({
+    field: z.enum([NotetakerFilterField.HasExternalAttendees, NotetakerFilterField.IsRecurring]),
+    operator: idFilterOperatorSchema,
+    value: z.enum(['false', 'true']),
+  });
+
+  const notetakerEventFiltersSchema = zodCompleteStrictObject<NotetakerEventFilters>({
+    conditions: z
+      .array(
+        z.discriminatedUnion('field', [
+          notetakerAddressFilterConditionSchema,
+          notetakerIdFilterConditionSchema,
+          notetakerNumericFilterConditionSchema,
+          notetakerBooleanFilterConditionSchema,
+        ]),
+      )
+      .max(Limits.MaxFilterConditions)
+      .optional(),
+    combinator: z.nativeEnum(FilterCombinator).optional(),
+    keywords: z.array(keywordSchema).max(Limits.MaxKeywords).optional(),
+  }).refine(filters => Boolean(filters.conditions?.length || filters.keywords?.length), {
+    message: 'A notetaker filter needs at least one condition or keyword.',
+  });
+
+  const notetakerEventTriggerSchema = zodCompleteStrictObject<NotetakerEventTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Notetaker),
+    eventType: z.nativeEnum(NotetakerEventType),
+    filters: notetakerEventFiltersSchema.optional(),
+  });
+
+  const eventTriggerSchema = z.discriminatedUnion('type', [
+    mailEventTriggerSchema,
+    slackEventTriggerSchema,
+    docsEventTriggerSchema,
+    notetakerEventTriggerSchema,
+  ]);
+
+  const defaultTriggerSchema = z.discriminatedUnion('kind', [
+    eventTriggerSchema,
+    scheduleTriggerSchema,
+    whileWritingTriggerSchema,
+  ]);
 
   const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z
     .array(defaultTriggerSchema)
+    .max(Limits.MaxDefaultTriggers)
     .superRefine((triggers, context) => {
       const seen = new Set<string>();
       triggers.forEach((trigger, index) => {
+        // An agent listens to as many events as it likes; the other kinds are one apiece.
+        if (trigger.kind === DefaultTriggerKind.Event) {
+          return;
+        }
         if (seen.has(trigger.kind)) {
           context.addIssue({
             code: 'custom',

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.DefaultTriggerKind = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.NotetakerFilterField = exports.NotetakerEventType = exports.DocsEventType = exports.SlackTriggerAudience = exports.SlackEventType = exports.MailFilterField = exports.MailEventType = exports.FilterCombinator = exports.FilterOperator = exports.EventTriggerType = exports.DefaultTriggerKind = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -388,17 +388,144 @@ var ContextualTriggerSurface;
     ContextualTriggerSurface["SocialMedia"] = "social_media";
 })(ContextualTriggerSurface || (exports.ContextualTriggerSurface = ContextualTriggerSurface = {}));
 /**
- * Which kind of default trigger an entry declares. More kinds (event, ...) join this enum as
- * they become authorable.
+ * Which kind of default trigger an entry declares. More kinds join this enum as they become
+ * authorable.
  *
  * @internal
  * @hidden
  */
 var DefaultTriggerKind;
 (function (DefaultTriggerKind) {
+    DefaultTriggerKind["Event"] = "event";
     DefaultTriggerKind["Schedule"] = "schedule";
     DefaultTriggerKind["WhileWriting"] = "whileWriting";
 })(DefaultTriggerKind || (exports.DefaultTriggerKind = DefaultTriggerKind = {}));
+/**
+ * Which product's events a default event trigger listens to.
+ *
+ * @internal
+ * @hidden
+ */
+var EventTriggerType;
+(function (EventTriggerType) {
+    EventTriggerType["Docs"] = "docs";
+    EventTriggerType["Mail"] = "mail";
+    EventTriggerType["Notetaker"] = "notetaker";
+    EventTriggerType["Slack"] = "slack";
+})(EventTriggerType || (exports.EventTriggerType = EventTriggerType = {}));
+/**
+ * How a filter condition compares its field to its value.
+ *
+ * @internal
+ * @hidden
+ */
+var FilterOperator;
+(function (FilterOperator) {
+    FilterOperator["NumberAtLeast"] = "numberAtLeast";
+    FilterOperator["NumberAtMost"] = "numberAtMost";
+    FilterOperator["NumberEquals"] = "numberEquals";
+    FilterOperator["TextContains"] = "textContains";
+    FilterOperator["TextDoesNotContain"] = "textDoesNotContain";
+    FilterOperator["TextDoesNotEqual"] = "textDoesNotEqual";
+    FilterOperator["TextEquals"] = "textEquals";
+})(FilterOperator || (exports.FilterOperator = FilterOperator = {}));
+/**
+ * How a filter's conditions combine. Absent means `And`.
+ *
+ * @internal
+ * @hidden
+ */
+var FilterCombinator;
+(function (FilterCombinator) {
+    FilterCombinator["And"] = "and";
+    FilterCombinator["Or"] = "or";
+})(FilterCombinator || (exports.FilterCombinator = FilterCombinator = {}));
+/**
+ * The mail events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+var MailEventType;
+(function (MailEventType) {
+    MailEventType["LabelAdded"] = "label_added";
+    MailEventType["MessageReceived"] = "message_received";
+    MailEventType["MessageSent"] = "message_sent";
+})(MailEventType || (exports.MailEventType = MailEventType = {}));
+/**
+ * The part of a message a mail filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+var MailFilterField;
+(function (MailFilterField) {
+    MailFilterField["Body"] = "body";
+    MailFilterField["From"] = "from";
+    MailFilterField["Subject"] = "subject";
+    MailFilterField["To"] = "to";
+})(MailFilterField || (exports.MailFilterField = MailFilterField = {}));
+/**
+ * The Slack events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+var SlackEventType;
+(function (SlackEventType) {
+    SlackEventType["AgentMentioned"] = "agent_mentioned";
+    SlackEventType["MessageKeyword"] = "message_keyword";
+})(SlackEventType || (exports.SlackEventType = SlackEventType = {}));
+/**
+ * Who may run the agent through a Slack trigger. Absent leaves the choice to the adopter.
+ *
+ * @internal
+ * @hidden
+ */
+var SlackTriggerAudience;
+(function (SlackTriggerAudience) {
+    SlackTriggerAudience["Anyone"] = "anyone";
+    SlackTriggerAudience["Creator"] = "creator";
+})(SlackTriggerAudience || (exports.SlackTriggerAudience = SlackTriggerAudience = {}));
+/**
+ * The doc events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+var DocsEventType;
+(function (DocsEventType) {
+    DocsEventType["FormSubmitted"] = "form_submitted";
+    DocsEventType["RowAdded"] = "row_added";
+    DocsEventType["RowChanged"] = "row_changed";
+})(DocsEventType || (exports.DocsEventType = DocsEventType = {}));
+/**
+ * The notetaker events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+var NotetakerEventType;
+(function (NotetakerEventType) {
+    NotetakerEventType["MeetingSummaryCompleted"] = "meeting.summary.completed";
+})(NotetakerEventType || (exports.NotetakerEventType = NotetakerEventType = {}));
+/**
+ * The part of a meeting a notetaker filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+var NotetakerFilterField;
+(function (NotetakerFilterField) {
+    NotetakerFilterField["DurationMinutes"] = "durationMinutes";
+    NotetakerFilterField["HasExternalAttendees"] = "hasExternalAttendees";
+    NotetakerFilterField["IsRecurring"] = "isRecurring";
+    NotetakerFilterField["MeetingType"] = "meetingType";
+    NotetakerFilterField["Participant"] = "participant";
+    NotetakerFilterField["ParticipantCount"] = "participantCount";
+    NotetakerFilterField["ProjectTag"] = "projectTag";
+    NotetakerFilterField["RecurringEventId"] = "recurringEventId";
+})(NotetakerFilterField || (exports.NotetakerFilterField = NotetakerFilterField = {}));
 /**
  * An enum of the HTTP status codes.
  */

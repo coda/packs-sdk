@@ -15,8 +15,12 @@ import {CurrencyFormat} from '..';
 import {DataIndexing} from '../api_types';
 import type {DefaultTriggerDefinition} from '../types';
 import {DefaultTriggerKind} from '../types';
+import {DocsEventType} from '../types';
 import {DurationUnit} from '..';
 import {EmbeddedContentType} from '../types';
+import {EventTriggerType} from '../types';
+import {FilterCombinator} from '../types';
+import {FilterOperator} from '../types';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
@@ -25,6 +29,10 @@ import {IndexingStrategy} from '../schema';
 import type {KnowledgeTool} from '../types';
 import {KnowledgeToolSourceType} from '../types';
 import {Limits} from '../testing/upload_validation';
+import {MailEventType} from '../types';
+import {MailFilterField} from '../types';
+import {NotetakerEventType} from '../types';
+import {NotetakerFilterField} from '../types';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {OptionsReference} from '../api_types';
 import {OptionsType} from '../api_types';
@@ -44,6 +52,8 @@ import type {ScreenAnnotationTool} from '../types';
 import {ScreenAnnotationType} from '../types';
 import type {Skill} from '../types';
 import {SkillModel} from '../types';
+import {SlackEventType} from '../types';
+import {SlackTriggerAudience} from '../types';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
@@ -8474,6 +8484,367 @@ describe('Pack metadata Validation', async () => {
       const defaultTriggers: DefaultTriggerDefinition[] = [
         {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
         {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
+      ];
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers,
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, defaultTriggers);
+    });
+
+    it('validates a default mail event trigger', async () => {
+      const mailTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Mail,
+        mailEventType: MailEventType.MessageReceived,
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [mailTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [mailTrigger]);
+    });
+
+    // `packs upload` validates the JSON the server receives, not the in-memory metadata.
+    it('validates a mail event trigger with filters that has been through JSON', async () => {
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [
+          {
+            kind: DefaultTriggerKind.Event,
+            type: EventTriggerType.Mail,
+            mailEventType: MailEventType.MessageReceived,
+            filters: {
+              combinator: FilterCombinator.Or,
+              conditions: [
+                {field: MailFilterField.From, operator: FilterOperator.TextEquals, value: 'ceo@example.com'},
+                {field: MailFilterField.Subject, operator: FilterOperator.TextContains, value: 'invoice'},
+              ],
+            },
+          },
+        ],
+      });
+      const result = await validateJson(JSON.parse(JSON.stringify(metadata)));
+      // Spelled out rather than reusing the enums, so this fails if the wire values ever change.
+      assert.deepEqual(JSON.parse(JSON.stringify(result.defaultTriggers)), [
+        {
+          kind: 'event',
+          type: 'mail',
+          mailEventType: 'message_received',
+          filters: {
+            combinator: 'or',
+            conditions: [
+              {field: 'from', operator: 'textEquals', value: 'ceo@example.com'},
+              {field: 'subject', operator: 'textContains', value: 'invoice'},
+            ],
+          },
+        },
+      ]);
+    });
+
+    it('takes more than one event trigger', async () => {
+      const defaultTriggers: DefaultTriggerDefinition[] = [
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Mail,
+          mailEventType: MailEventType.MessageReceived,
+        },
+        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Mail, mailEventType: MailEventType.MessageSent},
+      ];
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers,
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, defaultTriggers);
+    });
+
+    it('rejects an equality operator on a text field', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Mail,
+              mailEventType: MailEventType.MessageReceived,
+              filters: {
+                conditions: [
+                  {field: MailFilterField.Subject, operator: FilterOperator.TextEquals, value: 'invoice'} as any,
+                ],
+              },
+            },
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects a filter with no conditions', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Mail,
+              mailEventType: MailEventType.MessageReceived,
+              filters: {conditions: []},
+            },
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects more triggers than the server will store', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: new Array(Limits.MaxDefaultTriggers + 1).fill({
+            kind: DefaultTriggerKind.Event,
+            type: EventTriggerType.Mail,
+            mailEventType: MailEventType.MessageReceived,
+          }),
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('validates a default mail label-added trigger', async () => {
+      const labelTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Mail,
+        mailEventType: MailEventType.LabelAdded,
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [labelTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [labelTrigger]);
+    });
+
+    it('rejects filters on a label-added trigger, whose labels are bound at install', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Mail,
+              mailEventType: MailEventType.LabelAdded,
+              filters: {conditions: [{field: 'label', operator: 'textEquals', value: 'Label_1'}]},
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('validates a default slack keyword trigger', async () => {
+      const slackTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Slack,
+        eventType: SlackEventType.MessageKeyword,
+        audience: SlackTriggerAudience.Anyone,
+        monitorThreadFollowUps: true,
+        keywords: ['deploy', 'rollback'],
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [slackTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [slackTrigger]);
+    });
+
+    it('validates a default slack mention trigger', async () => {
+      const slackTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Slack,
+        eventType: SlackEventType.AgentMentioned,
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [slackTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [slackTrigger]);
+    });
+
+    it('rejects a slack channel, which is bound at install', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Slack,
+              eventType: SlackEventType.AgentMentioned,
+              channelIds: ['C123'],
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('validates a default docs event trigger', async () => {
+      const docsTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Docs,
+        docEventType: DocsEventType.RowAdded,
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [docsTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [docsTrigger]);
+    });
+
+    // `packs upload` validates the JSON the server receives, not the in-memory metadata.
+    it('validates a notetaker trigger with filters that has been through JSON', async () => {
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [
+          {
+            kind: DefaultTriggerKind.Event,
+            type: EventTriggerType.Notetaker,
+            eventType: NotetakerEventType.MeetingSummaryCompleted,
+            filters: {
+              conditions: [
+                {
+                  field: NotetakerFilterField.Participant,
+                  operator: FilterOperator.TextContains,
+                  value: '@customers.example.com',
+                },
+                {
+                  field: NotetakerFilterField.DurationMinutes,
+                  operator: FilterOperator.NumberAtLeast,
+                  value: '30',
+                },
+                {
+                  field: NotetakerFilterField.HasExternalAttendees,
+                  operator: FilterOperator.TextEquals,
+                  value: 'true',
+                },
+              ],
+              keywords: ['renewal'],
+            },
+          },
+        ],
+      });
+      const result = await validateJson(JSON.parse(JSON.stringify(metadata)));
+      // Spelled out rather than reusing the enums, so this fails if the wire values ever change.
+      assert.deepEqual(JSON.parse(JSON.stringify(result.defaultTriggers)), [
+        {
+          kind: 'event',
+          type: 'notetaker',
+          eventType: 'meeting.summary.completed',
+          filters: {
+            conditions: [
+              {field: 'participant', operator: 'textContains', value: '@customers.example.com'},
+              {field: 'durationMinutes', operator: 'numberAtLeast', value: '30'},
+              {field: 'hasExternalAttendees', operator: 'textEquals', value: 'true'},
+            ],
+            keywords: ['renewal'],
+          },
+        },
+      ]);
+    });
+
+    it('rejects a notetaker filter with neither conditions nor keywords', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+              filters: {combinator: FilterCombinator.And},
+            },
+          ],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[0].filters',
+        message: 'A notetaker filter needs at least one condition or keyword.',
+      });
+    });
+
+    it('rejects a text operator on a count field', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+              filters: {
+                conditions: [
+                  {
+                    field: NotetakerFilterField.DurationMinutes,
+                    operator: FilterOperator.TextContains,
+                    value: '30',
+                  } as any,
+                ],
+              },
+            },
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects a count field whose value is not a number', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+              filters: {
+                conditions: [
+                  {
+                    field: NotetakerFilterField.ParticipantCount,
+                    operator: FilterOperator.NumberAtMost,
+                    value: 'a few',
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[0].filters.conditions[0].value',
+        message: 'A count must be a whole number of up to four digits.',
+      });
+    });
+
+    it('takes one trigger of every event type at once', async () => {
+      const defaultTriggers: DefaultTriggerDefinition[] = [
+        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Mail, mailEventType: MailEventType.MessageReceived},
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Slack,
+          eventType: SlackEventType.MessageKeyword,
+          keywords: ['deploy'],
+        },
+        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Docs, docEventType: DocsEventType.FormSubmitted},
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Notetaker,
+          eventType: NotetakerEventType.MeetingSummaryCompleted,
+        },
       ];
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
