@@ -557,6 +557,32 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         return this;
     }
     /**
+     * Adds an event trigger this agent runs on. Call it once per event; the mailbox, and any other
+     * account-specific target, is bound at install.
+     *
+     * @example
+     * ```
+     * pack.addDefaultEventTrigger({
+     *   type: sdk.EventTriggerType.Mail,
+     *   mailEventType: sdk.MailEventType.MessageReceived,
+     *   filters: {
+     *     conditions: [
+     *       {
+     *         field: sdk.MailFilterField.From,
+     *         operator: sdk.FilterOperator.TextContains,
+     *         value: '@customers.example.com',
+     *       },
+     *     ],
+     *   },
+     * });
+     * ```
+     */
+    addDefaultEventTrigger(eventTrigger) {
+        var _a;
+        this.defaultTriggers = [...((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []), { kind: types_2.DefaultTriggerKind.Event, ...eventTrigger }];
+        return this;
+    }
+    /**
      * Sets the schedule this agent runs on.
      *
      * @example
