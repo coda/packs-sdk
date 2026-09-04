@@ -8349,6 +8349,31 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(result.defaultTriggers, [contextualTrigger]);
     });
 
+    // `packs upload` validates the JSON the server receives, not the in-memory metadata.
+    it('validates a default while-writing trigger that has been through JSON', async () => {
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [
+          {
+            kind: DefaultTriggerKind.WhileWriting,
+            condition: 'Offer a citation when the user asserts a statistic',
+            assistMode: ContextualTriggerAssistMode.OnDemand,
+            surfaces: [ContextualTriggerSurface.Docs],
+          },
+        ],
+      });
+      const result = await validateJson(JSON.parse(JSON.stringify(metadata)));
+      // Spelled out rather than reusing the enums, so this fails if the wire values ever change.
+      assert.deepEqual(JSON.parse(JSON.stringify(result.defaultTriggers)), [
+        {
+          kind: 'whileWriting',
+          condition: 'Offer a citation when the user asserts a statistic',
+          assistMode: 'on_demand',
+          surfaces: ['docs'],
+        },
+      ]);
+    });
+
     it('validates one naming assist mode, surfaces, and blocked domains', async () => {
       const contextualTrigger: DefaultTriggerDefinition = {
         kind: DefaultTriggerKind.WhileWriting,
