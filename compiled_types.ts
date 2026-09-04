@@ -169,6 +169,7 @@ type BasePackVersionMetadata = Omit<
   | 'syncTables'
   | 'skills'
   | 'agent'
+  | 'defaultTriggers'
 >;
 
 // Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.

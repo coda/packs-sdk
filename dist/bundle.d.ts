@@ -6188,6 +6188,103 @@ export interface AgentToolsDef {
 	}>;
 }
 /**
+ * When a while-writing trigger offers proactive help, vs. only on request.
+ * Absent defaults to `Proactive`.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerAssistMode {
+	OnDemand = "on_demand",
+	Proactive = "proactive"
+}
+/**
+ * The color a while-writing trigger's suggestion renders in. Absent defaults to `Purple`.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerSuggestionColor {
+	Blue = "blue",
+	Green = "green",
+	Mulberry = "mulberry",
+	Neutral = "neutral",
+	Orange = "orange",
+	Purple = "purple",
+	Red = "red",
+	Yellow = "yellow"
+}
+/**
+ * How a while-writing trigger's suggestion renders. Absent defaults to `Auto`, which leaves the
+ * choice to the client.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerDecorationStyle {
+	Auto = "auto",
+	Underline = "underline",
+	Vbar = "vbar"
+}
+/**
+ * Where a while-writing agent may offer help. Absent defaults to every surface.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerSurface {
+	ChatAndMessages = "chat_messages",
+	CodingEnvironment = "coding_environment",
+	CustomerService = "customer_service",
+	Docs = "docs",
+	Email = "email",
+	SearchAndBrowser = "search_browser",
+	SocialMedia = "social_media"
+}
+/**
+ * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
+ * enum as they become authorable.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum DefaultTriggerKind {
+	WhileWriting = "whileWriting"
+}
+/**
+ * Base interface for all default trigger definitions.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
+	/** The kind identifier for this trigger. */
+	kind: T;
+}
+/**
+ * A default while-writing trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.WhileWriting> {
+	/** Natural language condition the trigger fires on, e.g. "Offer a citation when the user asserts a statistic". */
+	condition: string;
+	assistMode?: ContextualTriggerAssistMode;
+	suggestionColor?: ContextualTriggerSuggestionColor;
+	decorationStyle?: ContextualTriggerDecorationStyle;
+	surfaces?: ContextualTriggerSurface[];
+	/** Domains this trigger will not activate on. Max 50. */
+	blockedDomains?: string[];
+}
+/**
+ * A single default trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export type DefaultTriggerDefinition = WhileWritingTriggerDefinition;
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -6293,6 +6390,13 @@ export interface PackVersionDefinition {
 	 * @hidden
 	 */
 	agent?: AgentDefinition;
+	/**
+	 * The triggers this pack's agent ships with, if it defines any. Authored via `sdk.newAgent()`.
+	 *
+	 * @internal
+	 * @hidden
+	 */
+	defaultTriggers?: DefaultTriggerDefinition[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6360,7 +6464,7 @@ export declare enum HttpStatusCode {
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, "agent">>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, "agent" | "defaultTriggers">>): PackDefinitionBuilder;
 /**
  * Creates a new skeleton agent definition that can be added to.
  *
@@ -6466,7 +6570,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
 	 * rather than constructing a builder directly.
 	 */
-	constructor(definition?: Partial<Omit<PackVersionDefinition, "agent">>);
+	constructor(definition?: Partial<Omit<PackVersionDefinition, "agent" | "defaultTriggers">>);
 	/**
 	 * Adds a formula definition to this pack.
 	 *
@@ -6735,6 +6839,10 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 */
 	agent: Partial<AgentDefinition>;
 	/**
+	 * See {@link PackVersionDefinition.defaultTriggers}.
+	 */
+	defaultTriggers?: DefaultTriggerDefinition[];
+	/**
 	 * Sets this agent's instructions.
 	 *
 	 * @example
@@ -6753,6 +6861,18 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 */
 	setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+	/**
+	 * Sets the while-writing trigger this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.setDefaultWhileWritingTrigger({
+	 *   condition: 'Offer a citation when the user asserts a statistic',
+	 *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+	 * });
+	 * ```
+	 */
+	setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, "kind">): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
@@ -6815,7 +6935,7 @@ export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 /** @hidden */
 export type ExternalSkill = SkillMetadata;
-export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills" | "agent">;
+export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills" | "agent" | "defaultTriggers">;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {

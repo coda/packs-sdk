@@ -27,7 +27,7 @@ pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
 
 | Parameter | Type |
 | ------ | ------ |
-| `definition?` | `Partial`\<`Omit`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), `"agent"`\>\> |
+| `definition?` | `Partial`\<`Omit`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), `"agent"` \| `"defaultTriggers"`\>\> |
 
 ## Returns
 

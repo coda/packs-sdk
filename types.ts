@@ -1798,6 +1798,111 @@ export interface AgentToolsDef {
 }
 
 /**
+ * When a while-writing trigger offers proactive help, vs. only on request.
+ * Absent defaults to `Proactive`.
+ *
+ * @internal
+ * @hidden
+ */
+export enum ContextualTriggerAssistMode {
+  OnDemand = 'on_demand',
+  Proactive = 'proactive',
+}
+
+/**
+ * The color a while-writing trigger's suggestion renders in. Absent defaults to `Purple`.
+ *
+ * @internal
+ * @hidden
+ */
+export enum ContextualTriggerSuggestionColor {
+  Blue = 'blue',
+  Green = 'green',
+  Mulberry = 'mulberry',
+  Neutral = 'neutral',
+  Orange = 'orange',
+  Purple = 'purple',
+  Red = 'red',
+  Yellow = 'yellow',
+}
+
+/**
+ * How a while-writing trigger's suggestion renders. Absent defaults to `Auto`, which leaves the
+ * choice to the client.
+ *
+ * @internal
+ * @hidden
+ */
+export enum ContextualTriggerDecorationStyle {
+  Auto = 'auto',
+  Underline = 'underline',
+  Vbar = 'vbar',
+}
+
+/**
+ * Where a while-writing agent may offer help. Absent defaults to every surface.
+ *
+ * @internal
+ * @hidden
+ */
+export enum ContextualTriggerSurface {
+  ChatAndMessages = 'chat_messages',
+  CodingEnvironment = 'coding_environment',
+  CustomerService = 'customer_service',
+  Docs = 'docs',
+  Email = 'email',
+  SearchAndBrowser = 'search_browser',
+  SocialMedia = 'social_media',
+}
+
+/**
+ * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
+ * enum as they become authorable.
+ *
+ * @internal
+ * @hidden
+ */
+export enum DefaultTriggerKind {
+  WhileWriting = 'whileWriting',
+}
+
+/**
+ * Base interface for all default trigger definitions.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
+  /** The kind identifier for this trigger. */
+  kind: T;
+}
+
+/**
+ * A default while-writing trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.WhileWriting> {
+  /** Natural language condition the trigger fires on, e.g. "Offer a citation when the user asserts a statistic". */
+  condition: string;
+  assistMode?: ContextualTriggerAssistMode;
+  suggestionColor?: ContextualTriggerSuggestionColor;
+  decorationStyle?: ContextualTriggerDecorationStyle;
+  surfaces?: ContextualTriggerSurface[];
+  /** Domains this trigger will not activate on. Max 50. */
+  blockedDomains?: string[];
+}
+
+/**
+ * A single default trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export type DefaultTriggerDefinition = WhileWritingTriggerDefinition;
+
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1908,6 +2013,13 @@ export interface PackVersionDefinition {
    * @hidden
    */
   agent?: AgentDefinition;
+  /**
+   * The triggers this pack's agent ships with, if it defines any. Authored via `sdk.newAgent()`.
+   *
+   * @internal
+   * @hidden
+   */
+  defaultTriggers?: DefaultTriggerDefinition[];
 }
 
 /**

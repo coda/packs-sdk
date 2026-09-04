@@ -7,8 +7,14 @@ import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {ContentCategorizationType} from '../schema';
+import {ContextualTriggerAssistMode} from '../types';
+import {ContextualTriggerDecorationStyle} from '../types';
+import {ContextualTriggerSuggestionColor} from '../types';
+import {ContextualTriggerSurface} from '../types';
 import {CurrencyFormat} from '..';
 import {DataIndexing} from '../api_types';
+import type {DefaultTriggerDefinition} from '../types';
+import {DefaultTriggerKind} from '../types';
 import {DurationUnit} from '..';
 import {EmbeddedContentType} from '../types';
 import type {GenericSyncTable} from '../api';
@@ -8328,6 +8334,124 @@ describe('Pack metadata Validation', async () => {
     it('leaves ordinary packs alone', async () => {
       const result = await validateJson(createFakePackVersionMetadata());
       assert.isUndefined(result.agent);
+    });
+
+    it('validates a default while-writing trigger', async () => {
+      const contextualTrigger = {
+        kind: DefaultTriggerKind.WhileWriting,
+        condition: 'Offer a citation when the user asserts a statistic',
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [contextualTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [contextualTrigger]);
+    });
+
+    // `packs upload` validates the JSON the server receives, not the in-memory metadata.
+    it('validates a default while-writing trigger that has been through JSON', async () => {
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [
+          {
+            kind: DefaultTriggerKind.WhileWriting,
+            condition: 'Offer a citation when the user asserts a statistic',
+            assistMode: ContextualTriggerAssistMode.OnDemand,
+            surfaces: [ContextualTriggerSurface.Docs],
+          },
+        ],
+      });
+      const result = await validateJson(JSON.parse(JSON.stringify(metadata)));
+      // Spelled out rather than reusing the enums, so this fails if the wire values ever change.
+      assert.deepEqual(JSON.parse(JSON.stringify(result.defaultTriggers)), [
+        {
+          kind: 'whileWriting',
+          condition: 'Offer a citation when the user asserts a statistic',
+          assistMode: 'on_demand',
+          surfaces: ['docs'],
+        },
+      ]);
+    });
+
+    it('validates one naming assist mode, surfaces, and blocked domains', async () => {
+      const contextualTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.WhileWriting,
+        condition: 'Offer a citation when the user asserts a statistic',
+        assistMode: ContextualTriggerAssistMode.OnDemand,
+        suggestionColor: ContextualTriggerSuggestionColor.Purple,
+        decorationStyle: ContextualTriggerDecorationStyle.Underline,
+        surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
+        blockedDomains: ['internal.example.com'],
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [contextualTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [contextualTrigger]);
+    });
+
+    it('rejects more than 50 blocked domains', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.WhileWriting,
+              condition: 'Do a thing.',
+              blockedDomains: Array.from({length: 51}, (_, i) => `example${i}.com`),
+            },
+          ],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[0].blockedDomains',
+        message: 'Too big: expected array to have <=50 items',
+      });
+    });
+
+    it('rejects runtime-only keys the authoring surface does not have', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.WhileWriting,
+              condition: 'Do a thing.',
+              evaluationConfig: {strategy: 'REGEX', granularity: 'SENTENCE', regexPattern: '\\d+%'},
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects two default triggers of the same kind', async () => {
+      const contextualTrigger = {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'};
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [contextualTrigger, contextualTrigger],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[1]',
+        message: 'An agent can only declare one whileWriting default trigger.',
+      });
+    });
+
+    it('rejects default triggers on a pack that is not an agent', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: undefined,
+          defaultTriggers: [{kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'}],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers',
+        message: 'Only an agent can define default triggers.',
+      });
     });
   });
 

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.DefaultTriggerKind = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -329,6 +329,75 @@ var SkillModel;
     /** OpenAI GPT-5 series models. */
     SkillModel["OpenAIGPT5"] = "OpenAIGPT5";
 })(SkillModel || (exports.SkillModel = SkillModel = {}));
+/**
+ * When a while-writing trigger offers proactive help, vs. only on request.
+ * Absent defaults to `Proactive`.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerAssistMode;
+(function (ContextualTriggerAssistMode) {
+    ContextualTriggerAssistMode["OnDemand"] = "on_demand";
+    ContextualTriggerAssistMode["Proactive"] = "proactive";
+})(ContextualTriggerAssistMode || (exports.ContextualTriggerAssistMode = ContextualTriggerAssistMode = {}));
+/**
+ * The color a while-writing trigger's suggestion renders in. Absent defaults to `Purple`.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerSuggestionColor;
+(function (ContextualTriggerSuggestionColor) {
+    ContextualTriggerSuggestionColor["Blue"] = "blue";
+    ContextualTriggerSuggestionColor["Green"] = "green";
+    ContextualTriggerSuggestionColor["Mulberry"] = "mulberry";
+    ContextualTriggerSuggestionColor["Neutral"] = "neutral";
+    ContextualTriggerSuggestionColor["Orange"] = "orange";
+    ContextualTriggerSuggestionColor["Purple"] = "purple";
+    ContextualTriggerSuggestionColor["Red"] = "red";
+    ContextualTriggerSuggestionColor["Yellow"] = "yellow";
+})(ContextualTriggerSuggestionColor || (exports.ContextualTriggerSuggestionColor = ContextualTriggerSuggestionColor = {}));
+/**
+ * How a while-writing trigger's suggestion renders. Absent defaults to `Auto`, which leaves the
+ * choice to the client.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerDecorationStyle;
+(function (ContextualTriggerDecorationStyle) {
+    ContextualTriggerDecorationStyle["Auto"] = "auto";
+    ContextualTriggerDecorationStyle["Underline"] = "underline";
+    ContextualTriggerDecorationStyle["Vbar"] = "vbar";
+})(ContextualTriggerDecorationStyle || (exports.ContextualTriggerDecorationStyle = ContextualTriggerDecorationStyle = {}));
+/**
+ * Where a while-writing agent may offer help. Absent defaults to every surface.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerSurface;
+(function (ContextualTriggerSurface) {
+    ContextualTriggerSurface["ChatAndMessages"] = "chat_messages";
+    ContextualTriggerSurface["CodingEnvironment"] = "coding_environment";
+    ContextualTriggerSurface["CustomerService"] = "customer_service";
+    ContextualTriggerSurface["Docs"] = "docs";
+    ContextualTriggerSurface["Email"] = "email";
+    ContextualTriggerSurface["SearchAndBrowser"] = "search_browser";
+    ContextualTriggerSurface["SocialMedia"] = "social_media";
+})(ContextualTriggerSurface || (exports.ContextualTriggerSurface = ContextualTriggerSurface = {}));
+/**
+ * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
+ * enum as they become authorable.
+ *
+ * @internal
+ * @hidden
+ */
+var DefaultTriggerKind;
+(function (DefaultTriggerKind) {
+    DefaultTriggerKind["WhileWriting"] = "whileWriting";
+})(DefaultTriggerKind || (exports.DefaultTriggerKind = DefaultTriggerKind = {}));
 /**
  * An enum of the HTTP status codes.
  */
