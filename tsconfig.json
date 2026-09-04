@@ -68,7 +68,8 @@
     "./scripts/*",
     "./documentation/samples",
     "./documentation/scripts",
-    "./documentation/theme"
+    "./documentation/theme",
+    "./spike"
   ],
   "ts-node": {
     "files": true,
