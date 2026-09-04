@@ -12,6 +12,14 @@ search:
 
 Reference documentation for the `packs` CLI.
 
+## add
+
+Add a project kind
+
+**Usage:** `packs add`
+
+---
+
 ## auth
 
 Set up authentication for a Pack
@@ -194,6 +202,14 @@ Link to a pre-existing Pack ID on the server
 :   Skip confirmation prompts. Required in non-interactive environments.
 
     **Type:** boolean | **Default:** `false`
+
+---
+
+## plugin
+
+Validate and inspect plugin listings that compose Packs
+
+**Usage:** `packs plugin`
 
 ---
 
