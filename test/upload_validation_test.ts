@@ -8337,7 +8337,7 @@ describe('Pack metadata Validation', async () => {
     });
 
     it('validates a default while-writing trigger', async () => {
-      const contextualTrigger = {
+      const contextualTrigger: DefaultTriggerDefinition = {
         kind: DefaultTriggerKind.WhileWriting,
         condition: 'Offer a citation when the user asserts a statistic',
       };
@@ -8428,7 +8428,10 @@ describe('Pack metadata Validation', async () => {
     });
 
     it('rejects two default triggers of the same kind', async () => {
-      const contextualTrigger = {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'};
+      const contextualTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.WhileWriting,
+        condition: 'Do a thing.',
+      };
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
@@ -8439,6 +8442,45 @@ describe('Pack metadata Validation', async () => {
         path: 'defaultTriggers[1]',
         message: 'An agent can only declare one whileWriting default trigger.',
       });
+    });
+
+    it('validates a default schedule trigger', async () => {
+      const scheduleTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Schedule,
+        rruleString: 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0',
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [scheduleTrigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [scheduleTrigger]);
+    });
+
+    it('rejects a schedule the runtime cannot fire', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [{kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'}],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[0].rruleString',
+        message: 'A schedule trigger must not run more frequently than once per hour.',
+      });
+    });
+
+    it('takes a schedule trigger and a while-writing trigger together', async () => {
+      const defaultTriggers: DefaultTriggerDefinition[] = [
+        {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
+        {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
+      ];
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers,
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, defaultTriggers);
     });
 
     it('rejects default triggers on a pack that is not an agent', async () => {

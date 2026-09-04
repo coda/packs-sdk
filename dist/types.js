@@ -388,14 +388,15 @@ var ContextualTriggerSurface;
     ContextualTriggerSurface["SocialMedia"] = "social_media";
 })(ContextualTriggerSurface || (exports.ContextualTriggerSurface = ContextualTriggerSurface = {}));
 /**
- * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
- * enum as they become authorable.
+ * Which kind of default trigger an entry declares. More kinds (event, ...) join this enum as
+ * they become authorable.
  *
  * @internal
  * @hidden
  */
 var DefaultTriggerKind;
 (function (DefaultTriggerKind) {
+    DefaultTriggerKind["Schedule"] = "schedule";
     DefaultTriggerKind["WhileWriting"] = "whileWriting";
 })(DefaultTriggerKind || (exports.DefaultTriggerKind = DefaultTriggerKind = {}));
 /**

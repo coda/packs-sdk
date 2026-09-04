@@ -104,6 +104,7 @@ import type {QueryParamTokenAuthentication} from '../types';
 import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
+import type {ScheduleTriggerDefinition} from '../types';
 import type {Schema} from '../schema';
 import type {ScreenAnnotationTool} from '../types';
 import {ScreenAnnotationType} from '../types';
@@ -161,6 +162,7 @@ import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
 import {unwrappedSchemaSupportsOptions} from '../schema';
+import {validateRRuleString} from './rrule_validation';
 import * as z from 'zod';
 
 /**
@@ -196,6 +198,7 @@ export const Limits = {
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
   PromptLength: 20000,
+  RRuleStringLength: 1000,
   SuggestedPromptText: 500,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,
@@ -2435,7 +2438,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     blockedDomains: z.array(domainSchema).max(Limits.MaxBlockedDomains).optional(),
   });
 
-  const defaultTriggerSchema = z.discriminatedUnion('kind', [whileWritingTriggerSchema]);
+  const scheduleTriggerSchema = zodCompleteStrictObject<ScheduleTriggerDefinition>({
+    kind: z.literal(DefaultTriggerKind.Schedule),
+    rruleString: z
+      .string()
+      .max(Limits.RRuleStringLength)
+      .superRefine((rruleString, context) => {
+        const message = validateRRuleString(rruleString);
+        if (message) {
+          context.addIssue({code: 'custom', message});
+        }
+      }),
+  });
+
+  const defaultTriggerSchema = z.discriminatedUnion('kind', [scheduleTriggerSchema, whileWritingTriggerSchema]);
 
   const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z
     .array(defaultTriggerSchema)

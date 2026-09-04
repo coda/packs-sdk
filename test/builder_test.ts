@@ -795,6 +795,35 @@ describe('Agent builder', () => {
     });
   });
 
+  describe('default schedule trigger', () => {
+    const scheduleTrigger = {rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'};
+
+    it('sets a trigger', () => {
+      agent.setDefaultScheduleTrigger(scheduleTrigger);
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
+    });
+
+    it('replaces rather than appends on a second call', () => {
+      agent.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=DAILY'}).setDefaultScheduleTrigger(scheduleTrigger);
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
+    });
+
+    it('sits alongside a while-writing trigger', () => {
+      const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic'};
+      agent.setDefaultWhileWritingTrigger(contextualTrigger).setDefaultScheduleTrigger(scheduleTrigger);
+      assert.deepEqual(agent.defaultTriggers, [
+        {kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger},
+        {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger},
+      ]);
+    });
+
+    it('carries through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').setDefaultScheduleTrigger(scheduleTrigger).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
+    });
+  });
+
   describe('withheld surface', () => {
     it('is not reachable through the types', () => {
       // Checked by tsc, not at runtime: if one of these stops being an error, the directive

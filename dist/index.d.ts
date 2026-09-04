@@ -282,6 +282,7 @@ export type { PartialSkillDef } from './types';
 export type { AgentDefinition } from './types';
 export type { DefaultTriggerDefinition } from './types';
 export { DefaultTriggerKind } from './types';
+export type { ScheduleTriggerDefinition } from './types';
 export type { WhileWritingTriggerDefinition } from './types';
 export { ContextualTriggerAssistMode } from './types';
 export { ContextualTriggerSuggestionColor } from './types';

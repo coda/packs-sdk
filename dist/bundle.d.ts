@@ -6242,13 +6242,14 @@ export declare enum ContextualTriggerSurface {
 	SocialMedia = "social_media"
 }
 /**
- * Which kind of default trigger an entry declares. More kinds (schedule, event, ...) join this
- * enum as they become authorable.
+ * Which kind of default trigger an entry declares. More kinds (event, ...) join this enum as
+ * they become authorable.
  *
  * @internal
  * @hidden
  */
 export declare enum DefaultTriggerKind {
+	Schedule = "schedule",
 	WhileWriting = "whileWriting"
 }
 /**
@@ -6260,6 +6261,19 @@ export declare enum DefaultTriggerKind {
 export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
 	/** The kind identifier for this trigger. */
 	kind: T;
+}
+/**
+ * A default schedule trigger a pack's agent ships with. Adopters receive it paused.
+ *
+ * @internal
+ * @hidden
+ */
+export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.Schedule> {
+	/**
+	 * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line anchoring the start and a
+	 * `TZID` on it naming the timezone.
+	 */
+	rruleString: string;
 }
 /**
  * A default while-writing trigger a pack's agent ships with.
@@ -6283,7 +6297,7 @@ export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<Defaul
  * @internal
  * @hidden
  */
-export type DefaultTriggerDefinition = WhileWritingTriggerDefinition;
+export type DefaultTriggerDefinition = ScheduleTriggerDefinition | WhileWritingTriggerDefinition;
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
@@ -6873,6 +6887,17 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 */
 	setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, "kind">): this;
+	/**
+	 * Sets the schedule this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.setDefaultScheduleTrigger({
+	 *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+	 * });
+	 * ```
+	 */
+	setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, "kind">): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
