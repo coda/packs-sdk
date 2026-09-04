@@ -7,6 +7,7 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {DEFAULT_TIMER_STRATEGY} from './config_storage';
 import {Tools} from './extensions';
 import {backfillFromPackConfig} from './helpers';
+import {handleAddPlugin} from './plugin';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleClone} from './clone';
@@ -15,6 +16,8 @@ import {handleExecute} from './execute';
 import {handleExtensions} from './extensions';
 import {handleInit} from './init';
 import {handleLink} from './link';
+import {handlePluginPlan} from './plugin';
+import {handlePluginValidate} from './plugin';
 import {handleRegister} from './register';
 import {handleRelease} from './release';
 import {handleSetOption} from './set_option';
@@ -101,6 +104,45 @@ export const commands: yargs.CommandModule[] = [
     command: 'init',
     describe: 'Initialize an empty Pack',
     handler: handleInit,
+  },
+  {
+    command: 'add',
+    describe: 'SPIKE: add a project kind (currently: plugin listing)',
+    builder: (yargs: yargs.Argv) => {
+      return yargs
+        .command({
+          command: 'plugin [name]',
+          describe:
+            'SPIKE: scaffold a plugin listing (agent folder + connector folder + plugin.json). Does not fuse packs.',
+          handler: handleAddPlugin as any,
+        })
+        .demandCommand();
+    },
+    handler: () => undefined,
+  },
+  {
+    command: 'plugin',
+    describe: 'SPIKE: create and validate plugin listings that compose packs',
+    builder: (yargs: yargs.Argv) => {
+      return yargs
+        .command({
+          command: 'create [name]',
+          describe: 'SPIKE: scaffold an agent and private connector under one plugin listing',
+          handler: handleAddPlugin as any,
+        })
+        .command({
+          command: 'validate [pluginJson]',
+          describe: 'SPIKE: validate a plugin listing and its local files',
+          handler: handlePluginValidate as any,
+        })
+        .command({
+          command: 'plan [pluginJson]',
+          describe: 'SPIKE: show the staged publish plan without making changes',
+          handler: handlePluginPlan as any,
+        })
+        .demandCommand();
+    },
+    handler: () => undefined,
   },
   {
     command: 'extensions <tools..>',

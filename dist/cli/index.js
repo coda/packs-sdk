@@ -12,6 +12,7 @@ const auth_1 = require("../testing/auth");
 const config_storage_3 = require("./config_storage");
 const extensions_1 = require("./extensions");
 const helpers_1 = require("./helpers");
+const plugin_1 = require("./plugin");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
 const clone_1 = require("./clone");
@@ -20,6 +21,8 @@ const execute_1 = require("./execute");
 const extensions_2 = require("./extensions");
 const init_1 = require("./init");
 const link_1 = require("./link");
+const plugin_2 = require("./plugin");
+const plugin_3 = require("./plugin");
 const register_1 = require("./register");
 const release_1 = require("./release");
 const set_option_1 = require("./set_option");
@@ -100,6 +103,44 @@ exports.commands = [
         command: 'init',
         describe: 'Initialize an empty Pack',
         handler: init_1.handleInit,
+    },
+    {
+        command: 'add',
+        describe: 'SPIKE: add a project kind (currently: plugin listing)',
+        builder: (yargs) => {
+            return yargs
+                .command({
+                command: 'plugin [name]',
+                describe: 'SPIKE: scaffold a plugin listing (agent folder + connector folder + plugin.json). Does not fuse packs.',
+                handler: plugin_1.handleAddPlugin,
+            })
+                .demandCommand();
+        },
+        handler: () => undefined,
+    },
+    {
+        command: 'plugin',
+        describe: 'SPIKE: create and validate plugin listings that compose packs',
+        builder: (yargs) => {
+            return yargs
+                .command({
+                command: 'create [name]',
+                describe: 'SPIKE: scaffold an agent and private connector under one plugin listing',
+                handler: plugin_1.handleAddPlugin,
+            })
+                .command({
+                command: 'validate [pluginJson]',
+                describe: 'SPIKE: validate a plugin listing and its local files',
+                handler: plugin_3.handlePluginValidate,
+            })
+                .command({
+                command: 'plan [pluginJson]',
+                describe: 'SPIKE: show the staged publish plan without making changes',
+                handler: plugin_2.handlePluginPlan,
+            })
+                .demandCommand();
+        },
+        handler: () => undefined,
     },
     {
         command: 'extensions <tools..>',

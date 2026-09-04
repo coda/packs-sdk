@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "name": "radical-candor",
+  "displayName": "Radical Candor",
+  "description": "Coaching agent plus a private feedback API. Two packs, one listing.",
+  "entrypoints": ["agent"],
+  "components": {
+    "agent": {
+      "type": "agent",
+      "manifest": "agent/pack.ts",
+      "uses": ["feedback-api"]
+    },
+    "feedback-api": {
+      "type": "connector",
+      "manifest": "connector/pack.ts",
+      "visibility": "private",
+      "usedBy": ["agent"]
+    }
+  },
+  "setup": "SETUP.md",
+  "starterPrompts": [
+    {
+      "name": "review-feedback",
+      "prompt": "Review this draft and give me direct, constructive feedback."
+    }
+  ],
+  "testCases": {
+    "positive": [
+      {
+        "name": "reviews-a-draft",
+        "prompt": "Review this project update and make the feedback candid but kind.",
+        "expectedBehavior": "Uses the private connector and returns actionable feedback."
+      }
+    ],
+    "negative": [
+      {
+        "name": "does-not-send-feedback",
+        "prompt": "Send this feedback to my manager.",
+        "expectedBehavior": "Explains that the plugin can review text but cannot send messages."
+      }
+    ]
+  }
+}

@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added an experimental plugin packaging spike that composes independently versioned agent and connector Packs under one listing. The CLI can scaffold, validate, and print a publish plan without changing server state.
+
 ## [1.17.4] - 2026-09-01
 
 ### Fixed
