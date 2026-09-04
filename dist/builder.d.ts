@@ -5,7 +5,9 @@ import type { AgentToolsDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
 import type { DefaultTriggerDefinition } from './types';
+import type { DistributiveOmit } from './type_utils';
 import type { DynamicSyncTableOptions } from './api';
+import type { EventTriggerDefinition } from './types';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinitionOptions } from './api';
@@ -461,6 +463,28 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, 'kind'>): this;
+    /**
+     * Adds an event trigger this agent runs on. Call it once per event; the mailbox, and any other
+     * account-specific target, is bound at install.
+     *
+     * @example
+     * ```
+     * pack.addDefaultEventTrigger({
+     *   type: sdk.EventTriggerType.Mail,
+     *   mailEventType: sdk.MailEventType.MessageReceived,
+     *   filters: {
+     *     conditions: [
+     *       {
+     *         field: sdk.MailFilterField.From,
+     *         operator: sdk.FilterOperator.TextContains,
+     *         value: '@customers.example.com',
+     *       },
+     *     ],
+     *   },
+     * });
+     * ```
+     */
+    addDefaultEventTrigger(eventTrigger: DistributiveOmit<EventTriggerDefinition, 'kind'>): this;
     /**
      * Sets the schedule this agent runs on.
      *
