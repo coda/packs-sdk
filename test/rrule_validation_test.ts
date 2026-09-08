@@ -28,6 +28,7 @@ describe('validateRRuleString', () => {
     it('takes the parts the builder form omits', () => {
       assertValid('RRULE:FREQ=MONTHLY;BYDAY=-1FR;BYSETPOS=-1;BYMONTH=3;WKST=SU;COUNT=10');
       assertValid('RRULE:FREQ=DAILY;BYMINUTE=17;UNTIL=20270101T000000Z');
+      assertValid('RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=1');
     });
 
     it('rejects a rule with no FREQ', () => {
@@ -74,13 +75,6 @@ describe('validateRRuleString', () => {
       assert.equal(
         validateRRuleString('RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=0'),
         'A schedule trigger has an invalid BYSETPOS.',
-      );
-    });
-
-    it('rejects yearly, which the server reads back as a daily cadence', () => {
-      assert.equal(
-        validateRRuleString('RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=1'),
-        'A schedule trigger does not support FREQ=YEARLY.',
       );
     });
 

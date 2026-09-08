@@ -1,6 +1,6 @@
 // Validation for the RFC 5545 recurrence a pack declares in a `schedule` default trigger.
 
-const Frequencies = ['HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY'];
+const Frequencies = ['HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
 const SubHourlyFrequencies = ['MINUTELY', 'SECONDLY'];
 const Weekdays = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
