@@ -14,10 +14,13 @@ import {DefaultTriggerKind} from './types';
 import type {DistributiveOmit} from './type_utils';
 import type {DynamicSyncTableOptions} from './api';
 import type {EventTriggerDefinition} from './types';
+import {EventTriggerType} from './types';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinitionOptions} from './api';
 import type {MCPServer} from './types';
+import type {MailEventTriggerDefinition} from './types';
+import type {NotetakerEventTriggerDefinition} from './types';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
@@ -27,6 +30,7 @@ import type {ScheduleTriggerDefinition} from './types';
 import type {Schema} from './schema';
 import type {Skill} from './types';
 import type {SkillEntrypoints} from './types';
+import type {SlackEventTriggerDefinition} from './types';
 import type {SuggestedPrompt} from './types';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
@@ -733,12 +737,11 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   }
 
   /**
-   * Adds an event trigger this agent runs on. Call it once per event.
+   * Adds a mail event trigger this agent runs on. Call it once per event.
    *
    * @example
    * ```
-   * pack.addDefaultEventTrigger({
-   *   type: sdk.EventTriggerType.Mail,
+   * pack.addDefaultMailEventTrigger({
    *   mailEventType: sdk.MailEventType.MessageReceived,
    *   filters: {
    *     conditions: [
@@ -752,7 +755,51 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * });
    * ```
    */
-  addDefaultEventTrigger(eventTrigger: DistributiveOmit<EventTriggerDefinition, 'kind'>): this {
+  addDefaultMailEventTrigger(trigger: DistributiveOmit<MailEventTriggerDefinition, 'kind' | 'type'>): this {
+    return this._addDefaultEventTrigger({type: EventTriggerType.Mail, ...trigger});
+  }
+
+  /**
+   * Adds a Slack event trigger this agent runs on. The workspace and channels are bound at install.
+   *
+   * @example
+   * ```
+   * pack.addDefaultSlackEventTrigger({
+   *   eventType: sdk.SlackEventType.MessageKeyword,
+   *   keywords: ['deploy', 'rollback'],
+   * });
+   * ```
+   */
+  addDefaultSlackEventTrigger(trigger: DistributiveOmit<SlackEventTriggerDefinition, 'kind' | 'type'>): this {
+    return this._addDefaultEventTrigger({type: EventTriggerType.Slack, ...trigger});
+  }
+
+  /**
+   * Adds a notetaker event trigger this agent runs on.
+   *
+   * @example
+   * ```
+   * pack.addDefaultNotetakerEventTrigger({
+   *   eventType: sdk.NotetakerEventType.MeetingSummaryCompleted,
+   *   filters: {
+   *     conditions: [
+   *       {
+   *         field: sdk.NotetakerFilterField.DurationMinutes,
+   *         operator: sdk.FilterOperator.NumberAtLeast,
+   *         value: '30',
+   *       },
+   *     ],
+   *   },
+   * });
+   * ```
+   */
+  addDefaultNotetakerEventTrigger(
+    trigger: DistributiveOmit<NotetakerEventTriggerDefinition, 'kind' | 'type'>,
+  ): this {
+    return this._addDefaultEventTrigger({type: EventTriggerType.Notetaker, ...trigger});
+  }
+
+  private _addDefaultEventTrigger(eventTrigger: DistributiveOmit<EventTriggerDefinition, 'kind'>): this {
     this.defaultTriggers = [...(this.defaultTriggers ?? []), {kind: DefaultTriggerKind.Event, ...eventTrigger}];
     return this;
   }

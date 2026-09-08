@@ -8841,8 +8841,7 @@ describe('Pack metadata Validation', async () => {
       assert.lengthOf(result.defaultTriggers!, 1);
     });
 
-    it('bounds a meeting type more tightly than a recurring event id', async () => {
-      const overTagLimit = 'a'.repeat(Limits.NotetakerTagValue + 1);
+    it('bounds a meeting type to a tag length', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
@@ -8853,7 +8852,11 @@ describe('Pack metadata Validation', async () => {
               eventType: NotetakerEventType.MeetingSummaryCompleted,
               filters: {
                 conditions: [
-                  {field: NotetakerFilterField.MeetingType, operator: FilterOperator.TextEquals, value: overTagLimit},
+                  {
+                    field: NotetakerFilterField.MeetingType,
+                    operator: FilterOperator.TextEquals,
+                    value: 'a'.repeat(Limits.NotetakerTagValue + 1),
+                  },
                 ],
               },
             },
@@ -8861,8 +8864,10 @@ describe('Pack metadata Validation', async () => {
         }),
       );
       assert.isNotEmpty(err.validationErrors);
+    });
 
-      const result = await validateJson(
+    it("rejects a recurring event id, which the adopter's calendar binds", async () => {
+      const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
           defaultTriggers: [
@@ -8871,19 +8876,13 @@ describe('Pack metadata Validation', async () => {
               type: EventTriggerType.Notetaker,
               eventType: NotetakerEventType.MeetingSummaryCompleted,
               filters: {
-                conditions: [
-                  {
-                    field: NotetakerFilterField.RecurringEventId,
-                    operator: FilterOperator.TextEquals,
-                    value: overTagLimit,
-                  },
-                ],
+                conditions: [{field: 'recurringEventId', operator: 'textEquals', value: 'abc123'}],
               },
-            },
+            } as any,
           ],
         }),
       );
-      assert.lengthOf(result.defaultTriggers!, 1);
+      assert.isNotEmpty(err.validationErrors);
     });
 
     it('takes one trigger of every event type at once', async () => {
