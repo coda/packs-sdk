@@ -2007,8 +2007,7 @@ export enum FilterCombinator {
 }
 
 /**
- * The mail events a default trigger can fire on. `label_added` is a fourth mail event the stored
- * contract carries; it is not authorable, because the labels it matches are per-account IDs.
+ * The mail events a default trigger can fire on.
  *
  * @internal
  * @hidden
@@ -2103,9 +2102,7 @@ export interface MailEventTriggerDefinition extends BaseEventTrigger<EventTrigge
 }
 
 /**
- * The Slack events a default trigger can fire on. Being mentioned is a second Slack event the
- * stored contract carries; it is not authorable, since a pack has nothing to say about it beyond
- * the channels, which the adopter binds.
+ * The Slack events a default trigger can fire on.
  *
  * @internal
  * @hidden
@@ -2115,8 +2112,8 @@ export enum SlackEventType {
 }
 
 /**
- * A default Slack event trigger a pack's agent ships with. The workspace and channels are bound at
- * install, as is the audience allowed to run the agent through it.
+ * A default Slack event trigger a pack's agent ships with. The workspace and channels are bound
+ * at install.
  *
  * @internal
  * @hidden
@@ -2158,8 +2155,8 @@ export enum NotetakerFilterField {
 }
 
 /**
- * Base interface for all notetaker filter conditions. Each field admits only the operators that
- * make sense for it, and bounds its own value.
+ * Base interface for all notetaker filter conditions. Each field admits only the operators and
+ * the value bound that suit it.
  *
  * @internal
  * @hidden
