@@ -793,9 +793,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * });
    * ```
    */
-  addDefaultNotetakerEventTrigger(
-    trigger: DistributiveOmit<NotetakerEventTriggerDefinition, 'kind' | 'type'>,
-  ): this {
+  addDefaultNotetakerEventTrigger(trigger: DistributiveOmit<NotetakerEventTriggerDefinition, 'kind' | 'type'>): this {
     return this._addDefaultEventTrigger({type: EventTriggerType.Notetaker, ...trigger});
   }
 
