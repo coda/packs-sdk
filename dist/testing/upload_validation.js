@@ -89,6 +89,7 @@ const schema_25 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
 const schema_26 = require("../schema");
+const rrule_validation_1 = require("./rrule_validation");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -121,6 +122,7 @@ exports.Limits = {
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
     PromptLength: 20000,
+    RRuleStringLength: 1000,
     SuggestedPromptText: 500,
     UpdateBatchSize: 1000,
     FilterableProperties: 5,
@@ -1876,7 +1878,19 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         surfaces: z.array(z.nativeEnum(types_5.ContextualTriggerSurface)).optional(),
         blockedDomains: z.array(domainSchema).max(exports.Limits.MaxBlockedDomains).optional(),
     });
-    const defaultTriggerSchema = z.discriminatedUnion('kind', [whileWritingTriggerSchema]);
+    const scheduleTriggerSchema = zodCompleteStrictObject({
+        kind: z.literal(types_6.DefaultTriggerKind.Schedule),
+        rruleString: z
+            .string()
+            .max(exports.Limits.RRuleStringLength)
+            .superRefine((rruleString, context) => {
+            const message = (0, rrule_validation_1.validateRRuleString)(rruleString);
+            if (message) {
+                context.addIssue({ code: 'custom', message });
+            }
+        }),
+    });
+    const defaultTriggerSchema = z.discriminatedUnion('kind', [scheduleTriggerSchema, whileWritingTriggerSchema]);
     const defaultTriggersSchema = z
         .array(defaultTriggerSchema)
         .superRefine((triggers, context) => {

@@ -26,6 +26,7 @@ export declare const Limits: {
     NetworkDomainUrl: number;
     PermissionsBatchSize: number;
     PromptLength: number;
+    RRuleStringLength: number;
     SuggestedPromptText: number;
     UpdateBatchSize: number;
     FilterableProperties: number;
