@@ -498,7 +498,6 @@ var NotetakerFilterField;
     NotetakerFilterField["Participant"] = "participant";
     NotetakerFilterField["ParticipantCount"] = "participantCount";
     NotetakerFilterField["ProjectTag"] = "projectTag";
-    NotetakerFilterField["RecurringEventId"] = "recurringEventId";
 })(NotetakerFilterField || (exports.NotetakerFilterField = NotetakerFilterField = {}));
 /**
  * An enum of the HTTP status codes.

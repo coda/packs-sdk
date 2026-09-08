@@ -29,7 +29,6 @@ export declare const Limits: {
     MaxSkillCount: number;
     MaxSuggestedPromptsPerPack: number;
     NotetakerParticipantValue: number;
-    NotetakerRecurringEventIdValue: number;
     NotetakerTagValue: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;

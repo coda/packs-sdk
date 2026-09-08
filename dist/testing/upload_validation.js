@@ -133,7 +133,6 @@ exports.Limits = {
     MaxSkillCount: 15,
     MaxSuggestedPromptsPerPack: 3,
     NotetakerParticipantValue: 320,
-    NotetakerRecurringEventIdValue: 1024,
     NotetakerTagValue: 128,
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
@@ -1969,11 +1968,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         operator: idFilterOperatorSchema,
         value: z.string().min(1).max(exports.Limits.NotetakerTagValue),
     });
-    const notetakerRecurringEventIdConditionSchema = zodCompleteStrictObject({
-        field: z.literal(types_16.NotetakerFilterField.RecurringEventId),
-        operator: idFilterOperatorSchema,
-        value: z.string().min(1).max(exports.Limits.NotetakerRecurringEventIdValue),
-    });
     const notetakerNumericFilterConditionSchema = zodCompleteStrictObject({
         field: z.enum([types_16.NotetakerFilterField.DurationMinutes, types_16.NotetakerFilterField.ParticipantCount]),
         operator: numericFilterOperatorSchema,
@@ -1990,7 +1984,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             notetakerParticipantConditionSchema,
             notetakerProjectTagConditionSchema,
             notetakerMeetingTypeConditionSchema,
-            notetakerRecurringEventIdConditionSchema,
             notetakerNumericFilterConditionSchema,
             notetakerBooleanFilterConditionSchema,
         ]))

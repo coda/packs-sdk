@@ -2151,7 +2151,6 @@ export enum NotetakerFilterField {
   Participant = 'participant',
   ParticipantCount = 'participantCount',
   ProjectTag = 'projectTag',
-  RecurringEventId = 'recurringEventId',
 }
 
 /**
@@ -2188,7 +2187,7 @@ export type NotetakerAddressFilterCondition = BaseNotetakerFilterCondition<
  * @hidden
  */
 export type NotetakerIdFilterCondition = BaseNotetakerFilterCondition<
-  NotetakerFilterField.MeetingType | NotetakerFilterField.RecurringEventId,
+  NotetakerFilterField.MeetingType,
   IdFilterOperator
 >;
 

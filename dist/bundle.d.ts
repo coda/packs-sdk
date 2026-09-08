@@ -6500,8 +6500,7 @@ export declare enum NotetakerFilterField {
 	MeetingType = "meetingType",
 	Participant = "participant",
 	ParticipantCount = "participantCount",
-	ProjectTag = "projectTag",
-	RecurringEventId = "recurringEventId"
+	ProjectTag = "projectTag"
 }
 /**
  * Base interface for all notetaker filter conditions. Each field admits only the operators and
@@ -6531,7 +6530,7 @@ export type NotetakerAddressFilterCondition = BaseNotetakerFilterCondition<Notet
  * @internal
  * @hidden
  */
-export type NotetakerIdFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.MeetingType | NotetakerFilterField.RecurringEventId, IdFilterOperator>;
+export type NotetakerIdFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.MeetingType, IdFilterOperator>;
 /**
  * A condition on a count field. The value is a one to four digit integer, as a string.
  *
@@ -7187,12 +7186,11 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 */
 	setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, "kind">): this;
 	/**
-	 * Adds an event trigger this agent runs on. Call it once per event.
+	 * Adds a mail event trigger this agent runs on. Call it once per event.
 	 *
 	 * @example
 	 * ```
-	 * pack.addDefaultEventTrigger({
-	 *   type: sdk.EventTriggerType.Mail,
+	 * pack.addDefaultMailEventTrigger({
 	 *   mailEventType: sdk.MailEventType.MessageReceived,
 	 *   filters: {
 	 *     conditions: [
@@ -7206,7 +7204,40 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * });
 	 * ```
 	 */
-	addDefaultEventTrigger(eventTrigger: DistributiveOmit<EventTriggerDefinition, "kind">): this;
+	addDefaultMailEventTrigger(trigger: DistributiveOmit<MailEventTriggerDefinition, "kind" | "type">): this;
+	/**
+	 * Adds a Slack event trigger this agent runs on. The workspace and channels are bound at install.
+	 *
+	 * @example
+	 * ```
+	 * pack.addDefaultSlackEventTrigger({
+	 *   eventType: sdk.SlackEventType.MessageKeyword,
+	 *   keywords: ['deploy', 'rollback'],
+	 * });
+	 * ```
+	 */
+	addDefaultSlackEventTrigger(trigger: DistributiveOmit<SlackEventTriggerDefinition, "kind" | "type">): this;
+	/**
+	 * Adds a notetaker event trigger this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.addDefaultNotetakerEventTrigger({
+	 *   eventType: sdk.NotetakerEventType.MeetingSummaryCompleted,
+	 *   filters: {
+	 *     conditions: [
+	 *       {
+	 *         field: sdk.NotetakerFilterField.DurationMinutes,
+	 *         operator: sdk.FilterOperator.NumberAtLeast,
+	 *         value: '30',
+	 *       },
+	 *     ],
+	 *   },
+	 * });
+	 * ```
+	 */
+	addDefaultNotetakerEventTrigger(trigger: DistributiveOmit<NotetakerEventTriggerDefinition, "kind" | "type">): this;
+	private _addDefaultEventTrigger;
 	/**
 	 * Sets the schedule this agent runs on.
 	 *

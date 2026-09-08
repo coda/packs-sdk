@@ -1946,8 +1946,7 @@ export declare enum NotetakerFilterField {
     MeetingType = "meetingType",
     Participant = "participant",
     ParticipantCount = "participantCount",
-    ProjectTag = "projectTag",
-    RecurringEventId = "recurringEventId"
+    ProjectTag = "projectTag"
 }
 /**
  * Base interface for all notetaker filter conditions. Each field admits only the operators and
@@ -1977,7 +1976,7 @@ export type NotetakerAddressFilterCondition = BaseNotetakerFilterCondition<Notet
  * @internal
  * @hidden
  */
-export type NotetakerIdFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.MeetingType | NotetakerFilterField.RecurringEventId, IdFilterOperator>;
+export type NotetakerIdFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.MeetingType, IdFilterOperator>;
 /**
  * A condition on a count field. The value is a one to four digit integer, as a string.
  *
