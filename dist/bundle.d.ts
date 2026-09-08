@@ -6306,7 +6306,6 @@ export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<Defaul
  * @hidden
  */
 export declare enum EventTriggerType {
-	Docs = "docs",
 	Mail = "mail",
 	Notetaker = "notetaker",
 	Slack = "slack"
@@ -6375,13 +6374,13 @@ export declare enum FilterCombinator {
 	Or = "or"
 }
 /**
- * The mail events a default trigger can fire on.
+ * The mail events a default trigger can fire on. `label_added` is a fourth mail event the stored
+ * contract carries; it is not authorable, because the labels it matches are per-account IDs.
  *
  * @internal
  * @hidden
  */
 export declare enum MailEventType {
-	LabelAdded = "label_added",
 	MessageReceived = "message_received",
 	MessageSent = "message_sent"
 }
@@ -6445,119 +6444,42 @@ export interface MailEventFilters {
 	combinator?: FilterCombinator;
 }
 /**
- * Base interface for all default mail event trigger definitions. The mailbox is bound at install.
+ * A default mail event trigger a pack's agent ships with. The mailbox is bound at install.
  *
  * @internal
  * @hidden
  */
-export interface BaseMailEventTrigger<T extends MailEventType> extends BaseEventTrigger<EventTriggerType.Mail> {
+export interface MailEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Mail> {
 	/** The mail event that fires the trigger. */
-	mailEventType: T;
-}
-/**
- * A default trigger on a message arriving or being sent.
- *
- * @internal
- * @hidden
- */
-export interface MailMessageEventTriggerDefinition extends BaseMailEventTrigger<MailEventType.MessageReceived | MailEventType.MessageSent> {
+	mailEventType: MailEventType;
 	/** Which messages fire the trigger. Absent fires on every one. */
 	filters?: MailEventFilters;
 }
 /**
- * A default trigger on a label being added. The labels it watches are bound at install, so it
- * fires on every label until an adopter narrows it.
- *
- * @internal
- * @hidden
- */
-export type MailLabelAddedTriggerDefinition = BaseMailEventTrigger<MailEventType.LabelAdded>;
-/**
- * A default mail event trigger a pack's agent ships with.
- *
- * @internal
- * @hidden
- */
-export type MailEventTriggerDefinition = MailLabelAddedTriggerDefinition | MailMessageEventTriggerDefinition;
-/**
- * The Slack events a default trigger can fire on.
+ * The Slack events a default trigger can fire on. Being mentioned is a second Slack event the
+ * stored contract carries; it is not authorable, since a pack has nothing to say about it beyond
+ * the channels, which the adopter binds.
  *
  * @internal
  * @hidden
  */
 export declare enum SlackEventType {
-	AgentMentioned = "agent_mentioned",
 	MessageKeyword = "message_keyword"
 }
 /**
- * Who may run the agent through a Slack trigger. Absent leaves the choice to the adopter.
+ * A default Slack event trigger a pack's agent ships with. The workspace and channels are bound at
+ * install, as is the audience allowed to run the agent through it.
  *
  * @internal
  * @hidden
  */
-export declare enum SlackTriggerAudience {
-	Anyone = "anyone",
-	Creator = "creator"
-}
-/**
- * Base interface for all default Slack event trigger definitions. The workspace and channels are
- * bound at install.
- *
- * @internal
- * @hidden
- */
-export interface BaseSlackEventTrigger<T extends SlackEventType> extends BaseEventTrigger<EventTriggerType.Slack> {
+export interface SlackEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Slack> {
 	/** The Slack event that fires the trigger. */
-	eventType: T;
-	audience?: SlackTriggerAudience;
-	/** Whether a firing records thread participation, so replies resume its chat. */
-	monitorThreadFollowUps?: boolean;
-}
-/**
- * A default trigger on a keyword appearing in a message.
- *
- * @internal
- * @hidden
- */
-export interface SlackMessageKeywordTriggerDefinition extends BaseSlackEventTrigger<SlackEventType.MessageKeyword> {
+	eventType: SlackEventType;
 	/** Keywords to match, case insensitively. Up to 50, each up to 200 characters. */
 	keywords?: string[];
-}
-/**
- * A default trigger on the agent being mentioned.
- *
- * @internal
- * @hidden
- */
-export type SlackAgentMentionTriggerDefinition = BaseSlackEventTrigger<SlackEventType.AgentMentioned>;
-/**
- * A default Slack event trigger a pack's agent ships with.
- *
- * @internal
- * @hidden
- */
-export type SlackEventTriggerDefinition = SlackAgentMentionTriggerDefinition | SlackMessageKeywordTriggerDefinition;
-/**
- * The doc events a default trigger can fire on.
- *
- * @internal
- * @hidden
- */
-export declare enum DocsEventType {
-	FormSubmitted = "form_submitted",
-	RowAdded = "row_added",
-	RowChanged = "row_changed"
-}
-/**
- * A default docs event trigger a pack's agent ships with. The doc and table are bound at install,
- * as are the watched columns of a {@link DocsEventType.RowChanged} trigger.
- *
- * @internal
- * @hidden
- */
-export interface DocsEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Docs> {
-	/** The doc event that fires the trigger. */
-	docEventType: DocsEventType;
+	/** Whether a firing records thread participation, so replies resume its chat. */
+	monitorThreadFollowUps?: boolean;
 }
 /**
  * The notetaker events a default trigger can fire on.
@@ -6586,7 +6508,7 @@ export declare enum NotetakerFilterField {
 }
 /**
  * Base interface for all notetaker filter conditions. Each field admits only the operators that
- * make sense for it.
+ * make sense for it, and bounds its own value.
  *
  * @internal
  * @hidden
@@ -6596,7 +6518,7 @@ export interface BaseNotetakerFilterCondition<F extends NotetakerFilterField, O 
 	field: F;
 	/** How to compare the field to {@link value}. */
 	operator: O;
-	/** What to match the field against. */
+	/** What to match the field against. Max 320 characters on a participant, 128 on a tag. */
 	value: string;
 }
 /**
@@ -6670,7 +6592,7 @@ export interface NotetakerEventTriggerDefinition extends BaseEventTrigger<EventT
  * @internal
  * @hidden
  */
-export type EventTriggerDefinition = DocsEventTriggerDefinition | MailEventTriggerDefinition | NotetakerEventTriggerDefinition | SlackEventTriggerDefinition;
+export type EventTriggerDefinition = MailEventTriggerDefinition | NotetakerEventTriggerDefinition | SlackEventTriggerDefinition;
 /**
  * A single default trigger a pack's agent ships with.
  *

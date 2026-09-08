@@ -33,8 +33,6 @@ import {DataIndexing} from '../api_types';
 import type {DefaultTriggerDefinition} from '../types';
 import {DefaultTriggerKind} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
-import type {DocsEventTriggerDefinition} from '../types';
-import {DocsEventType} from '../types';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
@@ -72,10 +70,9 @@ import type {MCPTool} from '../types';
 import type {MailAddressFilterCondition} from '../types';
 import type {MailAndCalendarTool} from '../types';
 import type {MailEventFilters} from '../types';
+import type {MailEventTriggerDefinition} from '../types';
 import {MailEventType} from '../types';
 import {MailFilterField} from '../types';
-import type {MailLabelAddedTriggerDefinition} from '../types';
-import type {MailMessageEventTriggerDefinition} from '../types';
 import type {MailTextFilterCondition} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
@@ -136,10 +133,8 @@ import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
 import {SkillModel} from '../types';
 import type {SkillModelConfiguration} from '../types';
-import type {SlackAgentMentionTriggerDefinition} from '../types';
+import type {SlackEventTriggerDefinition} from '../types';
 import {SlackEventType} from '../types';
-import type {SlackMessageKeywordTriggerDefinition} from '../types';
-import {SlackTriggerAudience} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -2521,62 +2516,45 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     combinator: z.nativeEnum(FilterCombinator).optional(),
   });
 
-  const mailMessageEventTriggerSchema = zodCompleteStrictObject<MailMessageEventTriggerDefinition>({
+  const mailEventTriggerSchema = zodCompleteStrictObject<MailEventTriggerDefinition>({
     kind: eventTriggerKindSchema,
     type: z.literal(EventTriggerType.Mail),
-    mailEventType: z.enum([MailEventType.MessageReceived, MailEventType.MessageSent]),
+    mailEventType: z.nativeEnum(MailEventType),
     filters: mailEventFiltersSchema.optional(),
   });
 
-  // Label filters name provider label IDs, which are not portable, so the adopter's install picks
-  // the labels and this trigger carries only the event.
-  const mailLabelAddedTriggerSchema = zodCompleteStrictObject<MailLabelAddedTriggerDefinition>({
-    kind: eventTriggerKindSchema,
-    type: z.literal(EventTriggerType.Mail),
-    mailEventType: z.literal(MailEventType.LabelAdded),
-  });
-
-  const mailEventTriggerSchema = z.discriminatedUnion('mailEventType', [
-    mailMessageEventTriggerSchema,
-    mailLabelAddedTriggerSchema,
-  ]);
-
-  const slackMessageKeywordTriggerSchema = zodCompleteStrictObject<SlackMessageKeywordTriggerDefinition>({
+  // No audience: it decides who in the adopter's workspace may run the agent, which is theirs to
+  // set. The stored contract takes it as optional on a save and fills it in server side.
+  const slackEventTriggerSchema = zodCompleteStrictObject<SlackEventTriggerDefinition>({
     kind: eventTriggerKindSchema,
     type: z.literal(EventTriggerType.Slack),
-    eventType: z.literal(SlackEventType.MessageKeyword),
-    audience: z.nativeEnum(SlackTriggerAudience).optional(),
-    monitorThreadFollowUps: z.boolean().optional(),
+    eventType: z.nativeEnum(SlackEventType),
     keywords: z.array(keywordSchema).max(Limits.MaxKeywords).optional(),
-  });
-
-  const slackAgentMentionTriggerSchema = zodCompleteStrictObject<SlackAgentMentionTriggerDefinition>({
-    kind: eventTriggerKindSchema,
-    type: z.literal(EventTriggerType.Slack),
-    eventType: z.literal(SlackEventType.AgentMentioned),
-    audience: z.nativeEnum(SlackTriggerAudience).optional(),
     monitorThreadFollowUps: z.boolean().optional(),
   });
 
-  const slackEventTriggerSchema = z.discriminatedUnion('eventType', [
-    slackMessageKeywordTriggerSchema,
-    slackAgentMentionTriggerSchema,
-  ]);
-
-  const docsEventTriggerSchema = zodCompleteStrictObject<DocsEventTriggerDefinition>({
-    kind: eventTriggerKindSchema,
-    type: z.literal(EventTriggerType.Docs),
-    docEventType: z.nativeEnum(DocsEventType),
-  });
-
-  const notetakerAddressFilterConditionSchema = zodCompleteStrictObject<NotetakerAddressFilterCondition>({
-    field: z.enum([NotetakerFilterField.Participant, NotetakerFilterField.ProjectTag]),
+  // One arm per field rather than per operator family: fields that share an operator vocabulary
+  // still bound their values differently (a participant holds an address, a tag holds a name).
+  const notetakerParticipantConditionSchema = zodCompleteStrictObject<NotetakerAddressFilterCondition>({
+    field: z.literal(NotetakerFilterField.Participant),
     operator: addressFilterOperatorSchema,
     value: z.string().min(1).max(Limits.NotetakerParticipantValue),
   });
 
-  const notetakerIdFilterConditionSchema = zodCompleteStrictObject<NotetakerIdFilterCondition>({
-    field: z.enum([NotetakerFilterField.MeetingType, NotetakerFilterField.RecurringEventId]),
+  const notetakerProjectTagConditionSchema = zodCompleteStrictObject<NotetakerAddressFilterCondition>({
+    field: z.literal(NotetakerFilterField.ProjectTag),
+    operator: addressFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.NotetakerTagValue),
+  });
+
+  const notetakerMeetingTypeConditionSchema = zodCompleteStrictObject<NotetakerIdFilterCondition>({
+    field: z.literal(NotetakerFilterField.MeetingType),
+    operator: idFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.NotetakerTagValue),
+  });
+
+  const notetakerRecurringEventIdConditionSchema = zodCompleteStrictObject<NotetakerIdFilterCondition>({
+    field: z.literal(NotetakerFilterField.RecurringEventId),
     operator: idFilterOperatorSchema,
     value: z.string().min(1).max(Limits.NotetakerRecurringEventIdValue),
   });
@@ -2597,8 +2575,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     conditions: z
       .array(
         z.discriminatedUnion('field', [
-          notetakerAddressFilterConditionSchema,
-          notetakerIdFilterConditionSchema,
+          notetakerParticipantConditionSchema,
+          notetakerProjectTagConditionSchema,
+          notetakerMeetingTypeConditionSchema,
+          notetakerRecurringEventIdConditionSchema,
           notetakerNumericFilterConditionSchema,
           notetakerBooleanFilterConditionSchema,
         ]),
@@ -2621,7 +2601,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const eventTriggerSchema = z.discriminatedUnion('type', [
     mailEventTriggerSchema,
     slackEventTriggerSchema,
-    docsEventTriggerSchema,
     notetakerEventTriggerSchema,
   ]);
 

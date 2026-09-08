@@ -6,7 +6,6 @@ import {ConnectionRequirement} from '../api_types';
 import {ContextualTriggerAssistMode} from '../types';
 import {ContextualTriggerSurface} from '../types';
 import {DefaultTriggerKind} from '../types';
-import {DocsEventType} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
 import {EventTriggerType} from '../types';
@@ -873,7 +872,6 @@ describe('Agent builder', () => {
           eventType: SlackEventType.MessageKeyword,
           keywords: ['deploy'],
         })
-        .addDefaultEventTrigger({type: EventTriggerType.Docs, docEventType: DocsEventType.RowChanged})
         .addDefaultEventTrigger({
           type: EventTriggerType.Notetaker,
           eventType: NotetakerEventType.MeetingSummaryCompleted,
@@ -886,7 +884,6 @@ describe('Agent builder', () => {
           eventType: SlackEventType.MessageKeyword,
           keywords: ['deploy'],
         },
-        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Docs, docEventType: DocsEventType.RowChanged},
         {
           kind: DefaultTriggerKind.Event,
           type: EventTriggerType.Notetaker,

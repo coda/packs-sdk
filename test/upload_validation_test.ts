@@ -15,7 +15,6 @@ import {CurrencyFormat} from '..';
 import {DataIndexing} from '../api_types';
 import type {DefaultTriggerDefinition} from '../types';
 import {DefaultTriggerKind} from '../types';
-import {DocsEventType} from '../types';
 import {DurationUnit} from '..';
 import {EmbeddedContentType} from '../types';
 import {EventTriggerType} from '../types';
@@ -53,7 +52,6 @@ import {ScreenAnnotationType} from '../types';
 import type {Skill} from '../types';
 import {SkillModel} from '../types';
 import {SlackEventType} from '../types';
-import {SlackTriggerAudience} from '../types';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
@@ -8628,59 +8626,13 @@ describe('Pack metadata Validation', async () => {
       assert.isNotEmpty(err.validationErrors);
     });
 
-    it('validates a default mail label-added trigger', async () => {
-      const labelTrigger: DefaultTriggerDefinition = {
-        kind: DefaultTriggerKind.Event,
-        type: EventTriggerType.Mail,
-        mailEventType: MailEventType.LabelAdded,
-      };
-      const metadata = createFakeAgentMetadata({
-        agent: {instructions: 'Do a thing.', tools: []},
-        defaultTriggers: [labelTrigger],
-      });
-      const result = await validateJson(metadata);
-      assert.deepEqual(result.defaultTriggers, [labelTrigger]);
-    });
-
-    it('rejects filters on a label-added trigger, whose labels are bound at install', async () => {
-      const err = await validateJsonAndAssertFails(
-        createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers: [
-            {
-              kind: DefaultTriggerKind.Event,
-              type: EventTriggerType.Mail,
-              mailEventType: MailEventType.LabelAdded,
-              filters: {conditions: [{field: 'label', operator: 'textEquals', value: 'Label_1'}]},
-            } as any,
-          ],
-        }),
-      );
-      assert.isNotEmpty(err.validationErrors);
-    });
-
     it('validates a default slack keyword trigger', async () => {
       const slackTrigger: DefaultTriggerDefinition = {
         kind: DefaultTriggerKind.Event,
         type: EventTriggerType.Slack,
         eventType: SlackEventType.MessageKeyword,
-        audience: SlackTriggerAudience.Anyone,
         monitorThreadFollowUps: true,
         keywords: ['deploy', 'rollback'],
-      };
-      const metadata = createFakeAgentMetadata({
-        agent: {instructions: 'Do a thing.', tools: []},
-        defaultTriggers: [slackTrigger],
-      });
-      const result = await validateJson(metadata);
-      assert.deepEqual(result.defaultTriggers, [slackTrigger]);
-    });
-
-    it('validates a default slack mention trigger', async () => {
-      const slackTrigger: DefaultTriggerDefinition = {
-        kind: DefaultTriggerKind.Event,
-        type: EventTriggerType.Slack,
-        eventType: SlackEventType.AgentMentioned,
       };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
@@ -8698,7 +8650,7 @@ describe('Pack metadata Validation', async () => {
             {
               kind: DefaultTriggerKind.Event,
               type: EventTriggerType.Slack,
-              eventType: SlackEventType.AgentMentioned,
+              eventType: SlackEventType.MessageKeyword,
               channelIds: ['C123'],
             } as any,
           ],
@@ -8707,18 +8659,21 @@ describe('Pack metadata Validation', async () => {
       assert.isNotEmpty(err.validationErrors);
     });
 
-    it('validates a default docs event trigger', async () => {
-      const docsTrigger: DefaultTriggerDefinition = {
-        kind: DefaultTriggerKind.Event,
-        type: EventTriggerType.Docs,
-        docEventType: DocsEventType.RowAdded,
-      };
-      const metadata = createFakeAgentMetadata({
-        agent: {instructions: 'Do a thing.', tools: []},
-        defaultTriggers: [docsTrigger],
-      });
-      const result = await validateJson(metadata);
-      assert.deepEqual(result.defaultTriggers, [docsTrigger]);
+    it('rejects a slack audience, which the adopter sets', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Slack,
+              eventType: SlackEventType.MessageKeyword,
+              audience: 'anyone',
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
     });
 
     // `packs upload` validates the JSON the server receives, not the in-memory metadata.
@@ -8845,6 +8800,94 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
+    // Fields sharing an operator vocabulary still bound their values differently, so the schema has
+    // an arm per field rather than per family.
+    it('bounds a project tag more tightly than a participant', async () => {
+      const overTagLimit = 'a'.repeat(Limits.NotetakerTagValue + 1);
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+              filters: {
+                conditions: [
+                  {field: NotetakerFilterField.ProjectTag, operator: FilterOperator.TextEquals, value: overTagLimit},
+                ],
+              },
+            },
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+
+      const result = await validateJson(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+              filters: {
+                conditions: [
+                  {field: NotetakerFilterField.Participant, operator: FilterOperator.TextEquals, value: overTagLimit},
+                ],
+              },
+            },
+          ],
+        }),
+      );
+      assert.lengthOf(result.defaultTriggers!, 1);
+    });
+
+    it('bounds a meeting type more tightly than a recurring event id', async () => {
+      const overTagLimit = 'a'.repeat(Limits.NotetakerTagValue + 1);
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+              filters: {
+                conditions: [
+                  {field: NotetakerFilterField.MeetingType, operator: FilterOperator.TextEquals, value: overTagLimit},
+                ],
+              },
+            },
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+
+      const result = await validateJson(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+              filters: {
+                conditions: [
+                  {
+                    field: NotetakerFilterField.RecurringEventId,
+                    operator: FilterOperator.TextEquals,
+                    value: overTagLimit,
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+      );
+      assert.lengthOf(result.defaultTriggers!, 1);
+    });
+
     it('takes one trigger of every event type at once', async () => {
       const defaultTriggers: DefaultTriggerDefinition[] = [
         {kind: DefaultTriggerKind.Event, type: EventTriggerType.Mail, mailEventType: MailEventType.MessageReceived},
@@ -8854,7 +8897,6 @@ describe('Pack metadata Validation', async () => {
           eventType: SlackEventType.MessageKeyword,
           keywords: ['deploy'],
         },
-        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Docs, docEventType: DocsEventType.FormSubmitted},
         {
           kind: DefaultTriggerKind.Event,
           type: EventTriggerType.Notetaker,
