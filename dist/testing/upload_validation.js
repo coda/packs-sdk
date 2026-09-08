@@ -1907,7 +1907,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
         }),
     });
-    // The operator vocabulary each field family accepts, mirroring the stored contract.
+    // The operator vocabulary each field family accepts.
     const addressFilterOperatorSchema = z.enum([
         types_11.FilterOperator.TextContains,
         types_11.FilterOperator.TextDoesNotContain,
@@ -1946,8 +1946,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         mailEventType: z.nativeEnum(types_13.MailEventType),
         filters: mailEventFiltersSchema.optional(),
     });
-    // No audience: it decides who in the adopter's workspace may run the agent, which is theirs to
-    // set. The stored contract takes it as optional on a save and fills it in server side.
     const slackEventTriggerSchema = zodCompleteStrictObject({
         kind: eventTriggerKindSchema,
         type: z.literal(types_8.EventTriggerType.Slack),
@@ -1955,8 +1953,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         keywords: z.array(keywordSchema).max(exports.Limits.MaxKeywords).optional(),
         monitorThreadFollowUps: z.boolean().optional(),
     });
-    // One arm per field rather than per operator family: fields that share an operator vocabulary
-    // still bound their values differently (a participant holds an address, a tag holds a name).
+    // Each notetaker field bounds its own value.
     const notetakerParticipantConditionSchema = zodCompleteStrictObject({
         field: z.literal(types_16.NotetakerFilterField.Participant),
         operator: addressFilterOperatorSchema,

@@ -733,8 +733,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   }
 
   /**
-   * Adds an event trigger this agent runs on. Call it once per event; the mailbox, and any other
-   * account-specific target, is bound at install.
+   * Adds an event trigger this agent runs on. Call it once per event.
    *
    * @example
    * ```

@@ -440,8 +440,7 @@ var FilterCombinator;
     FilterCombinator["Or"] = "or";
 })(FilterCombinator || (exports.FilterCombinator = FilterCombinator = {}));
 /**
- * The mail events a default trigger can fire on. `label_added` is a fourth mail event the stored
- * contract carries; it is not authorable, because the labels it matches are per-account IDs.
+ * The mail events a default trigger can fire on.
  *
  * @internal
  * @hidden
@@ -465,9 +464,7 @@ var MailFilterField;
     MailFilterField["To"] = "to";
 })(MailFilterField || (exports.MailFilterField = MailFilterField = {}));
 /**
- * The Slack events a default trigger can fire on. Being mentioned is a second Slack event the
- * stored contract carries; it is not authorable, since a pack has nothing to say about it beyond
- * the channels, which the adopter binds.
+ * The Slack events a default trigger can fire on.
  *
  * @internal
  * @hidden

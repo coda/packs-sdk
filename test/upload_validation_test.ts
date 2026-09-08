@@ -8800,8 +8800,6 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
-    // Fields sharing an operator vocabulary still bound their values differently, so the schema has
-    // an arm per field rather than per family.
     it('bounds a project tag more tightly than a participant', async () => {
       const overTagLimit = 'a'.repeat(Limits.NotetakerTagValue + 1);
       const err = await validateJsonAndAssertFails(
