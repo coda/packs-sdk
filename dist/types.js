@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.NotetakerFilterField = exports.NotetakerEventType = exports.DocsEventType = exports.SlackTriggerAudience = exports.SlackEventType = exports.MailFilterField = exports.MailEventType = exports.FilterCombinator = exports.FilterOperator = exports.EventTriggerType = exports.DefaultTriggerKind = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.NotetakerFilterField = exports.NotetakerEventType = exports.SlackEventType = exports.MailFilterField = exports.MailEventType = exports.FilterCombinator = exports.FilterOperator = exports.EventTriggerType = exports.DefaultTriggerKind = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -408,7 +408,6 @@ var DefaultTriggerKind;
  */
 var EventTriggerType;
 (function (EventTriggerType) {
-    EventTriggerType["Docs"] = "docs";
     EventTriggerType["Mail"] = "mail";
     EventTriggerType["Notetaker"] = "notetaker";
     EventTriggerType["Slack"] = "slack";
@@ -441,14 +440,14 @@ var FilterCombinator;
     FilterCombinator["Or"] = "or";
 })(FilterCombinator || (exports.FilterCombinator = FilterCombinator = {}));
 /**
- * The mail events a default trigger can fire on.
+ * The mail events a default trigger can fire on. `label_added` is a fourth mail event the stored
+ * contract carries; it is not authorable, because the labels it matches are per-account IDs.
  *
  * @internal
  * @hidden
  */
 var MailEventType;
 (function (MailEventType) {
-    MailEventType["LabelAdded"] = "label_added";
     MailEventType["MessageReceived"] = "message_received";
     MailEventType["MessageSent"] = "message_sent";
 })(MailEventType || (exports.MailEventType = MailEventType = {}));
@@ -466,39 +465,17 @@ var MailFilterField;
     MailFilterField["To"] = "to";
 })(MailFilterField || (exports.MailFilterField = MailFilterField = {}));
 /**
- * The Slack events a default trigger can fire on.
+ * The Slack events a default trigger can fire on. Being mentioned is a second Slack event the
+ * stored contract carries; it is not authorable, since a pack has nothing to say about it beyond
+ * the channels, which the adopter binds.
  *
  * @internal
  * @hidden
  */
 var SlackEventType;
 (function (SlackEventType) {
-    SlackEventType["AgentMentioned"] = "agent_mentioned";
     SlackEventType["MessageKeyword"] = "message_keyword";
 })(SlackEventType || (exports.SlackEventType = SlackEventType = {}));
-/**
- * Who may run the agent through a Slack trigger. Absent leaves the choice to the adopter.
- *
- * @internal
- * @hidden
- */
-var SlackTriggerAudience;
-(function (SlackTriggerAudience) {
-    SlackTriggerAudience["Anyone"] = "anyone";
-    SlackTriggerAudience["Creator"] = "creator";
-})(SlackTriggerAudience || (exports.SlackTriggerAudience = SlackTriggerAudience = {}));
-/**
- * The doc events a default trigger can fire on.
- *
- * @internal
- * @hidden
- */
-var DocsEventType;
-(function (DocsEventType) {
-    DocsEventType["FormSubmitted"] = "form_submitted";
-    DocsEventType["RowAdded"] = "row_added";
-    DocsEventType["RowChanged"] = "row_changed";
-})(DocsEventType || (exports.DocsEventType = DocsEventType = {}));
 /**
  * The notetaker events a default trigger can fire on.
  *
