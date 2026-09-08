@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateMetadata = exports.handleValidate = void 0;
+exports.validateMetadataOrThrow = exports.validateMetadata = exports.loadPackMetadataForValidation = exports.handleValidate = void 0;
 const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const helpers_1 = require("./helpers");
@@ -32,6 +32,11 @@ const helpers_3 = require("./helpers");
 const helpers_4 = require("../testing/helpers");
 const upload_validation_1 = require("../testing/upload_validation");
 async function handleValidate({ manifestFile, checkDeprecationWarnings }) {
+    const metadata = await loadPackMetadataForValidation(manifestFile);
+    return validateMetadata(metadata, { checkDeprecationWarnings });
+}
+exports.handleValidate = handleValidate;
+async function loadPackMetadataForValidation(manifestFile) {
     const fullManifestPath = (0, helpers_3.makeManifestFullPath)(manifestFile);
     const { bundlePath } = await (0, compile_1.compilePackBundle)({ manifestPath: fullManifestPath, minify: false });
     const manifest = await (0, helpers_1.importManifest)(bundlePath);
@@ -39,17 +44,13 @@ async function handleValidate({ manifestFile, checkDeprecationWarnings }) {
     if (!manifest.version) {
         manifest.version = '1';
     }
-    const metadata = (0, metadata_1.compilePackMetadata)(manifest);
-    return validateMetadata(metadata, { checkDeprecationWarnings });
+    return (0, metadata_1.compilePackMetadata)(manifest);
 }
-exports.handleValidate = handleValidate;
+exports.loadPackMetadataForValidation = loadPackMetadataForValidation;
 async function validateMetadata(metadata, { checkDeprecationWarnings = true } = {}) {
     var _a, _b;
-    // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve(`${(0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json'}`).then(s => __importStar(require(s)));
-    const codaPacksSDKVersion = packageJson.version;
     try {
-        await (0, upload_validation_1.validatePackVersionMetadata)(metadata, codaPacksSDKVersion);
+        await validateMetadataOrThrow(metadata);
     }
     catch (e) {
         const packMetadataValidationError = e;
@@ -59,6 +60,7 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     if (!checkDeprecationWarnings) {
         return;
     }
+    const codaPacksSDKVersion = await getSdkVersion();
     try {
         await (0, upload_validation_1.validatePackVersionMetadata)(metadata, codaPacksSDKVersion, { warningMode: true });
     }
@@ -69,6 +71,15 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     }
 }
 exports.validateMetadata = validateMetadata;
+async function validateMetadataOrThrow(metadata) {
+    await (0, upload_validation_1.validatePackVersionMetadata)(metadata, await getSdkVersion());
+}
+exports.validateMetadataOrThrow = validateMetadataOrThrow;
+async function getSdkVersion() {
+    // Since package.json isn't in dist, we grab it from the root directory instead.
+    const packageJson = await Promise.resolve(`${(0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json'}`).then(s => __importStar(require(s)));
+    return packageJson.version;
+}
 function makeErrorMessage({ path, message }) {
     if (path) {
         return `Error in field at path "${path}": ${message}`;

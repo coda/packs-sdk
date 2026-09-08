@@ -17,6 +17,11 @@ interface ValidateArgs {
 }
 
 export async function handleValidate({manifestFile, checkDeprecationWarnings}: ArgumentsCamelCase<ValidateArgs>) {
+  const metadata = await loadPackMetadataForValidation(manifestFile);
+  return validateMetadata(metadata, {checkDeprecationWarnings});
+}
+
+export async function loadPackMetadataForValidation(manifestFile: string): Promise<PackVersionMetadata> {
   const fullManifestPath = makeManifestFullPath(manifestFile);
   const {bundlePath} = await compilePackBundle({manifestPath: fullManifestPath, minify: false});
   const manifest = await importManifest<PackVersionDefinition>(bundlePath);
@@ -26,20 +31,15 @@ export async function handleValidate({manifestFile, checkDeprecationWarnings}: A
     manifest.version = '1';
   }
 
-  const metadata = compilePackMetadata(manifest);
-  return validateMetadata(metadata, {checkDeprecationWarnings});
+  return compilePackMetadata(manifest);
 }
 
 export async function validateMetadata(
   metadata: PackVersionMetadata,
   {checkDeprecationWarnings = true}: {checkDeprecationWarnings?: boolean} = {},
 ) {
-  // Since package.json isn't in dist, we grab it from the root directory instead.
-  const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
-  const codaPacksSDKVersion = packageJson.version as string;
-
   try {
-    await validatePackVersionMetadata(metadata, codaPacksSDKVersion);
+    await validateMetadataOrThrow(metadata);
   } catch (e: any) {
     const packMetadataValidationError = e as PackMetadataValidationError;
     const validationErrors = packMetadataValidationError.validationErrors?.map(makeErrorMessage).join('\n');
@@ -50,6 +50,7 @@ export async function validateMetadata(
     return;
   }
 
+  const codaPacksSDKVersion = await getSdkVersion();
   try {
     await validatePackVersionMetadata(metadata, codaPacksSDKVersion, {warningMode: true});
   } catch (e: any) {
@@ -57,6 +58,16 @@ export async function validateMetadata(
     const deprecationWarnings = packMetadataValidationError.validationErrors?.map(makeWarningMessage).join('\n');
     printAndExit(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
   }
+}
+
+export async function validateMetadataOrThrow(metadata: PackVersionMetadata): Promise<void> {
+  await validatePackVersionMetadata(metadata, await getSdkVersion());
+}
+
+async function getSdkVersion(): Promise<string> {
+  // Since package.json isn't in dist, we grab it from the root directory instead.
+  const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
+  return packageJson.version as string;
 }
 
 function makeErrorMessage({path, message}: ValidationError): string {

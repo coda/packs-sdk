@@ -12,6 +12,14 @@ search:
 
 Reference documentation for the `packs` CLI.
 
+## add
+
+Add a project kind
+
+**Usage:** `packs add`
+
+---
+
 ## auth
 
 Set up authentication for a Pack
@@ -184,6 +192,14 @@ Link to a pre-existing Pack ID on the server
 :   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `packs setOption <manifestFile> apiEndpoint <url>`.
 
     **Type:** string
+
+---
+
+## plugin
+
+Validate and inspect plugin listings that compose Packs
+
+**Usage:** `packs plugin`
 
 ---
 

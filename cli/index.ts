@@ -7,6 +7,7 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {DEFAULT_TIMER_STRATEGY} from './config_storage';
 import {Tools} from './extensions';
 import {backfillFromPackConfig} from './helpers';
+import {handleAddPlugin} from './plugin';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleClone} from './clone';
@@ -15,6 +16,8 @@ import {handleExecute} from './execute';
 import {handleExtensions} from './extensions';
 import {handleInit} from './init';
 import {handleLink} from './link';
+import {handlePluginPlan} from './plugin';
+import {handlePluginValidate} from './plugin';
 import {handleRegister} from './register';
 import {handleRelease} from './release';
 import {handleSetOption} from './set_option';
@@ -101,6 +104,39 @@ export const commands: yargs.CommandModule[] = [
     command: 'init',
     describe: 'Initialize an empty Pack',
     handler: handleInit,
+  },
+  {
+    command: 'add',
+    describe: 'Add a project kind',
+    builder: (yargs: yargs.Argv) => {
+      return yargs
+        .command({
+          command: 'plugin [name]',
+          describe: 'Scaffold a plugin listing with separate agent and connector Packs',
+          handler: handleAddPlugin as any,
+        })
+        .demandCommand();
+    },
+    handler: () => undefined,
+  },
+  {
+    command: 'plugin',
+    describe: 'Validate and inspect plugin listings that compose Packs',
+    builder: (yargs: yargs.Argv) => {
+      return yargs
+        .command({
+          command: 'validate [pluginJson]',
+          describe: 'Validate a plugin listing and every referenced Pack',
+          handler: handlePluginValidate as any,
+        })
+        .command({
+          command: 'plan [pluginJson]',
+          describe: 'Show the staged publish plan without making changes',
+          handler: handlePluginPlan as any,
+        })
+        .demandCommand();
+    },
+    handler: () => undefined,
   },
   {
     command: 'extensions <tools..>',

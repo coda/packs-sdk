@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "name": "harvey-assistant",
+  "displayName": "Harvey Assistant",
+  "description": "A legal assistant with a private Harvey REST connector and Harvey's hosted MCP connector.",
+  "entrypoints": ["agent"],
+  "components": {
+    "agent": {
+      "type": "agent",
+      "manifest": "agent/pack.ts",
+      "uses": [
+        {
+          "component": "harvey-api",
+          "formulas": [
+            {"formulaName": "AskHarvey"},
+            {"formulaName": "ListVaultProjects"},
+            {"formulaName": "UploadToVault"}
+          ]
+        },
+        {"component": "harvey-mcp"}
+      ],
+      "skills": []
+    },
+    "harvey-api": {
+      "type": "connector",
+      "manifest": "connector/pack.ts",
+      "visibility": "private"
+    },
+    "harvey-mcp": {
+      "type": "connector",
+      "manifest": "mcp/pack.ts",
+      "visibility": "public"
+    }
+  },
+  "setup": "SETUP.md",
+  "starterPrompts": [
+    {
+      "name": "review-indemnity",
+      "prompt": "Review the indemnity language in this document and summarize the main risks."
+    },
+    {
+      "name": "draft-legal-response",
+      "prompt": "Draft a response to the selected legal inquiry."
+    },
+    {
+      "name": "ask-vault",
+      "prompt": "List my Vault projects, then summarize the indemnification clauses in the most relevant one."
+    }
+  ],
+  "testCases": {
+    "positive": [
+      {
+        "name": "answers-legal-question",
+        "prompt": "What are the common elements of a breach of contract claim?",
+        "expectedBehavior": "Uses AskHarvey or Harvey MCP and identifies the response as legal information for review."
+      },
+      {
+        "name": "reviews-an-attached-file",
+        "prompt": "Analyze the attached MSA and flag unusual indemnity language.",
+        "expectedBehavior": "Calls AskHarvey with a file and does not also pass a Vault folder id."
+      },
+      {
+        "name": "grounds-in-vault",
+        "prompt": "Upload this document to Harvey and add it to a Vault project, then ask about it.",
+        "expectedBehavior": "Lists or selects a Vault project, uploads with UploadToVault, then asks with vaultFolderId or Harvey MCP Vault tools."
+      }
+    ],
+    "negative": [
+      {
+        "name": "does-not-mix-file-and-vault",
+        "prompt": "Send this file and also search the whole Vault folder in one Harvey request.",
+        "expectedBehavior": "Refuses to combine a file upload with Vault knowledge sources on the same AskHarvey call."
+      }
+    ]
+  }
+}

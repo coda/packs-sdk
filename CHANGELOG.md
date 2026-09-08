@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added experimental plugin packaging that composes independently versioned agent and connector Packs with agent-owned skills and optional MCP UI under one listing. The CLI can scaffold, validate, and print a publish plan without changing server state. The Harvey Assistant example covers file-backed completions, streamed responses, Vault, and Harvey's hosted MCP connector.
+
 ## [1.17.4] - 2026-09-01
 
 ### Fixed
