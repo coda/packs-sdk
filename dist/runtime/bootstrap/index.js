@@ -13,19 +13,29 @@ const source_map_1 = require("../common/source_map");
 const marshaling_2 = require("../common/marshaling");
 const marshaling_3 = require("../common/marshaling");
 const v8_1 = __importDefault(require("v8"));
-// Transfer options handed to isolated-vm must be null-prototype and deeply frozen, NOT plain object
-// literals: ivm reads `timeout` before `result`, so a guest-polluted `Object.prototype.timeout`
-// getter can fire mid-parse and rewrite `result` to a live host reference. Null prototype kills the
-// prototype lookup; freezing turns the mid-parse defineProperty into a throw.
+// isolated-vm resolves transfer options with a plain property get, so any option it reads that is
+// not an own property resolves up the prototype chain and can run arbitrary code mid-resolution.
+// Every option it reads is therefore declared explicitly below, using object-literal syntax so the
+// properties are defined rather than assigned. An explicit `undefined` is equivalent to omitting
+// the option. Do not drop keys or switch to assignment.
+// Stubs are installed with a property definition rather than an assignment. An assignment resolves
+// setters up the prototype chain, which would let code already running in the isolate intercept the
+// installation; a definition always creates an own property.
+const DEFINE_STUB_HELPER = `
+     const __defineStub = (target, key, value) =>
+       Object.defineProperty(target, key, {value, writable: true, enumerable: true, configurable: true});`;
 const FROZEN_TRANSFER_OPTS_HELPER = `
-     const __frozenTransferOpts = o => {
-       const frozen = Object.create(null);
-       for (const key of Object.keys(o)) {
-         const value = o[key];
-         frozen[key] = value !== null && typeof value === 'object' ? __frozenTransferOpts(value) : value;
-       }
-       return Object.freeze(frozen);
-     };`;
+     const __transferOpts = (copy, promise) => Object.freeze({
+       copy,
+       externalCopy: undefined,
+       reference: undefined,
+       promise,
+     });
+     const __applyOpts = (args, result) => Object.freeze({
+       timeout: undefined,
+       arguments: args,
+       result,
+     });`;
 // This helper avoids the need for other repos to directly depend on isolated-vm and
 // know what version to import.
 function createIsolate(options) {
@@ -68,22 +78,22 @@ async function injectAsyncFunction(context, stubName, func) {
         const result = await func(...args.map(arg => (0, marshaling_2.unmarshalValue)(arg)));
         return (0, marshaling_1.marshalValue)(result);
     };
+    const stubParent = stubName.slice(0, stubName.lastIndexOf('.'));
+    const stubKey = JSON.stringify(stubName.slice(stubName.lastIndexOf('.') + 1));
     await context.evalClosure(`'use strict';
+     ${DEFINE_STUB_HELPER}
      ${FROZEN_TRANSFER_OPTS_HELPER}
-     const __applyOpts = __frozenTransferOpts({
-       arguments: {copy: true},
-       result: {copy: true, promise: true},
-     });
-     ${stubName} = async function(...args) {
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, true));
+     __defineStub(${stubParent}, ${stubKey}, async function(...args) {
         return coda.handleErrorAsync(async () => {
          const result = await $0.apply(
            undefined,
            args.map(coda.marshalValue),
-           __applyOpts,
+           __opts,
          );
          return coda.unmarshalValue(result);
        });
-     };`, [stub], { arguments: { reference: true } });
+     });`, [stub], { arguments: { reference: true } });
 }
 exports.injectAsyncFunction = injectAsyncFunction;
 // Log functions have no return value and do a more relaxed version of marshaling that doesn't
@@ -92,14 +102,17 @@ async function injectLogFunction(context, stubName, func) {
     const stub = (marshaledArgs) => {
         func(...marshaledArgs.map(marshaling_2.unmarshalValue));
     };
+    const stubParent = stubName.slice(0, stubName.lastIndexOf('.'));
+    const stubKey = JSON.stringify(stubName.slice(stubName.lastIndexOf('.') + 1));
     await context.evalClosure(`'use strict';
+     ${DEFINE_STUB_HELPER}
      ${FROZEN_TRANSFER_OPTS_HELPER}
-     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}});
-     ${stubName} = function(...args) {
+     const __opts = __applyOpts(__transferOpts(true, undefined), undefined);
+     __defineStub(${stubParent}, ${stubKey}, function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], __applyOpts);
+          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], __opts);
         });
-     };`, [stub], { arguments: { reference: true } });
+     });`, [stub], { arguments: { reference: true } });
 }
 exports.injectLogFunction = injectLogFunction;
 async function injectFetcherFunction(context, stubName, func) {
@@ -107,24 +120,24 @@ async function injectFetcherFunction(context, stubName, func) {
         const result = await func((0, marshaling_2.unmarshalValue)(marshaledValue));
         return (0, marshaling_1.marshalValue)(result);
     };
+    const stubParent = stubName.slice(0, stubName.lastIndexOf('.'));
+    const stubKey = JSON.stringify(stubName.slice(stubName.lastIndexOf('.') + 1));
     await context.evalClosure(`'use strict';
+     ${DEFINE_STUB_HELPER}
      ${FROZEN_TRANSFER_OPTS_HELPER}
-     const __applyOpts = __frozenTransferOpts({
-       arguments: {copy: true},
-       result: {copy: true, promise: true},
-     });
-     ${stubName} = async function(fetchRequest) {
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, true));
+     __defineStub(${stubParent}, ${stubKey}, async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
          const fetchResult = await $0.apply(
            undefined,
            [coda.marshalValue(fetchRequest)],
-           __applyOpts,
+           __opts,
          );
          const parsedResult = coda.unmarshalValue(fetchResult);
          coda.handleFetcherStatusError(parsedResult, fetchRequest);
          return parsedResult;
        });
-     };`, [stub], { arguments: { reference: true } });
+     });`, [stub], { arguments: { reference: true } });
 }
 exports.injectFetcherFunction = injectFetcherFunction;
 /**
@@ -162,15 +175,17 @@ async function injectSerializer(context, stubName) {
     const serializeFn = (arg) => v8_1.default.serialize(arg).toString('base64');
     const deserializeFn = (arg) => v8_1.default.deserialize(Buffer.from(arg, 'base64'));
     await context.evalClosure(`'use strict';
+     ${DEFINE_STUB_HELPER}
      ${FROZEN_TRANSFER_OPTS_HELPER}
-     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}, result: {copy: true}});
-     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], __applyOpts)`, [serializeFn], {
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, undefined));
+     __defineStub(${stubName}, 'serialize', (arg) => $0.applySync(undefined, [arg], __opts))`, [serializeFn], {
         arguments: { reference: true },
     });
     await context.evalClosure(`'use strict';
+     ${DEFINE_STUB_HELPER}
      ${FROZEN_TRANSFER_OPTS_HELPER}
-     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}, result: {copy: true}});
-     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], __applyOpts)`, [deserializeFn], {
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, undefined));
+     __defineStub(${stubName}, 'deserialize', (arg) => $0.applySync(undefined, [arg], __opts))`, [deserializeFn], {
         arguments: { reference: true },
     });
 }

@@ -205,12 +205,12 @@ describe('Marshaling', () => {
   });
 
   it('rejects transform paths that are not own properties', () => {
-    const malicious = {
+    const payload = {
       encoded: {},
       postTransforms: [{type: 'Buffer', path: ['constructor', 'prototype']}],
       [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object,
     };
-    assert.throws(() => unmarshalValue(malicious), /unexpected transform path segment/);
+    assert.throws(() => unmarshalValue(payload), /unexpected transform path segment/);
   });
 
   it('marshals values for logging', () => {

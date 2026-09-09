@@ -186,10 +186,9 @@ function applyTransform(input, path, fn) {
         return fn(input);
     }
     else {
-        // postTransforms paths come from the marshaled payload, which is attacker-controllable.
-        // Legitimate paths (built by fixUncopyableTypes) only ever descend through own properties of
-        // plain objects/arrays. Rejecting anything else prevents a crafted path from walking inherited
-        // members like `constructor`/`__proto__`/`__lookupGetter__` into host intrinsics.
+        // Transform paths originate in the marshaled payload and are not trusted. Legitimate paths,
+        // built by fixUncopyableTypes, only ever descend through own properties of plain objects and
+        // arrays; anything else is rejected.
         const key = path[0];
         if (input === null || typeof input !== 'object' || !Object.prototype.hasOwnProperty.call(input, key)) {
             throw new Error(`Invalid marshaled value: unexpected transform path segment "${key}"`);
