@@ -198,7 +198,7 @@ export const Limits = {
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
   PromptLength: 20000,
-  RRuleStringLength: 1000,
+  RRuleStringLength: 512,
   SuggestedPromptText: 500,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,

@@ -76,6 +76,19 @@ describe('validateRRuleString', () => {
         validateRRuleString('RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=0'),
         'A schedule trigger has an invalid BYSETPOS.',
       );
+      assert.equal(validateRRuleString('RRULE:FREQ=MONTHLY;BYDAY=0MO'), 'A schedule trigger has an invalid BYDAY.');
+    });
+
+    it('ranges the occurrence a BYDAY picks at 1 through 53', () => {
+      assertValid('RRULE:FREQ=MONTHLY;BYDAY=+53MO');
+      assertValid('RRULE:FREQ=MONTHLY;BYDAY=-53SU,13WE');
+      for (const day of ['00MO', '54MO', '99MO', '-54MO']) {
+        assert.equal(
+          validateRRuleString(`RRULE:FREQ=MONTHLY;BYDAY=${day}`),
+          'A schedule trigger has an invalid BYDAY.',
+          day,
+        );
+      }
     });
 
     it('rejects a value out of range', () => {
@@ -86,6 +99,81 @@ describe('validateRRuleString', () => {
         validateRRuleString('DTSTART:tomorrow\nRRULE:FREQ=DAILY'),
         'A schedule trigger has an invalid DTSTART.',
       );
+    });
+  });
+
+  describe('dates', () => {
+    it('rejects a day the month does not have', () => {
+      // Passes a digit count check, and the runtime silently rolls it into March.
+      assert.equal(
+        validateRRuleString('DTSTART:20260231\nRRULE:FREQ=DAILY'),
+        'A schedule trigger has an invalid DTSTART.',
+      );
+      assert.equal(
+        validateRRuleString('RRULE:FREQ=DAILY;UNTIL=20270431T000000Z'),
+        'A schedule trigger has an invalid UNTIL.',
+      );
+    });
+
+    it('rejects a month, hour, minute, or second out of range', () => {
+      for (const dtstart of ['20261301', '20260100', '20260101T240000', '20260101T006000', '20260101T000061']) {
+        assert.equal(
+          validateRRuleString(`DTSTART:${dtstart}\nRRULE:FREQ=DAILY`),
+          'A schedule trigger has an invalid DTSTART.',
+          dtstart,
+        );
+      }
+    });
+
+    it('takes February 29 in a leap year and rejects it otherwise', () => {
+      assertValid('DTSTART:20280229\nRRULE:FREQ=YEARLY');
+      assert.equal(
+        validateRRuleString('DTSTART:20260229\nRRULE:FREQ=YEARLY'),
+        'A schedule trigger has an invalid DTSTART.',
+      );
+    });
+
+    it('takes a leap second', () => {
+      assertValid('DTSTART:20261231T235960Z\nRRULE:FREQ=DAILY');
+    });
+
+    it('rejects an UNTIL before the DTSTART', () => {
+      // rrule yields no occurrence at all, which computeNextRunAt writes as next_run_at = NULL.
+      assert.equal(
+        validateRRuleString('DTSTART:20260101\nRRULE:FREQ=DAILY;UNTIL=20250101T000000Z'),
+        'A schedule trigger must not end before it starts.',
+      );
+    });
+
+    it('takes an UNTIL on or after the DTSTART', () => {
+      assertValid('DTSTART:20260101\nRRULE:FREQ=DAILY;UNTIL=20270101T000000Z');
+      // Same day: the two are in different zones, so leave the boundary to the runtime.
+      assertValid('DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=DAILY;UNTIL=20260101T000000Z');
+    });
+  });
+
+  describe('timezone', () => {
+    it('takes the zones the runtime resolves', () => {
+      for (const timezone of ['America/New_York', 'UTC', 'utc', 'Asia/Calcutta', 'Etc/GMT+5', 'Europe/London']) {
+        assertValid(`DTSTART;TZID=${timezone}:20260101T090000\nRRULE:FREQ=DAILY`);
+      }
+    });
+
+    it('rejects a zone that does not exist', () => {
+      // rrulestr throws on these, which computeNextRunAt swallows into a trigger that never fires.
+      assert.equal(
+        validateRRuleString('DTSTART;TZID=Mars/Olympus:20260101T090000\nRRULE:FREQ=DAILY'),
+        'A schedule trigger has an invalid DTSTART timezone.',
+      );
+      assert.equal(
+        validateRRuleString('DTSTART;TZID=:20260101T090000\nRRULE:FREQ=DAILY'),
+        'A schedule trigger has an invalid DTSTART timezone.',
+      );
+    });
+
+    it('takes the other params a DTSTART carries', () => {
+      assertValid('DTSTART;VALUE=DATE:20260101\nRRULE:FREQ=DAILY');
+      assertValid('DTSTART;VALUE=DATE-TIME;TZID=America/New_York:20260101T090000\nRRULE:FREQ=DAILY');
     });
   });
 
