@@ -1,3 +1,5 @@
+import {CodaMarshalerType} from '../runtime/common/marshaling/constants';
+import {MarshalingInjectedKeys} from '../runtime/common/marshaling/constants';
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
 import {getIvm} from '../testing/ivm_wrapper';
@@ -200,6 +202,17 @@ describe('Marshaling', () => {
     assert.throws(() => unmarshalValue(undefined), 'Not a marshaled value: undefined');
     assert.throws(() => unmarshalValue(1), 'Not a marshaled value: 1');
     assert.throws(() => unmarshalValue({foo: 'bar'}), 'Not a marshaled value: {"foo":"bar"}');
+  });
+
+  it('rejects unmarshaling transform paths that walk into inherited members', () => {
+    // A crafted payload whose postTransforms path traverses inherited members (e.g. a prototype
+    // getter chain) must be rejected rather than followed onto host intrinsics.
+    const malicious = {
+      encoded: {},
+      postTransforms: [{type: 'Buffer', path: ['constructor', 'prototype']}],
+      [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object,
+    };
+    assert.throws(() => unmarshalValue(malicious), /unexpected transform path segment/);
   });
 
   it('marshals values for logging', () => {

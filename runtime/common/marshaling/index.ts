@@ -215,7 +215,15 @@ function applyTransform(input: any, path: string[], fn: (encoded: any) => any): 
   if (path.length === 0) {
     return fn(input);
   } else {
-    input[path[0]] = applyTransform(input[path[0]], path.slice(1), fn);
+    // postTransforms paths come from the marshaled payload, which is attacker-controllable.
+    // Legitimate paths (built by fixUncopyableTypes) only ever descend through own properties of
+    // plain objects/arrays. Rejecting anything else prevents a crafted path from walking inherited
+    // members like `constructor`/`__proto__`/`__lookupGetter__` into host intrinsics.
+    const key = path[0];
+    if (input === null || typeof input !== 'object' || !Object.prototype.hasOwnProperty.call(input, key)) {
+      throw new Error(`Invalid marshaled value: unexpected transform path segment "${key}"`);
+    }
+    input[key] = applyTransform(input[key], path.slice(1), fn);
     return input;
   }
 }
