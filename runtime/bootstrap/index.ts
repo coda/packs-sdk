@@ -26,6 +26,19 @@ import v8 from 'v8';
 
 export type {Context} from 'isolated-vm';
 
+// Transfer options are built as null-prototype, deeply frozen objects rather than inline object
+// literals so that option resolution cannot depend on state outside this module. Do not replace
+// these with plain literals.
+const FROZEN_TRANSFER_OPTS_HELPER = `
+     const __frozenTransferOpts = o => {
+       const frozen = Object.create(null);
+       for (const key of Object.keys(o)) {
+         const value = o[key];
+         frozen[key] = value !== null && typeof value === 'object' ? __frozenTransferOpts(value) : value;
+       }
+       return Object.freeze(frozen);
+     };`;
+
 // This helper avoids the need for other repos to directly depend on isolated-vm and
 // know what version to import.
 export function createIsolate(options: IsolateOptions): Isolate {
@@ -80,15 +93,17 @@ export async function injectAsyncFunction(
 
   await context.evalClosure(
     `'use strict';
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({
+       arguments: {copy: true},
+       result: {copy: true, promise: true},
+     });
      ${stubName} = async function(...args) {
         return coda.handleErrorAsync(async () => {
          const result = await $0.apply(
            undefined,
            args.map(coda.marshalValue),
-           {
-             arguments: {copy: true},
-             result: {copy: true, promise: true},
-           },
+           __applyOpts,
          );
          return coda.unmarshalValue(result);
        });
@@ -111,9 +126,11 @@ export async function injectLogFunction(
 
   await context.evalClosure(
     `'use strict';
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}});
      ${stubName} = function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], {arguments: {copy: true}});
+          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], __applyOpts);
         });
      };`,
     [stub],
@@ -133,15 +150,17 @@ export async function injectFetcherFunction(
 
   await context.evalClosure(
     `'use strict';
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({
+       arguments: {copy: true},
+       result: {copy: true, promise: true},
+     });
      ${stubName} = async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
          const fetchResult = await $0.apply(
            undefined,
            [coda.marshalValue(fetchRequest)],
-           {
-             arguments: {copy: true},
-             result: {copy: true, promise: true},
-           },
+           __applyOpts,
          );
          const parsedResult = coda.unmarshalValue(fetchResult);
          coda.handleFetcherStatusError(parsedResult, fetchRequest);
@@ -208,7 +227,9 @@ export async function injectSerializer(context: Context, stubName: string) {
   const deserializeFn = (arg: any) => v8.deserialize(Buffer.from(arg, 'base64'));
   await context.evalClosure(
     `'use strict';
-     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}, result: {copy: true}});
+     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], __applyOpts)`,
     [serializeFn],
     {
       arguments: {reference: true},
@@ -217,7 +238,9 @@ export async function injectSerializer(context: Context, stubName: string) {
 
   await context.evalClosure(
     `'use strict';
-     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}, result: {copy: true}});
+     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], __applyOpts)`,
     [deserializeFn],
     {
       arguments: {reference: true},

@@ -13,6 +13,19 @@ const source_map_1 = require("../common/source_map");
 const marshaling_2 = require("../common/marshaling");
 const marshaling_3 = require("../common/marshaling");
 const v8_1 = __importDefault(require("v8"));
+// Transfer options handed to isolated-vm must be null-prototype and deeply frozen, NOT plain object
+// literals: ivm reads `timeout` before `result`, so a guest-polluted `Object.prototype.timeout`
+// getter can fire mid-parse and rewrite `result` to a live host reference. Null prototype kills the
+// prototype lookup; freezing turns the mid-parse defineProperty into a throw.
+const FROZEN_TRANSFER_OPTS_HELPER = `
+     const __frozenTransferOpts = o => {
+       const frozen = Object.create(null);
+       for (const key of Object.keys(o)) {
+         const value = o[key];
+         frozen[key] = value !== null && typeof value === 'object' ? __frozenTransferOpts(value) : value;
+       }
+       return Object.freeze(frozen);
+     };`;
 // This helper avoids the need for other repos to directly depend on isolated-vm and
 // know what version to import.
 function createIsolate(options) {
@@ -56,15 +69,17 @@ async function injectAsyncFunction(context, stubName, func) {
         return (0, marshaling_1.marshalValue)(result);
     };
     await context.evalClosure(`'use strict';
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({
+       arguments: {copy: true},
+       result: {copy: true, promise: true},
+     });
      ${stubName} = async function(...args) {
         return coda.handleErrorAsync(async () => {
          const result = await $0.apply(
            undefined,
            args.map(coda.marshalValue),
-           {
-             arguments: {copy: true},
-             result: {copy: true, promise: true},
-           },
+           __applyOpts,
          );
          return coda.unmarshalValue(result);
        });
@@ -78,9 +93,11 @@ async function injectLogFunction(context, stubName, func) {
         func(...marshaledArgs.map(marshaling_2.unmarshalValue));
     };
     await context.evalClosure(`'use strict';
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}});
      ${stubName} = function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], {arguments: {copy: true}});
+          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], __applyOpts);
         });
      };`, [stub], { arguments: { reference: true } });
 }
@@ -91,15 +108,17 @@ async function injectFetcherFunction(context, stubName, func) {
         return (0, marshaling_1.marshalValue)(result);
     };
     await context.evalClosure(`'use strict';
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({
+       arguments: {copy: true},
+       result: {copy: true, promise: true},
+     });
      ${stubName} = async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
          const fetchResult = await $0.apply(
            undefined,
            [coda.marshalValue(fetchRequest)],
-           {
-             arguments: {copy: true},
-             result: {copy: true, promise: true},
-           },
+           __applyOpts,
          );
          const parsedResult = coda.unmarshalValue(fetchResult);
          coda.handleFetcherStatusError(parsedResult, fetchRequest);
@@ -143,11 +162,15 @@ async function injectSerializer(context, stubName) {
     const serializeFn = (arg) => v8_1.default.serialize(arg).toString('base64');
     const deserializeFn = (arg) => v8_1.default.deserialize(Buffer.from(arg, 'base64'));
     await context.evalClosure(`'use strict';
-     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [serializeFn], {
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}, result: {copy: true}});
+     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], __applyOpts)`, [serializeFn], {
         arguments: { reference: true },
     });
     await context.evalClosure(`'use strict';
-     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [deserializeFn], {
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __applyOpts = __frozenTransferOpts({arguments: {copy: true}, result: {copy: true}});
+     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], __applyOpts)`, [deserializeFn], {
         arguments: { reference: true },
     });
 }
