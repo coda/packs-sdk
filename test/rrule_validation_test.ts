@@ -133,8 +133,18 @@ describe('validateRRuleString', () => {
       );
     });
 
-    it('takes a leap second', () => {
-      assertValid('DTSTART:20261231T235960Z\nRRULE:FREQ=DAILY');
+    it('rejects a leap second, which neither Date nor rrule has', () => {
+      assert.equal(
+        validateRRuleString('DTSTART:20261231T235960Z\nRRULE:FREQ=DAILY'),
+        'A schedule trigger has an invalid DTSTART.',
+      );
+    });
+
+    it('rejects a year Date.UTC would read as 1900 through 1999', () => {
+      assert.equal(
+        validateRRuleString('DTSTART:00040101\nRRULE:FREQ=DAILY'),
+        'A schedule trigger has an invalid DTSTART.',
+      );
     });
 
     it('rejects an UNTIL before the DTSTART', () => {
@@ -147,8 +157,14 @@ describe('validateRRuleString', () => {
 
     it('takes an UNTIL on or after the DTSTART', () => {
       assertValid('DTSTART:20260101\nRRULE:FREQ=DAILY;UNTIL=20270101T000000Z');
-      // Same day: the two are in different zones, so leave the boundary to the runtime.
+    });
+
+    it('leaves the order to the runtime when the DTSTART names a zone', () => {
+      // A zoned DTSTART is a wall clock and UNTIL is UTC, so comparing the dates decides nothing.
+      // West of UTC the dates agree while the instants may not, east of UTC the reverse. Both go
+      // through rather than reject one of them wrongly.
       assertValid('DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=DAILY;UNTIL=20260101T000000Z');
+      assertValid('DTSTART;TZID=Pacific/Auckland:20260102T010000\nRRULE:FREQ=DAILY;UNTIL=20260101T120000Z');
     });
   });
 
@@ -171,9 +187,25 @@ describe('validateRRuleString', () => {
       );
     });
 
+    it('takes a quoted zone', () => {
+      assertValid('DTSTART;TZID="America/New_York":20260101T090000\nRRULE:FREQ=DAILY');
+    });
+
+    it('rejects a zone alongside a UTC time', () => {
+      assert.equal(
+        validateRRuleString('DTSTART;TZID=America/New_York:20260101T090000Z\nRRULE:FREQ=DAILY'),
+        'A schedule trigger cannot set both a DTSTART timezone and a UTC time.',
+      );
+    });
+
     it('takes the other params a DTSTART carries', () => {
       assertValid('DTSTART;VALUE=DATE:20260101\nRRULE:FREQ=DAILY');
       assertValid('DTSTART;VALUE=DATE-TIME;TZID=America/New_York:20260101T090000\nRRULE:FREQ=DAILY');
+    });
+
+    it('takes a lowercase UTC suffix, the way UNTIL does', () => {
+      assertValid('DTSTART:20260101T090000z\nRRULE:FREQ=DAILY');
+      assertValid('RRULE:FREQ=DAILY;UNTIL=20270101T000000z');
     });
   });
 

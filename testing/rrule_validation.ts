@@ -54,7 +54,7 @@ export function validateRRuleString(rruleString: string): string | undefined {
     const properties = separator < 0 ? [''] : line.slice(0, separator).split(';');
     const name = properties[0].toUpperCase();
     if (name === 'DTSTART' && dtstart === undefined) {
-      dtstart = line.slice(separator + 1);
+      dtstart = line.slice(separator + 1).toUpperCase();
       dtstartParams = properties.slice(1);
     } else if ((name === 'RRULE' || name === '') && rule === undefined) {
       rule = separator < 0 ? line : line.slice(separator + 1);
@@ -70,8 +70,15 @@ export function validateRRuleString(rruleString: string): string | undefined {
     return 'A schedule trigger has an invalid DTSTART.';
   }
   const timezone = dtstartParams.find(param => param.toUpperCase().startsWith(TimezoneParam));
-  if (timezone !== undefined && !isTimezone(timezone.slice(TimezoneParam.length))) {
-    return 'A schedule trigger has an invalid DTSTART timezone.';
+  if (timezone !== undefined) {
+    // RFC 5545 lets a param value carry quotes.
+    if (!isTimezone(timezone.slice(TimezoneParam.length).replace(/^"(.*)"$/, '$1'))) {
+      return 'A schedule trigger has an invalid DTSTART timezone.';
+    }
+    // A zone names a wall clock, so RFC 5545 forbids the UTC suffix alongside it.
+    if (dtstart?.endsWith('Z')) {
+      return 'A schedule trigger cannot set both a DTSTART timezone and a UTC time.';
+    }
   }
 
   const parts = new Map<string, string>();
@@ -108,8 +115,15 @@ export function validateRRuleString(rruleString: string): string | undefined {
   if (until !== undefined && !isDateTime(until)) {
     return 'A schedule trigger has an invalid UNTIL.';
   }
-  // Compared by date alone: a DTSTART carrying a TZID is a wall clock, while UNTIL is UTC.
-  if (until !== undefined && dtstart !== undefined && until.slice(0, 8) < dtstart.slice(0, 8)) {
+  // Compared by date alone, and only without a TZID: a zoned DTSTART is a wall clock and UNTIL is
+  // UTC, so the two can straddle a date boundary and still order correctly. That case is the
+  // runtime's to judge.
+  if (
+    until !== undefined &&
+    dtstart !== undefined &&
+    timezone === undefined &&
+    until.slice(0, 8) < dtstart.slice(0, 8)
+  ) {
     return 'A schedule trigger must not end before it starts.';
   }
   const weekStart = parts.get('WKST');
@@ -158,15 +172,16 @@ function isDateTime(value: string): boolean {
   }
   const [year, month, day] = [Number(date[1]), Number(date[2]), Number(date[3])];
   const parsed = new Date(Date.UTC(year, month - 1, day));
-  if (parsed.getUTCMonth() !== month - 1 || parsed.getUTCDate() !== day) {
+  // Date.UTC maps years 0 through 99 onto 1900 through 1999, so check the year back too.
+  if (parsed.getUTCFullYear() !== year || parsed.getUTCMonth() !== month - 1 || parsed.getUTCDate() !== day) {
     return false;
   }
   if (parts.length === 1) {
     return true;
   }
   const time = TimePattern.exec(parts[1]);
-  // RFC 5545 leaves room for a leap second.
-  return time !== null && Number(time[1]) <= 23 && Number(time[2]) <= 59 && Number(time[3]) <= 60;
+  // RFC 5545 leaves room for a leap second; neither Date nor rrule has one.
+  return time !== null && Number(time[1]) <= 23 && Number(time[2]) <= 59 && Number(time[3]) <= 59;
 }
 
 // A zone the runtime can resolve. Node's ICU backs the same lookup the runtime's does.
