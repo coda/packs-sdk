@@ -17,9 +17,11 @@ From the repository root, after `pnpm exec tsc`:
 npx ts-node cli/index.ts add plugin my-plugin
 npx ts-node cli/index.ts plugin validate examples/plugins/radical-candor/plugin.json
 npx ts-node cli/index.ts plugin plan examples/plugins/radical-candor/plugin.json
+npx ts-node cli/index.ts plugin plan examples/plugins/radical-candor/plugin.json --output json
 ```
 
 `add plugin` creates an agent Pack, a private connector Pack, setup instructions, and a listing. Optional skill and UI files are added only when a plugin needs them.
+Running the same scaffold command again is a no-op when the existing listing is valid and has the same name.
 
 `plugin validate` validates the listing graph, checks every referenced file, and runs normal Pack validation for agent and connector Packs.
 
@@ -30,6 +32,8 @@ npx ts-node cli/index.ts plugin plan examples/plugins/radical-candor/plugin.json
 3. Apply connector policy.
 4. List attached skills and deferred UI.
 5. Publish the listing after the Pack operations succeed.
+
+All three commands accept `--output json` for scripts and agents. Use each subcommand's `--help` for its inputs and examples.
 
 Only Packs are uploadable today. Installing listing skills and UI, resolving component names to Pack IDs, and publishing the composition atomically require server and runtime support.
 
