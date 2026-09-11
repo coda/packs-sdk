@@ -8651,6 +8651,7 @@ describe('Pack metadata Validation', async () => {
               kind: DefaultTriggerKind.Event,
               type: EventTriggerType.Slack,
               eventType: SlackEventType.MessageKeyword,
+              keywords: ['deploy'],
               channelIds: ['C123'],
             } as any,
           ],
@@ -8668,7 +8669,77 @@ describe('Pack metadata Validation', async () => {
               kind: DefaultTriggerKind.Event,
               type: EventTriggerType.Slack,
               eventType: SlackEventType.MessageKeyword,
+              keywords: ['deploy'],
               audience: 'anyone',
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects slack keywords that are empty, which would match every message', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Slack,
+              eventType: SlackEventType.MessageKeyword,
+              keywords: [],
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects a slack workspace, which is bound at install', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Slack,
+              eventType: SlackEventType.MessageKeyword,
+              keywords: ['deploy'],
+              teamId: 'T123',
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects a mail seat, which is bound at install', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Mail,
+              mailEventType: MailEventType.MessageReceived,
+              superhumanUserMailId: 'seat-1',
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects enabled, which the adopter turns on', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Mail,
+              mailEventType: MailEventType.MessageReceived,
+              enabled: true,
             } as any,
           ],
         }),
@@ -8883,6 +8954,44 @@ describe('Pack metadata Validation', async () => {
         }),
       );
       assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('takes a meeting type filter', async () => {
+      const trigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Notetaker,
+        eventType: NotetakerEventType.MeetingSummaryCompleted,
+        filters: {
+          conditions: [
+            {field: NotetakerFilterField.MeetingType, operator: FilterOperator.TextEquals, value: 'Customer call'},
+          ],
+        },
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [trigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [trigger]);
+    });
+
+    it('takes a project tag filter', async () => {
+      const trigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Notetaker,
+        eventType: NotetakerEventType.MeetingSummaryCompleted,
+        filters: {
+          conditions: [
+            {field: NotetakerFilterField.ProjectTag, operator: FilterOperator.TextContains, value: 'Renewals'},
+          ],
+        },
+      };
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers: [trigger],
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultTriggers, [trigger]);
     });
 
     it('takes one trigger of every event type at once', async () => {
