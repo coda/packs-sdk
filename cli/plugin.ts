@@ -3,7 +3,10 @@ import type {PluginComponentMetadata} from '../plugin/listing';
 import type {PluginListing} from '../plugin/listing';
 import {PluginListingError} from '../plugin/listing';
 import {PluginListingFileName} from '../plugin/listing';
+import type {PluginOutput} from './plugin_output';
 import {formatPluginPublishPlan} from '../plugin/listing';
+import {formatScaffoldResult} from './plugin_output';
+import {isExistingPlugin} from './plugin_output';
 import {loadPackMetadataForValidation} from './validate';
 import {loadPluginListing} from '../plugin/listing';
 import path from 'path';
@@ -17,49 +20,47 @@ import {validatePluginListing} from '../plugin/listing';
 
 interface AddPluginArgs {
   name?: string;
+  output: PluginOutput;
 }
 
 interface PluginJsonArgs {
   pluginJson?: string;
+  output: PluginOutput;
 }
 
-export async function handleAddPlugin({name}: ArgumentsCamelCase<AddPluginArgs>) {
+export async function handleAddPlugin({name, output}: ArgumentsCamelCase<AddPluginArgs>) {
   const pluginName = name || 'my-plugin';
   const targetDir = path.resolve(process.cwd(), pluginName);
+  const pluginJsonPath = path.join(targetDir, PluginListingFileName);
+  if (isExistingPlugin(pluginJsonPath, pluginName)) {
+    return printAndExit(formatScaffoldResult(pluginName, targetDir, 'unchanged', output), 0);
+  }
   try {
     scaffoldPlugin(targetDir, pluginName);
   } catch (err: unknown) {
     return printAndExit(err instanceof PluginListingError ? err.message : String(err));
   }
-  return printAndExit(
-    [
-      `Scaffolded plugin listing at ${targetDir}`,
-      `  ${PluginListingFileName}  (directory listing: agent + connector packs)`,
-      '  SETUP.md',
-      '  agent/pack.ts',
-      '  connector/pack.ts',
-      '',
-      'Next: coda plugin validate ' + path.join(pluginName, PluginListingFileName),
-      'Then: coda plugin plan ' + path.join(pluginName, PluginListingFileName),
-    ].join('\n'),
-    0,
-  );
+  return printAndExit(formatScaffoldResult(pluginName, targetDir, 'created', output), 0);
 }
 
-export async function handlePluginValidate({pluginJson}: ArgumentsCamelCase<PluginJsonArgs>) {
+export async function handlePluginValidate({pluginJson, output}: ArgumentsCamelCase<PluginJsonArgs>) {
   const pluginJsonPath = path.resolve(process.cwd(), pluginJson || PluginListingFileName);
   try {
     const listing = loadPluginListing(pluginJsonPath);
     const pluginRoot = path.dirname(pluginJsonPath);
     validatePluginListing(listing, pluginRoot);
     await validatePluginComponents(listing, pluginRoot);
-    return printAndExit(`Plugin definition is valid: ${pluginJsonPath}`, 0);
+    const result =
+      output === 'json'
+        ? JSON.stringify({valid: true, name: listing.name, pluginJson: pluginJsonPath}, null, 2)
+        : `Plugin definition is valid: ${pluginJsonPath}`;
+    return printAndExit(result, 0);
   } catch (err: unknown) {
     return printAndExit(err instanceof PluginListingError ? err.message : String(err));
   }
 }
 
-export async function handlePluginPlan({pluginJson}: ArgumentsCamelCase<PluginJsonArgs>) {
+export async function handlePluginPlan({pluginJson, output}: ArgumentsCamelCase<PluginJsonArgs>) {
   const pluginJsonPath = path.resolve(process.cwd(), pluginJson || PluginListingFileName);
   try {
     const listing = loadPluginListing(pluginJsonPath);
@@ -67,7 +68,7 @@ export async function handlePluginPlan({pluginJson}: ArgumentsCamelCase<PluginJs
     validatePluginListing(listing, pluginRoot);
     const componentMetadata = await validatePluginComponents(listing, pluginRoot);
     const plan = planPluginPublish(pluginJsonPath, componentMetadata);
-    return printAndExit(formatPluginPublishPlan(plan), 0);
+    return printAndExit(output === 'json' ? JSON.stringify(plan, null, 2) : formatPluginPublishPlan(plan), 0);
   } catch (err: unknown) {
     return printAndExit(err instanceof PluginListingError ? err.message : String(err));
   }

@@ -44,6 +44,14 @@ const TimerStrategyArg = {
   desc: `Options: none, error, fake (default: ${DEFAULT_TIMER_STRATEGY}).`,
 };
 
+const PluginOutputArg = {
+  string: true,
+  alias: 'o',
+  choices: ['text', 'json'],
+  default: 'text',
+  desc: 'Output format. Use json for scripts and agents.',
+};
+
 export const commands: yargs.CommandModule[] = [
   {
     command: 'execute <manifestPath> <formulaName> [params..]',
@@ -113,9 +121,20 @@ export const commands: yargs.CommandModule[] = [
         .command({
           command: 'plugin [name]',
           describe: 'Scaffold a plugin listing with separate agent and connector Packs',
+          builder: (pluginYargs: yargs.Argv) =>
+            pluginYargs
+              .positional('name', {
+                type: 'string',
+                default: 'my-plugin',
+                describe: 'Plugin name and output directory (kebab-case).',
+              })
+              .option('output', PluginOutputArg)
+              .example('$0 add plugin radical-candor', 'Create a plugin in ./radical-candor.')
+              .example('$0 add plugin radical-candor --output json', 'Create it and return machine-readable output.'),
           handler: handleAddPlugin as any,
         })
-        .demandCommand();
+        .demandCommand()
+        .example('$0 add plugin --help', 'Show help for scaffolding a plugin.');
     },
     handler: () => undefined,
   },
@@ -127,14 +146,42 @@ export const commands: yargs.CommandModule[] = [
         .command({
           command: 'validate [pluginJson]',
           describe: 'Validate a plugin listing and every referenced Pack',
+          builder: (validateYargs: yargs.Argv) =>
+            validateYargs
+              .positional('pluginJson', {
+                type: 'string',
+                default: 'plugin.json',
+                describe: 'Path to the plugin listing.',
+              })
+              .option('output', PluginOutputArg)
+              .example('$0 plugin validate', 'Validate ./plugin.json.')
+              .example(
+                '$0 plugin validate examples/plugins/radical-candor/plugin.json --output json',
+                'Validate a listing and return machine-readable output.',
+              ),
           handler: handlePluginValidate as any,
         })
         .command({
           command: 'plan [pluginJson]',
           describe: 'Show the staged publish plan without making changes',
+          builder: (planYargs: yargs.Argv) =>
+            planYargs
+              .positional('pluginJson', {
+                type: 'string',
+                default: 'plugin.json',
+                describe: 'Path to the plugin listing.',
+              })
+              .option('output', PluginOutputArg)
+              .example('$0 plugin plan', 'Plan publication for ./plugin.json.')
+              .example(
+                '$0 plugin plan examples/plugins/radical-candor/plugin.json --output json',
+                'Return a plan that can be piped to another command.',
+              ),
           handler: handlePluginPlan as any,
         })
-        .demandCommand();
+        .demandCommand()
+        .example('$0 plugin validate --help', 'Show validation inputs and examples.')
+        .example('$0 plugin plan --help', 'Show planning inputs and examples.');
     },
     handler: () => undefined,
   },
