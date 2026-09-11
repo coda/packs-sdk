@@ -2526,7 +2526,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     kind: eventTriggerKindSchema,
     type: z.literal(EventTriggerType.Slack),
     eventType: z.nativeEnum(SlackEventType),
-    keywords: z.array(keywordSchema).max(Limits.MaxKeywords).optional(),
+    keywords: z.array(keywordSchema).min(1).max(Limits.MaxKeywords),
     monitorThreadFollowUps: z.boolean().optional(),
   });
 

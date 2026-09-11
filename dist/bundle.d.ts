@@ -6473,8 +6473,11 @@ export declare enum SlackEventType {
 export interface SlackEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Slack> {
 	/** The Slack event that fires the trigger. */
 	eventType: SlackEventType;
-	/** Keywords to match, case insensitively. Up to 50, each up to 200 characters. */
-	keywords?: string[];
+	/** Keywords to match, case insensitively. One to 50, each up to 200 characters. */
+	keywords: [
+		string,
+		...string[]
+	];
 	/** Whether a firing records thread participation, so replies resume its chat. */
 	monitorThreadFollowUps?: boolean;
 }

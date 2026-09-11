@@ -1949,7 +1949,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         kind: eventTriggerKindSchema,
         type: z.literal(types_8.EventTriggerType.Slack),
         eventType: z.nativeEnum(types_22.SlackEventType),
-        keywords: z.array(keywordSchema).max(exports.Limits.MaxKeywords).optional(),
+        keywords: z.array(keywordSchema).min(1).max(exports.Limits.MaxKeywords),
         monitorThreadFollowUps: z.boolean().optional(),
     });
     // Each notetaker field bounds its own value.
