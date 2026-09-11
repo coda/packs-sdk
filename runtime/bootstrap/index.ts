@@ -26,6 +26,31 @@ import v8 from 'v8';
 
 export type {Context} from 'isolated-vm';
 
+// isolated-vm resolves transfer options with a plain property get, so any option it reads that is
+// not an own property resolves up the prototype chain and can run arbitrary code mid-resolution.
+// Every option it reads is therefore declared explicitly below, using object-literal syntax so the
+// properties are defined rather than assigned. An explicit `undefined` is equivalent to omitting
+// the option. Do not drop keys or switch to assignment.
+// Stubs are installed with a property definition rather than an assignment. An assignment resolves
+// setters up the prototype chain, which would let code already running in the isolate intercept the
+// installation; a definition always creates an own property.
+const DEFINE_STUB_HELPER = `
+     const __defineStub = (target, key, value) =>
+       Object.defineProperty(target, key, {value, writable: true, enumerable: true, configurable: true});`;
+
+const FROZEN_TRANSFER_OPTS_HELPER = `
+     const __transferOpts = (copy, promise) => Object.freeze({
+       copy,
+       externalCopy: undefined,
+       reference: undefined,
+       promise,
+     });
+     const __applyOpts = (args, result) => Object.freeze({
+       timeout: undefined,
+       arguments: args,
+       result,
+     });`;
+
 // This helper avoids the need for other repos to directly depend on isolated-vm and
 // know what version to import.
 export function createIsolate(options: IsolateOptions): Isolate {
@@ -78,21 +103,24 @@ export async function injectAsyncFunction(
     return marshalValue(result);
   };
 
+  const stubParent = stubName.slice(0, stubName.lastIndexOf('.'));
+  const stubKey = JSON.stringify(stubName.slice(stubName.lastIndexOf('.') + 1));
+
   await context.evalClosure(
     `'use strict';
-     ${stubName} = async function(...args) {
+     ${DEFINE_STUB_HELPER}
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, true));
+     __defineStub(${stubParent}, ${stubKey}, async function(...args) {
         return coda.handleErrorAsync(async () => {
          const result = await $0.apply(
            undefined,
            args.map(coda.marshalValue),
-           {
-             arguments: {copy: true},
-             result: {copy: true, promise: true},
-           },
+           __opts,
          );
          return coda.unmarshalValue(result);
        });
-     };`,
+     });`,
     [stub],
     {arguments: {reference: true}},
   );
@@ -109,13 +137,19 @@ export async function injectLogFunction(
     func(...marshaledArgs.map(unmarshalValue));
   };
 
+  const stubParent = stubName.slice(0, stubName.lastIndexOf('.'));
+  const stubKey = JSON.stringify(stubName.slice(stubName.lastIndexOf('.') + 1));
+
   await context.evalClosure(
     `'use strict';
-     ${stubName} = function(...args) {
+     ${DEFINE_STUB_HELPER}
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __opts = __applyOpts(__transferOpts(true, undefined), undefined);
+     __defineStub(${stubParent}, ${stubKey}, function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], {arguments: {copy: true}});
+          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], __opts);
         });
-     };`,
+     });`,
     [stub],
     {arguments: {reference: true}},
   );
@@ -131,23 +165,26 @@ export async function injectFetcherFunction(
     return marshalValue(result);
   };
 
+  const stubParent = stubName.slice(0, stubName.lastIndexOf('.'));
+  const stubKey = JSON.stringify(stubName.slice(stubName.lastIndexOf('.') + 1));
+
   await context.evalClosure(
     `'use strict';
-     ${stubName} = async function(fetchRequest) {
+     ${DEFINE_STUB_HELPER}
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, true));
+     __defineStub(${stubParent}, ${stubKey}, async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
          const fetchResult = await $0.apply(
            undefined,
            [coda.marshalValue(fetchRequest)],
-           {
-             arguments: {copy: true},
-             result: {copy: true, promise: true},
-           },
+           __opts,
          );
          const parsedResult = coda.unmarshalValue(fetchResult);
          coda.handleFetcherStatusError(parsedResult, fetchRequest);
          return parsedResult;
        });
-     };`,
+     });`,
     [stub],
     {arguments: {reference: true}},
   );
@@ -208,7 +245,10 @@ export async function injectSerializer(context: Context, stubName: string) {
   const deserializeFn = (arg: any) => v8.deserialize(Buffer.from(arg, 'base64'));
   await context.evalClosure(
     `'use strict';
-     ${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+     ${DEFINE_STUB_HELPER}
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, undefined));
+     __defineStub(${stubName}, 'serialize', (arg) => $0.applySync(undefined, [arg], __opts))`,
     [serializeFn],
     {
       arguments: {reference: true},
@@ -217,7 +257,10 @@ export async function injectSerializer(context: Context, stubName: string) {
 
   await context.evalClosure(
     `'use strict';
-     ${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+     ${DEFINE_STUB_HELPER}
+     ${FROZEN_TRANSFER_OPTS_HELPER}
+     const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, undefined));
+     __defineStub(${stubName}, 'deserialize', (arg) => $0.applySync(undefined, [arg], __opts))`,
     [deserializeFn],
     {
       arguments: {reference: true},
