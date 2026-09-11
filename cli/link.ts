@@ -1,12 +1,12 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import {assertApiToken} from './helpers';
 import {assertPackIdOrUrl} from './helpers';
+import {confirmOrFail} from './confirm';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
-import {promptForInput} from '../testing/helpers';
 import {storePackId} from './config_storage';
 
 // Regular expression that matches coda.io/p/<packId> or <packId>.
@@ -20,9 +20,10 @@ interface LinkArgs {
   apiEndpoint: string;
   packIdOrUrl: string;
   apiToken?: string;
+  yes?: boolean;
 }
 
-export async function handleLink({manifestDir, apiEndpoint, packIdOrUrl, apiToken}: ArgumentsCamelCase<LinkArgs>) {
+export async function handleLink({manifestDir, apiEndpoint, packIdOrUrl, apiToken, yes}: ArgumentsCamelCase<LinkArgs>) {
   // TODO(dweitzman): Add a download command to fetch the latest code from
   // the server and ask people if they want to download after linking.
   const formattedEndpoint = formatEndpoint(apiEndpoint);
@@ -50,20 +51,21 @@ export async function handleLink({manifestDir, apiEndpoint, packIdOrUrl, apiToke
   const existingPackId = getPackId(manifestDir, apiEndpoint);
   if (existingPackId) {
     if (existingPackId === packId) {
-      return printAndExit(`Already associated with pack ${existingPackId}. No change needed`, 0);
+      return printAndExit(
+        `already linked pack_id: ${existingPackId}\nurl: ${formattedEndpoint}/p/${existingPackId}`,
+        0,
+      );
     }
 
-    const input = promptForInput(
-      `Overwrite existing deploy to pack https://coda.io/p/${existingPackId} with https://coda.io/p/${packId} instead? (y/N): `,
-      {yesOrNo: true},
-    );
-    if (input.toLocaleLowerCase() !== 'yes') {
-      return process.exit(1);
-    }
+    confirmOrFail({
+      yes,
+      prompt: `Overwrite existing deploy to pack https://coda.io/p/${existingPackId} with https://coda.io/p/${packId} instead? (y/N): `,
+      example: `packs link ${manifestDir} ${packId} --yes`,
+    });
   }
 
   storePackId(manifestDir, packId, apiEndpoint);
-  return printAndExit(`Linked successfully!`, 0);
+  return printAndExit(`linked pack_id: ${packId}\nurl: ${formattedEndpoint}/p/${packId}`, 0);
 }
 
 export function parsePackIdOrUrl(packIdOrUrl: string): number | null {

@@ -61,7 +61,7 @@ export async function createPack(
     const response = await codaClient.createPack({}, {name, description, workspaceId: parseWorkspace(workspace)});
     const packId = response.packId;
     storePackId(manifestDir, packId, apiEndpoint);
-    return printAndExit(`Pack created successfully! You can manage pack settings at ${apiEndpoint}/p/${packId}`, 0);
+    return printAndExit(`created pack_id: ${packId}\nurl: ${apiEndpoint}/p/${packId}`, 0);
   } catch (err: any) {
     if (isResponseError(err)) {
       return printAndExit(`Unable to create your pack, received error: ${await formatResponseError(err)}`);

@@ -3,6 +3,7 @@ interface CloneArgs {
     packIdOrUrl: string;
     apiEndpoint: string;
     apiToken?: string;
+    yes?: boolean;
 }
-export declare function handleClone({ packIdOrUrl, apiEndpoint, apiToken }: ArgumentsCamelCase<CloneArgs>): Promise<undefined>;
+export declare function handleClone({ packIdOrUrl, apiEndpoint, apiToken, yes }: ArgumentsCamelCase<CloneArgs>): Promise<undefined>;
 export {};

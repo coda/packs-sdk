@@ -41,7 +41,8 @@ exports.handleSetOption = handleSetOption;
 function validateOption(option, value) {
     const validOptions = Object.values(config_storage_1.PackOptionKey);
     if (!validOptions.includes(option)) {
-        return (0, helpers_2.printAndExit)(`Unsupported option "${option}". Valid options are: ${validOptions.join(', ')}`);
+        return (0, helpers_2.printAndExit)(`Error: Unsupported option "${option}". Valid options: ${validOptions.join(', ')}\n` +
+            `  packs setOption pack.ts gitTag true`);
     }
     const key = option;
     switch (key) {

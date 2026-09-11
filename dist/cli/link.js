@@ -3,19 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parsePackIdOrUrl = exports.handleLink = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const confirm_1 = require("./confirm");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
 const config_storage_1 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const helpers_5 = require("../testing/helpers");
-const helpers_6 = require("../testing/helpers");
 const config_storage_2 = require("./config_storage");
 // Regular expression that matches coda.io/p/<packId> or <packId>.
 const PackEditUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/p\/([0-9]+)(:?[^0-9].*)?$/;
 const PackGalleryUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/packs\/[^/]*-([0-9]+)$/;
 const PackPlainIdRegex = /^([0-9]+)$/;
 const PackRegexes = [PackEditUrlRegex, PackGalleryUrlRegex, PackPlainIdRegex];
-async function handleLink({ manifestDir, apiEndpoint, packIdOrUrl, apiToken }) {
+async function handleLink({ manifestDir, apiEndpoint, packIdOrUrl, apiToken, yes }) {
     // TODO(dweitzman): Add a download command to fetch the latest code from
     // the server and ask people if they want to download after linking.
     const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
@@ -41,15 +41,16 @@ async function handleLink({ manifestDir, apiEndpoint, packIdOrUrl, apiToken }) {
     const existingPackId = (0, config_storage_1.getPackId)(manifestDir, apiEndpoint);
     if (existingPackId) {
         if (existingPackId === packId) {
-            return (0, helpers_5.printAndExit)(`Already associated with pack ${existingPackId}. No change needed`, 0);
+            return (0, helpers_5.printAndExit)(`already linked pack_id: ${existingPackId}\nurl: ${formattedEndpoint}/p/${existingPackId}`, 0);
         }
-        const input = (0, helpers_6.promptForInput)(`Overwrite existing deploy to pack https://coda.io/p/${existingPackId} with https://coda.io/p/${packId} instead? (y/N): `, { yesOrNo: true });
-        if (input.toLocaleLowerCase() !== 'yes') {
-            return process.exit(1);
-        }
+        (0, confirm_1.confirmOrFail)({
+            yes,
+            prompt: `Overwrite existing deploy to pack https://coda.io/p/${existingPackId} with https://coda.io/p/${packId} instead? (y/N): `,
+            example: `packs link ${manifestDir} ${packId} --yes`,
+        });
     }
     (0, config_storage_2.storePackId)(manifestDir, packId, apiEndpoint);
-    return (0, helpers_5.printAndExit)(`Linked successfully!`, 0);
+    return (0, helpers_5.printAndExit)(`linked pack_id: ${packId}\nurl: ${formattedEndpoint}/p/${packId}`, 0);
 }
 exports.handleLink = handleLink;
 function parsePackIdOrUrl(packIdOrUrl) {

@@ -2,6 +2,7 @@ import type {ArgumentsCamelCase} from 'yargs';
 import type {Client} from '../helpers/external-api/coda';
 import {assertApiToken} from './helpers';
 import {assertPackIdOrUrl} from './helpers';
+import {confirmOrFail} from './confirm';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import fs from 'fs-extra';
@@ -10,16 +11,16 @@ import {isResponseError} from '../helpers/external-api/coda';
 import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
-import {promptForInput} from '../testing/helpers';
 import {storePackId} from './config_storage';
 
 interface CloneArgs {
   packIdOrUrl: string;
   apiEndpoint: string;
   apiToken?: string;
+  yes?: boolean;
 }
 
-export async function handleClone({packIdOrUrl, apiEndpoint, apiToken}: ArgumentsCamelCase<CloneArgs>) {
+export async function handleClone({packIdOrUrl, apiEndpoint, apiToken, yes}: ArgumentsCamelCase<CloneArgs>) {
   const manifestDir = process.cwd();
   const packId = assertPackIdOrUrl(packIdOrUrl);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
@@ -27,12 +28,11 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken}: Argument
 
   const codeAlreadyExists = fs.existsSync(path.join(manifestDir, 'pack.ts'));
   if (codeAlreadyExists) {
-    const shouldOverwrite = promptForInput('A pack.ts file already exists. Do you want to overwrite it? (y/N)?', {
-      yesOrNo: true,
+    confirmOrFail({
+      yes,
+      prompt: 'A pack.ts file already exists. Do you want to overwrite it? (y/N)?',
+      example: `packs clone ${packIdOrUrl} --yes`,
     });
-    if (shouldOverwrite.toLocaleLowerCase() !== 'yes') {
-      return printAndExit('Aborting');
-    }
   }
 
   const client = createCodaClient(apiToken, formattedEndpoint);
@@ -59,13 +59,11 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken}: Argument
   if (!sourceCode) {
     print(`Unable to download source for Pack version ${packVersion}. Packs built using the CLI can't be cloned.`);
 
-    const shouldInitializeWithoutDownload = promptForInput(
-      'Do you want to continue initializing with template starter code instead (y/N)?',
-      {yesOrNo: true},
-    );
-    if (shouldInitializeWithoutDownload !== 'yes') {
-      return process.exit(1);
-    }
+    confirmOrFail({
+      yes,
+      prompt: 'Do you want to continue initializing with template starter code instead (y/N)?',
+      example: `packs clone ${packIdOrUrl} --yes`,
+    });
 
     await handleInit();
     storePackId(manifestDir, packId, apiEndpoint);
@@ -78,7 +76,7 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken}: Argument
   storePackId(manifestDir, packId, apiEndpoint);
 
   fs.writeFileSync(path.join(manifestDir, 'pack.ts'), sourceCode);
-  printAndExit("Successfully updated pack.ts with the Pack's code!", 0);
+  printAndExit(`cloned pack_id: ${packId}\nversion: ${packVersion}\nfile: pack.ts`, 0);
 }
 
 function maybeHandleClientError(err: any) {

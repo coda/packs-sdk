@@ -4,6 +4,7 @@ import type {PackVersionDefinition} from '..';
 import {assertApiToken} from './helpers';
 import {assertPackId} from './helpers';
 import {build} from './build';
+import {confirmOrFail} from './confirm';
 import {createCodaClient} from './helpers';
 import {createGitTag} from './git_helpers';
 import {formatEndpoint} from './helpers';
@@ -13,10 +14,10 @@ import {getGitState} from './git_helpers';
 import {gitTagExists} from './git_helpers';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
+import {missingFlagError} from './confirm';
 import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
-import {promptForInput} from '../testing/helpers';
 import {tryParseSystemError} from './errors';
 
 interface ReleaseArgs {
@@ -26,6 +27,8 @@ interface ReleaseArgs {
   notes: string;
   apiToken?: string;
   gitTag?: boolean;
+  yes?: boolean;
+  useLatest?: boolean;
 }
 
 export async function handleRelease({
@@ -35,6 +38,8 @@ export async function handleRelease({
   notes,
   apiToken,
   gitTag,
+  yes,
+  useLatest,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
@@ -57,13 +62,13 @@ export async function handleRelease({
 
     // Warn if not on main/master branch
     if (gitState.currentBranch && !['main', 'master'].includes(gitState.currentBranch)) {
-      const shouldContinue = promptForInput(
-        `Warning: You are releasing from branch '${gitState.currentBranch}', not 'main'.\n` + `Continue anyway? (y/N) `,
-        {yesOrNo: true},
-      );
-      if (shouldContinue !== 'yes') {
-        return process.exit(1);
-      }
+      confirmOrFail({
+        yes,
+        prompt:
+          `Warning: You are releasing from branch '${gitState.currentBranch}', not 'main'.\n` +
+          `Continue anyway? (y/N) `,
+        example: `packs release ${manifestFile} --notes "<notes>" --yes`,
+      });
     }
   }
 
@@ -89,12 +94,12 @@ export async function handleRelease({
 
     const [latestPackVersionData] = versions;
     const {packVersion: latestPackVersion} = latestPackVersionData;
-    const shouldReleaseLatestPackVersion = promptForInput(
-      `No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/N)\n`,
-      {yesOrNo: true},
-    );
-    if (shouldReleaseLatestPackVersion !== 'yes') {
-      return process.exit(1);
+    if (!useLatest) {
+      return missingFlagError(
+        'No pack version specified.',
+        `packs release ${manifestFile} ${latestPackVersion} --notes "<notes>"`,
+        `Release the latest uploaded version: packs release ${manifestFile} --use-latest --notes "<notes>"`,
+      );
     }
     packVersion = latestPackVersion;
   }
@@ -104,7 +109,10 @@ export async function handleRelease({
     codaClient.createPackRelease(packId, {}, {packVersion, releaseNotes: notes}),
   );
 
-  print(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
+  print(`released ${packVersion}`);
+  print(`pack_id: ${packId}`);
+  print(`release_id: ${releaseResponse.releaseId}`);
+  print(`url: ${formattedEndpoint}/p/${packId}`);
 
   // Create git tag if enabled
   if (gitTag && gitState.isGitRepo) {

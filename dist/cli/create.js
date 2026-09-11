@@ -62,7 +62,7 @@ async function createPack(manifestFile, apiEndpoint, { name, description, worksp
         const response = await codaClient.createPack({}, { name, description, workspaceId: parseWorkspace(workspace) });
         const packId = response.packId;
         (0, config_storage_3.storePackId)(manifestDir, packId, apiEndpoint);
-        return (0, helpers_4.printAndExit)(`Pack created successfully! You can manage pack settings at ${apiEndpoint}/p/${packId}`, 0);
+        return (0, helpers_4.printAndExit)(`created pack_id: ${packId}\nurl: ${apiEndpoint}/p/${packId}`, 0);
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {
