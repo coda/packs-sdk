@@ -72,7 +72,8 @@ export function validateRRuleString(rruleString: string): string | undefined {
   const timezone = dtstartParams.find(param => param.toUpperCase().startsWith(TimezoneParam));
   if (timezone !== undefined) {
     // RFC 5545 lets a param value carry quotes.
-    if (!isTimezone(timezone.slice(TimezoneParam.length).replace(/^"(.*)"$/, '$1'))) {
+    const zone = timezone.slice(timezone.indexOf('=') + 1).replace(/^"(.*)"$/, '$1');
+    if (!isTimezone(zone)) {
       return 'A schedule trigger has an invalid DTSTART timezone.';
     }
     // A zone names a wall clock, so RFC 5545 forbids the UTC suffix alongside it.
