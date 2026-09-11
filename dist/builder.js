@@ -5,6 +5,7 @@ const types_1 = require("./types");
 const api_types_1 = require("./api_types");
 const types_2 = require("./types");
 const types_3 = require("./types");
+const types_4 = require("./types");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -521,17 +522,17 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         const tools = [];
         if (webSearch) {
             const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
-            tools.push({ type: types_3.ToolType.WebSearch, ...(allowedDomains ? { allowedDomains } : {}) });
+            tools.push({ type: types_4.ToolType.WebSearch, ...(allowedDomains ? { allowedDomains } : {}) });
         }
         if (docs) {
-            tools.push({ type: types_3.ToolType.CodaDocsAndTables });
+            tools.push({ type: types_4.ToolType.CodaDocsAndTables });
         }
         if (mail) {
-            tools.push({ type: types_3.ToolType.MailAndCalendar });
+            tools.push({ type: types_4.ToolType.MailAndCalendar });
         }
         for (const connector of connectors || []) {
             tools.push({
-                type: types_3.ToolType.Pack,
+                type: types_4.ToolType.Pack,
                 packId: connector.packId,
                 ...(connector.formulas ? { formulas: connector.formulas } : {}),
             });
@@ -554,6 +555,69 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         var _a;
         const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.WhileWriting);
         this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger }];
+        return this;
+    }
+    /**
+     * Adds a mail event trigger this agent runs on. Call it once per event.
+     *
+     * @example
+     * ```
+     * pack.addDefaultMailEventTrigger({
+     *   mailEventType: sdk.MailEventType.MessageReceived,
+     *   filters: {
+     *     conditions: [
+     *       {
+     *         field: sdk.MailFilterField.From,
+     *         operator: sdk.FilterOperator.TextContains,
+     *         value: '@customers.example.com',
+     *       },
+     *     ],
+     *   },
+     * });
+     * ```
+     */
+    addDefaultMailEventTrigger(trigger) {
+        return this._addDefaultEventTrigger({ type: types_3.EventTriggerType.Mail, ...trigger });
+    }
+    /**
+     * Adds a Slack event trigger this agent runs on. The workspace and channels are bound at install.
+     *
+     * @example
+     * ```
+     * pack.addDefaultSlackEventTrigger({
+     *   eventType: sdk.SlackEventType.MessageKeyword,
+     *   keywords: ['deploy', 'rollback'],
+     * });
+     * ```
+     */
+    addDefaultSlackEventTrigger(trigger) {
+        return this._addDefaultEventTrigger({ type: types_3.EventTriggerType.Slack, ...trigger });
+    }
+    /**
+     * Adds a notetaker event trigger this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.addDefaultNotetakerEventTrigger({
+     *   eventType: sdk.NotetakerEventType.MeetingSummaryCompleted,
+     *   filters: {
+     *     conditions: [
+     *       {
+     *         field: sdk.NotetakerFilterField.DurationMinutes,
+     *         operator: sdk.FilterOperator.NumberAtLeast,
+     *         value: '30',
+     *       },
+     *     ],
+     *   },
+     * });
+     * ```
+     */
+    addDefaultNotetakerEventTrigger(trigger) {
+        return this._addDefaultEventTrigger({ type: types_3.EventTriggerType.Notetaker, ...trigger });
+    }
+    _addDefaultEventTrigger(eventTrigger) {
+        var _a;
+        this.defaultTriggers = [...((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []), { kind: types_2.DefaultTriggerKind.Event, ...eventTrigger }];
         return this;
     }
     /**

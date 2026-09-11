@@ -8,10 +8,18 @@ import {ContextualTriggerSurface} from '../types';
 import {DefaultTriggerKind} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
+import {EventTriggerType} from '../types';
 import type {ExternalPackVersionMetadata} from '../compiled_types';
+import {FilterCombinator} from '../types';
+import {FilterOperator} from '../types';
 import type {GenericObjectSchema} from '../schema';
 import {KnowledgeToolSourceType} from '../types';
+import type {MailEventFilters} from '../types';
+import type {MailEventTriggerDefinition} from '../types';
+import {MailEventType} from '../types';
+import {MailFilterField} from '../types';
 import type {MetadataFormulaDef} from '../api';
+import {NotetakerEventType} from '../types';
 import type {ObjectFormulaDef} from '../api';
 import type {ObjectSchema} from '../schema';
 import {PackDefinitionBuilder} from '../builder';
@@ -20,6 +28,7 @@ import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '..';
 import type {Skill} from '../types';
+import {SlackEventType} from '../types';
 import type {StringPackFormula} from '../api';
 import type {SyncTableOptions} from '../api';
 import {ToolType} from '../types';
@@ -821,6 +830,78 @@ describe('Agent builder', () => {
       agent.setInstructions('Do a thing.').setDefaultScheduleTrigger(scheduleTrigger).setVersion('1.0.0');
       const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
       assert.deepEqual(metadata.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
+    });
+  });
+
+  describe('default event trigger', () => {
+    const mailTrigger = {mailEventType: MailEventType.MessageReceived};
+    const storedMailTrigger: MailEventTriggerDefinition = {
+      kind: DefaultTriggerKind.Event,
+      type: EventTriggerType.Mail,
+      ...mailTrigger,
+    };
+
+    it('adds a trigger', () => {
+      agent.addDefaultMailEventTrigger(mailTrigger);
+      assert.deepEqual(agent.defaultTriggers, [storedMailTrigger]);
+    });
+
+    it('appends rather than replaces on a second call', () => {
+      agent
+        .addDefaultMailEventTrigger(mailTrigger)
+        .addDefaultMailEventTrigger({mailEventType: MailEventType.MessageSent});
+      assert.deepEqual(agent.defaultTriggers, [
+        storedMailTrigger,
+        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Mail, mailEventType: MailEventType.MessageSent},
+      ]);
+    });
+
+    it('takes filters', () => {
+      const filters: MailEventFilters = {
+        combinator: FilterCombinator.Or,
+        conditions: [
+          {field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'},
+          {field: MailFilterField.Subject, operator: FilterOperator.TextContains, value: 'invoice'},
+        ],
+      };
+      agent.addDefaultMailEventTrigger({...mailTrigger, filters});
+      assert.deepEqual(agent.defaultTriggers, [{...storedMailTrigger, filters}]);
+    });
+
+    it('adds a trigger of every event type', () => {
+      agent
+        .addDefaultMailEventTrigger(mailTrigger)
+        .addDefaultSlackEventTrigger({eventType: SlackEventType.MessageKeyword, keywords: ['deploy']})
+        .addDefaultNotetakerEventTrigger({eventType: NotetakerEventType.MeetingSummaryCompleted});
+      assert.deepEqual(agent.defaultTriggers, [
+        storedMailTrigger,
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Slack,
+          eventType: SlackEventType.MessageKeyword,
+          keywords: ['deploy'],
+        },
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Notetaker,
+          eventType: NotetakerEventType.MeetingSummaryCompleted,
+        },
+      ]);
+    });
+
+    it('sits alongside the other kinds', () => {
+      const scheduleTrigger = {rruleString: 'RRULE:FREQ=DAILY'};
+      agent.setDefaultScheduleTrigger(scheduleTrigger).addDefaultMailEventTrigger(mailTrigger);
+      assert.deepEqual(agent.defaultTriggers, [
+        {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger},
+        storedMailTrigger,
+      ]);
+    });
+
+    it('carries through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').addDefaultMailEventTrigger(mailTrigger).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.defaultTriggers, [storedMailTrigger]);
     });
   });
 

@@ -1688,13 +1688,14 @@ export declare enum ContextualTriggerSurface {
     SocialMedia = "social_media"
 }
 /**
- * Which kind of default trigger an entry declares. More kinds (event, ...) join this enum as
- * they become authorable.
+ * Which kind of default trigger an entry declares. More kinds join this enum as they become
+ * authorable.
  *
  * @internal
  * @hidden
  */
 export declare enum DefaultTriggerKind {
+    Event = "event",
     Schedule = "schedule",
     WhileWriting = "whileWriting"
 }
@@ -1745,12 +1746,302 @@ export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<Defaul
     blockedDomains?: string[];
 }
 /**
+ * Which product's events a default event trigger listens to.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum EventTriggerType {
+    Mail = "mail",
+    Notetaker = "notetaker",
+    Slack = "slack"
+}
+/**
+ * Base interface for all default event trigger definitions.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseEventTrigger<T extends EventTriggerType> extends BaseDefaultTrigger<DefaultTriggerKind.Event> {
+    /** Which product's events this trigger listens to. */
+    type: T;
+}
+/**
+ * How a filter condition compares its field to its value.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum FilterOperator {
+    NumberAtLeast = "numberAtLeast",
+    NumberAtMost = "numberAtMost",
+    NumberEquals = "numberEquals",
+    TextContains = "textContains",
+    TextDoesNotContain = "textDoesNotContain",
+    TextDoesNotEqual = "textDoesNotEqual",
+    TextEquals = "textEquals"
+}
+/**
+ * The operators an address field accepts: whole value or substring.
+ *
+ * @internal
+ * @hidden
+ */
+export type AddressFilterOperator = FilterOperator.TextContains | FilterOperator.TextDoesNotContain | FilterOperator.TextDoesNotEqual | FilterOperator.TextEquals;
+/**
+ * The operators a free-text field accepts: substring only.
+ *
+ * @internal
+ * @hidden
+ */
+export type TextFilterOperator = FilterOperator.TextContains | FilterOperator.TextDoesNotContain;
+/**
+ * The operators an identifier field accepts: whole value only.
+ *
+ * @internal
+ * @hidden
+ */
+export type IdFilterOperator = FilterOperator.TextDoesNotEqual | FilterOperator.TextEquals;
+/**
+ * The operators a numeric field accepts.
+ *
+ * @internal
+ * @hidden
+ */
+export type NumericFilterOperator = FilterOperator.NumberAtLeast | FilterOperator.NumberAtMost | FilterOperator.NumberEquals;
+/**
+ * How a filter's conditions combine. Absent means `And`.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum FilterCombinator {
+    And = "and",
+    Or = "or"
+}
+/**
+ * The mail events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum MailEventType {
+    MessageReceived = "message_received",
+    MessageSent = "message_sent"
+}
+/**
+ * The part of a message a mail filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum MailFilterField {
+    Body = "body",
+    From = "from",
+    Subject = "subject",
+    To = "to"
+}
+/**
+ * Base interface for all mail filter conditions. Each field admits only the operators that make
+ * sense for it.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseMailFilterCondition<F extends MailFilterField, O extends FilterOperator> {
+    /** The part of the message to match on. */
+    field: F;
+    /** How to compare the field to {@link value}. */
+    operator: O;
+    /** What to match the field against. Max 320 characters on an address field, 998 on a text field. */
+    value: string;
+}
+/**
+ * A condition on an address field.
+ *
+ * @internal
+ * @hidden
+ */
+export type MailAddressFilterCondition = BaseMailFilterCondition<MailFilterField.From | MailFilterField.To, AddressFilterOperator>;
+/**
+ * A condition on a text field.
+ *
+ * @internal
+ * @hidden
+ */
+export type MailTextFilterCondition = BaseMailFilterCondition<MailFilterField.Body | MailFilterField.Subject, TextFilterOperator>;
+/**
+ * A single condition on a mail event trigger.
+ *
+ * @internal
+ * @hidden
+ */
+export type MailEventFilterCondition = MailAddressFilterCondition | MailTextFilterCondition;
+/**
+ * Which messages a mail event trigger fires on.
+ *
+ * @internal
+ * @hidden
+ */
+export interface MailEventFilters {
+    /** The conditions to match. One to 20 of them. */
+    conditions: MailEventFilterCondition[];
+    combinator?: FilterCombinator;
+}
+/**
+ * A default mail event trigger a pack's agent ships with. The mailbox is bound at install.
+ *
+ * @internal
+ * @hidden
+ */
+export interface MailEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Mail> {
+    /** The mail event that fires the trigger. */
+    mailEventType: MailEventType;
+    /** Which messages fire the trigger. Absent fires on every one. */
+    filters?: MailEventFilters;
+}
+/**
+ * The Slack events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum SlackEventType {
+    MessageKeyword = "message_keyword"
+}
+/**
+ * A default Slack event trigger a pack's agent ships with. The workspace and channels are bound
+ * at install.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SlackEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Slack> {
+    /** The Slack event that fires the trigger. */
+    eventType: SlackEventType;
+    /** Keywords to match, case insensitively. One to 50, each up to 200 characters. */
+    keywords: [string, ...string[]];
+    /** Whether a firing records thread participation, so replies resume its chat. */
+    monitorThreadFollowUps?: boolean;
+}
+/**
+ * The notetaker events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum NotetakerEventType {
+    MeetingSummaryCompleted = "meeting.summary.completed"
+}
+/**
+ * The part of a meeting a notetaker filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum NotetakerFilterField {
+    DurationMinutes = "durationMinutes",
+    HasExternalAttendees = "hasExternalAttendees",
+    IsRecurring = "isRecurring",
+    MeetingType = "meetingType",
+    Participant = "participant",
+    ParticipantCount = "participantCount",
+    ProjectTag = "projectTag"
+}
+/**
+ * Base interface for all notetaker filter conditions. Each field admits only the operators and
+ * the value bound that suit it.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseNotetakerFilterCondition<F extends NotetakerFilterField, O extends FilterOperator> {
+    /** The part of the meeting to match on. */
+    field: F;
+    /** How to compare the field to {@link value}. */
+    operator: O;
+    /** What to match the field against. Max 320 characters on a participant, 128 on a tag. */
+    value: string;
+}
+/**
+ * A condition on a list-valued field.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerAddressFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.Participant | NotetakerFilterField.ProjectTag, AddressFilterOperator>;
+/**
+ * A condition on an identifier field.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerIdFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.MeetingType, IdFilterOperator>;
+/**
+ * A condition on a count field. The value is a one to four digit integer, as a string.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerNumericFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.DurationMinutes | NotetakerFilterField.ParticipantCount, NumericFilterOperator>;
+/**
+ * A condition on a yes-or-no field.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NotetakerBooleanFilterCondition extends BaseNotetakerFilterCondition<NotetakerFilterField.HasExternalAttendees | NotetakerFilterField.IsRecurring, IdFilterOperator> {
+    value: 'false' | 'true';
+}
+/**
+ * A single condition on a notetaker event trigger.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerEventFilterCondition = NotetakerAddressFilterCondition | NotetakerBooleanFilterCondition | NotetakerIdFilterCondition | NotetakerNumericFilterCondition;
+/**
+ * Which meetings a notetaker event trigger fires on. Give conditions, keywords, or both.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NotetakerEventFilters {
+    /** The conditions to match. Up to 20 of them. */
+    conditions?: NotetakerEventFilterCondition[];
+    combinator?: FilterCombinator;
+    /**
+     * Keywords to match case insensitively against the meeting title and summary, any one of which
+     * fires the trigger. Up to 50, each up to 200 characters.
+     */
+    keywords?: string[];
+}
+/**
+ * A default notetaker event trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NotetakerEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Notetaker> {
+    /** The notetaker event that fires the trigger. */
+    eventType: NotetakerEventType;
+    /** Which meetings fire the trigger. Absent fires on every one. */
+    filters?: NotetakerEventFilters;
+}
+/**
+ * A single default event trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export type EventTriggerDefinition = MailEventTriggerDefinition | NotetakerEventTriggerDefinition | SlackEventTriggerDefinition;
+/**
  * A single default trigger a pack's agent ships with.
  *
  * @internal
  * @hidden
  */
-export type DefaultTriggerDefinition = ScheduleTriggerDefinition | WhileWritingTriggerDefinition;
+export type DefaultTriggerDefinition = EventTriggerDefinition | ScheduleTriggerDefinition | WhileWritingTriggerDefinition;
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
