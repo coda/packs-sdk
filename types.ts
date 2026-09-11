@@ -1888,6 +1888,13 @@ export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTri
   /**
    * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line anchoring the start and a
    * `TZID` on it naming the timezone.
+   *
+   * Takes `FREQ` of `HOURLY` through `YEARLY`, with `INTERVAL`, `COUNT`, `UNTIL`, `WKST`, `BYDAY`,
+   * `BYHOUR`, `BYMINUTE`, `BYMONTH`, `BYMONTHDAY`, and `BYSETPOS`. Rules the builder's picker
+   * cannot draw, such as `FREQ=YEARLY` or `BYMONTHDAY=-1`, upload and render read-only.
+   *
+   * Rejected: a schedule firing more than once an hour, an rrule set, an unresolvable `TZID`, a
+   * date that does not exist, an `UNTIL` before the `DTSTART`, and a rule over 512 characters.
    */
   rruleString: string;
 }

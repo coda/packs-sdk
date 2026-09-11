@@ -8470,6 +8470,21 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
+    it('rejects a schedule longer than the column holds', async () => {
+      // Valid apart from its length, so the length is the only thing left to complain about.
+      const rruleString = 'RRULE:FREQ=MONTHLY;BYMONTHDAY=1'.padEnd(Limits.RRuleStringLength + 1, ',1');
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [{kind: DefaultTriggerKind.Schedule, rruleString}],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[0].rruleString',
+        message: `Too big: expected string to have <=${Limits.RRuleStringLength} characters`,
+      });
+    });
+
     it('takes a schedule trigger and a while-writing trigger together', async () => {
       const defaultTriggers: DefaultTriggerDefinition[] = [
         {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},

@@ -27,8 +27,11 @@ const NumericRulePartRanges = [
     ['BYMONTHDAY', [-31, -1], [1, 31]],
     ['BYSETPOS', [-366, -1], [1, 366]],
 ];
-const DateTimePattern = /^\d{8}(T\d{6}Z?)?$/;
-const WeekdayPattern = new RegExp(`^[+-]?\\d{0,2}(${Weekdays.join('|')})$`);
+const DatePattern = /^(\d{4})(\d{2})(\d{2})$/;
+const TimePattern = /^(\d{2})(\d{2})(\d{2})Z?$/;
+const TimezoneParam = 'TZID=';
+// A weekday, optionally picking one occurrence of it, as RFC 5545 ranges that at 1 through 53.
+const WeekdayPattern = new RegExp(`^([+-]?([1-9]|[1-4]\\d|5[0-3]))?(${Weekdays.join('|')})$`);
 const MinutesPerHour = 60;
 const TooFrequent = 'A schedule trigger must not run more frequently than once per hour.';
 /**
@@ -41,12 +44,15 @@ function validateRRuleString(rruleString) {
         .map(line => line.trim())
         .filter(Boolean);
     let dtstart;
+    let dtstartParams = [];
     let rule;
     for (const line of lines) {
         const separator = line.indexOf(':');
-        const name = separator < 0 ? '' : line.slice(0, separator).split(';')[0].toUpperCase();
+        const properties = separator < 0 ? [''] : line.slice(0, separator).split(';');
+        const name = properties[0].toUpperCase();
         if (name === 'DTSTART' && dtstart === undefined) {
-            dtstart = line.slice(separator + 1);
+            dtstart = line.slice(separator + 1).toUpperCase();
+            dtstartParams = properties.slice(1);
         }
         else if ((name === 'RRULE' || name === '') && rule === undefined) {
             rule = separator < 0 ? line : line.slice(separator + 1);
@@ -58,8 +64,20 @@ function validateRRuleString(rruleString) {
     if (rule === undefined) {
         return 'A schedule trigger must have an RRULE.';
     }
-    if (dtstart !== undefined && !DateTimePattern.test(dtstart)) {
+    if (dtstart !== undefined && !isDateTime(dtstart)) {
         return 'A schedule trigger has an invalid DTSTART.';
+    }
+    const timezone = dtstartParams.find(param => param.toUpperCase().startsWith(TimezoneParam));
+    if (timezone !== undefined) {
+        // RFC 5545 lets a param value carry quotes.
+        const zone = timezone.slice(timezone.indexOf('=') + 1).replace(/^"(.*)"$/, '$1');
+        if (!isTimezone(zone)) {
+            return 'A schedule trigger has an invalid DTSTART timezone.';
+        }
+        // A zone names a wall clock, so RFC 5545 forbids the UTC suffix alongside it.
+        if (dtstart === null || dtstart === void 0 ? void 0 : dtstart.endsWith('Z')) {
+            return 'A schedule trigger cannot set both a DTSTART timezone and a UTC time.';
+        }
     }
     const parts = new Map();
     for (const part of rule.split(';')) {
@@ -90,8 +108,17 @@ function validateRRuleString(rruleString) {
         }
     }
     const until = parts.get('UNTIL');
-    if (until !== undefined && !DateTimePattern.test(until)) {
+    if (until !== undefined && !isDateTime(until)) {
         return 'A schedule trigger has an invalid UNTIL.';
+    }
+    // Compared by date alone, and only without a TZID: a zoned DTSTART is a wall clock and UNTIL is
+    // UTC, so the two can straddle a date boundary and still order correctly. That case is the
+    // runtime's to judge.
+    if (until !== undefined &&
+        dtstart !== undefined &&
+        timezone === undefined &&
+        until.slice(0, 8) < dtstart.slice(0, 8)) {
+        return 'A schedule trigger must not end before it starts.';
     }
     const weekStart = parts.get('WKST');
     if (weekStart !== undefined && !Weekdays.includes(weekStart)) {
@@ -124,6 +151,36 @@ function validateRRuleString(rruleString) {
     return gaps.some(gap => gap < MinutesPerHour) ? TooFrequent : undefined;
 }
 exports.validateRRuleString = validateRRuleString;
+// An RFC 5545 DATE or DATE-TIME naming a day that exists, not just the right count of digits.
+function isDateTime(value) {
+    const parts = value.split('T');
+    const date = parts.length <= 2 ? DatePattern.exec(parts[0]) : null;
+    if (!date) {
+        return false;
+    }
+    const [year, month, day] = [Number(date[1]), Number(date[2]), Number(date[3])];
+    const parsed = new Date(Date.UTC(year, month - 1, day));
+    // Date.UTC maps years 0 through 99 onto 1900 through 1999, so check the year back too.
+    if (parsed.getUTCFullYear() !== year || parsed.getUTCMonth() !== month - 1 || parsed.getUTCDate() !== day) {
+        return false;
+    }
+    if (parts.length === 1) {
+        return true;
+    }
+    const time = TimePattern.exec(parts[1]);
+    // RFC 5545 leaves room for a leap second; neither Date nor rrule has one.
+    return time !== null && Number(time[1]) <= 23 && Number(time[2]) <= 59 && Number(time[3]) <= 59;
+}
+// A zone the runtime can resolve. Node's ICU backs the same lookup the runtime's does.
+function isTimezone(value) {
+    try {
+        new Intl.DateTimeFormat('en-US', { timeZone: value });
+        return true;
+    }
+    catch {
+        return false;
+    }
+}
 function parseNumberList(value, ranges) {
     const numbers = value.split(',').map(entry => (/^-?\d+$/.test(entry) ? Number(entry) : NaN));
     const inRange = (entry) => ranges.some(([min, max]) => entry >= min && entry <= max);
