@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleClone = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const confirm_1 = require("./confirm");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
 const fs_extra_1 = __importDefault(require("fs-extra"));
@@ -14,21 +15,19 @@ const coda_1 = require("../helpers/external-api/coda");
 const path_1 = __importDefault(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
-const helpers_7 = require("../testing/helpers");
 const config_storage_1 = require("./config_storage");
-async function handleClone({ packIdOrUrl, apiEndpoint, apiToken }) {
+async function handleClone({ packIdOrUrl, apiEndpoint, apiToken, yes }) {
     const manifestDir = process.cwd();
     const packId = (0, helpers_2.assertPackIdOrUrl)(packIdOrUrl);
     const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
     apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     const codeAlreadyExists = fs_extra_1.default.existsSync(path_1.default.join(manifestDir, 'pack.ts'));
     if (codeAlreadyExists) {
-        const shouldOverwrite = (0, helpers_7.promptForInput)('A pack.ts file already exists. Do you want to overwrite it? (y/N)?', {
-            yesOrNo: true,
+        (0, confirm_1.confirmOrFail)({
+            yes,
+            prompt: 'A pack.ts file already exists. Do you want to overwrite it? (y/N)?',
+            example: `packs clone ${packIdOrUrl} --yes`,
         });
-        if (shouldOverwrite.toLocaleLowerCase() !== 'yes') {
-            return (0, helpers_6.printAndExit)('Aborting');
-        }
     }
     const client = (0, helpers_3.createCodaClient)(apiToken, formattedEndpoint);
     let packVersion;
@@ -52,10 +51,11 @@ async function handleClone({ packIdOrUrl, apiEndpoint, apiToken }) {
     }
     if (!sourceCode) {
         (0, helpers_5.print)(`Unable to download source for Pack version ${packVersion}. Packs built using the CLI can't be cloned.`);
-        const shouldInitializeWithoutDownload = (0, helpers_7.promptForInput)('Do you want to continue initializing with template starter code instead (y/N)?', { yesOrNo: true });
-        if (shouldInitializeWithoutDownload !== 'yes') {
-            return process.exit(1);
-        }
+        (0, confirm_1.confirmOrFail)({
+            yes,
+            prompt: 'Do you want to continue initializing with template starter code instead (y/N)?',
+            example: `packs clone ${packIdOrUrl} --yes`,
+        });
         await (0, init_1.handleInit)();
         (0, config_storage_1.storePackId)(manifestDir, packId, apiEndpoint);
         return;
@@ -64,7 +64,7 @@ async function handleClone({ packIdOrUrl, apiEndpoint, apiToken }) {
     await (0, init_1.handleInit)();
     (0, config_storage_1.storePackId)(manifestDir, packId, apiEndpoint);
     fs_extra_1.default.writeFileSync(path_1.default.join(manifestDir, 'pack.ts'), sourceCode);
-    (0, helpers_6.printAndExit)("Successfully updated pack.ts with the Pack's code!", 0);
+    (0, helpers_6.printAndExit)(`cloned pack_id: ${packId}\nversion: ${packVersion}\nfile: pack.ts`, 0);
 }
 exports.handleClone = handleClone;
 function maybeHandleClientError(err) {

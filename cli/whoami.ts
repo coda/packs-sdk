@@ -17,7 +17,7 @@ export async function handleWhoami({apiToken, apiEndpoint}: ArgumentsCamelCase<W
   if (!apiToken) {
     apiToken = getApiKey(apiEndpoint);
     if (!apiToken) {
-      return printAndExit('Missing API token. Please run `packs register` to register one.');
+      return printAndExit('Error: Missing API token.\n  packs register --apiToken <token>');
     }
   }
 

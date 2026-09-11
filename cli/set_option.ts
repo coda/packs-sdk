@@ -24,7 +24,10 @@ export async function handleSetOption({manifestFile, option, value}: ArgumentsCa
 function validateOption(option: string, value: string): PackOptions {
   const validOptions = Object.values(PackOptionKey) as string[];
   if (!validOptions.includes(option)) {
-    return printAndExit(`Unsupported option "${option}". Valid options are: ${validOptions.join(', ')}`);
+    return printAndExit(
+      `Error: Unsupported option "${option}". Valid options: ${validOptions.join(', ')}\n` +
+        `  packs setOption pack.ts gitTag true`,
+    );
   }
   const key = option as PackOptionKey;
   switch (key) {
