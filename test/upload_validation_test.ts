@@ -8554,6 +8554,9 @@ describe('Pack metadata Validation', async () => {
         kind: DefaultTriggerKind.Event,
         type: EventTriggerType.Mail,
         mailEventType: MailEventType.MessageReceived,
+        filters: {
+          conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+        },
       };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
@@ -8606,8 +8609,18 @@ describe('Pack metadata Validation', async () => {
           kind: DefaultTriggerKind.Event,
           type: EventTriggerType.Mail,
           mailEventType: MailEventType.MessageReceived,
+          filters: {
+            conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+          },
         },
-        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Mail, mailEventType: MailEventType.MessageSent},
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Mail,
+          mailEventType: MailEventType.MessageSent,
+          filters: {
+            conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+          },
+        },
       ];
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
@@ -8659,14 +8672,89 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers: new Array(Limits.MaxDefaultTriggers + 1).fill({
+          defaultTriggers: new Array(Limits.MaxDefaultEventTriggers + 1).fill({
             kind: DefaultTriggerKind.Event,
             type: EventTriggerType.Mail,
             mailEventType: MailEventType.MessageReceived,
+            filters: {
+              conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@a.com'}],
+            },
           }),
         }),
       );
       assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects a mail trigger with no filters, which would fire on every message', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Mail,
+              mailEventType: MailEventType.MessageReceived,
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects a notetaker trigger with no filters, which would fire on every meeting', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Notetaker,
+              eventType: NotetakerEventType.MeetingSummaryCompleted,
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('rejects slack thread follow-ups, which the adopter turns on', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {
+              kind: DefaultTriggerKind.Event,
+              type: EventTriggerType.Slack,
+              eventType: SlackEventType.MessageKeyword,
+              keywords: ['deploy'],
+              monitorThreadFollowUps: true,
+            } as any,
+          ],
+        }),
+      );
+      assert.isNotEmpty(err.validationErrors);
+    });
+
+    it('takes a full event budget alongside the other kinds', async () => {
+      const mailTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Mail,
+        mailEventType: MailEventType.MessageReceived,
+        filters: {
+          conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+        },
+      };
+      const defaultTriggers: DefaultTriggerDefinition[] = [
+        ...new Array(Limits.MaxDefaultEventTriggers).fill(mailTrigger),
+        {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
+        {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
+      ];
+      const metadata = createFakeAgentMetadata({
+        agent: {instructions: 'Do a thing.', tools: []},
+        defaultTriggers,
+      });
+      const result = await validateJson(metadata);
+      assert.lengthOf(result.defaultTriggers!, Limits.MaxDefaultEventTriggers + 2);
     });
 
     it('validates a default slack keyword trigger', async () => {
@@ -8674,7 +8762,6 @@ describe('Pack metadata Validation', async () => {
         kind: DefaultTriggerKind.Event,
         type: EventTriggerType.Slack,
         eventType: SlackEventType.MessageKeyword,
-        monitorThreadFollowUps: true,
         keywords: ['deploy', 'rollback'],
       };
       const metadata = createFakeAgentMetadata({
@@ -8765,6 +8852,11 @@ describe('Pack metadata Validation', async () => {
               kind: DefaultTriggerKind.Event,
               type: EventTriggerType.Mail,
               mailEventType: MailEventType.MessageReceived,
+              filters: {
+                conditions: [
+                  {field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'},
+                ],
+              },
               superhumanUserMailId: 'seat-1',
             } as any,
           ],
@@ -8782,6 +8874,11 @@ describe('Pack metadata Validation', async () => {
               kind: DefaultTriggerKind.Event,
               type: EventTriggerType.Mail,
               mailEventType: MailEventType.MessageReceived,
+              filters: {
+                conditions: [
+                  {field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'},
+                ],
+              },
               enabled: true,
             } as any,
           ],
@@ -9039,7 +9136,14 @@ describe('Pack metadata Validation', async () => {
 
     it('takes one trigger of every event type at once', async () => {
       const defaultTriggers: DefaultTriggerDefinition[] = [
-        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Mail, mailEventType: MailEventType.MessageReceived},
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Mail,
+          mailEventType: MailEventType.MessageReceived,
+          filters: {
+            conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+          },
+        },
         {
           kind: DefaultTriggerKind.Event,
           type: EventTriggerType.Slack,
@@ -9050,6 +9154,7 @@ describe('Pack metadata Validation', async () => {
           kind: DefaultTriggerKind.Event,
           type: EventTriggerType.Notetaker,
           eventType: NotetakerEventType.MeetingSummaryCompleted,
+          filters: {keywords: ['renewal']},
         },
       ];
       const metadata = createFakeAgentMetadata({

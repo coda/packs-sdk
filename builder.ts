@@ -737,7 +737,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   }
 
   /**
-   * Adds a mail event trigger this agent runs on. Call it once per event.
+   * Adds a mail event trigger this agent runs on.
    *
    * @example
    * ```

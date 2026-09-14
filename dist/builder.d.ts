@@ -466,7 +466,7 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      */
     setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, 'kind'>): this;
     /**
-     * Adds a mail event trigger this agent runs on. Call it once per event.
+     * Adds a mail event trigger this agent runs on.
      *
      * @example
      * ```

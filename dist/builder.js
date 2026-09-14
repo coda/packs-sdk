@@ -558,7 +558,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         return this;
     }
     /**
-     * Adds a mail event trigger this agent runs on. Call it once per event.
+     * Adds a mail event trigger this agent runs on.
      *
      * @example
      * ```

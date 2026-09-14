@@ -6451,8 +6451,8 @@ export interface MailEventFilters {
 export interface MailEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Mail> {
 	/** The mail event that fires the trigger. */
 	mailEventType: MailEventType;
-	/** Which messages fire the trigger. Absent fires on every one. */
-	filters?: MailEventFilters;
+	/** Which messages fire the trigger. */
+	filters: MailEventFilters;
 }
 /**
  * The Slack events a default trigger can fire on.
@@ -6478,8 +6478,6 @@ export interface SlackEventTriggerDefinition extends BaseEventTrigger<EventTrigg
 		string,
 		...string[]
 	];
-	/** Whether a firing records thread participation, so replies resume its chat. */
-	monitorThreadFollowUps?: boolean;
 }
 /**
  * The notetaker events a default trigger can fire on.
@@ -6582,8 +6580,8 @@ export interface NotetakerEventFilters {
 export interface NotetakerEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Notetaker> {
 	/** The notetaker event that fires the trigger. */
 	eventType: NotetakerEventType;
-	/** Which meetings fire the trigger. Absent fires on every one. */
-	filters?: NotetakerEventFilters;
+	/** Which meetings fire the trigger. */
+	filters: NotetakerEventFilters;
 }
 /**
  * A single default event trigger a pack's agent ships with.
@@ -7189,7 +7187,7 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 */
 	setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, "kind">): this;
 	/**
-	 * Adds a mail event trigger this agent runs on. Call it once per event.
+	 * Adds a mail event trigger this agent runs on.
 	 *
 	 * @example
 	 * ```

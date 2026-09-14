@@ -19,6 +19,7 @@ import type {MailEventTriggerDefinition} from '../types';
 import {MailEventType} from '../types';
 import {MailFilterField} from '../types';
 import type {MetadataFormulaDef} from '../api';
+import type {NotetakerEventFilters} from '../types';
 import {NotetakerEventType} from '../types';
 import type {ObjectFormulaDef} from '../api';
 import type {ObjectSchema} from '../schema';
@@ -834,7 +835,11 @@ describe('Agent builder', () => {
   });
 
   describe('default event trigger', () => {
-    const mailTrigger = {mailEventType: MailEventType.MessageReceived};
+    const mailFilters: MailEventFilters = {
+      conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+    };
+    const notetakerFilters: NotetakerEventFilters = {keywords: ['renewal']};
+    const mailTrigger = {mailEventType: MailEventType.MessageReceived, filters: mailFilters};
     const storedMailTrigger: MailEventTriggerDefinition = {
       kind: DefaultTriggerKind.Event,
       type: EventTriggerType.Mail,
@@ -849,14 +854,19 @@ describe('Agent builder', () => {
     it('appends rather than replaces on a second call', () => {
       agent
         .addDefaultMailEventTrigger(mailTrigger)
-        .addDefaultMailEventTrigger({mailEventType: MailEventType.MessageSent});
+        .addDefaultMailEventTrigger({mailEventType: MailEventType.MessageSent, filters: mailFilters});
       assert.deepEqual(agent.defaultTriggers, [
         storedMailTrigger,
-        {kind: DefaultTriggerKind.Event, type: EventTriggerType.Mail, mailEventType: MailEventType.MessageSent},
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Mail,
+          mailEventType: MailEventType.MessageSent,
+          filters: mailFilters,
+        },
       ]);
     });
 
-    it('takes filters', () => {
+    it('takes a combinator over several conditions', () => {
       const filters: MailEventFilters = {
         combinator: FilterCombinator.Or,
         conditions: [
@@ -872,7 +882,10 @@ describe('Agent builder', () => {
       agent
         .addDefaultMailEventTrigger(mailTrigger)
         .addDefaultSlackEventTrigger({eventType: SlackEventType.MessageKeyword, keywords: ['deploy']})
-        .addDefaultNotetakerEventTrigger({eventType: NotetakerEventType.MeetingSummaryCompleted});
+        .addDefaultNotetakerEventTrigger({
+          eventType: NotetakerEventType.MeetingSummaryCompleted,
+          filters: notetakerFilters,
+        });
       assert.deepEqual(agent.defaultTriggers, [
         storedMailTrigger,
         {
@@ -885,6 +898,7 @@ describe('Agent builder', () => {
           kind: DefaultTriggerKind.Event,
           type: EventTriggerType.Notetaker,
           eventType: NotetakerEventType.MeetingSummaryCompleted,
+          filters: notetakerFilters,
         },
       ]);
     });

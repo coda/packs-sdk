@@ -23,7 +23,7 @@ export declare const Limits: {
     MailFilterAddressValue: number;
     MailFilterTextValue: number;
     MaxBlockedDomains: number;
-    MaxDefaultTriggers: number;
+    MaxDefaultEventTriggers: number;
     MaxFilterConditions: number;
     MaxKeywords: number;
     MaxSkillCount: number;

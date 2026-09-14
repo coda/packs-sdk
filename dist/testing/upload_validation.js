@@ -127,7 +127,7 @@ exports.Limits = {
     MailFilterAddressValue: 320,
     MailFilterTextValue: 998,
     MaxBlockedDomains: 50,
-    MaxDefaultTriggers: 20,
+    MaxDefaultEventTriggers: 20,
     MaxFilterConditions: 20,
     MaxKeywords: 50,
     MaxSkillCount: 15,
@@ -1943,14 +1943,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         kind: eventTriggerKindSchema,
         type: z.literal(types_8.EventTriggerType.Mail),
         mailEventType: z.nativeEnum(types_13.MailEventType),
-        filters: mailEventFiltersSchema.optional(),
+        filters: mailEventFiltersSchema,
     });
     const slackEventTriggerSchema = zodCompleteStrictObject({
         kind: eventTriggerKindSchema,
         type: z.literal(types_8.EventTriggerType.Slack),
         eventType: z.nativeEnum(types_22.SlackEventType),
         keywords: z.array(keywordSchema).min(1).max(exports.Limits.MaxKeywords),
-        monitorThreadFollowUps: z.boolean().optional(),
     });
     // Each notetaker field bounds its own value.
     const notetakerParticipantConditionSchema = zodCompleteStrictObject({
@@ -1998,7 +1997,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         kind: eventTriggerKindSchema,
         type: z.literal(types_8.EventTriggerType.Notetaker),
         eventType: z.nativeEnum(types_15.NotetakerEventType),
-        filters: notetakerEventFiltersSchema.optional(),
+        filters: notetakerEventFiltersSchema,
     });
     const eventTriggerSchema = z.discriminatedUnion('type', [
         mailEventTriggerSchema,
@@ -2012,12 +2011,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const defaultTriggersSchema = z
         .array(defaultTriggerSchema)
-        .max(exports.Limits.MaxDefaultTriggers)
         .superRefine((triggers, context) => {
         const seen = new Set();
+        let eventTriggers = 0;
         triggers.forEach((trigger, index) => {
-            // An agent listens to as many events as it likes; the other kinds are one apiece.
+            // An agent listens to as many events as the server stores; the other kinds are one apiece.
             if (trigger.kind === types_6.DefaultTriggerKind.Event) {
+                eventTriggers += 1;
+                if (eventTriggers > exports.Limits.MaxDefaultEventTriggers) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: [index],
+                        message: `An agent can only declare ${exports.Limits.MaxDefaultEventTriggers} event default triggers.`,
+                    });
+                }
                 return;
             }
             if (seen.has(trigger.kind)) {

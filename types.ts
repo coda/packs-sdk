@@ -2097,8 +2097,8 @@ export interface MailEventFilters {
 export interface MailEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Mail> {
   /** The mail event that fires the trigger. */
   mailEventType: MailEventType;
-  /** Which messages fire the trigger. Absent fires on every one. */
-  filters?: MailEventFilters;
+  /** Which messages fire the trigger. */
+  filters: MailEventFilters;
 }
 
 /**
@@ -2123,8 +2123,6 @@ export interface SlackEventTriggerDefinition extends BaseEventTrigger<EventTrigg
   eventType: SlackEventType;
   /** Keywords to match, case insensitively. One to 50, each up to 200 characters. */
   keywords: [string, ...string[]];
-  /** Whether a firing records thread participation, so replies resume its chat. */
-  monitorThreadFollowUps?: boolean;
 }
 
 /**
@@ -2254,8 +2252,8 @@ export interface NotetakerEventFilters {
 export interface NotetakerEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Notetaker> {
   /** The notetaker event that fires the trigger. */
   eventType: NotetakerEventType;
-  /** Which meetings fire the trigger. Absent fires on every one. */
-  filters?: NotetakerEventFilters;
+  /** Which meetings fire the trigger. */
+  filters: NotetakerEventFilters;
 }
 
 /**
