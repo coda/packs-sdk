@@ -8470,6 +8470,49 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
+    it('blames only the trigger that is broken', async () => {
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'},
+          ],
+        }),
+      );
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'defaultTriggers[1].rruleString',
+          message: 'A schedule trigger must not run more frequently than once per hour.',
+        },
+      ]);
+    });
+
+    it('reports a duplicate kind alongside a broken trigger', async () => {
+      const contextualTrigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.WhileWriting,
+        condition: 'Do a thing.',
+      };
+      const err = await validateJsonAndAssertFails(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          defaultTriggers: [
+            contextualTrigger,
+            contextualTrigger,
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'},
+          ],
+        }),
+      );
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[1]',
+        message: 'An agent can only declare one whileWriting default trigger.',
+      });
+      assert.deepInclude(err.validationErrors!, {
+        path: 'defaultTriggers[2].rruleString',
+        message: 'A schedule trigger must not run more frequently than once per hour.',
+      });
+    });
+
     it('rejects a schedule longer than the column holds', async () => {
       // Valid apart from its length, so the length is the only thing left to complain about.
       const rruleString = 'RRULE:FREQ=MONTHLY;BYMONTHDAY=1'.padEnd(Limits.RRuleStringLength + 1, ',1');
