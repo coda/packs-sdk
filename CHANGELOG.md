@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - CLI commands now fail immediately in non-interactive environments instead of waiting on confirmation prompts. Use `--yes` to skip confirmations on `clone`, `link`, `register`, and `release`. `register` requires `--apiToken` (or a pasted token on a TTY). `release` accepts `--use-latest` when the manifest has no version. `--help` for each command includes examples ready to run.
 
+### Fixed
+
+- `packs init` no longer fails with `ENOENT` when run from a subdirectory of an npm project, and no longer runs the obsolete `npm set-script` patching step that was removed in npm 9.
+
 ## [1.17.5] - 2026-09-08
 
 ### Changed
