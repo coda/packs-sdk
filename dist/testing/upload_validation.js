@@ -1904,9 +1904,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             seen.add(trigger.kind);
         });
     });
-    // Keeps the triggers that read cleanly and drops the rest, so a payload this parser only partly
-    // understands still yields the triggers it does. Never reports an issue: a caller that wants to
-    // hear about a bad trigger wants the strict schema.
+    // Keeps the triggers that read cleanly and drops the rest, including a duplicate kind. Never
+    // reports an issue; the strict schema is for callers that want to hear about a bad trigger.
     const bestEffortDefaultTriggersSchema = z.array(z.unknown()).transform(items => {
         const seen = new Set();
         return items.flatMap(item => {
