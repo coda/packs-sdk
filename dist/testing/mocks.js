@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newJsonFetchResponse = exports.newMockExecutionContext = exports.newMockSyncExecutionContext = void 0;
+exports.newJsonFetchResponse = exports.newMockExecutionContext = exports.newMockSuggestionExecutionContext = exports.newMockSyncExecutionContext = void 0;
 const sinon_1 = __importDefault(require("sinon"));
 const uuid_1 = require("uuid");
 function newMockSyncExecutionContext(overrides) {
@@ -15,6 +15,20 @@ function newMockSyncExecutionContext(overrides) {
     };
 }
 exports.newMockSyncExecutionContext = newMockSyncExecutionContext;
+/**
+ * Counterpart of {@link newMockSyncExecutionContext} for a suggestion-producing formula.
+ *
+ * @internal
+ * @hidden
+ */
+function newMockSuggestionExecutionContext(overrides) {
+    return {
+        ...newMockExecutionContext(),
+        suggestions: { currentHighlights: [], dismissedHighlights: [], acceptedHighlights: [] },
+        ...overrides,
+    };
+}
+exports.newMockSuggestionExecutionContext = newMockSuggestionExecutionContext;
 function newMockExecutionContext(overrides) {
     return {
         invocationLocation: {

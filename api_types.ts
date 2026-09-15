@@ -1216,6 +1216,42 @@ export interface InvocationLocation {
 }
 
 /**
+ * A suggestion the editor is showing, or one the user has already acted on.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionHighlight {
+  /** Stable id, so a later run can update or delete this suggestion rather than duplicate it. */
+  id?: string;
+  /** Short heading naming the issue, 2-4 words. */
+  title: string;
+  /** What to change about the span, and why. */
+  explanation: string;
+  /** The span of the submitted text this suggestion is about. */
+  original: string;
+  /** A concrete rewrite of the span. Absent when there is nothing to swap in. */
+  replacement?: string;
+  /** How much acting on this matters, from 0 (cosmetic) to 1. */
+  importance?: number;
+}
+
+/**
+ * What the editor already knows about the text under review.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionRun {
+  /** Suggestions currently on screen. */
+  readonly currentHighlights: readonly SuggestionHighlight[];
+  /** Suggestions the user dismissed, so a producer can avoid raising them again. */
+  readonly dismissedHighlights: readonly SuggestionHighlight[];
+  /** Suggestions the user accepted. */
+  readonly acceptedHighlights: readonly SuggestionHighlight[];
+}
+
+/**
  * An object passed to the `execute` function of every formula invocation
  * with information and utilities for handling the invocation. In particular,
  * this contains the {@link core.Fetcher}, which is used for making HTTP requests.
@@ -1279,6 +1315,24 @@ export interface ExecutionContext {
    * for sync tables used within Superhuman Go.
    */
   readonly previousAttemptError?: InvocationError;
+
+  /**
+   * Information about the suggestion run. Only populated if this is a suggestion-producing formula.
+   * @internal
+   * @hidden
+   */
+  readonly suggestions?: SuggestionRun;
+}
+
+/**
+ * Sub-class of {@link ExecutionContext} passed to a suggestion-producing formula. The only
+ * difference is that `suggestions` is guaranteed present.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionExecutionContext extends ExecutionContext {
+  readonly suggestions: SuggestionRun;
 }
 
 /**

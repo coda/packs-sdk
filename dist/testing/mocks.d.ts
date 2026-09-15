@@ -3,6 +3,7 @@ import type { ExecutionContext } from '../api_types';
 import type { FetchRequest } from '../api_types';
 import type { FetchResponse } from '../api_types';
 import type { Sync } from '../api_types';
+import type { SuggestionRun } from '../api_types';
 import type { SyncExecutionContext } from '../api_types';
 import type { SyncStateService } from '../api_types';
 import type { TemporaryBlobStorage } from '../api_types';
@@ -24,9 +25,23 @@ export interface MockSyncExecutionContext<SyncContinuationT = Continuation, Incr
         getLatestRowVersions: SinonFunctionStub<SyncStateService['getLatestRowVersions']>;
     };
 }
+/**
+ * @internal
+ * @hidden
+ */
+export interface MockSuggestionExecutionContext extends MockExecutionContext {
+    suggestions: SuggestionRun;
+}
 /** Mock type of the specified `SyncExecutionContext`. */
 export type SyncExecutionContextAsMock<T extends SyncExecutionContext> = T extends SyncExecutionContext<infer ContinuationT, infer IncrementalContinuationT, infer IncrementalSyncContinuationT> ? MockSyncExecutionContext<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT> : never;
 export declare function newMockSyncExecutionContext<T extends SyncExecutionContext<any>>(overrides?: Partial<T>): SyncExecutionContextAsMock<T>;
+/**
+ * Counterpart of {@link newMockSyncExecutionContext} for a suggestion-producing formula.
+ *
+ * @internal
+ * @hidden
+ */
+export declare function newMockSuggestionExecutionContext(overrides?: Partial<MockSuggestionExecutionContext>): MockSuggestionExecutionContext;
 export declare function newMockExecutionContext(overrides?: Partial<MockExecutionContext>): MockExecutionContext;
 export declare function newJsonFetchResponse<T>(body: T, status?: number, headers?: {
     [header: string]: string | string[] | undefined;

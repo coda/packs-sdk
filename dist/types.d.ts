@@ -1146,7 +1146,12 @@ export declare enum ToolType {
      * Tool that provides access to Superhuman Mail email and calendar capabilities.
      * @internal
      */
-    MailAndCalendar = "MailAndCalendar"
+    MailAndCalendar = "MailAndCalendar",
+    /**
+     * Tool whose single formula returns finished suggestions, so no LLM turn is needed.
+     * @internal
+     */
+    SuggestionProducer = "SuggestionProducer"
 }
 /**
  * The type identifier for a tool
@@ -1418,6 +1423,21 @@ export interface MCPServer {
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
  */
+/**
+ * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per skill.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionProducerTool extends BaseTool<ToolType.SuggestionProducer> {
+    /** The pack holding the formula. Omit this to reference the current pack. */
+    packId?: number;
+    /**
+     * Name of the formula returning {@link makeSuggestionResultSchema}-shaped results. The runtime
+     * calls it directly and emits its operations, so the model never sees this formula.
+     */
+    formulaName: string;
+}
 export interface ToolMap {
     [ToolType.Pack]: PackTool;
     [ToolType.Knowledge]: KnowledgeTool;
@@ -1428,6 +1448,7 @@ export interface ToolMap {
     [ToolType.MailAndCalendar]: MailAndCalendarTool;
     [ToolType.WebSearch]: WebSearchTool;
     [ToolType.EmbeddedContent]: EmbeddedContentTool;
+    [ToolType.SuggestionProducer]: SuggestionProducerTool;
 }
 /**
  * Union of all supported tool types.
@@ -1594,6 +1615,8 @@ export interface AgentDefinition {
  * @hidden
  */
 export type AgentTool = CodaDocsAndTablesTool | MailAndCalendarTool | WebSearchTool | (Omit<PackTool, 'packId'> & {
+    packId: number;
+}) | (Omit<SuggestionProducerTool, 'packId'> & {
     packId: number;
 });
 /**

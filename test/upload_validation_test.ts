@@ -90,8 +90,10 @@ import {makeReferenceSchemaFromObjectSchema} from '..';
 import {makeSchema} from '../schema';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSuggestionResultSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
+import {normalizeSchema} from '../schema';
 import {normalizeTool} from '../testing/upload_validation';
 import {numberArray} from '../api_types';
 import {validateCrawlHierarchy} from '../testing/upload_validation';
@@ -6422,6 +6424,152 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('validates a skill with a suggestion producer tool', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [{type: ToolType.SuggestionProducer, packId: 123, formulaName: 'CheckSuggestions'}],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for a skill with two suggestion producer tools', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {type: ToolType.SuggestionProducer, packId: 123, formulaName: 'CheckOne'},
+              {type: ToolType.SuggestionProducer, packId: 456, formulaName: 'CheckTwo'},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message: 'A skill can only use the SuggestionProducer tool once.',
+        },
+      ]);
+    });
+
+    it('validates a suggestion producer whose formula matches the contract', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [
+          createFakePackFormulaMetadata({
+            name: 'CheckSuggestions',
+            resultType: Type.object,
+            // addFormula normalizes the schema, so the fixture has to as well.
+            schema: normalizeSchema(makeSuggestionResultSchema()),
+            parameters: [makeParameter({type: ParameterType.String, name: 'text', description: 'The text.'})],
+          }),
+        ],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [{type: ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails when a suggestion producer formula returns the wrong shape', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [
+          createFakePackFormulaMetadata({
+            name: 'CheckSuggestions',
+            parameters: [makeParameter({type: ParameterType.String, name: 'text', description: 'The text.'})],
+          }),
+        ],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [{type: ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].formulaName',
+          message:
+            'A SuggestionProducer formula must return the makeSuggestionResultSchema() shape: an "operations" ' +
+            'array of {type, highlight}, each highlight carrying title, explanation and original.',
+        },
+      ]);
+    });
+
+    it('fails when a suggestion producer formula does not take the text first', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [
+          createFakePackFormulaMetadata({
+            name: 'CheckSuggestions',
+            resultType: Type.object,
+            schema: normalizeSchema(makeSuggestionResultSchema()),
+            parameters: [makeParameter({type: ParameterType.Number, name: 'limit', description: 'A limit.'})],
+          }),
+        ],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [{type: ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].formulaName',
+          message: 'A SuggestionProducer formula must take the text to check as its first parameter.',
+        },
+      ]);
+    });
+
+    it('fails when a suggestion producer names no formula in this pack', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [{type: ToolType.SuggestionProducer, formulaName: 'Missing'}],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].formulaName',
+          message:
+            'Formula "Missing" not found. A SuggestionProducer tool must reference a formula defined in this pack.',
+        },
+      ]);
+    });
+
     it('fails for skill with invalid tool type', async () => {
       const metadata = createFakePackVersionMetadata({
         skills: [
@@ -6470,6 +6618,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.EmbeddedContent:
           break;
         case ToolType.WebSearch:
+          break;
+        case ToolType.SuggestionProducer:
           break;
         case 'CustomTool':
           break;
@@ -8262,6 +8412,12 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(result.agent?.tools, tools);
     });
 
+    it('takes a suggestion producer naming a connector formula', async () => {
+      const tools: AgentTool[] = [{type: ToolType.SuggestionProducer, packId: 1, formulaName: 'CheckSuggestions'}];
+      const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
+      assert.deepEqual(result.agent?.tools, tools);
+    });
+
     it('rejects tool types an agent cannot use', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
@@ -8271,7 +8427,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'agent.tools[0].type',
-          message: 'An agent can only use the Docs, Mail, web search, and Pack tools.',
+          message: 'An agent can only use the Docs, Mail, web search, Pack, and SuggestionProducer tools.',
         },
       ]);
     });

@@ -12,7 +12,7 @@
  * @module testing
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newMockSyncExecutionContext = exports.newMockExecutionContext = exports.newJsonFetchResponse = exports.executeFormulaOrSyncWithVM = exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormula = exports.executeSyncFormulaFromPackDef = exports.executeMetadataFormula = exports.executeFormulaFromPackDef = void 0;
+exports.newMockSyncExecutionContext = exports.newMockSuggestionExecutionContext = exports.newMockExecutionContext = exports.newJsonFetchResponse = exports.executeFormulaOrSyncWithVM = exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormula = exports.executeSyncFormulaFromPackDef = exports.executeMetadataFormula = exports.executeFormulaFromPackDef = void 0;
 var execution_1 = require("./testing/execution");
 Object.defineProperty(exports, "executeFormulaFromPackDef", { enumerable: true, get: function () { return execution_1.executeFormulaFromPackDef; } });
 var execution_2 = require("./testing/execution");
@@ -39,4 +39,6 @@ Object.defineProperty(exports, "newJsonFetchResponse", { enumerable: true, get: 
 var mocks_2 = require("./testing/mocks");
 Object.defineProperty(exports, "newMockExecutionContext", { enumerable: true, get: function () { return mocks_2.newMockExecutionContext; } });
 var mocks_3 = require("./testing/mocks");
-Object.defineProperty(exports, "newMockSyncExecutionContext", { enumerable: true, get: function () { return mocks_3.newMockSyncExecutionContext; } });
+Object.defineProperty(exports, "newMockSuggestionExecutionContext", { enumerable: true, get: function () { return mocks_3.newMockSuggestionExecutionContext; } });
+var mocks_4 = require("./testing/mocks");
+Object.defineProperty(exports, "newMockSyncExecutionContext", { enumerable: true, get: function () { return mocks_4.newMockSyncExecutionContext; } });

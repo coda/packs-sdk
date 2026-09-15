@@ -3,6 +3,7 @@ import type {ExecutionContext} from '../api_types';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Sync} from '../api_types';
+import type {SuggestionRun} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncStateService} from '../api_types';
 import type {TemporaryBlobStorage} from '../api_types';
@@ -38,6 +39,14 @@ export interface MockSyncExecutionContext<
   };
 }
 
+/**
+ * @internal
+ * @hidden
+ */
+export interface MockSuggestionExecutionContext extends MockExecutionContext {
+  suggestions: SuggestionRun;
+}
+
 /** Mock type of the specified `SyncExecutionContext`. */
 export type SyncExecutionContextAsMock<T extends SyncExecutionContext> =
   T extends SyncExecutionContext<
@@ -57,6 +66,22 @@ export function newMockSyncExecutionContext<T extends SyncExecutionContext<any>>
     syncStateService: {getLatestRowVersions: sinon.stub()},
     ...overrides,
   } as SyncExecutionContextAsMock<T>;
+}
+
+/**
+ * Counterpart of {@link newMockSyncExecutionContext} for a suggestion-producing formula.
+ *
+ * @internal
+ * @hidden
+ */
+export function newMockSuggestionExecutionContext(
+  overrides?: Partial<MockSuggestionExecutionContext>,
+): MockSuggestionExecutionContext {
+  return {
+    ...newMockExecutionContext(),
+    suggestions: {currentHighlights: [], dismissedHighlights: [], acceptedHighlights: []},
+    ...overrides,
+  };
 }
 
 export function newMockExecutionContext(overrides?: Partial<MockExecutionContext>): MockExecutionContext {

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.makeSuggestionResultSchema = exports.SuggestionOperationType = exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -991,3 +991,55 @@ function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
     }
 }
 exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;
+/**
+ * What a suggestion operation does to a highlight. Values match the `/executeAgent` wire.
+ *
+ * @internal
+ * @hidden
+ */
+var SuggestionOperationType;
+(function (SuggestionOperationType) {
+    SuggestionOperationType["Upsert"] = "upsert";
+    SuggestionOperationType["Delete"] = "delete";
+})(SuggestionOperationType || (exports.SuggestionOperationType = SuggestionOperationType = {}));
+/**
+ * The result shape a suggestion-producing formula returns. Pass this to `addFormula`'s `schema`
+ * rather than declaring the shape by hand, so the pack and the runtime cannot drift.
+ *
+ * @internal
+ * @hidden
+ */
+function makeSuggestionResultSchema() {
+    return makeObjectSchema({
+        properties: {
+            operations: {
+                type: ValueType.Array,
+                required: true,
+                items: makeObjectSchema({
+                    properties: {
+                        // No literal member in ValueType, so the runtime parse is what rejects an unknown value.
+                        type: {
+                            type: ValueType.String,
+                            required: true,
+                            description: `One of: ${Object.values(SuggestionOperationType).join(', ')}.`,
+                        },
+                        highlight: makeObjectSchema({
+                            properties: {
+                                id: { type: ValueType.String },
+                                title: { type: ValueType.String, required: true },
+                                explanation: { type: ValueType.String, required: true },
+                                original: { type: ValueType.String, required: true },
+                                replacement: { type: ValueType.String },
+                                importance: { type: ValueType.Number },
+                            },
+                            displayProperty: 'title',
+                            required: true,
+                        }),
+                    },
+                }),
+            },
+            error: { type: ValueType.String, description: 'Why the check could not run. Absent on success.' },
+        },
+    });
+}
+exports.makeSuggestionResultSchema = makeSuggestionResultSchema;

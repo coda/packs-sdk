@@ -1799,4 +1799,22 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  * failed to copy a function.
  */
 export declare function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string): void;
+/**
+ * What a suggestion operation does to a highlight. Values match the `/executeAgent` wire.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum SuggestionOperationType {
+    Upsert = "upsert",
+    Delete = "delete"
+}
+/**
+ * The result shape a suggestion-producing formula returns. Pass this to `addFormula`'s `schema`
+ * rather than declaring the shape by hand, so the pack and the runtime cannot drift.
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionResultSchema(): GenericObjectSchema;
 export {};

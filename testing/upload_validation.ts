@@ -143,6 +143,7 @@ import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
 import type {SuggestedPrompt} from '../types';
+import type {SuggestionProducerTool} from '../types';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
 import type {SyncPassthroughData} from '../api';
@@ -178,6 +179,7 @@ import {makeSchema} from '../schema';
 import {maybeSchemaOptionsValue} from '../schema';
 import {maybeUnwrapArraySchema} from '../schema';
 import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
+import {normalizeSchemaKey} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
 import {unwrappedSchemaSupportsOptions} from '../schema';
@@ -2306,6 +2308,34 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       .optional(),
   });
 
+  const suggestionProducerToolSchema = zodCompleteStrictObject<SuggestionProducerTool>({
+    type: z.literal(ToolType.SuggestionProducer),
+    packId: z.number().optional(),
+    formulaName: z
+      .string()
+      .min(1)
+      .superRefine((formulaName, context) => {
+        if (!validateFormulaName(formulaName)) {
+          context.addIssue({code: 'custom', message: `Formula name must be a valid formula name.`});
+        }
+      }),
+  });
+
+  // Two producers would leave the runtime picking between them arbitrarily. The agent path gets
+  // this from its own per-type check; skills only dedupe equivalent tools, so check it here.
+  function validateAtMostOneSuggestionProducer(tools: readonly unknown[], context: z.RefinementCtx): void {
+    const producers = tools.flatMap((tool, index) =>
+      (tool as Tool).type === ToolType.SuggestionProducer ? [index] : [],
+    );
+    for (const index of producers.slice(1)) {
+      context.addIssue({
+        code: 'custom',
+        path: [index],
+        message: `A skill can only use the ${ToolType.SuggestionProducer} tool once.`,
+      });
+    }
+  }
+
   const knowledgeToolSourceSchema = z.discriminatedUnion('type', [
     z.object({
       type: z.literal(KnowledgeToolSourceType.Global),
@@ -2390,6 +2420,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     mailAndCalendarToolSchema,
     embeddedContentToolSchema,
     webSearchToolSchema,
+    suggestionProducerToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
@@ -2409,6 +2440,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
         });
       }
+      validateAtMostOneSuggestionProducer(tools, context);
     }),
     forcedFormula: z.string().min(1).optional(),
     models: z.array(skillModelConfigurationSchema).optional(),
@@ -2420,8 +2452,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const agentToolSchema = z.discriminatedUnion(
     'type',
-    [packToolSchema.extend({packId: z.number()}), codaDocsToolSchema, mailAndCalendarToolSchema, webSearchToolSchema],
-    {error: 'An agent can only use the Docs, Mail, web search, and Pack tools.'},
+    [
+      packToolSchema.extend({packId: z.number()}),
+      codaDocsToolSchema,
+      mailAndCalendarToolSchema,
+      webSearchToolSchema,
+      suggestionProducerToolSchema.extend({packId: z.number()}),
+    ],
+    {error: 'An agent can only use the Docs, Mail, web search, Pack, and SuggestionProducer tools.'},
   );
 
   const agentSchema = zodCompleteStrictObject<AgentDefinition>({
@@ -2446,6 +2484,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
           seen.add(key);
         });
+        validateAtMostOneSuggestionProducer(tools, context);
       }),
   });
 
@@ -3030,7 +3069,48 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       .superRefine((data, context) => {
         const metadata = data as PackVersionMetadata;
         const {formulas = [], skills = []} = metadata;
-        const formulaNames = new Set(formulas.map(f => f.name));
+        const formulasByName = new Map(formulas.map(f => [f.name, f]));
+        const formulaNames = new Set(formulasByName.keys());
+
+        // Keys are normalized to PascalCase by addFormula, so look them up normalized.
+        function propertyOf(schema: unknown, key: string): Schema | undefined {
+          return (schema as GenericObjectSchema | undefined)?.properties?.[normalizeSchemaKey(key)];
+        }
+
+        // The producer is called with the text alone and its result is emitted without an LLM
+        // reading it, so both ends of the formula have to match what the runtime will send and parse.
+        function validateSuggestionProducerFormula(
+          formula: PackFormulaMetadata,
+          basePath: Array<string | number>,
+        ): void {
+          const fail = (message: string, leaf?: string) =>
+            context.addIssue({code: 'custom', path: leaf ? [...basePath, leaf] : basePath, message});
+          const [text, ...rest] = (formula.parameters ?? []) as ParamDefs;
+
+          if (text?.type !== Type.string) {
+            fail(`A ${ToolType.SuggestionProducer} formula must take the text to check as its first parameter.`);
+          }
+          if (rest.some(param => !param.optional)) {
+            fail(
+              `A ${ToolType.SuggestionProducer} formula is passed only the text, so its other parameters must be optional.`,
+            );
+          }
+          if ((formula as {isAction?: boolean}).isAction) {
+            fail(`A ${ToolType.SuggestionProducer} formula cannot be an action.`);
+          }
+
+          const operations = formula.resultType === Type.object ? propertyOf(formula.schema, 'operations') : undefined;
+          const operation = operations?.type === ValueType.Array ? operations.items : undefined;
+          const highlight = propertyOf(operation, 'highlight');
+          const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(highlight, key));
+
+          if (!operation || !propertyOf(operation, 'type') || highlight?.type !== ValueType.Object || missing.length) {
+            fail(
+              `A ${ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
+                `an "operations" array of {type, highlight}, each highlight carrying title, explanation and original.`,
+            );
+          }
+        }
 
         function validateSkillTools(skill: {tools?: Tool[]}, basePath: Array<string | number>) {
           (skill.tools || []).forEach((tool, toolIndex) => {
@@ -3049,6 +3129,19 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                   });
                 }
               });
+            }
+            if (tool.type === ToolType.SuggestionProducer && !tool.packId) {
+              const path = [...basePath, 'tools', toolIndex, 'formulaName'];
+              const formula = formulasByName.get(tool.formulaName);
+              if (!formula) {
+                context.addIssue({
+                  code: 'custom',
+                  path,
+                  message: `Formula "${tool.formulaName}" not found. A ${ToolType.SuggestionProducer} tool must reference a formula defined in this pack.`,
+                });
+              } else {
+                validateSuggestionProducerFormula(formula, path);
+              }
             }
           });
         }

@@ -84,6 +84,9 @@ export type {Continuation} from './api';
 export type {CrawlStrategy} from './api_types';
 export type {SyncTableRelation} from './api_types';
 export type {SuggestedValueType} from './api_types';
+export type {SuggestionExecutionContext} from './api_types';
+export type {SuggestionHighlight} from './api_types';
+export type {SuggestionRun} from './api_types';
 export type {DynamicOptions} from './api';
 export type {DynamicSyncTableDef} from './api';
 export type {EmptyFormulaDef} from './api';
@@ -240,6 +243,7 @@ export type {StringSchema} from './schema';
 export type {SimpleStringSchema} from './schema';
 export type {StringTimeSchema} from './schema';
 export type {StringWithOptionsSchema} from './schema';
+export {SuggestionOperationType} from './schema';
 export type {TextAttributionNode} from './schema';
 export {ValueHintType} from './schema';
 export {ValueType} from './schema';
@@ -248,6 +252,7 @@ export {makeAttributionNode} from './schema';
 export {makeObjectSchema} from './schema';
 export {makeReferenceSchemaFromObjectSchema} from './schema';
 export {makeSchema} from './schema';
+export {makeSuggestionResultSchema} from './schema';
 export {withIdentity} from './schema';
 
 // Exports for intermediate entities we want included in the TypeDoc documentation

@@ -1009,6 +1009,40 @@ export interface InvocationLocation {
 	userId?: string;
 }
 /**
+ * A suggestion the editor is showing, or one the user has already acted on.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionHighlight {
+	/** Stable id, so a later run can update or delete this suggestion rather than duplicate it. */
+	id?: string;
+	/** Short heading naming the issue, 2-4 words. */
+	title: string;
+	/** What to change about the span, and why. */
+	explanation: string;
+	/** The span of the submitted text this suggestion is about. */
+	original: string;
+	/** A concrete rewrite of the span. Absent when there is nothing to swap in. */
+	replacement?: string;
+	/** How much acting on this matters, from 0 (cosmetic) to 1. */
+	importance?: number;
+}
+/**
+ * What the editor already knows about the text under review.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionRun {
+	/** Suggestions currently on screen. */
+	readonly currentHighlights: readonly SuggestionHighlight[];
+	/** Suggestions the user dismissed, so a producer can avoid raising them again. */
+	readonly dismissedHighlights: readonly SuggestionHighlight[];
+	/** Suggestions the user accepted. */
+	readonly acceptedHighlights: readonly SuggestionHighlight[];
+}
+/**
  * An object passed to the `execute` function of every formula invocation
  * with information and utilities for handling the invocation. In particular,
  * this contains the {@link core.Fetcher}, which is used for making HTTP requests.
@@ -1070,6 +1104,22 @@ export interface ExecutionContext {
 	 * for sync tables used within Superhuman Go.
 	 */
 	readonly previousAttemptError?: InvocationError;
+	/**
+	 * Information about the suggestion run. Only populated if this is a suggestion-producing formula.
+	 * @internal
+	 * @hidden
+	 */
+	readonly suggestions?: SuggestionRun;
+}
+/**
+ * Sub-class of {@link ExecutionContext} passed to a suggestion-producing formula. The only
+ * difference is that `suggestions` is guaranteed present.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionExecutionContext extends ExecutionContext {
+	readonly suggestions: SuggestionRun;
 }
 /**
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
@@ -3023,6 +3073,24 @@ export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchema
  * You could add the identity directly, but that would make the schema less re-usable.
  */
 export declare function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema;
+/**
+ * What a suggestion operation does to a highlight. Values match the `/executeAgent` wire.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum SuggestionOperationType {
+	Upsert = "upsert",
+	Delete = "delete"
+}
+/**
+ * The result shape a suggestion-producing formula returns. Pass this to `addFormula`'s `schema`
+ * rather than declaring the shape by hand, so the pack and the runtime cannot drift.
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionResultSchema(): GenericObjectSchema;
 /**
  * Configuration for how to construct an HTTP request for a code-free formula definition
  * created using {@link makeTranslateObjectFormula}.
@@ -5705,7 +5773,12 @@ export declare enum ToolType {
 	 * Tool that provides access to Superhuman Mail email and calendar capabilities.
 	 * @internal
 	 */
-	MailAndCalendar = "MailAndCalendar"
+	MailAndCalendar = "MailAndCalendar",
+	/**
+	 * Tool whose single formula returns finished suggestions, so no LLM turn is needed.
+	 * @internal
+	 */
+	SuggestionProducer = "SuggestionProducer"
 }
 /**
  * Base interface for all tool definitions.
@@ -5972,6 +6045,21 @@ export interface MCPServer {
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
  */
+/**
+ * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per skill.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionProducerTool extends BaseTool<ToolType.SuggestionProducer> {
+	/** The pack holding the formula. Omit this to reference the current pack. */
+	packId?: number;
+	/**
+	 * Name of the formula returning {@link makeSuggestionResultSchema}-shaped results. The runtime
+	 * calls it directly and emits its operations, so the model never sees this formula.
+	 */
+	formulaName: string;
+}
 export interface ToolMap {
 	[ToolType.Pack]: PackTool;
 	[ToolType.Knowledge]: KnowledgeTool;
@@ -5982,6 +6070,7 @@ export interface ToolMap {
 	[ToolType.MailAndCalendar]: MailAndCalendarTool;
 	[ToolType.WebSearch]: WebSearchTool;
 	[ToolType.EmbeddedContent]: EmbeddedContentTool;
+	[ToolType.SuggestionProducer]: SuggestionProducerTool;
 }
 /**
  * Union of all supported tool types.
@@ -6148,6 +6237,8 @@ export interface AgentDefinition {
  * @hidden
  */
 export type AgentTool = CodaDocsAndTablesTool | MailAndCalendarTool | WebSearchTool | (Omit<PackTool, "packId"> & {
+	packId: number;
+}) | (Omit<SuggestionProducerTool, "packId"> & {
 	packId: number;
 });
 /**

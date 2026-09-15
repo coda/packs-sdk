@@ -32,8 +32,10 @@ export {newRealFetcherSyncExecutionContext} from './testing/execution';
 export {executeFormulaOrSyncWithVM} from './testing/execution';
 
 export type {MockExecutionContext} from './testing/mocks';
+export type {MockSuggestionExecutionContext} from './testing/mocks';
 export type {MockSyncExecutionContext} from './testing/mocks';
 export type {SyncExecutionContextAsMock} from './testing/mocks';
 export {newJsonFetchResponse} from './testing/mocks';
 export {newMockExecutionContext} from './testing/mocks';
+export {newMockSuggestionExecutionContext} from './testing/mocks';
 export {newMockSyncExecutionContext} from './testing/mocks';

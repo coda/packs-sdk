@@ -2548,3 +2548,55 @@ export function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, pa
     );
   }
 }
+
+/**
+ * What a suggestion operation does to a highlight. Values match the `/executeAgent` wire.
+ *
+ * @internal
+ * @hidden
+ */
+export enum SuggestionOperationType {
+  Upsert = 'upsert',
+  Delete = 'delete',
+}
+
+/**
+ * The result shape a suggestion-producing formula returns. Pass this to `addFormula`'s `schema`
+ * rather than declaring the shape by hand, so the pack and the runtime cannot drift.
+ *
+ * @internal
+ * @hidden
+ */
+export function makeSuggestionResultSchema(): GenericObjectSchema {
+  return makeObjectSchema({
+    properties: {
+      operations: {
+        type: ValueType.Array,
+        required: true,
+        items: makeObjectSchema({
+          properties: {
+            // No literal member in ValueType, so the runtime parse is what rejects an unknown value.
+            type: {
+              type: ValueType.String,
+              required: true,
+              description: `One of: ${Object.values(SuggestionOperationType).join(', ')}.`,
+            },
+            highlight: makeObjectSchema({
+              properties: {
+                id: {type: ValueType.String},
+                title: {type: ValueType.String, required: true},
+                explanation: {type: ValueType.String, required: true},
+                original: {type: ValueType.String, required: true},
+                replacement: {type: ValueType.String},
+                importance: {type: ValueType.Number},
+              },
+              displayProperty: 'title',
+              required: true,
+            }),
+          },
+        }),
+      },
+      error: {type: ValueType.String, description: 'Why the check could not run. Absent on success.'},
+    },
+  });
+}

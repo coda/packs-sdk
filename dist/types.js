@@ -264,6 +264,11 @@ var ToolType;
      * @internal
      */
     ToolType["MailAndCalendar"] = "MailAndCalendar";
+    /**
+     * Tool whose single formula returns finished suggestions, so no LLM turn is needed.
+     * @internal
+     */
+    ToolType["SuggestionProducer"] = "SuggestionProducer";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
