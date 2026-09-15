@@ -37,7 +37,7 @@ function isGitAvailable() {
 }
 // By no means comprehensive, just an attempt to cover characters that can appear in a package.json declaration.
 function escapeShellCmd(cmd) {
-    return cmd.replace('>', '\\>').replace('<', '\\<');
+    return cmd.replace(/>/g, '\\>').replace(/</g, '\\<');
 }
 async function handleInit() {
     // npm installs into the nearest ancestor directory containing a package.json, so a Pack created

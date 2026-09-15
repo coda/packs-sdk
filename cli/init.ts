@@ -39,7 +39,7 @@ function isGitAvailable(): boolean {
 
 // By no means comprehensive, just an attempt to cover characters that can appear in a package.json declaration.
 function escapeShellCmd(cmd: string): string {
-  return cmd.replace('>', '\\>').replace('<', '\\<');
+  return cmd.replace(/>/g, '\\>').replace(/</g, '\\<');
 }
 
 export async function handleInit() {
