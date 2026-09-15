@@ -1,28 +1,36 @@
 import fs from 'fs-extra';
 import path from 'path';
+import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {spawnProcess} from './helpers';
-
-const PacksExamplesDirectory = 'node_modules/@codahq/packs-examples';
 
 const GitIgnore = `.coda.json
 .coda-credentials.json
 `;
 
-function updateMoldSourceMap() {
-  // unfortuanately Windows has no grep.
-  const packageFileName = 'node_modules/mold-source-map/package.json';
-  const lines = fs.readFileSync(packageFileName).toString().split('\n');
-  const validLines = lines.filter(line => !line.includes('"main":'));
-  fs.writeFileSync(packageFileName, validLines.join('\n'));
+function getNpmRoot(): string {
+  const {status, stdout} = spawnProcess('npm prefix', {stdio: 'pipe'});
+  const npmRoot = status === 0 ? stdout.toString().trim() : '';
+  if (!npmRoot) {
+    return printAndExit(
+      'The packs init command requires npm to be installed and available in your path. ' +
+        'See https://nodejs.org/en/download for suggested ways to install.',
+    );
+  }
+  return fs.realpathSync(npmRoot);
 }
 
-function addPatches() {
-  spawnProcess(`npm set-script postinstall "npx patch-package"`);
-
-  updateMoldSourceMap();
-
-  spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
+// npm may hoist the examples above the npm root, so ask Node where they actually landed instead of
+// assuming they are in the nearest node_modules.
+function getPacksExamplesDirectory(): string {
+  try {
+    return path.dirname(require.resolve('@codahq/packs-examples/package.json', {paths: [process.cwd()]}));
+  } catch (error: any) {
+    return printAndExit(
+      `The packs init command could not find @codahq/packs-examples from ${process.cwd()}. ` +
+        'Check that you can reach https://github.com/coda/packs-examples and try again.',
+    );
+  }
 }
 
 function isGitAvailable(): boolean {
@@ -31,24 +39,22 @@ function isGitAvailable(): boolean {
 
 // By no means comprehensive, just an attempt to cover characters that can appear in a package.json declaration.
 function escapeShellCmd(cmd: string): string {
-  return cmd.replace('>', '\\>').replace('<', '\\<');
+  return cmd.replace(/>/g, '\\>').replace(/</g, '\\<');
 }
 
 export async function handleInit() {
-  // stdout looks like `8.1.2\n`.
-  const npmVersion = parseInt(spawnProcess('npm -v', {stdio: 'pipe'}).stdout.toString().trim().split('.', 1)[0], 10);
-  if (npmVersion < 7) {
-    // need npm 7 to support "npm set-script"
-    throw new Error(`Your npm version is older than 7. Please upgrade npm to at least 7 with "npm install -g npm@7"`);
+  // npm installs into the nearest ancestor directory containing a package.json, so a Pack created
+  // anywhere else would have its dependencies added to that directory instead of this one.
+  const npmRoot = getNpmRoot();
+  if (npmRoot !== fs.realpathSync(process.cwd())) {
+    return printAndExit(
+      `npm installs packages into ${npmRoot}, so a Pack created here would have its dependencies added there ` +
+        'instead. Run "npm init -y" here first to create the Pack in this directory, or run the packs init ' +
+        `command in ${npmRoot}.`,
+    );
   }
 
-  let isPacksExamplesInstalled: boolean;
-  try {
-    const listNpmPackages = spawnProcess('npm list @codahq/packs-examples');
-    isPacksExamplesInstalled = listNpmPackages.status === 0;
-  } catch (error: any) {
-    isPacksExamplesInstalled = false;
-  }
+  const isPacksExamplesInstalled = spawnProcess('npm list @codahq/packs-examples').status === 0;
 
   if (!isPacksExamplesInstalled) {
     if (!isGitAvailable()) {
@@ -57,31 +63,42 @@ export async function handleInit() {
           'See https://git-scm.com/downloads for suggested ways to install.',
       );
     }
-    const installCommand = `npm install https://github.com/coda/packs-examples.git`;
-    spawnProcess(installCommand);
+    if (spawnProcess(`npm install https://github.com/coda/packs-examples.git`).status !== 0) {
+      return printAndExit(
+        'The packs init command could not install the Pack examples. ' +
+          'Check that you can reach https://github.com/coda/packs-examples and try again.',
+      );
+    }
   }
 
-  const packageJson = JSON.parse(fs.readFileSync(path.join(PacksExamplesDirectory, 'package.json'), 'utf-8'));
+  const packsExamplesDirectory = getPacksExamplesDirectory();
+  const packageJson = JSON.parse(fs.readFileSync(path.join(packsExamplesDirectory, 'package.json'), 'utf-8'));
   const devDependencies = packageJson.devDependencies;
   const devDependencyPackages = Object.keys(devDependencies)
     .map(dependency => `${dependency}@${devDependencies[dependency]}`)
     .join(' ');
-  spawnProcess(escapeShellCmd(`npm install --save-dev ${devDependencyPackages}`));
-  if (spawnProcess('npm list @codahq/packs-sdk --depth=0').status !== 0) {
-    spawnProcess('npm install --save @codahq/packs-sdk');
+  if (spawnProcess(escapeShellCmd(`npm install --save-dev ${devDependencyPackages}`)).status !== 0) {
+    return printAndExit('The packs init command could not install the Pack development dependencies.');
+  }
+  if (
+    spawnProcess('npm list @codahq/packs-sdk --depth=0').status !== 0 &&
+    spawnProcess('npm install --save @codahq/packs-sdk').status !== 0
+  ) {
+    return printAndExit('The packs init command could not install @codahq/packs-sdk.');
   }
 
-  // developers may run in NodeJs 16 where some packages need to be patched to avoid warnings.
-  addPatches();
-
-  fs.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
+  const templateDirectory = path.join(packsExamplesDirectory, 'examples/template');
+  if (!fs.existsSync(templateDirectory)) {
+    return printAndExit(`The packs init command could not find the Pack template in ${templateDirectory}.`);
+  }
+  fs.copySync(templateDirectory, process.cwd());
   // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
   // in the template example alongside the other files. So we just create it explicitly
   // here as part of the init step.
   fs.appendFileSync(path.join(process.cwd(), '.gitignore'), GitIgnore);
 
-  if (!isPacksExamplesInstalled) {
-    const uninstallCommand = `npm uninstall @codahq/packs-examples`;
-    spawnProcess(uninstallCommand);
+  // The Pack is usable at this point, so failing to clean up the examples is only worth a warning.
+  if (!isPacksExamplesInstalled && spawnProcess('npm uninstall @codahq/packs-examples').status !== 0) {
+    print('The Pack examples could not be removed. Run "npm uninstall @codahq/packs-examples" to remove them.');
   }
 }

@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - CLI commands now fail immediately in non-interactive environments instead of waiting on confirmation prompts. Use `--yes` to skip confirmations on `clone`, `link`, `register`, and `release`. `register` requires `--apiToken` (or a pasted token on a TTY). `release` accepts `--use-latest` when the manifest has no version. `--help` for each command includes examples ready to run.
 
+### Fixed
+
+- `packs init` no longer runs the obsolete `npm set-script` patching step that was removed in npm 9. When it is run outside the directory npm installs into, it now explains that the Pack's dependencies would be added elsewhere and how to proceed, instead of failing with a raw `ENOENT` after adding packages to the parent project. A missing npm or git, and failures installing the Pack examples or its dependencies, are all reported with actionable messages.
+
 ## [1.17.5] - 2026-09-08
 
 ### Changed
