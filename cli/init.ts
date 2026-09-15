@@ -87,7 +87,11 @@ export async function handleInit() {
     return printAndExit('The packs init command could not install @codahq/packs-sdk.');
   }
 
-  fs.copySync(path.join(packsExamplesDirectory, 'examples/template'), process.cwd());
+  const templateDirectory = path.join(packsExamplesDirectory, 'examples/template');
+  if (!fs.existsSync(templateDirectory)) {
+    return printAndExit(`The packs init command could not find the Pack template in ${templateDirectory}.`);
+  }
+  fs.copySync(templateDirectory, process.cwd());
   // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
   // in the template example alongside the other files. So we just create it explicitly
   // here as part of the init step.
