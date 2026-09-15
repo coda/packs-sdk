@@ -139,8 +139,8 @@ class PackMetadataValidationError extends Error {
     }
 }
 exports.PackMetadataValidationError = PackMetadataValidationError;
-async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode } = {}) {
-    const { legacyPackMetadataSchema } = buildMetadataSchema({ sdkVersion, warningMode });
+async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode, bestEffortDefaultTriggers } = {}) {
+    const { legacyPackMetadataSchema } = buildMetadataSchema({ sdkVersion, warningMode, bestEffortDefaultTriggers });
     let combinedSchema = legacyPackMetadataSchema;
     // Server-side validation may be running a different SDK version than the pack maker
     // is using, so some breaking changes to metadata validation can be set up to only
@@ -531,7 +531,7 @@ const setEndpointPostSetupValidator = zodCompleteObject({
     getOptions: z.unknown().optional(),
     getOptionsFormula: z.unknown().optional(),
 }).refine(data => data.getOptions || data.getOptionsFormula, 'Either getOptions or getOptionsFormula must be specified.');
-function buildMetadataSchema({ sdkVersion }) {
+function buildMetadataSchema({ sdkVersion, bestEffortDefaultTriggers }) {
     const singleAuthDomainSchema = z
         .string()
         .nonempty()
@@ -1891,9 +1891,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
     });
     const defaultTriggerSchema = z.discriminatedUnion('kind', [scheduleTriggerSchema, whileWritingTriggerSchema]);
-    const defaultTriggersSchema = z
-        .array(defaultTriggerSchema)
-        .superRefine((triggers, context) => {
+    const strictDefaultTriggersSchema = z.array(defaultTriggerSchema).superRefine((triggers, context) => {
         const seen = new Set();
         triggers.forEach((trigger, index) => {
             if (seen.has(trigger.kind)) {
@@ -1906,6 +1904,22 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             seen.add(trigger.kind);
         });
     });
+    // Keeps the triggers that read cleanly and drops the rest, including a duplicate kind. Never
+    // reports an issue; the strict schema is for callers that want to hear about a bad trigger.
+    const bestEffortDefaultTriggersSchema = z.array(z.unknown()).transform(items => {
+        const seen = new Set();
+        return items.flatMap(item => {
+            const parsed = defaultTriggerSchema.safeParse(item);
+            if (!parsed.success || seen.has(parsed.data.kind)) {
+                return [];
+            }
+            seen.add(parsed.data.kind);
+            return [parsed.data];
+        });
+    });
+    const defaultTriggersSchema = bestEffortDefaultTriggers
+        ? bestEffortDefaultTriggersSchema
+        : strictDefaultTriggersSchema;
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
     });
