@@ -11,7 +11,15 @@ const GitIgnore = `.coda.json
 // npm installs into the nearest ancestor directory containing a package.json, not into the current
 // directory, so every node_modules path has to be resolved from there.
 function getNpmRoot(): string {
-  return spawnProcess('npm prefix', {stdio: 'pipe'}).stdout.toString().trim();
+  const {status, stdout} = spawnProcess('npm prefix', {stdio: 'pipe'});
+  const npmRoot = status === 0 ? stdout.toString().trim() : '';
+  return (
+    npmRoot ||
+    printAndExit(
+      'The packs init command requires npm to be installed and available in your path. ' +
+        'See https://nodejs.org/en/download for suggested ways to install.',
+    )
+  );
 }
 
 function isGitAvailable(): boolean {
@@ -51,7 +59,12 @@ export async function handleInit({yes}: {yes?: boolean} = {}) {
       );
     }
     const installCommand = `npm install https://github.com/coda/packs-examples.git`;
-    spawnProcess(installCommand);
+    if (spawnProcess(installCommand).status !== 0) {
+      return printAndExit(
+        'The packs init command could not install the Pack examples. ' +
+          'Check that you can reach https://github.com/coda/packs-examples and try again.',
+      );
+    }
   }
 
   const packageJson = JSON.parse(fs.readFileSync(path.join(packsExamplesDirectory, 'package.json'), 'utf-8'));
