@@ -6,6 +6,15 @@
 
 Superhuman Packs allow you to extend the Superhuman suite, creating agents for Go and adding building blocks to Coda. To learn more, see [our SDK documentation](https://docs.superhuman.com/packs/build).
 
+## Agent skill
+
+This repo ships a [Claude Code skill](.claude/skills/create-agent-pack) that walks through building and
+uploading an agent pack. Install it with the [`skills` CLI](https://github.com/vercel-labs/skills):
+
+```bash
+bunx skills add coda/packs-sdk --skill create-agent-pack --global
+```
+
 ## Contributing
 
 See our [Contributing guide](CONTRIBUTING.md) for more information on how to contribute to this project.

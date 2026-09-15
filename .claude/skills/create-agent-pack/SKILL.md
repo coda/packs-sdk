@@ -1,6 +1,6 @@
 ---
 name: create-agent-pack
-description: Create, build, validate, and upload a Packs SDK agent (pack.ts using sdk.newAgent()) to your Coda/Superhuman account, including registering an API token, wiring up tools (docs/mail/webSearch/connectors) and triggers (schedule/while-writing), and installing it from the agent directory. Use this whenever a developer wants to build a Coda/Superhuman agent pack, test a schedule trigger or rrule string, or asks to "create an agent" / "upload a pack" / "make a pack.ts". Also use for iterating on an existing agent pack: adding tools, changing instructions, adding a second pack, or adding a trigger.
+description: "Create, build, validate, and upload a Packs SDK agent (pack.ts using sdk.newAgent()) to your Coda/Superhuman account, including registering an API token, wiring up tools (docs/mail/webSearch/connectors) and triggers (schedule/while-writing), and installing it from the agent directory. Use this whenever a developer wants to build a Coda/Superhuman agent pack, test a schedule trigger or rrule string, or asks to 'create an agent' / 'upload a pack' / 'make a pack.ts'. Also use for iterating on an existing agent pack, such as adding tools, changing instructions, adding a second pack, or adding a trigger."
 ---
 
 # Create an agent pack
