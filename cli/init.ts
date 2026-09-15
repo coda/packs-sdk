@@ -4,26 +4,14 @@ import path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {spawnProcess} from './helpers';
 
-const PacksExamplesDirectory = 'node_modules/@codahq/packs-examples';
-
 const GitIgnore = `.coda.json
 .coda-credentials.json
 `;
 
-function updateMoldSourceMap() {
-  // unfortuanately Windows has no grep.
-  const packageFileName = 'node_modules/mold-source-map/package.json';
-  const lines = fs.readFileSync(packageFileName).toString().split('\n');
-  const validLines = lines.filter(line => !line.includes('"main":'));
-  fs.writeFileSync(packageFileName, validLines.join('\n'));
-}
-
-function addPatches() {
-  spawnProcess(`npm set-script postinstall "npx patch-package"`);
-
-  updateMoldSourceMap();
-
-  spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
+// npm installs into the nearest ancestor directory containing a package.json, not into the current
+// directory, so every node_modules path has to be resolved from there.
+function getNpmRoot(): string {
+  return spawnProcess('npm prefix', {stdio: 'pipe'}).stdout.toString().trim();
 }
 
 function isGitAvailable(): boolean {
@@ -45,12 +33,7 @@ export async function handleInit({yes}: {yes?: boolean} = {}) {
     });
   }
 
-  // stdout looks like `8.1.2\n`.
-  const npmVersion = parseInt(spawnProcess('npm -v', {stdio: 'pipe'}).stdout.toString().trim().split('.', 1)[0], 10);
-  if (npmVersion < 7) {
-    // need npm 7 to support "npm set-script"
-    throw new Error(`Your npm version is older than 7. Please upgrade npm to at least 7 with "npm install -g npm@7"`);
-  }
+  const packsExamplesDirectory = path.join(getNpmRoot(), 'node_modules/@codahq/packs-examples');
 
   let isPacksExamplesInstalled: boolean;
   try {
@@ -71,7 +54,7 @@ export async function handleInit({yes}: {yes?: boolean} = {}) {
     spawnProcess(installCommand);
   }
 
-  const packageJson = JSON.parse(fs.readFileSync(path.join(PacksExamplesDirectory, 'package.json'), 'utf-8'));
+  const packageJson = JSON.parse(fs.readFileSync(path.join(packsExamplesDirectory, 'package.json'), 'utf-8'));
   const devDependencies = packageJson.devDependencies;
   const devDependencyPackages = Object.keys(devDependencies)
     .map(dependency => `${dependency}@${devDependencies[dependency]}`)
@@ -81,10 +64,7 @@ export async function handleInit({yes}: {yes?: boolean} = {}) {
     spawnProcess('npm install --save @codahq/packs-sdk');
   }
 
-  // developers may run in NodeJs 16 where some packages need to be patched to avoid warnings.
-  addPatches();
-
-  fs.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
+  fs.copySync(path.join(packsExamplesDirectory, 'examples/template'), process.cwd());
   // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
   // in the template example alongside the other files. So we just create it explicitly
   // here as part of the init step.
