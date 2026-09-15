@@ -7,6 +7,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added a `superhuman` CLI binary alias alongside the existing `packs` and `coda` aliases. `npx superhuman <cmd>` behaves identically to `npx packs <cmd>`.
+- Documented installing the `create-agent-pack` skill via the `skills` CLI in the README.
+
+### Fixed
+
+- Fixed invalid YAML metadata in the `create-agent-pack` skill's `SKILL.md` that made it unreadable by third-party skill-installer tooling.
 
 ### Changed
 
