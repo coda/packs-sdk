@@ -8541,68 +8541,6 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(result.defaultTriggers, defaultTriggers);
     });
 
-    describe('best effort parsing', () => {
-      async function parseBestEffort(defaultTriggers: any[]) {
-        const metadata = createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers,
-        });
-        const result = await validatePackVersionMetadata(metadata, codaPacksSDKVersion, {
-          bestEffortDefaultTriggers: true,
-        });
-        return result.defaultTriggers;
-      }
-
-      it('keeps the triggers that parse and drops the ones that do not', async () => {
-        const contextualTrigger: DefaultTriggerDefinition = {
-          kind: DefaultTriggerKind.WhileWriting,
-          condition: 'Do a thing.',
-        };
-        const parsed = await parseBestEffort([
-          contextualTrigger,
-          {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'},
-        ]);
-        assert.deepEqual(parsed, [contextualTrigger]);
-      });
-
-      it('drops a kind it does not recognize', async () => {
-        const scheduleTrigger: DefaultTriggerDefinition = {
-          kind: DefaultTriggerKind.Schedule,
-          rruleString: 'RRULE:FREQ=DAILY',
-        };
-        const parsed = await parseBestEffort([{kind: 'somethingNewerThanUs'}, scheduleTrigger]);
-        assert.deepEqual(parsed, [scheduleTrigger]);
-      });
-
-      it('keeps the first of a duplicated kind', async () => {
-        const parsed = await parseBestEffort([
-          {kind: DefaultTriggerKind.WhileWriting, condition: 'First.'},
-          {kind: DefaultTriggerKind.WhileWriting, condition: 'Second.'},
-        ]);
-        assert.deepEqual(parsed, [{kind: DefaultTriggerKind.WhileWriting, condition: 'First.'}]);
-      });
-
-      it('leaves an array of good triggers alone', async () => {
-        const defaultTriggers: DefaultTriggerDefinition[] = [
-          {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
-          {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
-        ];
-        assert.deepEqual(await parseBestEffort(defaultTriggers), defaultTriggers);
-      });
-
-      it('does not loosen the rest of the pack', async () => {
-        const metadata = createFakeAgentMetadata({
-          agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers: [],
-          version: '',
-        });
-        await testHelper.willBeRejectedWith(
-          validatePackVersionMetadata(metadata, codaPacksSDKVersion, {bestEffortDefaultTriggers: true}),
-          /Pack metadata failed validation/,
-        );
-      });
-    });
-
     it('rejects default triggers on a pack that is not an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({

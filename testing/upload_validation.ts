@@ -224,9 +224,9 @@ export class PackMetadataValidationError extends Error {
 export async function validatePackVersionMetadata(
   metadata: Record<string, any>,
   sdkVersion: string | undefined,
-  {warningMode, bestEffortDefaultTriggers}: {warningMode?: boolean; bestEffortDefaultTriggers?: boolean} = {},
+  {warningMode}: {warningMode?: boolean} = {},
 ): Promise<PackVersionMetadata> {
-  const {legacyPackMetadataSchema} = buildMetadataSchema({sdkVersion, warningMode, bestEffortDefaultTriggers});
+  const {legacyPackMetadataSchema} = buildMetadataSchema({sdkVersion, warningMode});
 
   let combinedSchema: z.ZodType<Partial<PackVersionMetadata>> = legacyPackMetadataSchema;
 
@@ -703,12 +703,9 @@ const setEndpointPostSetupValidator = zodCompleteObject<SetEndpoint>({
 interface BuildMetadataSchemaArgs {
   sdkVersion?: string;
   warningMode?: boolean;
-  // Skip default triggers that don't parse instead of rejecting the whole array. For callers that
-  // parse a payload someone else produced, where the readable triggers are worth keeping.
-  bestEffortDefaultTriggers?: boolean;
 }
 
-function buildMetadataSchema({sdkVersion, bestEffortDefaultTriggers}: BuildMetadataSchemaArgs): {
+function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   legacyPackMetadataSchema: z.ZodType<Partial<PackVersionMetadata>>;
   variousSupportedAuthenticationValidators: Array<z.ZodType<any>>;
   arrayPropertySchema: z.ZodType<any>;
@@ -2456,37 +2453,21 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const defaultTriggerSchema = z.discriminatedUnion('kind', [scheduleTriggerSchema, whileWritingTriggerSchema]);
 
-  const strictDefaultTriggersSchema = z.array(defaultTriggerSchema).superRefine((triggers, context) => {
-    const seen = new Set<string>();
-    triggers.forEach((trigger, index) => {
-      if (seen.has(trigger.kind)) {
-        context.addIssue({
-          code: 'custom',
-          path: [index],
-          message: `An agent can only declare one ${trigger.kind} default trigger.`,
-        });
-      }
-      seen.add(trigger.kind);
+  const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z
+    .array(defaultTriggerSchema)
+    .superRefine((triggers, context) => {
+      const seen = new Set<string>();
+      triggers.forEach((trigger, index) => {
+        if (seen.has(trigger.kind)) {
+          context.addIssue({
+            code: 'custom',
+            path: [index],
+            message: `An agent can only declare one ${trigger.kind} default trigger.`,
+          });
+        }
+        seen.add(trigger.kind);
+      });
     });
-  });
-
-  // Keeps the triggers that read cleanly and drops the rest, including a duplicate kind. Never
-  // reports an issue; the strict schema is for callers that want to hear about a bad trigger.
-  const bestEffortDefaultTriggersSchema = z.array(z.unknown()).transform(items => {
-    const seen = new Set<string>();
-    return items.flatMap(item => {
-      const parsed = defaultTriggerSchema.safeParse(item);
-      if (!parsed.success || seen.has(parsed.data.kind)) {
-        return [];
-      }
-      seen.add(parsed.data.kind);
-      return [parsed.data];
-    });
-  });
-
-  const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[], any> = bestEffortDefaultTriggers
-    ? bestEffortDefaultTriggersSchema
-    : strictDefaultTriggersSchema;
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
