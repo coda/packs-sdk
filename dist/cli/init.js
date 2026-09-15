@@ -38,7 +38,7 @@ function isGitAvailable() {
 }
 // By no means comprehensive, just an attempt to cover characters that can appear in a package.json declaration.
 function escapeShellCmd(cmd) {
-    return cmd.replace('>', '\\>').replace('<', '\\<');
+    return cmd.replace(/>/g, '\\>').replace(/</g, '\\<');
 }
 async function handleInit({ yes } = {}) {
     // Warn before clobbering an existing pack.ts, since init copies the template over it.
