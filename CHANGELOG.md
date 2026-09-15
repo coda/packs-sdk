@@ -10,7 +10,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Fixed
 
-- `packs init` no longer fails with `ENOENT` when run from a subdirectory of an npm project, and no longer runs the obsolete `npm set-script` patching step that was removed in npm 9.
+- `packs init` no longer fails with `ENOENT` when run from a subdirectory of an npm project, and no longer runs the obsolete `npm set-script` patching step that was removed in npm 9. A missing npm or a failed download of the Pack examples now prints an actionable message instead of a stack trace.
 
 ## [1.17.5] - 2026-09-08
 
