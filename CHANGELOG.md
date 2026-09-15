@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added a `superhuman` CLI binary alias alongside the existing `packs` and `coda` aliases. `npx superhuman <cmd>` behaves identically to `npx packs <cmd>`.
+
 ### Changed
 
 - CLI commands now fail immediately in non-interactive environments instead of waiting on confirmation prompts. Use `--yes` to skip confirmations on `clone`, `link`, `register`, and `release`. `register` requires `--apiToken` (or a pasted token on a TTY). `release` accepts `--use-latest` when the manifest has no version. `--help` for each command includes examples ready to run.
