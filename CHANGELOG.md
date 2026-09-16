@@ -12,6 +12,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Fixed
 
 - Fixed invalid YAML metadata in the `create-agent-pack` skill's `SKILL.md` that made it unreadable by third-party skill-installer tooling.
+- `validate` now prints `Pack is valid.` on success instead of exiting silently.
+- The version-bump CI check failure message now mentions the `skip-version-check` label as an escape hatch for docs-only or CI-only changes.
 
 ### Changed
 

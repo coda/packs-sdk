@@ -8,6 +8,7 @@ import {compilePackMetadata} from '../helpers/metadata';
 import {importManifest} from './helpers';
 import {isTestCommand} from './helpers';
 import {makeManifestFullPath} from './helpers';
+import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 
@@ -47,6 +48,7 @@ export async function validateMetadata(
   }
 
   if (!checkDeprecationWarnings) {
+    print('Pack is valid.');
     return;
   }
 
@@ -57,6 +59,8 @@ export async function validateMetadata(
     const deprecationWarnings = packMetadataValidationError.validationErrors?.map(makeWarningMessage).join('\n');
     printAndExit(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
   }
+
+  print('Pack is valid.');
 }
 
 function makeErrorMessage({path, message}: ValidationError): string {

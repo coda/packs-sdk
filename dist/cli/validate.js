@@ -30,6 +30,7 @@ const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("../testing/helpers");
+const helpers_5 = require("../testing/helpers");
 const upload_validation_1 = require("../testing/upload_validation");
 async function handleValidate({ manifestFile, checkDeprecationWarnings }) {
     const fullManifestPath = (0, helpers_3.makeManifestFullPath)(manifestFile);
@@ -54,9 +55,10 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     catch (e) {
         const packMetadataValidationError = e;
         const validationErrors = (_a = packMetadataValidationError.validationErrors) === null || _a === void 0 ? void 0 : _a.map(makeErrorMessage).join('\n');
-        (0, helpers_4.printAndExit)(`${e.message}: \n${validationErrors}`);
+        (0, helpers_5.printAndExit)(`${e.message}: \n${validationErrors}`);
     }
     if (!checkDeprecationWarnings) {
+        (0, helpers_4.print)('Pack is valid.');
         return;
     }
     try {
@@ -65,8 +67,9 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     catch (e) {
         const packMetadataValidationError = e;
         const deprecationWarnings = (_b = packMetadataValidationError.validationErrors) === null || _b === void 0 ? void 0 : _b.map(makeWarningMessage).join('\n');
-        (0, helpers_4.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
+        (0, helpers_5.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
     }
+    (0, helpers_4.print)('Pack is valid.');
 }
 exports.validateMetadata = validateMetadata;
 function makeErrorMessage({ path, message }) {
