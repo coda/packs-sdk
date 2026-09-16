@@ -2463,13 +2463,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (formula.isAction) {
                     fail(`A ${types_16.ToolType.SuggestionProducer} formula cannot be an action.`);
                 }
-                const operations = formula.resultType === api_types_8.Type.object ? propertyOf(formula.schema, 'operations') : undefined;
-                const operation = (operations === null || operations === void 0 ? void 0 : operations.type) === schema_18.ValueType.Array ? operations.items : undefined;
-                const highlight = propertyOf(operation, 'highlight');
-                const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(highlight, key));
-                if (!operation || !propertyOf(operation, 'type') || (highlight === null || highlight === void 0 ? void 0 : highlight.type) !== schema_18.ValueType.Object || missing.length) {
+                const suggestions = formula.resultType === api_types_8.Type.object ? propertyOf(formula.schema, 'suggestions') : undefined;
+                const suggestion = (suggestions === null || suggestions === void 0 ? void 0 : suggestions.type) === schema_18.ValueType.Array ? suggestions.items : undefined;
+                const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(suggestion, key));
+                if ((suggestion === null || suggestion === void 0 ? void 0 : suggestion.type) !== schema_18.ValueType.Object || missing.length) {
                     fail(`A ${types_16.ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
-                        `an "operations" array of {type, highlight}, each highlight carrying title, explanation and original.`);
+                        `a "suggestions" array of objects, each carrying title, explanation and original.`);
                 }
             }
             function validateSkillTools(skill, basePath) {

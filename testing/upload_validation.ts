@@ -3099,15 +3099,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             fail(`A ${ToolType.SuggestionProducer} formula cannot be an action.`);
           }
 
-          const operations = formula.resultType === Type.object ? propertyOf(formula.schema, 'operations') : undefined;
-          const operation = operations?.type === ValueType.Array ? operations.items : undefined;
-          const highlight = propertyOf(operation, 'highlight');
-          const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(highlight, key));
+          const suggestions =
+            formula.resultType === Type.object ? propertyOf(formula.schema, 'suggestions') : undefined;
+          const suggestion = suggestions?.type === ValueType.Array ? suggestions.items : undefined;
+          const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(suggestion, key));
 
-          if (!operation || !propertyOf(operation, 'type') || highlight?.type !== ValueType.Object || missing.length) {
+          if (suggestion?.type !== ValueType.Object || missing.length) {
             fail(
               `A ${ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
-                `an "operations" array of {type, highlight}, each highlight carrying title, explanation and original.`,
+                `a "suggestions" array of objects, each carrying title, explanation and original.`,
             );
           }
         }

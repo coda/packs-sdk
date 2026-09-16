@@ -1051,12 +1051,33 @@ export interface SuggestionHighlight {
     title: string;
     /** What to change about the span, and why. */
     explanation: string;
+    /**
+     * A distinctive string copied verbatim from before `original`, used to pick the right occurrence
+     * when `original` appears more than once. Omit it when `original` is unique.
+     */
+    contextBefore?: string;
     /** The span of the submitted text this suggestion is about. */
     original: string;
+    /** Same as `contextBefore`, for a landmark after `original`. */
+    contextAfter?: string;
     /** A concrete rewrite of the span. Absent when there is nothing to swap in. */
     replacement?: string;
     /** How much acting on this matters, from 0 (cosmetic) to 1. */
     importance?: number;
+}
+/**
+ * What a suggestion-producing formula returns, the TypeScript counterpart of
+ * {@link makeSuggestionResultSchema}. Findings only: the runtime reconciles them against the
+ * highlights already on screen, so a checker never describes an edit to that state.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionResult {
+    /** Every finding for the submitted text, most important first. */
+    suggestions: SuggestionHighlight[];
+    /** Why the check could not run. Absent on success. */
+    error?: string;
 }
 /**
  * What the editor already knows about the text under review.

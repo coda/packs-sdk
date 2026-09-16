@@ -1800,18 +1800,13 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  */
 export declare function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string): void;
 /**
- * What a suggestion operation does to a highlight. Values match the `/executeAgent` wire.
- *
- * @internal
- * @hidden
- */
-export declare enum SuggestionOperationType {
-    Upsert = "upsert",
-    Delete = "delete"
-}
-/**
  * The result shape a suggestion-producing formula returns. Pass this to `addFormula`'s `schema`
  * rather than declaring the shape by hand, so the pack and the runtime cannot drift.
+ *
+ * A producer returns findings, not edits to the editor's state: the runtime reconciles them against
+ * the highlights already on screen (reusing an id so a finding updates in place, deleting one the
+ * checker no longer reports, dropping one the user dismissed). A checker is therefore stateless, and
+ * the fields here are exactly the ones {@link SuggestionHighlight} carries.
  *
  * @internal
  * @hidden

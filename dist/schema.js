@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeSuggestionResultSchema = exports.SuggestionOperationType = exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.makeSuggestionResultSchema = exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -992,19 +992,13 @@ function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
 }
 exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;
 /**
- * What a suggestion operation does to a highlight. Values match the `/executeAgent` wire.
- *
- * @internal
- * @hidden
- */
-var SuggestionOperationType;
-(function (SuggestionOperationType) {
-    SuggestionOperationType["Upsert"] = "upsert";
-    SuggestionOperationType["Delete"] = "delete";
-})(SuggestionOperationType || (exports.SuggestionOperationType = SuggestionOperationType = {}));
-/**
  * The result shape a suggestion-producing formula returns. Pass this to `addFormula`'s `schema`
  * rather than declaring the shape by hand, so the pack and the runtime cannot drift.
+ *
+ * A producer returns findings, not edits to the editor's state: the runtime reconciles them against
+ * the highlights already on screen (reusing an id so a finding updates in place, deleting one the
+ * checker no longer reports, dropping one the user dismissed). A checker is therefore stateless, and
+ * the fields here are exactly the ones {@link SuggestionHighlight} carries.
  *
  * @internal
  * @hidden
@@ -1012,30 +1006,55 @@ var SuggestionOperationType;
 function makeSuggestionResultSchema() {
     return makeObjectSchema({
         properties: {
-            operations: {
+            suggestions: {
                 type: ValueType.Array,
                 required: true,
+                description: 'Every finding for the submitted text, most important first.',
                 items: makeObjectSchema({
                     properties: {
-                        // No literal member in ValueType, so the runtime parse is what rejects an unknown value.
-                        type: {
+                        id: {
+                            type: ValueType.String,
+                            description: 'Stable identifier for this finding across runs, so the same finding updates in ' +
+                                'place instead of being recreated. Omit it and the runtime matches on the span.',
+                        },
+                        title: {
                             type: ValueType.String,
                             required: true,
-                            description: `One of: ${Object.values(SuggestionOperationType).join(', ')}.`,
+                            description: 'A 2-4 word heading naming the issue. No trailing period.',
                         },
-                        highlight: makeObjectSchema({
-                            properties: {
-                                id: { type: ValueType.String },
-                                title: { type: ValueType.String, required: true },
-                                explanation: { type: ValueType.String, required: true },
-                                original: { type: ValueType.String, required: true },
-                                replacement: { type: ValueType.String },
-                                importance: { type: ValueType.Number },
-                            },
-                            displayProperty: 'title',
+                        explanation: {
+                            type: ValueType.String,
                             required: true,
-                        }),
+                            description: 'One or two sentences on what to change about the span and why.',
+                        },
+                        contextBefore: {
+                            type: ValueType.String,
+                            description: 'A distinctive string copied verbatim from before `original`, used to pick the ' +
+                                'right occurrence when `original` appears more than once.',
+                        },
+                        original: {
+                            type: ValueType.String,
+                            required: true,
+                            description: 'The span of the submitted text this finding is about, copied verbatim.',
+                        },
+                        contextAfter: {
+                            type: ValueType.String,
+                            description: 'Same as `contextBefore`, for a landmark after `original`.',
+                        },
+                        replacement: {
+                            type: ValueType.String,
+                            description: 'A concrete rewrite of the span. Absent when there is nothing to swap in.',
+                        },
+                        // Not required, because the runtime treats an absent score as unranked rather than
+                        // rejecting the finding. Always set it: ranking is the reason this path exists.
+                        importance: {
+                            type: ValueType.Number,
+                            description: 'How much acting on this matters, from 0 (cosmetic) to 1 (the reader will be ' +
+                                'misled without it). Judge it against the other findings for this text.',
+                        },
                     },
+                    displayProperty: 'title',
+                    description: 'One finding about a span of the submitted text.',
                 }),
             },
             error: { type: ValueType.String, description: 'Why the check could not run. Absent on success.' },

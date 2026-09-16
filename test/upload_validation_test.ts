@@ -6512,8 +6512,8 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].formulaName',
           message:
-            'A SuggestionProducer formula must return the makeSuggestionResultSchema() shape: an "operations" ' +
-            'array of {type, highlight}, each highlight carrying title, explanation and original.',
+            'A SuggestionProducer formula must return the makeSuggestionResultSchema() shape: a "suggestions" ' +
+            'array of objects, each carrying title, explanation and original.',
         },
       ]);
     });
