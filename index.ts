@@ -318,6 +318,7 @@ export type {ContactResolutionTool} from './types';
 export type {CodaDocsAndTablesTool} from './types';
 export type {MailAndCalendarTool} from './types';
 export type {WebSearchTool} from './types';
+export type {SuggestionProducerTool} from './types';
 export type {MCPServer} from './types';
 export type {PartialSkillDef} from './types';
 export type {AgentDefinition} from './types';

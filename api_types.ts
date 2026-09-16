@@ -1221,7 +1221,7 @@ export interface InvocationLocation {
  * @internal
  * @hidden
  */
-export interface SuggestionHighlight {
+export type SuggestionHighlight = {
   /** Stable id, so a later run can update or delete this suggestion rather than duplicate it. */
   id?: string;
   /** Short heading naming the issue, 2-4 words. */
@@ -1241,7 +1241,7 @@ export interface SuggestionHighlight {
   replacement?: string;
   /** How much acting on this matters, from 0 (cosmetic) to 1. */
   importance?: number;
-}
+};
 
 /**
  * What a suggestion-producing formula returns, the TypeScript counterpart of
@@ -1251,12 +1251,12 @@ export interface SuggestionHighlight {
  * @internal
  * @hidden
  */
-export interface SuggestionResult {
+export type SuggestionResult = {
   /** Every finding for the submitted text, most important first. */
   suggestions: SuggestionHighlight[];
   /** Why the check could not run. Absent on success. */
   error?: string;
-}
+};
 
 /**
  * What the editor already knows about the text under review.
