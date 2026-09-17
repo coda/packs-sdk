@@ -9,6 +9,7 @@ import type {MetadataFormula} from './api';
 import type {ObjectSchemaProperty} from './schema';
 import type {ParameterValidationResult} from './api';
 import type {Schema} from './schema';
+import {z} from 'zod';
 
 /**
  * Markers used internally to represent data types for parameters and return values.
@@ -1216,32 +1217,52 @@ export interface InvocationLocation {
 }
 
 /**
+ * A suggestion the editor is showing, or one the user has already acted on. The single source of
+ * truth for this shape -- consumers (e.g. the agent runtime's own highlight schema) reference
+ * `SuggestionHighlightSchema.shape.<field>` per field rather than redeclaring these fields, so a
+ * field added or removed here can't silently drift out of sync downstream.
+ *
+ * @internal
+ * @hidden
+ */
+export const SuggestionHighlightSchema = z.object({
+  // `id` and `replacement` are `.nullable()` without `.optional()` (a required key, nullable
+  // value) rather than `.nullish()` like the other optional fields below: OpenAI's strict
+  // structured-output mode (what the agent runtime's own highlight schema feeds it) only excludes
+  // a field from JSON Schema's `required` array when it is wrapped in zod's `.optional()` --
+  // `.nullable()` alone keeps it required, with `null` added as an accepted type instead. Matching
+  // that convention here (rather than the more ergonomic "just omit it" pattern) is what lets the
+  // agent runtime derive its schema from this one field-by-field with no gap.
+  /** Stable id, so a later run can update or delete this suggestion rather than duplicate it. Set
+   * to `null` if there is no id to give a finding, rather than omitting the key. */
+  id: z.string().nullable(),
+  /** Short heading naming the issue, 2-4 words. */
+  title: z.string(),
+  /** What to change about the span, and why. */
+  explanation: z.string(),
+  /**
+   * A distinctive string copied verbatim from before `original`, used to pick the right occurrence
+   * when `original` appears more than once. Omit it when `original` is unique.
+   */
+  contextBefore: z.string().nullish(),
+  /** The span of the submitted text this suggestion is about. */
+  original: z.string(),
+  /** Same as `contextBefore`, for a landmark after `original`. */
+  contextAfter: z.string().nullish(),
+  /** A concrete rewrite of the span. Set to `null` (not omitted) when there is nothing to swap
+   * in. */
+  replacement: z.string().nullable(),
+  /** How much acting on this matters, from 0 (cosmetic) to 1. */
+  importance: z.number().min(0).max(1).nullish(),
+});
+
+/**
  * A suggestion the editor is showing, or one the user has already acted on.
  *
  * @internal
  * @hidden
  */
-export type SuggestionHighlight = {
-  /** Stable id, so a later run can update or delete this suggestion rather than duplicate it. */
-  id?: string;
-  /** Short heading naming the issue, 2-4 words. */
-  title: string;
-  /** What to change about the span, and why. */
-  explanation: string;
-  /**
-   * A distinctive string copied verbatim from before `original`, used to pick the right occurrence
-   * when `original` appears more than once. Omit it when `original` is unique.
-   */
-  contextBefore?: string;
-  /** The span of the submitted text this suggestion is about. */
-  original: string;
-  /** Same as `contextBefore`, for a landmark after `original`. */
-  contextAfter?: string;
-  /** A concrete rewrite of the span. Absent when there is nothing to swap in. */
-  replacement?: string;
-  /** How much acting on this matters, from 0 (cosmetic) to 1. */
-  importance?: number;
-};
+export type SuggestionHighlight = z.infer<typeof SuggestionHighlightSchema>;
 
 /**
  * What a suggestion-producing formula returns, the TypeScript counterpart of
@@ -1251,12 +1272,12 @@ export type SuggestionHighlight = {
  * @internal
  * @hidden
  */
-export type SuggestionResult = {
+export interface SuggestionResult {
   /** Every finding for the submitted text, most important first. */
   suggestions: SuggestionHighlight[];
   /** Why the check could not run. Absent on success. */
   error?: string;
-};
+}
 
 /**
  * What the editor already knows about the text under review.

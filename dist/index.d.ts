@@ -76,6 +76,7 @@ export type { SyncTableRelation } from './api_types';
 export type { SuggestedValueType } from './api_types';
 export type { SuggestionExecutionContext } from './api_types';
 export type { SuggestionHighlight } from './api_types';
+export { SuggestionHighlightSchema } from './api_types';
 export type { SuggestionResult } from './api_types';
 export type { SuggestionRun } from './api_types';
 export type { DynamicOptions } from './api';
