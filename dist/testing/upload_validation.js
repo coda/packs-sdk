@@ -1760,7 +1760,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .optional(),
     });
     const suggestionProducerToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_16.ToolType.SuggestionProducer),
+        type: z.literal(types_24.ToolType.SuggestionProducer),
         packId: z.number().optional(),
         formulaName: z
             .string()
@@ -1774,12 +1774,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     // Two producers would leave the runtime picking between them arbitrarily. The agent path gets
     // this from its own per-type check; skills only dedupe equivalent tools, so check it here.
     function validateAtMostOneSuggestionProducer(tools, context) {
-        const producers = tools.flatMap((tool, index) => tool.type === types_16.ToolType.SuggestionProducer ? [index] : []);
+        const producers = tools.flatMap((tool, index) => tool.type === types_24.ToolType.SuggestionProducer ? [index] : []);
         for (const index of producers.slice(1)) {
             context.addIssue({
                 code: 'custom',
                 path: [index],
-                message: `A skill can only use the ${types_16.ToolType.SuggestionProducer} tool once.`,
+                message: `A skill can only use the ${types_24.ToolType.SuggestionProducer} tool once.`,
             });
         }
     }
@@ -2455,19 +2455,19 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const fail = (message, leaf) => context.addIssue({ code: 'custom', path: leaf ? [...basePath, leaf] : basePath, message });
                 const [text, ...rest] = ((_a = formula.parameters) !== null && _a !== void 0 ? _a : []);
                 if ((text === null || text === void 0 ? void 0 : text.type) !== api_types_8.Type.string) {
-                    fail(`A ${types_16.ToolType.SuggestionProducer} formula must take the text to check as its first parameter.`);
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula must take the text to check as its first parameter.`);
                 }
                 if (rest.some(param => !param.optional)) {
-                    fail(`A ${types_16.ToolType.SuggestionProducer} formula is passed only the text, so its other parameters must be optional.`);
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula is passed only the text, so its other parameters must be optional.`);
                 }
                 if (formula.isAction) {
-                    fail(`A ${types_16.ToolType.SuggestionProducer} formula cannot be an action.`);
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula cannot be an action.`);
                 }
                 const suggestions = formula.resultType === api_types_8.Type.object ? propertyOf(formula.schema, 'suggestions') : undefined;
                 const suggestion = (suggestions === null || suggestions === void 0 ? void 0 : suggestions.type) === schema_18.ValueType.Array ? suggestions.items : undefined;
                 const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(suggestion, key));
                 if ((suggestion === null || suggestion === void 0 ? void 0 : suggestion.type) !== schema_18.ValueType.Object || missing.length) {
-                    fail(`A ${types_16.ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
                         `a "suggestions" array of objects, each carrying title, explanation and original.`);
                 }
             }
@@ -2489,14 +2489,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                             }
                         });
                     }
-                    if (tool.type === types_16.ToolType.SuggestionProducer && !tool.packId) {
+                    if (tool.type === types_24.ToolType.SuggestionProducer && !tool.packId) {
                         const path = [...basePath, 'tools', toolIndex, 'formulaName'];
                         const formula = formulasByName.get(tool.formulaName);
                         if (!formula) {
                             context.addIssue({
                                 code: 'custom',
                                 path,
-                                message: `Formula "${tool.formulaName}" not found. A ${types_16.ToolType.SuggestionProducer} tool must reference a formula defined in this pack.`,
+                                message: `Formula "${tool.formulaName}" not found. A ${types_24.ToolType.SuggestionProducer} tool must reference a formula defined in this pack.`,
                             });
                         }
                         else {
