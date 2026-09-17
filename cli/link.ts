@@ -4,6 +4,7 @@ import {assertPackIdOrUrl} from './helpers';
 import {confirmOrFail} from './confirm';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {formatResponseError} from './errors';
 import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
@@ -38,11 +39,14 @@ export async function handleLink({manifestDir, apiEndpoint, packIdOrUrl, apiToke
     await codaClient.getPack(packId);
   } catch (err: any) {
     if (isResponseError(err)) {
+      const serverError = await formatResponseError(err);
       switch (err.response.status) {
         case 401:
         case 403:
         case 404:
-          return printAndExit("You don't have permission to edit this pack");
+          return printAndExit(`You don't have permission to edit this pack: ${serverError}`);
+        default:
+          return printAndExit(`Error while looking up pack: ${serverError}`);
       }
     }
     throw err;

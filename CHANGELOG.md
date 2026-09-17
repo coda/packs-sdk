@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Fixed
+
+- CLI commands now surface the server-side error message (and HTTP status) when an API request fails, instead of swallowing it behind a generic message. This affects `register`, `whoami`, `clone`, and `link`, and makes `formatResponseError` robust to non-JSON and empty error bodies.
+
 ## [1.17.6] - 2026-09-16
 
 ### Added

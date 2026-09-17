@@ -5,6 +5,7 @@ import {assertPackIdOrUrl} from './helpers';
 import {confirmOrFail} from './confirm';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {formatResponseError} from './errors';
 import fs from 'fs-extra';
 import {handleInit} from './init';
 import {isResponseError} from '../helpers/external-api/coda';
@@ -44,7 +45,7 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken, yes}: Arg
       return printAndExit(`No built versions found for pack ${packId}. Only built versions can be cloned.`);
     }
   } catch (err: any) {
-    maybeHandleClientError(err);
+    await maybeHandleClientError(err);
     throw err;
   }
 
@@ -52,7 +53,7 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken, yes}: Arg
   try {
     sourceCode = await getPackSource(client, packId, packVersion);
   } catch (err: any) {
-    maybeHandleClientError(err);
+    await maybeHandleClientError(err);
     throw err;
   }
 
@@ -79,14 +80,18 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken, yes}: Arg
   printAndExit(`cloned pack_id: ${packId}\nversion: ${packVersion}\nfile: pack.ts`, 0);
 }
 
-function maybeHandleClientError(err: any) {
-  if (isResponseError(err)) {
-    switch (err.response.status) {
-      case 401:
-      case 403:
-      case 404:
-        return printAndExit("You don't have permission to edit this pack.");
-    }
+async function maybeHandleClientError(err: any) {
+  if (!isResponseError(err)) {
+    return;
+  }
+  const serverError = await formatResponseError(err);
+  switch (err.response.status) {
+    case 401:
+    case 403:
+    case 404:
+      return printAndExit(`You don't have permission to edit this pack: ${serverError}`);
+    default:
+      return printAndExit(`Error while cloning pack: ${serverError}`);
   }
 }
 

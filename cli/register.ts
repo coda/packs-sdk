@@ -3,6 +3,7 @@ import {DEFAULT_API_ENDPOINT} from './config_storage';
 import {confirmOrFail} from './confirm';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {formatResponseError} from './errors';
 import {isInteractive} from './confirm';
 import {isResponseError} from '../helpers/external-api/coda';
 import {missingFlagError} from './confirm';
@@ -64,7 +65,7 @@ export async function handleRegister({
     await client.whoami();
   } catch (err: any) {
     if (isResponseError(err)) {
-      return printAndExit(`Invalid API token provided.`);
+      return printAndExit(`Invalid API token provided: ${await formatResponseError(err)}`);
     }
 
     const errors = [`Unexpected error while checking validity of API token: ${err}`, tryParseSystemError(err)];
