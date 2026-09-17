@@ -2,6 +2,7 @@ import type {ArgumentsCamelCase} from 'yargs';
 import type {PublicApiUser} from '../helpers/external-api/v1';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {formatResponseError} from './errors';
 import {getApiKey} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
@@ -28,7 +29,7 @@ export async function handleWhoami({apiToken, apiEndpoint}: ArgumentsCamelCase<W
     return printAndExit(formatWhoami(response), 0);
   } catch (err: any) {
     if (isResponseError(err)) {
-      return printAndExit(`Invalid API token provided.`);
+      return printAndExit(`Invalid API token provided: ${await formatResponseError(err)}`);
     }
 
     const errors = [`Unexpected error while checking owner of API token: ${err}`, tryParseSystemError(err)];

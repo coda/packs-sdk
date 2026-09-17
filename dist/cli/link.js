@@ -6,6 +6,7 @@ const helpers_2 = require("./helpers");
 const confirm_1 = require("./confirm");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
+const errors_1 = require("./errors");
 const config_storage_1 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const helpers_5 = require("../testing/helpers");
@@ -29,11 +30,14 @@ async function handleLink({ manifestDir, apiEndpoint, packIdOrUrl, apiToken, yes
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {
+            const serverError = await (0, errors_1.formatResponseError)(err);
             switch (err.response.status) {
                 case 401:
                 case 403:
                 case 404:
-                    return (0, helpers_5.printAndExit)("You don't have permission to edit this pack");
+                    return (0, helpers_5.printAndExit)(`You don't have permission to edit this pack: ${serverError}`);
+                default:
+                    return (0, helpers_5.printAndExit)(`Error while looking up pack: ${serverError}`);
             }
         }
         throw err;

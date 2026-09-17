@@ -14,10 +14,34 @@ function tryParseSystemError(error) {
 }
 exports.tryParseSystemError = tryParseSystemError;
 async function formatResponseError(err) {
-    const json = await err.response.json();
-    return formatError(json);
+    const { response } = err;
+    const status = response.statusText ? `${response.status} ${response.statusText}` : `${response.status}`;
+    const body = await tryReadResponseBody(response);
+    return body ? `${status}: ${body}` : status;
 }
 exports.formatResponseError = formatResponseError;
+async function tryReadResponseBody(response) {
+    let text;
+    try {
+        text = await response.text();
+    }
+    catch {
+        // The body was unreadable (e.g. already consumed or a network error); fall back to the status alone.
+        return '';
+    }
+    const trimmed = text.trim();
+    if (!trimmed) {
+        return '';
+    }
+    // Coda API errors are JSON, so pretty-print them. Non-JSON bodies (proxy/gateway errors,
+    // plain text) are surfaced verbatim so the server-side message is never swallowed.
+    try {
+        return formatError(JSON.parse(trimmed));
+    }
+    catch {
+        return trimmed;
+    }
+}
 function formatError(obj) {
     return util_1.default.inspect(obj, false, null, true);
 }
