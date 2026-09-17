@@ -8,6 +8,7 @@ const config_storage_1 = require("./config_storage");
 const confirm_1 = require("./confirm");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const errors_1 = require("./errors");
 const confirm_2 = require("./confirm");
 const coda_1 = require("../helpers/external-api/coda");
 const confirm_3 = require("./confirm");
@@ -15,7 +16,7 @@ const open_1 = __importDefault(require("open"));
 const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const config_storage_2 = require("./config_storage");
-const errors_1 = require("./errors");
+const errors_2 = require("./errors");
 const DEFAULT_ACCOUNT_ENDPOINT = 'https://docs.superhuman.com';
 function getApiTokenCreationUrl(apiEndpoint) {
     const normalizedEndpoint = apiEndpoint.replace(/\/+$/, '');
@@ -50,9 +51,9 @@ async function handleRegister({ apiToken, apiEndpoint, open: openBrowser, yes, }
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {
-            return (0, helpers_3.printAndExit)(`Invalid API token provided.`);
+            return (0, helpers_3.printAndExit)(`Invalid API token provided: ${await (0, errors_1.formatResponseError)(err)}`);
         }
-        const errors = [`Unexpected error while checking validity of API token: ${err}`, (0, errors_1.tryParseSystemError)(err)];
+        const errors = [`Unexpected error while checking validity of API token: ${err}`, (0, errors_2.tryParseSystemError)(err)];
         return (0, helpers_3.printAndExit)(errors.join('\n'));
     }
     (0, config_storage_2.storeCodaApiKey)(apiToken, process.env.PWD, apiEndpoint);

@@ -1,11 +1,7 @@
 import type {ResponseError} from '../helpers/external-api/coda';
 import {formatResponseError} from '../cli/errors';
 
-function fakeResponseError(response: {
-  status: number;
-  statusText: string;
-  body: string;
-}): ResponseError {
+function fakeResponseError(response: {status: number; statusText: string; body: string}): ResponseError {
   const {status, statusText, body} = response;
   return {
     response: {

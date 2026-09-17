@@ -9,6 +9,7 @@ const helpers_2 = require("./helpers");
 const confirm_1 = require("./confirm");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
+const errors_1 = require("./errors");
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const init_1 = require("./init");
 const coda_1 = require("../helpers/external-api/coda");
@@ -38,7 +39,7 @@ async function handleClone({ packIdOrUrl, apiEndpoint, apiToken, yes }) {
         }
     }
     catch (err) {
-        maybeHandleClientError(err);
+        await maybeHandleClientError(err);
         throw err;
     }
     let sourceCode;
@@ -46,7 +47,7 @@ async function handleClone({ packIdOrUrl, apiEndpoint, apiToken, yes }) {
         sourceCode = await getPackSource(client, packId, packVersion);
     }
     catch (err) {
-        maybeHandleClientError(err);
+        await maybeHandleClientError(err);
         throw err;
     }
     if (!sourceCode) {
@@ -67,14 +68,18 @@ async function handleClone({ packIdOrUrl, apiEndpoint, apiToken, yes }) {
     (0, helpers_6.printAndExit)(`cloned pack_id: ${packId}\nversion: ${packVersion}\nfile: pack.ts`, 0);
 }
 exports.handleClone = handleClone;
-function maybeHandleClientError(err) {
-    if ((0, coda_1.isResponseError)(err)) {
-        switch (err.response.status) {
-            case 401:
-            case 403:
-            case 404:
-                return (0, helpers_6.printAndExit)("You don't have permission to edit this pack.");
-        }
+async function maybeHandleClientError(err) {
+    if (!(0, coda_1.isResponseError)(err)) {
+        return;
+    }
+    const serverError = await (0, errors_1.formatResponseError)(err);
+    switch (err.response.status) {
+        case 401:
+        case 403:
+        case 404:
+            return (0, helpers_6.printAndExit)(`You don't have permission to edit this pack: ${serverError}`);
+        default:
+            return (0, helpers_6.printAndExit)(`Error while cloning pack: ${serverError}`);
     }
 }
 async function getPackLatestVersion(client, packId) {
