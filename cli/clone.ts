@@ -36,6 +36,9 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken, yes}: Arg
     });
   }
 
+  // clone handles its own overwrite confirmation above, so init shouldn't prompt again.
+  const overwriteAlreadyConfirmed = true;
+
   const client = createCodaClient(apiToken, formattedEndpoint);
 
   let packVersion: string | null;
@@ -66,16 +69,14 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken, yes}: Arg
       example: `packs clone ${packIdOrUrl} --yes`,
     });
 
-    // clone already confirmed any overwrite above, so skip init's own prompt.
-    await handleInit({yes: true});
+    await handleInit({yes: overwriteAlreadyConfirmed});
     storePackId(manifestDir, packId, apiEndpoint);
     return;
   }
 
   print(`Fetched source at version ${packVersion}`);
 
-  // clone already confirmed any overwrite above, so skip init's own prompt.
-  await handleInit({yes: true});
+  await handleInit({yes: overwriteAlreadyConfirmed});
   storePackId(manifestDir, packId, apiEndpoint);
 
   fs.writeFileSync(path.join(manifestDir, 'pack.ts'), sourceCode);
