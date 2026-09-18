@@ -55,7 +55,10 @@ const CommandExamples: Record<string, Array<[string, string]>> = {
     ['$0 execute pack.ts MySyncTable --maxRows 10', 'Sync a table and cap the number of rows.'],
   ],
   auth: [['$0 auth pack.ts', 'Start local auth setup for the Pack.']],
-  init: [['$0 init', 'Scaffold pack.ts and related starter files in the current directory.']],
+  init: [
+    ['$0 init', 'Scaffold pack.ts and related starter files in the current directory.'],
+    ['$0 init --yes', 'Overwrite an existing pack.ts without prompting.'],
+  ],
   extensions: [['$0 extensions vscode', 'Install VS Code snippets for Packs.']],
   clone: [
     ['$0 clone 1234', 'Download the latest Pack Studio source into this directory.'],
@@ -160,7 +163,10 @@ export const commands: yargs.CommandModule[] = [
   {
     command: 'init',
     describe: 'Initialize an empty Pack',
-    handler: handleInit,
+    builder: {
+      yes: YesArg,
+    },
+    handler: handleInit as any,
   },
   {
     command: 'extensions <tools..>',

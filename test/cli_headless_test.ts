@@ -1,7 +1,9 @@
 import './test_helper';
 import * as confirm from '../cli/confirm';
 import {confirmOrFail} from '../cli/confirm';
+import fsExtra from 'fs-extra';
 import * as gitHelpers from '../cli/git_helpers';
+import {handleInit} from '../cli/init';
 import {handleRegister} from '../cli/register';
 import {handleRelease} from '../cli/release';
 import * as helpers from '../cli/helpers';
@@ -55,6 +57,60 @@ describe('Headless CLI', () => {
         assert.include(exitMessage, 'Pass --yes to continue without a prompt.');
         assert.include(exitMessage, 'packs clone 1234 --yes');
       }
+    });
+  });
+
+  describe('init', () => {
+    // Sentinel thrown by the stubbed spawnProcess to prove execution got past the
+    // overwrite guard without doing any real npm work.
+    const SPAWN_SENTINEL = 'spawnProcess was called';
+
+    it('aborts before doing any work when pack.ts already exists and is not confirmed', async () => {
+      sinon.stub(fsExtra, 'existsSync').returns(true);
+      sinon.stub(confirm, 'isInteractive').returns(false);
+      const spawnStub = sinon.stub(helpers, 'spawnProcess');
+
+      try {
+        await handleInit();
+        assert.fail('expected printAndExit');
+      } catch {
+        // printAndExit throws
+      }
+
+      assert.equal(exitCode, 1);
+      assert.include(exitMessage, 'pack.ts file already exists');
+      assert.isFalse(spawnStub.called, 'should not run npm work after aborting');
+    });
+
+    it('asks to confirm the overwrite and passes yes through when pack.ts exists', async () => {
+      sinon.stub(fsExtra, 'existsSync').returns(true);
+      const confirmStub = sinon.stub(confirm, 'confirmOrFail');
+      sinon.stub(helpers, 'spawnProcess').throws(new Error(SPAWN_SENTINEL));
+
+      try {
+        await handleInit({yes: true});
+      } catch {
+        // sentinel thrown once execution proceeds past the guard
+      }
+
+      assert.isTrue(confirmStub.calledOnce);
+      const args = confirmStub.firstCall.firstArg;
+      assert.equal(args.yes, true);
+      assert.include(args.prompt, 'pack.ts file already exists');
+    });
+
+    it('does not ask to confirm when pack.ts does not exist', async () => {
+      sinon.stub(fsExtra, 'existsSync').returns(false);
+      const confirmStub = sinon.stub(confirm, 'confirmOrFail');
+      sinon.stub(helpers, 'spawnProcess').throws(new Error(SPAWN_SENTINEL));
+
+      try {
+        await handleInit();
+      } catch {
+        // sentinel thrown once execution proceeds past the guard
+      }
+
+      assert.isFalse(confirmStub.called);
     });
   });
 

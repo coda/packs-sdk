@@ -170,6 +170,13 @@ Initialize an empty Pack
 
 **Usage:** `packs init`
 
+**Options:**
+
+`--yes`, `-y`
+:   Skip confirmation prompts. Required in non-interactive environments.
+
+    **Type:** boolean | **Default:** `false`
+
 ---
 
 ## link
