@@ -32,6 +32,7 @@ import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
 import type { StringSchema } from './schema';
+import type { SuggestionResult } from './api_types';
 import type { SyncCompletionMetadataResult } from './api_types';
 import type { SyncExecutionContext } from './api_types';
 import { TableRole } from './api_types';
@@ -1694,3 +1695,95 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 };
 export declare function maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions: SyncTablePropertyOptions | undefined, connectionRequirement: ConnectionRequirement | undefined): SyncTablePropertyOptions | undefined;
 export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends FormulaOptions<ParamDefsT, CommonPackFormulaDef<ParamDefsT>> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;
+/**
+ * The name a {@link makeSuggestionFormula} formula gives its one parameter. The runtime invokes a
+ * producer by parameter name, so this is part of the wire contract rather than a cosmetic choice --
+ * which is why the factory owns it instead of leaving it to the caller.
+ *
+ * @internal
+ * @hidden
+ */
+export declare const SUGGESTION_TEXT_PARAMETER_NAME = "text";
+/**
+ * What {@link core.PackDefinitionBuilder.addSuggestionFormula} takes: everything about a
+ * suggestion-producing formula that is the pack's to decide. The parameter list, the result schema
+ * and the result type are not on this list -- they are the contract the runtime depends on, and
+ * {@link makeSuggestionFormula} supplies them.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionFormulaDef<ContextT extends ExecutionContext = ExecutionContext> {
+    /** Formula name. The skill's {@link core.SuggestionProducerTool} names this. */
+    name: string;
+    /** What this checker looks for. Shown to a pack's users; the model never reads it. */
+    description: string;
+    /**
+     * Runs the check over `text` and returns its findings.
+     *
+     * Offsets in each finding are into this same `text`, in UTF-16 code units, and
+     * `text.slice(startOffset, endOffset)` must equal that finding's `original` -- the runtime drops
+     * a finding where the two disagree.
+     */
+    execute: (text: string, context: ContextT) => Promise<SuggestionResult> | SuggestionResult;
+    /** See {@link PackFormulaDef.connectionRequirement}. */
+    connectionRequirement?: ConnectionRequirement;
+    /** See {@link PackFormulaDef.cacheTtlSecs}. Defaults to 0: a check runs against live text. */
+    cacheTtlSecs?: number;
+    /** See {@link PackFormulaDef.examples}. */
+    examples?: Array<{
+        params: [string];
+        result: SuggestionResult;
+    }>;
+}
+/**
+ * Builds the definition for a suggestion-producing formula: the formula a skill names in its
+ * {@link core.SuggestionProducerTool}, which the runtime calls directly instead of running an LLM.
+ *
+ * Fixes every part of the contract that a hand-written definition can get wrong, each of which is
+ * a silent failure rather than a loud one -- a producer that does not match is not rejected at
+ * runtime, it is skipped, and the run falls back to the model and returns a plausible answer:
+ *
+ * - the parameter list: one required string named `text`, because the runtime passes arguments by
+ *   parameter name;
+ * - the result schema: {@link makeSuggestionResultSchema}, so the runtime's parser recognizes it;
+ * - the result type: `execute` must return a {@link SuggestionResult}, checked at compile time.
+ *
+ * Pass the result to `pack.addFormula`.
+ *
+ * @example
+ * ```ts
+ * pack.addFormula(
+ *   makeSuggestionFormula({
+ *     name: 'CheckSuggestions',
+ *     description: 'Flags feedback that is too hedged to land.',
+ *     execute: async (text, context) => ({suggestions: await check(context, text)}),
+ *   }),
+ * );
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionFormula<ContextT extends ExecutionContext = ExecutionContext>({ execute, ...rest }: SuggestionFormulaDef<ContextT>): {
+    cacheTtlSecs: number;
+    resultType: ValueType.Object;
+    schema: import("./schema").GenericObjectSchema;
+    parameters: readonly [ParamDefFromOptionsUnion<ParameterType, {
+        type: ParameterType.String;
+        name: string;
+        description: string;
+    }>];
+    execute: ([text]: [string], context: ContextT) => SuggestionResult | Promise<SuggestionResult>;
+    /** Formula name. The skill's {@link core.SuggestionProducerTool} names this. */
+    name: string;
+    /** What this checker looks for. Shown to a pack's users; the model never reads it. */
+    description: string;
+    /** See {@link PackFormulaDef.connectionRequirement}. */
+    connectionRequirement?: ConnectionRequirement | undefined;
+    /** See {@link PackFormulaDef.examples}. */
+    examples?: {
+        params: [string];
+        result: SuggestionResult;
+    }[] | undefined;
+};

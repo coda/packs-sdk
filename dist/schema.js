@@ -992,13 +992,14 @@ function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
 }
 exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;
 /**
- * The result shape a suggestion-producing formula returns. Pass this to `addFormula`'s `schema`
- * rather than declaring the shape by hand, so the pack and the runtime cannot drift.
+ * The result shape a suggestion-producing formula returns. Prefer {@link makeSuggestionFormula},
+ * which applies this alongside the rest of the contract; reach for this directly only when
+ * assembling a formula definition by hand.
  *
  * A producer returns findings, not edits to the editor's state: the runtime reconciles them against
- * the highlights already on screen (reusing an id so a finding updates in place, deleting one the
- * checker no longer reports, dropping one the user dismissed). A checker is therefore stateless, and
- * the fields here are exactly the ones {@link SuggestionHighlight} carries.
+ * the suggestions already on screen (updating one it still reports, deleting one it no longer
+ * reports, dropping one the user dismissed). A checker is therefore stateless, and the fields here
+ * are exactly the ones {@link SuggestionHighlight} carries.
  *
  * @internal
  * @hidden
@@ -1012,10 +1013,24 @@ function makeSuggestionResultSchema() {
                 description: 'Every finding for the submitted text, most important first.',
                 items: makeObjectSchema({
                     properties: {
-                        id: {
+                        startOffset: {
+                            type: ValueType.Number,
+                            required: true,
+                            description: 'Offset of the first UTF-16 code unit of the span, counted from the start of the ' +
+                                'text this formula was given.',
+                        },
+                        endOffset: {
+                            type: ValueType.Number,
+                            required: true,
+                            description: 'Offset one past the last UTF-16 code unit of the span. Must be greater than ' +
+                                'startOffset, and no greater than the length of the text.',
+                        },
+                        original: {
                             type: ValueType.String,
-                            description: 'Stable identifier for this finding across runs, so the same finding updates in ' +
-                                'place instead of being recreated. Omit it and the runtime matches on the span.',
+                            required: true,
+                            description: 'The span itself, copied verbatim from the text. A checksum on the offsets rather ' +
+                                'than the anchor: a finding whose original does not match the text at its offsets ' +
+                                'is dropped.',
                         },
                         title: {
                             type: ValueType.String,
@@ -1027,26 +1042,17 @@ function makeSuggestionResultSchema() {
                             required: true,
                             description: 'One or two sentences on what to change about the span and why.',
                         },
-                        contextBefore: {
-                            type: ValueType.String,
-                            description: 'A distinctive string copied verbatim from before `original`, used to pick the ' +
-                                'right occurrence when `original` appears more than once.',
-                        },
-                        original: {
-                            type: ValueType.String,
-                            required: true,
-                            description: 'The span of the submitted text this finding is about, copied verbatim.',
-                        },
-                        contextAfter: {
-                            type: ValueType.String,
-                            description: 'Same as `contextBefore`, for a landmark after `original`.',
-                        },
                         replacement: {
                             type: ValueType.String,
                             description: 'A concrete rewrite of the span. Absent when there is nothing to swap in.',
                         },
-                        // Not required, because the runtime treats an absent score as unranked rather than
-                        // rejecting the finding. Always set it: ranking is the reason this path exists.
+                        // Optional because a checker with nothing to rank should leave it unset rather than
+                        // invent a number. Set it when there is a real signal behind it: ranking is the
+                        // reason this path exists.
+                        //
+                        // The 0-1 range cannot be expressed here -- ValueType.Number carries no bounds -- so
+                        // it is enforced where the result is parsed. A value outside the range costs that one
+                        // finding, not the whole result.
                         importance: {
                             type: ValueType.Number,
                             description: 'How much acting on this matters, from 0 (cosmetic) to 1 (the reader will be ' +

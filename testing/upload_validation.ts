@@ -119,6 +119,7 @@ import type {ProgressBarSchema} from '../schema';
 import type {PropertyIdentifier} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ReservedAuthenticationNames} from '../types';
+import {SUGGESTION_TEXT_PARAMETER_NAME} from '../api';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
 import type {ScheduleTriggerDefinition} from '../types';
@@ -3077,18 +3078,27 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           return (schema as GenericObjectSchema | undefined)?.properties?.[normalizeSchemaKey(key)];
         }
 
-        // The producer is called with the text alone and its result is emitted without an LLM
-        // reading it, so both ends of the formula have to match what the runtime will send and parse.
+        // The runtime calls a producer itself and emits its result without an LLM reading it, so
+        // both ends of the formula have to match what the runtime sends and parses. A mismatch is
+        // not a loud failure at runtime -- the producer is skipped and the run falls back to the
+        // model -- so it has to be caught here. `makeSuggestionFormula()` satisfies all of this by
+        // construction; these checks guard a hand-assembled definition.
         function validateSuggestionProducerFormula(
           formula: PackFormulaMetadata,
           basePath: Array<string | number>,
         ): void {
-          const fail = (message: string, leaf?: string) =>
-            context.addIssue({code: 'custom', path: leaf ? [...basePath, leaf] : basePath, message});
-          const [text, ...rest] = (formula.parameters ?? []) as ParamDefs;
+          const fail = (message: string) => context.addIssue({code: 'custom', path: basePath, message});
+          const parameters = (formula.parameters ?? []) as ParamDefs;
+          const [text, ...rest] = parameters;
 
-          if (text?.type !== Type.string) {
-            fail(`A ${ToolType.SuggestionProducer} formula must take the text to check as its first parameter.`);
+          // Arguments are passed to a formula by parameter *name*, not position, so the name is
+          // part of the wire contract: a first parameter called anything else receives nothing.
+          if (text?.name !== SUGGESTION_TEXT_PARAMETER_NAME || text.type !== Type.string) {
+            fail(
+              `A ${ToolType.SuggestionProducer} formula must take the text to check as a string ` +
+                `parameter named "${SUGGESTION_TEXT_PARAMETER_NAME}". Use makeSuggestionFormula() ` +
+                `to declare one.`,
+            );
           }
           if (rest.some(param => !param.optional)) {
             fail(
@@ -3102,12 +3112,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           const suggestions =
             formula.resultType === Type.object ? propertyOf(formula.schema, 'suggestions') : undefined;
           const suggestion = suggestions?.type === ValueType.Array ? suggestions.items : undefined;
-          const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(suggestion, key));
+          const required = ['startOffset', 'endOffset', 'original', 'title', 'explanation'];
+          const missing = required.filter(key => !propertyOf(suggestion, key));
 
           if (suggestion?.type !== ValueType.Object || missing.length) {
             fail(
               `A ${ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
-                `a "suggestions" array of objects, each carrying title, explanation and original.`,
+                `a "suggestions" array of objects, each carrying ${required.join(', ')}.`,
             );
           }
         }
@@ -3130,6 +3141,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
               });
             }
+            // A producer naming a formula in *this* pack can be checked end to end. One naming
+            // another pack's formula cannot be, from here: this manifest does not contain that
+            // formula's metadata. The server-side validator resolves the referenced pack and
+            // applies `validateSuggestionProducerFormula` there, so the contract is still checked
+            // before the tool can run -- just not at `coda validate` time.
             if (tool.type === ToolType.SuggestionProducer && !tool.packId) {
               const path = [...basePath, 'tools', toolIndex, 'formulaName'];
               const formula = formulasByName.get(tool.formulaName);

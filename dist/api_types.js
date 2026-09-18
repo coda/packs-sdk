@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataIndexing = exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.SuggestionHighlightSchema = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.FormulaPurpose = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
-const zod_1 = require("zod");
+exports.DataIndexing = exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.FormulaPurpose = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -323,45 +322,6 @@ var InvocationSource;
      */
     InvocationSource["NativeIntegration"] = "NativeIntegration";
 })(InvocationSource || (exports.InvocationSource = InvocationSource = {}));
-/**
- * A suggestion the editor is showing, or one the user has already acted on. The single source of
- * truth for this shape -- consumers (e.g. the agent runtime's own highlight schema) reference
- * `SuggestionHighlightSchema.shape.<field>` per field rather than redeclaring these fields, so a
- * field added or removed here can't silently drift out of sync downstream.
- *
- * @internal
- * @hidden
- */
-exports.SuggestionHighlightSchema = zod_1.z.object({
-    // `id` and `replacement` are `.nullable()` without `.optional()` (a required key, nullable
-    // value) rather than `.nullish()` like the other optional fields below: OpenAI's strict
-    // structured-output mode (what the agent runtime's own highlight schema feeds it) only excludes
-    // a field from JSON Schema's `required` array when it is wrapped in zod's `.optional()` --
-    // `.nullable()` alone keeps it required, with `null` added as an accepted type instead. Matching
-    // that convention here (rather than the more ergonomic "just omit it" pattern) is what lets the
-    // agent runtime derive its schema from this one field-by-field with no gap.
-    /** Stable id, so a later run can update or delete this suggestion rather than duplicate it. Set
-     * to `null` if there is no id to give a finding, rather than omitting the key. */
-    id: zod_1.z.string().nullable(),
-    /** Short heading naming the issue, 2-4 words. */
-    title: zod_1.z.string(),
-    /** What to change about the span, and why. */
-    explanation: zod_1.z.string(),
-    /**
-     * A distinctive string copied verbatim from before `original`, used to pick the right occurrence
-     * when `original` appears more than once. Omit it when `original` is unique.
-     */
-    contextBefore: zod_1.z.string().nullish(),
-    /** The span of the submitted text this suggestion is about. */
-    original: zod_1.z.string(),
-    /** Same as `contextBefore`, for a landmark after `original`. */
-    contextAfter: zod_1.z.string().nullish(),
-    /** A concrete rewrite of the span. Set to `null` (not omitted) when there is nothing to swap
-     * in. */
-    replacement: zod_1.z.string().nullable(),
-    /** How much acting on this matters, from 0 (cosmetic) to 1. */
-    importance: zod_1.z.number().min(0).max(1).nullish(),
-});
 /**
  * A function to check if a given {@link ExecutionContext} is a {@link SyncExecutionContext}.
  */

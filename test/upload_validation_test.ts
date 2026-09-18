@@ -38,6 +38,7 @@ import {OptionsType} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackTool} from '../types';
+import type {PackVersionDefinition} from '../types';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
@@ -93,6 +94,7 @@ import {makeStringParameter} from '../api';
 import {makeSuggestionResultSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
+import {newPack} from '../builder';
 import {normalizeSchema} from '../schema';
 import {normalizeTool} from '../testing/upload_validation';
 import {numberArray} from '../api_types';
@@ -6513,12 +6515,18 @@ describe('Pack metadata Validation', async () => {
           path: 'skills[0].tools[0].formulaName',
           message:
             'A SuggestionProducer formula must return the makeSuggestionResultSchema() shape: a "suggestions" ' +
-            'array of objects, each carrying title, explanation and original.',
+            'array of objects, each carrying startOffset, endOffset, original, title, explanation.',
         },
       ]);
     });
 
-    it('fails when a suggestion producer formula does not take the text first', async () => {
+    // The runtime passes arguments by parameter name, so both the name and the type have to match.
+    // A wrong name is the dangerous case: it type-checks, uploads, and then receives nothing.
+    const textParameterMessage =
+      'A SuggestionProducer formula must take the text to check as a string parameter named "text". ' +
+      'Use makeSuggestionFormula() to declare one.';
+
+    async function assertTextParameterRejected(parameters: ParamDefs) {
       const metadata = createFakePackVersionMetadata({
         formulaNamespace: 'TestPack',
         formulas: [
@@ -6526,7 +6534,7 @@ describe('Pack metadata Validation', async () => {
             name: 'CheckSuggestions',
             resultType: Type.object,
             schema: normalizeSchema(makeSuggestionResultSchema()),
-            parameters: [makeParameter({type: ParameterType.Number, name: 'limit', description: 'A limit.'})],
+            parameters,
           }),
         ],
         skills: [
@@ -6540,12 +6548,40 @@ describe('Pack metadata Validation', async () => {
         ],
       });
       const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          path: 'skills[0].tools[0].formulaName',
-          message: 'A SuggestionProducer formula must take the text to check as its first parameter.',
-        },
+      assert.deepEqual(err.validationErrors, [{path: 'skills[0].tools[0].formulaName', message: textParameterMessage}]);
+    }
+
+    it('fails when a suggestion producer formula does not take the text first', async () => {
+      await assertTextParameterRejected([
+        makeParameter({type: ParameterType.Number, name: 'text', description: 'A limit.'}),
       ]);
+    });
+
+    it('fails when a suggestion producer formula names its text parameter something else', async () => {
+      await assertTextParameterRejected([
+        makeParameter({type: ParameterType.String, name: 'content', description: 'The text.'}),
+      ]);
+    });
+
+    // The real builder path, not a hand-assembled fixture: addSuggestionFormula's whole purpose is
+    // to satisfy the checks above by construction, so the test goes through it and through
+    // compilePackMetadata (which converts ValueType.Object to Type.object and normalizes the
+    // schema keys) to prove the checks agree with what a real pack actually uploads.
+    it('accepts the formula addSuggestionFormula builds', async () => {
+      const pack = newPack({version: '1'});
+      pack.addSuggestionFormula({
+        name: 'CheckSuggestions',
+        description: 'Checks the text.',
+        execute: () => ({suggestions: []}),
+      });
+      pack.addSkill({
+        name: 'TestSkill',
+        displayName: 'Test Skill',
+        description: 'A test skill',
+        prompt: 'You are a helpful assistant',
+        tools: [{type: ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+      });
+      await validateJson(createFakePackVersionMetadata(compilePackMetadata(pack as PackVersionDefinition)));
     });
 
     it('fails when a suggestion producer names no formula in this pack', async () => {

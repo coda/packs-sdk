@@ -32,6 +32,7 @@ import type {Skill} from './types';
 import type {SkillEntrypoints} from './types';
 import type {SlackEventTriggerDefinition} from './types';
 import type {SuggestedPrompt} from './types';
+import type {SuggestionFormulaDef} from './api';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
 import type {SyncTable} from './api';
@@ -45,6 +46,7 @@ import type {WhileWritingTriggerDefinition} from './types';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
+import {makeSuggestionFormula} from './api';
 import {makeSyncTable} from './api';
 import {maybeRewriteConnectionForFormula} from './api';
 import {maybeRewriteConnectionForNamedPropertyOptions} from './api';
@@ -352,6 +354,58 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
   addColumnFormat(format: Format): this {
     this.formats.push(format);
     return this;
+  }
+
+  /**
+   * Adds a suggestion-producing formula to this pack: the formula a skill names in its
+   * {@link core.SuggestionProducerTool}, which the agent runtime calls directly instead of running
+   * an LLM.
+   *
+   * Prefer this to assembling the definition by hand. It fixes every part of the contract the
+   * runtime depends on -- the parameter's name and type, the result schema, and the result type
+   * `execute` must return -- each of which fails *silently* when it does not match: a producer the
+   * runtime cannot call is skipped rather than rejected, and the run falls back to the model and
+   * returns a plausible answer.
+   *
+   * @example
+   * ```
+   * pack.addSuggestionFormula({
+   *   name: 'CheckSuggestions',
+   *   description: 'Flags feedback that is too hedged to land.',
+   *   execute: async (text, context) => ({
+   *     suggestions: [
+   *       {
+   *         startOffset: 0,
+   *         endOffset: 7,
+   *         original: text.slice(0, 7),
+   *         title: 'Hedged praise',
+   *         explanation: 'Say what was wrong and what to do about it.',
+   *         replacement: null,
+   *         importance: 0.6,
+   *       },
+   *     ],
+   *   }),
+   * });
+   *
+   * pack.addSkill({
+   *   name: 'Check',
+   *   displayName: 'Check',
+   *   description: 'Checks feedback.',
+   *   prompt: 'Review the text for feedback that will not land.',
+   *   tools: [{type: sdk.ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+   * });
+   * ```
+   *
+   * @internal
+   * @hidden
+   */
+  addSuggestionFormula(definition: SuggestionFormulaDef): this {
+    // `addFormula` types `execute`'s return value as `ObjectSchemaType<>` of the schema passed
+    // alongside it. `makeSuggestionResultSchema()` is a `GenericObjectSchema`, whose properties are
+    // erased, so that inference cannot see `SuggestionResult` in it -- the same reason `addFormula`
+    // itself pushes `formula as any` below. The invariant that matters is enforced on the way in,
+    // by `SuggestionFormulaDef['execute']`.
+    return this.addFormula(makeSuggestionFormula(definition) as any);
   }
 
   /**

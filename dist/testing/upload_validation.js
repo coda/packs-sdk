@@ -68,6 +68,7 @@ const schema_14 = require("../schema");
 const types_18 = require("../types");
 const __1 = require("..");
 const types_19 = require("../types");
+const api_1 = require("../api");
 const schema_15 = require("../schema");
 const types_20 = require("../types");
 const schema_16 = require("../schema");
@@ -89,7 +90,7 @@ const util_1 = require("util");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
 const schema_21 = require("../schema");
-const api_1 = require("../api");
+const api_2 = require("../api");
 const schema_22 = require("../schema");
 const schema_23 = require("../schema");
 const schema_24 = require("../schema");
@@ -2412,7 +2413,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const { getter } = syncTable;
                 let { allowedAuthenticationNames } = getter;
                 // TODO(patrick): Better typing
-                if (!(0, api_1.isSyncPackFormula)(getter)) {
+                if (!(0, api_2.isSyncPackFormula)(getter)) {
                     continue;
                 }
                 const { supportsGetPermissions } = getter;
@@ -2448,14 +2449,22 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 var _a;
                 return (_a = schema === null || schema === void 0 ? void 0 : schema.properties) === null || _a === void 0 ? void 0 : _a[(0, schema_26.normalizeSchemaKey)(key)];
             }
-            // The producer is called with the text alone and its result is emitted without an LLM
-            // reading it, so both ends of the formula have to match what the runtime will send and parse.
+            // The runtime calls a producer itself and emits its result without an LLM reading it, so
+            // both ends of the formula have to match what the runtime sends and parses. A mismatch is
+            // not a loud failure at runtime -- the producer is skipped and the run falls back to the
+            // model -- so it has to be caught here. `makeSuggestionFormula()` satisfies all of this by
+            // construction; these checks guard a hand-assembled definition.
             function validateSuggestionProducerFormula(formula, basePath) {
                 var _a;
-                const fail = (message, leaf) => context.addIssue({ code: 'custom', path: leaf ? [...basePath, leaf] : basePath, message });
-                const [text, ...rest] = ((_a = formula.parameters) !== null && _a !== void 0 ? _a : []);
-                if ((text === null || text === void 0 ? void 0 : text.type) !== api_types_8.Type.string) {
-                    fail(`A ${types_24.ToolType.SuggestionProducer} formula must take the text to check as its first parameter.`);
+                const fail = (message) => context.addIssue({ code: 'custom', path: basePath, message });
+                const parameters = ((_a = formula.parameters) !== null && _a !== void 0 ? _a : []);
+                const [text, ...rest] = parameters;
+                // Arguments are passed to a formula by parameter *name*, not position, so the name is
+                // part of the wire contract: a first parameter called anything else receives nothing.
+                if ((text === null || text === void 0 ? void 0 : text.name) !== api_1.SUGGESTION_TEXT_PARAMETER_NAME || text.type !== api_types_8.Type.string) {
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula must take the text to check as a string ` +
+                        `parameter named "${api_1.SUGGESTION_TEXT_PARAMETER_NAME}". Use makeSuggestionFormula() ` +
+                        `to declare one.`);
                 }
                 if (rest.some(param => !param.optional)) {
                     fail(`A ${types_24.ToolType.SuggestionProducer} formula is passed only the text, so its other parameters must be optional.`);
@@ -2465,10 +2474,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
                 const suggestions = formula.resultType === api_types_8.Type.object ? propertyOf(formula.schema, 'suggestions') : undefined;
                 const suggestion = (suggestions === null || suggestions === void 0 ? void 0 : suggestions.type) === schema_18.ValueType.Array ? suggestions.items : undefined;
-                const missing = ['title', 'explanation', 'original'].filter(key => !propertyOf(suggestion, key));
+                const required = ['startOffset', 'endOffset', 'original', 'title', 'explanation'];
+                const missing = required.filter(key => !propertyOf(suggestion, key));
                 if ((suggestion === null || suggestion === void 0 ? void 0 : suggestion.type) !== schema_18.ValueType.Object || missing.length) {
                     fail(`A ${types_24.ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
-                        `a "suggestions" array of objects, each carrying title, explanation and original.`);
+                        `a "suggestions" array of objects, each carrying ${required.join(', ')}.`);
                 }
             }
             function validateSkillTools(skill, basePath) {
@@ -2489,6 +2499,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                             }
                         });
                     }
+                    // A producer naming a formula in *this* pack can be checked end to end. One naming
+                    // another pack's formula cannot be, from here: this manifest does not contain that
+                    // formula's metadata. The server-side validator resolves the referenced pack and
+                    // applies `validateSuggestionProducerFormula` there, so the contract is still checked
+                    // before the tool can run -- just not at `coda validate` time.
                     if (tool.type === types_24.ToolType.SuggestionProducer && !tool.packId) {
                         const path = [...basePath, 'tools', toolIndex, 'formulaName'];
                         const formula = formulasByName.get(tool.formulaName);

@@ -1574,11 +1574,6 @@ export interface MCPServer {
 }
 
 /**
- * Map of tool types to their corresponding tool interfaces.
- * This interface can be extended via declaration merging to add custom tool types.
- * @hidden
- */
-/**
  * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per skill.
  *
  * @internal
@@ -1588,12 +1583,20 @@ export interface SuggestionProducerTool extends BaseTool<ToolType.SuggestionProd
   /** The pack holding the formula. Omit this to reference the current pack. */
   packId?: number;
   /**
-   * Name of the formula returning {@link makeSuggestionResultSchema}-shaped results. The runtime
-   * calls it directly and emits its operations, so the model never sees this formula.
+   * Name of the formula to call. Declare it with {@link core.makeSuggestionFormula}, which fixes
+   * the parameter and result shape the runtime expects; a formula that does not match is skipped
+   * at runtime rather than rejected, so the run silently falls back to the model.
+   *
+   * The runtime calls this formula itself and emits its findings, so the model never sees it.
    */
   formulaName: string;
 }
 
+/**
+ * Map of tool types to their corresponding tool interfaces.
+ * This interface can be extended via declaration merging to add custom tool types.
+ * @hidden
+ */
 export interface ToolMap {
   [ToolType.Pack]: PackTool;
   [ToolType.Knowledge]: KnowledgeTool;

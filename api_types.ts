@@ -9,7 +9,6 @@ import type {MetadataFormula} from './api';
 import type {ObjectSchemaProperty} from './schema';
 import type {ParameterValidationResult} from './api';
 import type {Schema} from './schema';
-import {z} from 'zod';
 
 /**
  * Markers used internally to represent data types for parameters and return values.
@@ -1217,57 +1216,60 @@ export interface InvocationLocation {
 }
 
 /**
- * A suggestion the editor is showing, or one the user has already acted on. The single source of
- * truth for this shape -- consumers (e.g. the agent runtime's own highlight schema) reference
- * `SuggestionHighlightSchema.shape.<field>` per field rather than redeclaring these fields, so a
- * field added or removed here can't silently drift out of sync downstream.
+ * One finding a suggestion-producing formula reports about a span of the text it was given.
+ *
+ * The span is identified by offsets rather than by surrounding-text landmarks: a producer computes
+ * its findings deterministically and already knows where they are, so it does not need the
+ * string-matching affordances an LLM does. `SuggestionHighlightSchema` in
+ * `packs-sdk/dist/suggestion_schemas` is the zod counterpart of this type, kept in lockstep by a
+ * compile-time assertion there.
+ *
+ * Optional fields are omitted rather than set to `null`: a Coda object schema has no null, so an
+ * absent property is the only way it expresses "no value", and `makeSuggestionResultSchema()` has
+ * to be able to describe this shape.
  *
  * @internal
  * @hidden
  */
-export const SuggestionHighlightSchema = z.object({
-  // `id` and `replacement` are `.nullable()` without `.optional()` (a required key, nullable
-  // value) rather than `.nullish()` like the other optional fields below: OpenAI's strict
-  // structured-output mode (what the agent runtime's own highlight schema feeds it) only excludes
-  // a field from JSON Schema's `required` array when it is wrapped in zod's `.optional()` --
-  // `.nullable()` alone keeps it required, with `null` added as an accepted type instead. Matching
-  // that convention here (rather than the more ergonomic "just omit it" pattern) is what lets the
-  // agent runtime derive its schema from this one field-by-field with no gap.
-  /** Stable id, so a later run can update or delete this suggestion rather than duplicate it. Set
-   * to `null` if there is no id to give a finding, rather than omitting the key. */
-  id: z.string().nullable(),
-  /** Short heading naming the issue, 2-4 words. */
-  title: z.string(),
-  /** What to change about the span, and why. */
-  explanation: z.string(),
+export interface SuggestionHighlight {
   /**
-   * A distinctive string copied verbatim from before `original`, used to pick the right occurrence
-   * when `original` appears more than once. Omit it when `original` is unique.
+   * Offset of the first UTF-16 code unit of the span, counted from the start of the `text` the
+   * formula was given -- i.e. `text.slice(startOffset, endOffset)` must equal `original`.
+   *
+   * UTF-16 code units, not Unicode code points and not bytes: the unit JavaScript's `String`
+   * indexes in, so `slice` and `indexOf` agree with it. An emoji or other astral character counts
+   * as two.
    */
-  contextBefore: z.string().nullish(),
-  /** The span of the submitted text this suggestion is about. */
-  original: z.string(),
-  /** Same as `contextBefore`, for a landmark after `original`. */
-  contextAfter: z.string().nullish(),
-  /** A concrete rewrite of the span. Set to `null` (not omitted) when there is nothing to swap
-   * in. */
-  replacement: z.string().nullable(),
-  /** How much acting on this matters, from 0 (cosmetic) to 1. */
-  importance: z.number().min(0).max(1).nullish(),
-});
-
-/**
- * A suggestion the editor is showing, or one the user has already acted on.
- *
- * @internal
- * @hidden
- */
-export type SuggestionHighlight = z.infer<typeof SuggestionHighlightSchema>;
+  startOffset: number;
+  /** Offset one past the last UTF-16 code unit of the span. Must be greater than `startOffset`. */
+  endOffset: number;
+  /**
+   * The span itself, copied verbatim from `text`. Not the anchor -- the offsets are -- but a
+   * checksum on them: the runtime drops a finding whose `original` does not match the text at its
+   * offsets, since that means the two disagree about which span is meant.
+   */
+  original: string;
+  /** Short heading naming the issue, 2-4 words. */
+  title: string;
+  /** What to change about the span, and why. */
+  explanation: string;
+  /**
+   * A concrete rewrite of the span. Omit it when there is nothing to swap in -- a finding that only
+   * comments on the span.
+   */
+  replacement?: string;
+  /**
+   * How much acting on this matters, from 0 (cosmetic) to 1 (the reader will be misled without it).
+   * Omit it when there is nothing to rank; an absent score reads as unranked, not as zero.
+   */
+  importance?: number;
+}
 
 /**
  * What a suggestion-producing formula returns, the TypeScript counterpart of
  * {@link makeSuggestionResultSchema}. Findings only: the runtime reconciles them against the
- * highlights already on screen, so a checker never describes an edit to that state.
+ * suggestions already on screen, so a checker never describes an edit to that state and never
+ * needs to know what is on screen.
  *
  * @internal
  * @hidden
@@ -1277,21 +1279,6 @@ export interface SuggestionResult {
   suggestions: SuggestionHighlight[];
   /** Why the check could not run. Absent on success. */
   error?: string;
-}
-
-/**
- * What the editor already knows about the text under review.
- *
- * @internal
- * @hidden
- */
-export interface SuggestionRun {
-  /** Suggestions currently on screen. */
-  readonly currentHighlights: readonly SuggestionHighlight[];
-  /** Suggestions the user dismissed, so a producer can avoid raising them again. */
-  readonly dismissedHighlights: readonly SuggestionHighlight[];
-  /** Suggestions the user accepted. */
-  readonly acceptedHighlights: readonly SuggestionHighlight[];
 }
 
 /**
@@ -1358,24 +1345,6 @@ export interface ExecutionContext {
    * for sync tables used within Superhuman Go.
    */
   readonly previousAttemptError?: InvocationError;
-
-  /**
-   * Information about the suggestion run. Only populated if this is a suggestion-producing formula.
-   * @internal
-   * @hidden
-   */
-  readonly suggestions?: SuggestionRun;
-}
-
-/**
- * Sub-class of {@link ExecutionContext} passed to a suggestion-producing formula. The only
- * difference is that `suggestions` is guaranteed present.
- *
- * @internal
- * @hidden
- */
-export interface SuggestionExecutionContext extends ExecutionContext {
-  readonly suggestions: SuggestionRun;
 }
 
 /**

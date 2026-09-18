@@ -12,8 +12,9 @@ const api_3 = require("./api");
 const api_4 = require("./api");
 const api_5 = require("./api");
 const api_6 = require("./api");
-const migration_1 = require("./helpers/migration");
 const api_7 = require("./api");
+const migration_1 = require("./helpers/migration");
+const api_8 = require("./api");
 /**
  * Creates a new skeleton pack definition that can be added to.
  *
@@ -150,7 +151,7 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
      */
     addSyncTable(definition) {
         const connectionRequirementToUse = definition.connectionRequirement || this._defaultConnectionRequirement;
-        const syncTable = (0, api_4.makeSyncTable)({
+        const syncTable = (0, api_5.makeSyncTable)({
             ...definition,
             connectionRequirement: connectionRequirementToUse,
         });
@@ -204,6 +205,57 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
     addColumnFormat(format) {
         this.formats.push(format);
         return this;
+    }
+    /**
+     * Adds a suggestion-producing formula to this pack: the formula a skill names in its
+     * {@link core.SuggestionProducerTool}, which the agent runtime calls directly instead of running
+     * an LLM.
+     *
+     * Prefer this to assembling the definition by hand. It fixes every part of the contract the
+     * runtime depends on -- the parameter's name and type, the result schema, and the result type
+     * `execute` must return -- each of which fails *silently* when it does not match: a producer the
+     * runtime cannot call is skipped rather than rejected, and the run falls back to the model and
+     * returns a plausible answer.
+     *
+     * @example
+     * ```
+     * pack.addSuggestionFormula({
+     *   name: 'CheckSuggestions',
+     *   description: 'Flags feedback that is too hedged to land.',
+     *   execute: async (text, context) => ({
+     *     suggestions: [
+     *       {
+     *         startOffset: 0,
+     *         endOffset: 7,
+     *         original: text.slice(0, 7),
+     *         title: 'Hedged praise',
+     *         explanation: 'Say what was wrong and what to do about it.',
+     *         replacement: null,
+     *         importance: 0.6,
+     *       },
+     *     ],
+     *   }),
+     * });
+     *
+     * pack.addSkill({
+     *   name: 'Check',
+     *   displayName: 'Check',
+     *   description: 'Checks feedback.',
+     *   prompt: 'Review the text for feedback that will not land.',
+     *   tools: [{type: sdk.ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+     * });
+     * ```
+     *
+     * @internal
+     * @hidden
+     */
+    addSuggestionFormula(definition) {
+        // `addFormula` types `execute`'s return value as `ObjectSchemaType<>` of the schema passed
+        // alongside it. `makeSuggestionResultSchema()` is a `GenericObjectSchema`, whose properties are
+        // erased, so that inference cannot see `SuggestionResult` in it -- the same reason `addFormula`
+        // itself pushes `formula as any` below. The invariant that matters is enforced on the way in,
+        // by `SuggestionFormulaDef['execute']`.
+        return this.addFormula((0, api_4.makeSuggestionFormula)(definition));
     }
     /**
      * Adds a skill definition to this pack.
@@ -336,11 +388,11 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
     }
     _wrapAuthenticationFunctions(authentication) {
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
-        const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
-        const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
+        const getConnectionName = (0, api_8.wrapMetadataFunction)(getConnectionNameDef);
+        const getConnectionUserId = (0, api_8.wrapMetadataFunction)(getConnectionUserIdDef);
         const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-            const getOptions = (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions);
-            const getOptionsFormula = (0, api_7.wrapMetadataFunction)(step.getOptionsFormula);
+            const getOptions = (0, api_8.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions);
+            const getOptionsFormula = (0, api_8.wrapMetadataFunction)(step.getOptionsFormula);
             return { ...step, getOptions, getOptionsFormula };
         });
         return { ...rest, getConnectionName, getConnectionUserId, postSetup };
@@ -441,7 +493,7 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
         // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
         // after the fact.
         this.formulas = this.formulas.map(formula => {
-            return formula.connectionRequirement ? formula : (0, api_5.maybeRewriteConnectionForFormula)(formula, connectionRequirement);
+            return formula.connectionRequirement ? formula : (0, api_6.maybeRewriteConnectionForFormula)(formula, connectionRequirement);
         });
         this.syncTables = this.syncTables.map(syncTable => {
             if (syncTable.getter.connectionRequirement) {
@@ -450,7 +502,7 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
             else if ((0, api_1.isDynamicSyncTable)(syncTable)) {
                 return {
                     ...syncTable,
-                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
+                    getter: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
                     // These 4 are metadata formulas, so they use ConnectionRequirement.Required
                     // by default if you don't specify a connection requirement (a legacy behavior
                     // that is confusing and perhaps undesirable now that we have better builders).
@@ -462,20 +514,20 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
                     // always work, but it does give rise to confusing behavior that calling
                     // setDefaultConnectionRequirement() can wipe away an explicit connection
                     // requirement override set on one of these 4 metadata formulas.
-                    getName: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getName, connectionRequirement),
-                    getDisplayUrl: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
-                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
-                    listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
-                    searchDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.searchDynamicUrls, connectionRequirement),
-                    namedPropertyOptions: (0, api_6.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
+                    getName: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.getName, connectionRequirement),
+                    getDisplayUrl: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
+                    getSchema: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
+                    listDynamicUrls: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
+                    searchDynamicUrls: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.searchDynamicUrls, connectionRequirement),
+                    namedPropertyOptions: (0, api_7.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
                 };
             }
             else {
                 return {
                     ...syncTable,
-                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
-                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
-                    namedPropertyOptions: (0, api_6.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
+                    getter: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
+                    getSchema: (0, api_6.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
+                    namedPropertyOptions: (0, api_7.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
                 };
             }
         });
