@@ -3176,7 +3176,7 @@ export interface SuggestionFormulaDef<ContextT extends ExecutionContext = Execut
 }
 
 /**
- * Builds the definition for a suggestion-producing formula: the formula a skill names in its
+ * Builds the definition for a suggestion-producing formula: the formula an agent names in its
  * {@link core.SuggestionProducerTool}, which the runtime calls directly instead of running an LLM.
  *
  * Fixes every part of the contract that a hand-written definition can get wrong, each of which is

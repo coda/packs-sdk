@@ -1,4 +1,5 @@
 import {testHelper} from './test_helper';
+import type {AgentDefinition} from '../types';
 import type {AgentTool} from '../types';
 import type {AllToolTypes} from '../types';
 import type {AllowedAuthentication} from '../types';
@@ -94,6 +95,7 @@ import {makeStringParameter} from '../api';
 import {makeSuggestionResultSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
+import {newAgent} from '../builder';
 import {newPack} from '../builder';
 import {normalizeSchema} from '../schema';
 import {normalizeTool} from '../testing/upload_validation';
@@ -8452,6 +8454,18 @@ describe('Pack metadata Validation', async () => {
       const tools: AgentTool[] = [{type: ToolType.SuggestionProducer, packId: 1, formulaName: 'CheckSuggestions'}];
       const result = await validateJson(createFakeAgentMetadata({agent: {instructions: 'Do a thing.', tools}}));
       assert.deepEqual(result.agent?.tools, tools);
+    });
+
+    // Through the builder rather than a hand-written tool list, so `setTools` and this schema
+    // cannot drift: the producer is the one tool an agent cannot write without it.
+    it('accepts the producer setTools builds', async () => {
+      const agent = newAgent();
+      agent.setInstructions('Do a thing.');
+      agent.setTools({suggestions: {packId: 1, formulaName: 'CheckSuggestions'}});
+      const result = await validateJson(createFakeAgentMetadata({agent: agent.agent as AgentDefinition}));
+      assert.deepEqual(result.agent?.tools, [
+        {type: ToolType.SuggestionProducer, packId: 1, formulaName: 'CheckSuggestions'},
+      ]);
     });
 
     it('rejects tool types an agent cannot use', async () => {

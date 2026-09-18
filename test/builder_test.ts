@@ -717,6 +717,21 @@ describe('Agent builder', () => {
       ]);
     });
 
+    it('names a connector formula that produces the suggestions itself', () => {
+      agent.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.SuggestionProducer, packId: 1234, formulaName: 'CheckSuggestions'},
+      ]);
+    });
+
+    it('takes a suggestion producer alongside the tools the fallback run uses', () => {
+      agent.setTools({docs: true, suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.CodaDocsAndTables},
+        {type: ToolType.SuggestionProducer, packId: 1234, formulaName: 'CheckSuggestions'},
+      ]);
+    });
+
     it('puts connectors after the built-in tools, the way the in-app builder does', () => {
       agent.setTools({docs: true, webSearch: true, mail: true, connectors: [{packId: 1234}]});
       assert.deepEqual(agent.agent.tools, [

@@ -4744,7 +4744,7 @@ export interface SuggestionFormulaDef<ContextT extends ExecutionContext = Execut
 	}>;
 }
 /**
- * Builds the definition for a suggestion-producing formula: the formula a skill names in its
+ * Builds the definition for a suggestion-producing formula: the formula an agent names in its
  * {@link core.SuggestionProducerTool}, which the runtime calls directly instead of running an LLM.
  *
  * Fixes every part of the contract that a hand-written definition can get wrong, each of which is
@@ -6151,13 +6151,18 @@ export interface MCPServer {
 	name: string;
 }
 /**
- * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per skill.
+ * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per agent.
  *
  * @internal
  * @hidden
  */
 export interface SuggestionProducerTool extends BaseTool<ToolType.SuggestionProducer> {
-	/** The pack holding the formula. Omit this to reference the current pack. */
+	/**
+	 * The pack holding the formula. Omit this to reference the current pack.
+	 *
+	 * An agent declaring this tool must set it: an agent holds no formulas of its own, so its
+	 * producer always lives in a separate connector pack.
+	 */
 	packId?: number;
 	/**
 	 * Name of the formula to call. Declare it with {@link core.makeSuggestionFormula}, which fixes
@@ -6390,6 +6395,27 @@ export interface AgentToolsDef {
 			formulaName: string;
 		}>;
 	}>;
+	/**
+	 * A connector formula that returns finished suggestions, which the runtime calls directly
+	 * instead of running this agent's model. See {@link core.SuggestionProducerTool}.
+	 *
+	 * `packId` is required: an agent holds no formulas of its own, so the producer always lives in
+	 * a connector pack. Declare it there with
+	 * {@link core.PackDefinitionBuilder.addSuggestionFormula}.
+	 *
+	 * The agent's instructions are still used, but only as the fallback when the producer cannot be
+	 * called -- so write them to describe the same job the producer does.
+	 */
+	suggestions?: {
+		/**
+		 * The id of the connector pack holding the formula.
+		 */
+		packId: number;
+		/**
+		 * The name of the suggestion-producing formula to call.
+		 */
+		formulaName: string;
+	};
 }
 /**
  * When a while-writing trigger offers proactive help, vs. only on request.
@@ -7174,7 +7200,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 */
 	addColumnFormat(format: Format): this;
 	/**
-	 * Adds a suggestion-producing formula to this pack: the formula a skill names in its
+	 * Adds a suggestion-producing formula to this pack: the formula an agent names in its
 	 * {@link core.SuggestionProducerTool}, which the agent runtime calls directly instead of running
 	 * an LLM.
 	 *
@@ -7184,8 +7210,19 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 * runtime cannot call is skipped rather than rejected, and the run falls back to the model and
 	 * returns a plausible answer.
 	 *
+	 * This takes two packs. The formula lives in a connector, because only a connector holds
+	 * formulas, authentication and network domains; the agent that names it is a separate pack,
+	 * because only an agent can carry a while-writing trigger and so be reachable at all. They are
+	 * joined by the connector's pack id, which is why
+	 * {@link core.AgentToolsDef.suggestions} requires one.
+	 *
 	 * @example
 	 * ```
+	 * // pack.ts, in the connector -- the half that talks to the checker.
+	 * const pack = sdk.newPack();
+	 * pack.addNetworkDomain('radicalcandor.com');
+	 * pack.setUserAuthentication({type: sdk.AuthenticationType.HeaderBearerToken});
+	 *
 	 * pack.addSuggestionFormula({
 	 *   name: 'CheckSuggestions',
 	 *   description: 'Flags feedback that is too hedged to land.',
@@ -7197,20 +7234,26 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 *         original: text.slice(0, 7),
 	 *         title: 'Hedged praise',
 	 *         explanation: 'Say what was wrong and what to do about it.',
-	 *         replacement: null,
 	 *         importance: 0.6,
 	 *       },
 	 *     ],
 	 *   }),
 	 * });
+	 * ```
 	 *
-	 * pack.addSkill({
-	 *   name: 'Check',
-	 *   displayName: 'Check',
-	 *   description: 'Checks feedback.',
-	 *   prompt: 'Review the text for feedback that will not land.',
-	 *   tools: [{type: sdk.ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+	 * @example
+	 * ```
+	 * // pack.ts, in the agent -- the half the runtime runs. 1234 is the connector's pack id.
+	 * const pack = sdk.newAgent();
+	 * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
+	 * pack.setDefaultWhileWritingTrigger({
+	 *   condition: 'The writer is giving someone feedback',
+	 *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
 	 * });
+	 *
+	 * // Used only when the producer cannot be called, so it describes the producer's job rather
+	 * // than a different one -- a run that falls back should not change the subject.
+	 * pack.setInstructions('Flag feedback that is too hedged to land, with a concrete rewrite.');
 	 * ```
 	 *
 	 * @internal
@@ -7419,9 +7462,10 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
 	 * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+	 * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
 	 * ```
 	 */
-	setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+	setTools({ docs, mail, webSearch, connectors, suggestions }: AgentToolsDef): this;
 	/**
 	 * Sets the while-writing trigger this agent runs on.
 	 *

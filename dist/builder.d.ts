@@ -244,7 +244,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      */
     addColumnFormat(format: Format): this;
     /**
-     * Adds a suggestion-producing formula to this pack: the formula a skill names in its
+     * Adds a suggestion-producing formula to this pack: the formula an agent names in its
      * {@link core.SuggestionProducerTool}, which the agent runtime calls directly instead of running
      * an LLM.
      *
@@ -254,8 +254,19 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      * runtime cannot call is skipped rather than rejected, and the run falls back to the model and
      * returns a plausible answer.
      *
+     * This takes two packs. The formula lives in a connector, because only a connector holds
+     * formulas, authentication and network domains; the agent that names it is a separate pack,
+     * because only an agent can carry a while-writing trigger and so be reachable at all. They are
+     * joined by the connector's pack id, which is why
+     * {@link core.AgentToolsDef.suggestions} requires one.
+     *
      * @example
      * ```
+     * // pack.ts, in the connector -- the half that talks to the checker.
+     * const pack = sdk.newPack();
+     * pack.addNetworkDomain('radicalcandor.com');
+     * pack.setUserAuthentication({type: sdk.AuthenticationType.HeaderBearerToken});
+     *
      * pack.addSuggestionFormula({
      *   name: 'CheckSuggestions',
      *   description: 'Flags feedback that is too hedged to land.',
@@ -267,20 +278,26 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      *         original: text.slice(0, 7),
      *         title: 'Hedged praise',
      *         explanation: 'Say what was wrong and what to do about it.',
-     *         replacement: null,
      *         importance: 0.6,
      *       },
      *     ],
      *   }),
      * });
+     * ```
      *
-     * pack.addSkill({
-     *   name: 'Check',
-     *   displayName: 'Check',
-     *   description: 'Checks feedback.',
-     *   prompt: 'Review the text for feedback that will not land.',
-     *   tools: [{type: sdk.ToolType.SuggestionProducer, formulaName: 'CheckSuggestions'}],
+     * @example
+     * ```
+     * // pack.ts, in the agent -- the half the runtime runs. 1234 is the connector's pack id.
+     * const pack = sdk.newAgent();
+     * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
+     * pack.setDefaultWhileWritingTrigger({
+     *   condition: 'The writer is giving someone feedback',
+     *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
      * });
+     *
+     * // Used only when the producer cannot be called, so it describes the producer's job rather
+     * // than a different one -- a run that falls back should not change the subject.
+     * pack.setInstructions('Flag feedback that is too hedged to land, with a concrete rewrite.');
      * ```
      *
      * @internal
@@ -495,9 +512,10 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
      * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+     * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
      * ```
      */
-    setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+    setTools({ docs, mail, webSearch, connectors, suggestions }: AgentToolsDef): this;
     /**
      * Sets the while-writing trigger this agent runs on.
      *

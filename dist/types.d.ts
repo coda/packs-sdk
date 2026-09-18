@@ -1419,13 +1419,18 @@ export interface MCPServer {
     name: string;
 }
 /**
- * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per skill.
+ * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per agent.
  *
  * @internal
  * @hidden
  */
 export interface SuggestionProducerTool extends BaseTool<ToolType.SuggestionProducer> {
-    /** The pack holding the formula. Omit this to reference the current pack. */
+    /**
+     * The pack holding the formula. Omit this to reference the current pack.
+     *
+     * An agent declaring this tool must set it: an agent holds no formulas of its own, so its
+     * producer always lives in a separate connector pack.
+     */
     packId?: number;
     /**
      * Name of the formula to call. Declare it with {@link core.makeSuggestionFormula}, which fixes
@@ -1658,6 +1663,27 @@ export interface AgentToolsDef {
             formulaName: string;
         }>;
     }>;
+    /**
+     * A connector formula that returns finished suggestions, which the runtime calls directly
+     * instead of running this agent's model. See {@link core.SuggestionProducerTool}.
+     *
+     * `packId` is required: an agent holds no formulas of its own, so the producer always lives in
+     * a connector pack. Declare it there with
+     * {@link core.PackDefinitionBuilder.addSuggestionFormula}.
+     *
+     * The agent's instructions are still used, but only as the fallback when the producer cannot be
+     * called -- so write them to describe the same job the producer does.
+     */
+    suggestions?: {
+        /**
+         * The id of the connector pack holding the formula.
+         */
+        packId: number;
+        /**
+         * The name of the suggestion-producing formula to call.
+         */
+        formulaName: string;
+    };
 }
 /**
  * When a while-writing trigger offers proactive help, vs. only on request.
