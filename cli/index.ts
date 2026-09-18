@@ -57,7 +57,7 @@ const CommandExamples: Record<string, Array<[string, string]>> = {
   auth: [['$0 auth pack.ts', 'Start local auth setup for the Pack.']],
   init: [
     ['$0 init', 'Scaffold pack.ts and related starter files in the current directory.'],
-    ['$0 init --yes', 'Overwrite an existing pack.ts without prompting.'],
+    ['$0 init --yes', 'Skip the overwrite prompt (replaces pack.ts and other starter files).'],
   ],
   extensions: [['$0 extensions vscode', 'Install VS Code snippets for Packs.']],
   clone: [
@@ -162,7 +162,7 @@ export const commands: yargs.CommandModule[] = [
   },
   {
     command: 'init',
-    describe: 'Initialize an empty Pack',
+    describe: 'Scaffold a Pack in the current directory',
     builder: {
       yes: YesArg,
     },

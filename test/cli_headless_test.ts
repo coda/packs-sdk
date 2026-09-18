@@ -66,7 +66,7 @@ describe('Headless CLI', () => {
     const SPAWN_SENTINEL = 'spawnProcess was called';
 
     it('aborts before doing any work when pack.ts already exists and is not confirmed', async () => {
-      sinon.stub(fsExtra, 'existsSync').returns(true);
+      sinon.stub(fsExtra, 'existsSync').callsFake(p => String(p).endsWith('pack.ts'));
       sinon.stub(confirm, 'isInteractive').returns(false);
       const spawnStub = sinon.stub(helpers, 'spawnProcess');
 
@@ -83,7 +83,7 @@ describe('Headless CLI', () => {
     });
 
     it('asks to confirm the overwrite and passes yes through when pack.ts exists', async () => {
-      sinon.stub(fsExtra, 'existsSync').returns(true);
+      sinon.stub(fsExtra, 'existsSync').callsFake(p => String(p).endsWith('pack.ts'));
       const confirmStub = sinon.stub(confirm, 'confirmOrFail');
       sinon.stub(helpers, 'spawnProcess').throws(new Error(SPAWN_SENTINEL));
 

@@ -7,7 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Fixed
 
 - CLI commands now surface the server-side error message (and HTTP status) when an API request fails, instead of swallowing it behind a generic message. This affects `register`, `whoami`, `clone`, and `link`, and makes `formatResponseError` robust to non-JSON and empty error bodies.
-- `packs init` (and its `coda`/`superhuman` aliases) now prompts before overwriting an existing `pack.ts` instead of silently clobbering it. Pass `--yes` to skip the prompt (required in non-interactive environments).
+- `packs init` (and its `coda`/`superhuman` aliases) now prompts before overwriting an existing `pack.ts` instead of silently clobbering it. Pass `--yes` to skip the prompt. Note that in non-interactive environments `init` now exits with a non-zero status when a `pack.ts` already exists unless `--yes` is passed, so scripts that relied on the previous silent overwrite must add `--yes`.
 
 ## [1.17.6] - 2026-09-16
 

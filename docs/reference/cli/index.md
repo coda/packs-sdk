@@ -166,7 +166,7 @@ Installs developer extensions for working with Packs.
 
 ## init
 
-Initialize an empty Pack
+Scaffold a Pack in the current directory
 
 **Usage:** `packs init`
 
