@@ -1009,6 +1009,70 @@ export interface InvocationLocation {
 	userId?: string;
 }
 /**
+ * One finding a suggestion-producing formula reports about a span of the text it was given.
+ *
+ * The span is identified by offsets rather than by surrounding-text landmarks: a producer computes
+ * its findings deterministically and already knows where they are, so it does not need the
+ * string-matching affordances an LLM does. `SuggestionHighlightSchema` in
+ * `packs-sdk/dist/suggestion_schemas` is the zod counterpart of this type, kept in lockstep by a
+ * compile-time assertion there.
+ *
+ * Optional fields are omitted rather than set to `null`: a Coda object schema has no null, so an
+ * absent property is the only way it expresses "no value", and `makeSuggestionResultSchema()` has
+ * to be able to describe this shape.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionHighlight {
+	/**
+	 * Offset of the first UTF-16 code unit of the span, counted from the start of the `text` the
+	 * formula was given -- i.e. `text.slice(startOffset, endOffset)` must equal `original`.
+	 *
+	 * UTF-16 code units, not Unicode code points and not bytes: the unit JavaScript's `String`
+	 * indexes in, so `slice` and `indexOf` agree with it. An emoji or other astral character counts
+	 * as two.
+	 */
+	startOffset: number;
+	/** Offset one past the last UTF-16 code unit of the span. Must be greater than `startOffset`. */
+	endOffset: number;
+	/**
+	 * The span itself, copied verbatim from `text`. Not the anchor -- the offsets are -- but a
+	 * checksum on them: the runtime drops a finding whose `original` does not match the text at its
+	 * offsets, since that means the two disagree about which span is meant.
+	 */
+	original: string;
+	/** Short heading naming the issue, 2-4 words. */
+	title: string;
+	/** What to change about the span, and why. */
+	explanation: string;
+	/**
+	 * A concrete rewrite of the span. Omit it when there is nothing to swap in -- a finding that only
+	 * comments on the span.
+	 */
+	replacement?: string;
+	/**
+	 * How much acting on this matters, from 0 (cosmetic) to 1 (the reader will be misled without it).
+	 * Omit it when there is nothing to rank; an absent score reads as unranked, not as zero.
+	 */
+	importance?: number;
+}
+/**
+ * What a suggestion-producing formula returns, the TypeScript counterpart of
+ * {@link makeSuggestionResultSchema}. Findings only: the runtime reconciles them against the
+ * suggestions already on screen, so a checker never describes an edit to that state and never
+ * needs to know what is on screen.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionResult {
+	/** Every finding for the submitted text, most important first. */
+	suggestions: SuggestionHighlight[];
+	/** Why the check could not run. Absent on success. */
+	error?: string;
+}
+/**
  * An object passed to the `execute` function of every formula invocation
  * with information and utilities for handling the invocation. In particular,
  * this contains the {@link core.Fetcher}, which is used for making HTTP requests.
@@ -3024,6 +3088,20 @@ export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchema
  */
 export declare function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema;
 /**
+ * The result shape a suggestion-producing formula returns. Prefer {@link makeSuggestionFormula},
+ * which applies this alongside the rest of the contract; reach for this directly only when
+ * assembling a formula definition by hand.
+ *
+ * A producer returns findings, not edits to the editor's state: the runtime reconciles them against
+ * the suggestions already on screen (updating one it still reports, deleting one it no longer
+ * reports, dropping one the user dismissed). A checker is therefore stateless, and the fields here
+ * are exactly the ones {@link SuggestionHighlight} carries.
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionResultSchema(): GenericObjectSchema;
+/**
  * Configuration for how to construct an HTTP request for a code-free formula definition
  * created using {@link makeTranslateObjectFormula}.
  *
@@ -4623,6 +4701,106 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	validateParameters: MetadataFormula<ExecutionContext, ParameterValidationResult> | undefined;
 };
 /**
+ * The name a {@link makeSuggestionFormula} formula gives its one parameter. The runtime invokes a
+ * producer by parameter name, so this is part of the wire contract rather than a cosmetic choice --
+ * which is why the factory owns it instead of leaving it to the caller.
+ *
+ * @internal
+ * @hidden
+ */
+export declare const SUGGESTION_TEXT_PARAMETER_NAME = "text";
+/**
+ * What {@link core.PackDefinitionBuilder.addSuggestionFormula} takes: everything about a
+ * suggestion-producing formula that is the pack's to decide. The parameter list, the result schema
+ * and the result type are not on this list -- they are the contract the runtime depends on, and
+ * {@link makeSuggestionFormula} supplies them.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionFormulaDef<ContextT extends ExecutionContext = ExecutionContext> {
+	/** Formula name. The skill's {@link core.SuggestionProducerTool} names this. */
+	name: string;
+	/** What this checker looks for. Shown to a pack's users; the model never reads it. */
+	description: string;
+	/**
+	 * Runs the check over `text` and returns its findings.
+	 *
+	 * Offsets in each finding are into this same `text`, in UTF-16 code units, and
+	 * `text.slice(startOffset, endOffset)` must equal that finding's `original` -- the runtime drops
+	 * a finding where the two disagree.
+	 */
+	execute: (text: string, context: ContextT) => Promise<SuggestionResult> | SuggestionResult;
+	/** See {@link PackFormulaDef.connectionRequirement}. */
+	connectionRequirement?: ConnectionRequirement;
+	/** See {@link PackFormulaDef.cacheTtlSecs}. Defaults to 0: a check runs against live text. */
+	cacheTtlSecs?: number;
+	/** See {@link PackFormulaDef.examples}. */
+	examples?: Array<{
+		params: [
+			string
+		];
+		result: SuggestionResult;
+	}>;
+}
+/**
+ * Builds the definition for a suggestion-producing formula: the formula an agent names in its
+ * {@link core.SuggestionProducerTool}, which the runtime calls directly instead of running an LLM.
+ *
+ * Fixes every part of the contract that a hand-written definition can get wrong, each of which is
+ * a silent failure rather than a loud one -- a producer that does not match is not rejected at
+ * runtime, it is skipped, and the run falls back to the model and returns a plausible answer:
+ *
+ * - the parameter list: one required string named `text`, because the runtime passes arguments by
+ *   parameter name;
+ * - the result schema: {@link makeSuggestionResultSchema}, so the runtime's parser recognizes it;
+ * - the result type: `execute` must return a {@link SuggestionResult}, checked at compile time.
+ *
+ * Pass the result to `pack.addFormula`.
+ *
+ * @example
+ * ```ts
+ * pack.addFormula(
+ *   makeSuggestionFormula({
+ *     name: 'CheckSuggestions',
+ *     description: 'Flags feedback that is too hedged to land.',
+ *     execute: async (text, context) => ({suggestions: await check(context, text)}),
+ *   }),
+ * );
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionFormula<ContextT extends ExecutionContext = ExecutionContext>({ execute, ...rest }: SuggestionFormulaDef<ContextT>): {
+	cacheTtlSecs: number;
+	resultType: ValueType.Object;
+	schema: GenericObjectSchema;
+	parameters: readonly [
+		ParamDefFromOptionsUnion<ParameterType, {
+			type: ParameterType.String;
+			name: string;
+			description: string;
+		}>
+	];
+	execute: ([text]: [
+		string
+	], context: ContextT) => SuggestionResult | Promise<SuggestionResult>;
+	/** Formula name. The skill's {@link core.SuggestionProducerTool} names this. */
+	name: string;
+	/** What this checker looks for. Shown to a pack's users; the model never reads it. */
+	description: string;
+	/** See {@link PackFormulaDef.connectionRequirement}. */
+	connectionRequirement?: ConnectionRequirement | undefined;
+	/** See {@link PackFormulaDef.examples}. */
+	examples?: {
+		params: [
+			string
+		];
+		result: SuggestionResult;
+	}[] | undefined;
+};
+/**
  * @deprecated Use `number` in new code.
  */
 export type PackId = number;
@@ -5705,7 +5883,12 @@ export declare enum ToolType {
 	 * Tool that provides access to Superhuman Mail email and calendar capabilities.
 	 * @internal
 	 */
-	MailAndCalendar = "MailAndCalendar"
+	MailAndCalendar = "MailAndCalendar",
+	/**
+	 * Tool whose single formula returns finished suggestions, so no LLM turn is needed.
+	 * @internal
+	 */
+	SuggestionProducer = "SuggestionProducer"
 }
 /**
  * Base interface for all tool definitions.
@@ -5968,6 +6151,29 @@ export interface MCPServer {
 	name: string;
 }
 /**
+ * Tool that produces suggestions from one formula, bypassing the LLM loop. At most one per agent.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionProducerTool extends BaseTool<ToolType.SuggestionProducer> {
+	/**
+	 * The pack holding the formula. Omit this to reference the current pack.
+	 *
+	 * An agent declaring this tool must set it: an agent holds no formulas of its own, so its
+	 * producer always lives in a separate connector pack.
+	 */
+	packId?: number;
+	/**
+	 * Name of the formula to call. Declare it with {@link core.makeSuggestionFormula}, which fixes
+	 * the parameter and result shape the runtime expects; a formula that does not match is skipped
+	 * at runtime rather than rejected, so the run silently falls back to the model.
+	 *
+	 * The runtime calls this formula itself and emits its findings, so the model never sees it.
+	 */
+	formulaName: string;
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -5982,6 +6188,7 @@ export interface ToolMap {
 	[ToolType.MailAndCalendar]: MailAndCalendarTool;
 	[ToolType.WebSearch]: WebSearchTool;
 	[ToolType.EmbeddedContent]: EmbeddedContentTool;
+	[ToolType.SuggestionProducer]: SuggestionProducerTool;
 }
 /**
  * Union of all supported tool types.
@@ -6149,6 +6356,8 @@ export interface AgentDefinition {
  */
 export type AgentTool = CodaDocsAndTablesTool | MailAndCalendarTool | WebSearchTool | (Omit<PackTool, "packId"> & {
 	packId: number;
+}) | (Omit<SuggestionProducerTool, "packId"> & {
+	packId: number;
 });
 /**
  * The tools an agent can use, as written on the builder.
@@ -6186,6 +6395,27 @@ export interface AgentToolsDef {
 			formulaName: string;
 		}>;
 	}>;
+	/**
+	 * A connector formula that returns finished suggestions, which the runtime calls directly
+	 * instead of running this agent's model. See {@link core.SuggestionProducerTool}.
+	 *
+	 * `packId` is required: an agent holds no formulas of its own, so the producer always lives in
+	 * a connector pack. Declare it there with
+	 * {@link core.PackDefinitionBuilder.addSuggestionFormula}.
+	 *
+	 * The agent's instructions are still used, but only as the fallback when the producer cannot be
+	 * called -- so write them to describe the same job the producer does.
+	 */
+	suggestions?: {
+		/**
+		 * The id of the connector pack holding the formula.
+		 */
+		packId: number;
+		/**
+		 * The name of the suggestion-producing formula to call.
+		 */
+		formulaName: string;
+	};
 }
 /**
  * When a while-writing trigger offers proactive help, vs. only on request.
@@ -6970,6 +7200,67 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	 */
 	addColumnFormat(format: Format): this;
 	/**
+	 * Adds a suggestion-producing formula to this pack: the formula an agent names in its
+	 * {@link core.SuggestionProducerTool}, which the agent runtime calls directly instead of running
+	 * an LLM.
+	 *
+	 * Prefer this to assembling the definition by hand. It fixes every part of the contract the
+	 * runtime depends on -- the parameter's name and type, the result schema, and the result type
+	 * `execute` must return -- each of which fails *silently* when it does not match: a producer the
+	 * runtime cannot call is skipped rather than rejected, and the run falls back to the model and
+	 * returns a plausible answer.
+	 *
+	 * This takes two packs. The formula lives in a connector, because only a connector holds
+	 * formulas, authentication and network domains; the agent that names it is a separate pack,
+	 * because only an agent can carry a while-writing trigger and so be reachable at all. They are
+	 * joined by the connector's pack id, which is why
+	 * {@link core.AgentToolsDef.suggestions} requires one.
+	 *
+	 * @example
+	 * ```
+	 * // pack.ts, in the connector -- the half that talks to the checker.
+	 * const pack = sdk.newPack();
+	 * pack.addNetworkDomain('radicalcandor.com');
+	 * pack.setUserAuthentication({type: sdk.AuthenticationType.HeaderBearerToken});
+	 *
+	 * pack.addSuggestionFormula({
+	 *   name: 'CheckSuggestions',
+	 *   description: 'Flags feedback that is too hedged to land.',
+	 *   execute: async (text, context) => ({
+	 *     suggestions: [
+	 *       {
+	 *         startOffset: 0,
+	 *         endOffset: 7,
+	 *         original: text.slice(0, 7),
+	 *         title: 'Hedged praise',
+	 *         explanation: 'Say what was wrong and what to do about it.',
+	 *         importance: 0.6,
+	 *       },
+	 *     ],
+	 *   }),
+	 * });
+	 * ```
+	 *
+	 * @example
+	 * ```
+	 * // pack.ts, in the agent -- the half the runtime runs. 1234 is the connector's pack id.
+	 * const pack = sdk.newAgent();
+	 * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
+	 * pack.setDefaultWhileWritingTrigger({
+	 *   condition: 'The writer is giving someone feedback',
+	 *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+	 * });
+	 *
+	 * // Used only when the producer cannot be called, so it describes the producer's job rather
+	 * // than a different one -- a run that falls back should not change the subject.
+	 * pack.setInstructions('Flag feedback that is too hedged to land, with a concrete rewrite.');
+	 * ```
+	 *
+	 * @internal
+	 * @hidden
+	 */
+	addSuggestionFormula(definition: SuggestionFormulaDef): this;
+	/**
 	 * Adds a skill definition to this pack.
 	 *
 	 * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
@@ -7171,9 +7462,10 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
 	 * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+	 * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
 	 * ```
 	 */
-	setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+	setTools({ docs, mail, webSearch, connectors, suggestions }: AgentToolsDef): this;
 	/**
 	 * Sets the while-writing trigger this agent runs on.
 	 *

@@ -1799,4 +1799,18 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  * failed to copy a function.
  */
 export declare function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string): void;
+/**
+ * The result shape a suggestion-producing formula returns. Prefer {@link makeSuggestionFormula},
+ * which applies this alongside the rest of the contract; reach for this directly only when
+ * assembling a formula definition by hand.
+ *
+ * A producer returns findings, not edits to the editor's state: the runtime reconciles them against
+ * the suggestions already on screen (updating one it still reports, deleting one it no longer
+ * reports, dropping one the user dismissed). A checker is therefore stateless, and the fields here
+ * are exactly the ones {@link SuggestionHighlight} carries.
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionResultSchema(): GenericObjectSchema;
 export {};

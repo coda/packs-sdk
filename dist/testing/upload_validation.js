@@ -68,6 +68,7 @@ const schema_14 = require("../schema");
 const types_18 = require("../types");
 const __1 = require("..");
 const types_19 = require("../types");
+const api_1 = require("../api");
 const schema_15 = require("../schema");
 const types_20 = require("../types");
 const schema_16 = require("../schema");
@@ -89,14 +90,15 @@ const util_1 = require("util");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
 const schema_21 = require("../schema");
-const api_1 = require("../api");
+const api_2 = require("../api");
 const schema_22 = require("../schema");
 const schema_23 = require("../schema");
 const schema_24 = require("../schema");
 const schema_25 = require("../schema");
+const schema_26 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
-const schema_26 = require("../schema");
+const schema_27 = require("../schema");
 const rrule_validation_1 = require("./rrule_validation");
 const z = __importStar(require("zod"));
 /**
@@ -1612,7 +1614,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         const schemaForOptions = (0, schema_24.maybeUnwrapArraySchema)(schema);
         const result = !schemaForOptions ||
-            (0, schema_26.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
+            (0, schema_27.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
             !('options' in schemaForOptions && schemaForOptions.options);
         return result;
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
@@ -1758,6 +1760,30 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }))
             .optional(),
     });
+    const suggestionProducerToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_24.ToolType.SuggestionProducer),
+        packId: z.number().optional(),
+        formulaName: z
+            .string()
+            .min(1)
+            .superRefine((formulaName, context) => {
+            if (!validateFormulaName(formulaName)) {
+                context.addIssue({ code: 'custom', message: `Formula name must be a valid formula name.` });
+            }
+        }),
+    });
+    // Two producers would leave the runtime picking between them arbitrarily. The agent path gets
+    // this from its own per-type check; skills only dedupe equivalent tools, so check it here.
+    function validateAtMostOneSuggestionProducer(tools, context) {
+        const producers = tools.flatMap((tool, index) => tool.type === types_24.ToolType.SuggestionProducer ? [index] : []);
+        for (const index of producers.slice(1)) {
+            context.addIssue({
+                code: 'custom',
+                path: [index],
+                message: `A skill can only use the ${types_24.ToolType.SuggestionProducer} tool once.`,
+            });
+        }
+    }
     const knowledgeToolSourceSchema = z.discriminatedUnion('type', [
         z.object({
             type: z.literal(types_12.KnowledgeToolSourceType.Global),
@@ -1830,6 +1856,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         mailAndCalendarToolSchema,
         embeddedContentToolSchema,
         webSearchToolSchema,
+        suggestionProducerToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z
@@ -1849,6 +1876,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
                 });
             }
+            validateAtMostOneSuggestionProducer(tools, context);
         }),
         forcedFormula: z.string().min(1).optional(),
         models: z.array(skillModelConfigurationSchema).optional(),
@@ -1856,7 +1884,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const chatSkillSchema = skillSchema.partial();
     // Missing and empty are separate Zod failures, so both carry the same message.
     const MissingInstructions = 'An agent must have instructions. Call setInstructions() on the agent.';
-    const agentToolSchema = z.discriminatedUnion('type', [packToolSchema.extend({ packId: z.number() }), codaDocsToolSchema, mailAndCalendarToolSchema, webSearchToolSchema], { error: 'An agent can only use the Docs, Mail, web search, and Pack tools.' });
+    const agentToolSchema = z.discriminatedUnion('type', [
+        packToolSchema.extend({ packId: z.number() }),
+        codaDocsToolSchema,
+        mailAndCalendarToolSchema,
+        webSearchToolSchema,
+        suggestionProducerToolSchema.extend({ packId: z.number() }),
+    ], { error: 'An agent can only use the Docs, Mail, web search, Pack, and SuggestionProducer tools.' });
     const agentSchema = zodCompleteStrictObject({
         instructions: z.string({ error: MissingInstructions }).min(1, MissingInstructions).max(exports.Limits.PromptLength),
         tools: z
@@ -1878,6 +1912,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
                 seen.add(key);
             });
+            validateAtMostOneSuggestionProducer(tools, context);
         }),
     });
     const domainSchema = z
@@ -2378,7 +2413,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const { getter } = syncTable;
                 let { allowedAuthenticationNames } = getter;
                 // TODO(patrick): Better typing
-                if (!(0, api_1.isSyncPackFormula)(getter)) {
+                if (!(0, api_2.isSyncPackFormula)(getter)) {
                     continue;
                 }
                 const { supportsGetPermissions } = getter;
@@ -2407,7 +2442,45 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .superRefine((data, context) => {
             const metadata = data;
             const { formulas = [], skills = [] } = metadata;
-            const formulaNames = new Set(formulas.map(f => f.name));
+            const formulasByName = new Map(formulas.map(f => [f.name, f]));
+            const formulaNames = new Set(formulasByName.keys());
+            // Keys are normalized to PascalCase by addFormula, so look them up normalized.
+            function propertyOf(schema, key) {
+                var _a;
+                return (_a = schema === null || schema === void 0 ? void 0 : schema.properties) === null || _a === void 0 ? void 0 : _a[(0, schema_26.normalizeSchemaKey)(key)];
+            }
+            // The runtime calls a producer itself and emits its result without an LLM reading it, so
+            // both ends of the formula have to match what the runtime sends and parses. A mismatch is
+            // not a loud failure at runtime -- the producer is skipped and the run falls back to the
+            // model -- so it has to be caught here. `makeSuggestionFormula()` satisfies all of this by
+            // construction; these checks guard a hand-assembled definition.
+            function validateSuggestionProducerFormula(formula, basePath) {
+                var _a;
+                const fail = (message) => context.addIssue({ code: 'custom', path: basePath, message });
+                const parameters = ((_a = formula.parameters) !== null && _a !== void 0 ? _a : []);
+                const [text, ...rest] = parameters;
+                // Arguments are passed to a formula by parameter *name*, not position, so the name is
+                // part of the wire contract: a first parameter called anything else receives nothing.
+                if ((text === null || text === void 0 ? void 0 : text.name) !== api_1.SUGGESTION_TEXT_PARAMETER_NAME || text.type !== api_types_8.Type.string) {
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula must take the text to check as a string ` +
+                        `parameter named "${api_1.SUGGESTION_TEXT_PARAMETER_NAME}". Use makeSuggestionFormula() ` +
+                        `to declare one.`);
+                }
+                if (rest.some(param => !param.optional)) {
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula is passed only the text, so its other parameters must be optional.`);
+                }
+                if (formula.isAction) {
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula cannot be an action.`);
+                }
+                const suggestions = formula.resultType === api_types_8.Type.object ? propertyOf(formula.schema, 'suggestions') : undefined;
+                const suggestion = (suggestions === null || suggestions === void 0 ? void 0 : suggestions.type) === schema_18.ValueType.Array ? suggestions.items : undefined;
+                const required = ['startOffset', 'endOffset', 'original', 'title', 'explanation'];
+                const missing = required.filter(key => !propertyOf(suggestion, key));
+                if ((suggestion === null || suggestion === void 0 ? void 0 : suggestion.type) !== schema_18.ValueType.Object || missing.length) {
+                    fail(`A ${types_24.ToolType.SuggestionProducer} formula must return the makeSuggestionResultSchema() shape: ` +
+                        `a "suggestions" array of objects, each carrying ${required.join(', ')}.`);
+                }
+            }
             function validateSkillTools(skill, basePath) {
                 (skill.tools || []).forEach((tool, toolIndex) => {
                     // Only validate Pack tools without a packId (i.e., referencing current pack).
@@ -2425,6 +2498,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                                 });
                             }
                         });
+                    }
+                    // A producer naming a formula in *this* pack can be checked end to end. One naming
+                    // another pack's formula cannot be, from here: this manifest does not contain that
+                    // formula's metadata. The server-side validator resolves the referenced pack and
+                    // applies `validateSuggestionProducerFormula` there, so the contract is still checked
+                    // before the tool can run -- just not at `coda validate` time.
+                    if (tool.type === types_24.ToolType.SuggestionProducer && !tool.packId) {
+                        const path = [...basePath, 'tools', toolIndex, 'formulaName'];
+                        const formula = formulasByName.get(tool.formulaName);
+                        if (!formula) {
+                            context.addIssue({
+                                code: 'custom',
+                                path,
+                                message: `Formula "${tool.formulaName}" not found. A ${types_24.ToolType.SuggestionProducer} tool must reference a formula defined in this pack.`,
+                            });
+                        }
+                        else {
+                            validateSuggestionProducerFormula(formula, path);
+                        }
                     }
                 });
             }

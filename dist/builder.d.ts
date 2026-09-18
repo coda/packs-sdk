@@ -24,6 +24,7 @@ import type { Skill } from './types';
 import type { SkillEntrypoints } from './types';
 import type { SlackEventTriggerDefinition } from './types';
 import type { SuggestedPrompt } from './types';
+import type { SuggestionFormulaDef } from './api';
 import type { SyncExecutionContext } from './api_types';
 import type { SyncPassthroughData } from './api';
 import type { SyncTable } from './api';
@@ -243,6 +244,67 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      */
     addColumnFormat(format: Format): this;
     /**
+     * Adds a suggestion-producing formula to this pack: the formula an agent names in its
+     * {@link core.SuggestionProducerTool}, which the agent runtime calls directly instead of running
+     * an LLM.
+     *
+     * Prefer this to assembling the definition by hand. It fixes every part of the contract the
+     * runtime depends on -- the parameter's name and type, the result schema, and the result type
+     * `execute` must return -- each of which fails *silently* when it does not match: a producer the
+     * runtime cannot call is skipped rather than rejected, and the run falls back to the model and
+     * returns a plausible answer.
+     *
+     * This takes two packs. The formula lives in a connector, because only a connector holds
+     * formulas, authentication and network domains; the agent that names it is a separate pack,
+     * because only an agent can carry a while-writing trigger and so be reachable at all. They are
+     * joined by the connector's pack id, which is why
+     * {@link core.AgentToolsDef.suggestions} requires one.
+     *
+     * @example
+     * ```
+     * // pack.ts, in the connector -- the half that talks to the checker.
+     * const pack = sdk.newPack();
+     * pack.addNetworkDomain('radicalcandor.com');
+     * pack.setUserAuthentication({type: sdk.AuthenticationType.HeaderBearerToken});
+     *
+     * pack.addSuggestionFormula({
+     *   name: 'CheckSuggestions',
+     *   description: 'Flags feedback that is too hedged to land.',
+     *   execute: async (text, context) => ({
+     *     suggestions: [
+     *       {
+     *         startOffset: 0,
+     *         endOffset: 7,
+     *         original: text.slice(0, 7),
+     *         title: 'Hedged praise',
+     *         explanation: 'Say what was wrong and what to do about it.',
+     *         importance: 0.6,
+     *       },
+     *     ],
+     *   }),
+     * });
+     * ```
+     *
+     * @example
+     * ```
+     * // pack.ts, in the agent -- the half the runtime runs. 1234 is the connector's pack id.
+     * const pack = sdk.newAgent();
+     * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
+     * pack.setDefaultWhileWritingTrigger({
+     *   condition: 'The writer is giving someone feedback',
+     *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+     * });
+     *
+     * // Used only when the producer cannot be called, so it describes the producer's job rather
+     * // than a different one -- a run that falls back should not change the subject.
+     * pack.setInstructions('Flag feedback that is too hedged to land, with a concrete rewrite.');
+     * ```
+     *
+     * @internal
+     * @hidden
+     */
+    addSuggestionFormula(definition: SuggestionFormulaDef): this;
+    /**
      * Adds a skill definition to this pack.
      *
      * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
@@ -450,9 +512,10 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
      * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+     * pack.setTools({suggestions: {packId: 1234, formulaName: 'CheckSuggestions'}});
      * ```
      */
-    setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+    setTools({ docs, mail, webSearch, connectors, suggestions }: AgentToolsDef): this;
     /**
      * Sets the while-writing trigger this agent runs on.
      *

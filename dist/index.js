@@ -13,7 +13,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.IndexingStrategy = exports.ImageOutline = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.ResponseSizeTooLargeError = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.InvocationSource = exports.UpdateOutcome = exports.DataIndexing = exports.ConnectionRequirement = exports.OptionsType = exports.PackDefinitionBuilder = exports.newAgent = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
-exports.EmbeddedContentType = exports.ToolType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.SkillModel = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.NotetakerFilterField = exports.NotetakerEventType = exports.SlackEventType = exports.MailFilterField = exports.MailEventType = exports.FilterCombinator = exports.FilterOperator = exports.EventTriggerType = exports.DefaultTriggerKind = exports.PermissionSyncMode = exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = void 0;
+exports.EmbeddedContentType = exports.ToolType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.SkillModel = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.NotetakerFilterField = exports.NotetakerEventType = exports.SlackEventType = exports.MailFilterField = exports.MailEventType = exports.FilterCombinator = exports.FilterOperator = exports.EventTriggerType = exports.DefaultTriggerKind = exports.PermissionSyncMode = exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = exports.SUGGESTION_TEXT_PARAMETER_NAME = exports.makeSuggestionResultSchema = exports.makeSuggestionFormula = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -131,8 +131,14 @@ var schema_18 = require("./schema");
 Object.defineProperty(exports, "makeReferenceSchemaFromObjectSchema", { enumerable: true, get: function () { return schema_18.makeReferenceSchemaFromObjectSchema; } });
 var schema_19 = require("./schema");
 Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_19.makeSchema; } });
+var api_17 = require("./api");
+Object.defineProperty(exports, "makeSuggestionFormula", { enumerable: true, get: function () { return api_17.makeSuggestionFormula; } });
 var schema_20 = require("./schema");
-Object.defineProperty(exports, "withIdentity", { enumerable: true, get: function () { return schema_20.withIdentity; } });
+Object.defineProperty(exports, "makeSuggestionResultSchema", { enumerable: true, get: function () { return schema_20.makeSuggestionResultSchema; } });
+var api_18 = require("./api");
+Object.defineProperty(exports, "SUGGESTION_TEXT_PARAMETER_NAME", { enumerable: true, get: function () { return api_18.SUGGESTION_TEXT_PARAMETER_NAME; } });
+var schema_21 = require("./schema");
+Object.defineProperty(exports, "withIdentity", { enumerable: true, get: function () { return schema_21.withIdentity; } });
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK
 var api_types_9 = require("./api_types");

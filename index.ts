@@ -84,6 +84,8 @@ export type {Continuation} from './api';
 export type {CrawlStrategy} from './api_types';
 export type {SyncTableRelation} from './api_types';
 export type {SuggestedValueType} from './api_types';
+export type {SuggestionHighlight} from './api_types';
+export type {SuggestionResult} from './api_types';
 export type {DynamicOptions} from './api';
 export type {DynamicSyncTableDef} from './api';
 export type {EmptyFormulaDef} from './api';
@@ -248,6 +250,9 @@ export {makeAttributionNode} from './schema';
 export {makeObjectSchema} from './schema';
 export {makeReferenceSchemaFromObjectSchema} from './schema';
 export {makeSchema} from './schema';
+export {makeSuggestionFormula} from './api';
+export {makeSuggestionResultSchema} from './schema';
+export {SUGGESTION_TEXT_PARAMETER_NAME} from './api';
 export {withIdentity} from './schema';
 
 // Exports for intermediate entities we want included in the TypeDoc documentation
@@ -313,6 +318,7 @@ export type {ContactResolutionTool} from './types';
 export type {CodaDocsAndTablesTool} from './types';
 export type {MailAndCalendarTool} from './types';
 export type {WebSearchTool} from './types';
+export type {SuggestionProducerTool} from './types';
 export type {MCPServer} from './types';
 export type {PartialSkillDef} from './types';
 export type {AgentDefinition} from './types';

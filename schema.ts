@@ -2548,3 +2548,84 @@ export function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, pa
     );
   }
 }
+
+/**
+ * The result shape a suggestion-producing formula returns. Prefer {@link makeSuggestionFormula},
+ * which applies this alongside the rest of the contract; reach for this directly only when
+ * assembling a formula definition by hand.
+ *
+ * A producer returns findings, not edits to the editor's state: the runtime reconciles them against
+ * the suggestions already on screen (updating one it still reports, deleting one it no longer
+ * reports, dropping one the user dismissed). A checker is therefore stateless, and the fields here
+ * are exactly the ones {@link SuggestionHighlight} carries.
+ *
+ * @internal
+ * @hidden
+ */
+export function makeSuggestionResultSchema(): GenericObjectSchema {
+  return makeObjectSchema({
+    properties: {
+      suggestions: {
+        type: ValueType.Array,
+        required: true,
+        description: 'Every finding for the submitted text, most important first.',
+        items: makeObjectSchema({
+          properties: {
+            startOffset: {
+              type: ValueType.Number,
+              required: true,
+              description:
+                'Offset of the first UTF-16 code unit of the span, counted from the start of the ' +
+                'text this formula was given.',
+            },
+            endOffset: {
+              type: ValueType.Number,
+              required: true,
+              description:
+                'Offset one past the last UTF-16 code unit of the span. Must be greater than ' +
+                'startOffset, and no greater than the length of the text.',
+            },
+            original: {
+              type: ValueType.String,
+              required: true,
+              description:
+                'The span itself, copied verbatim from the text. A checksum on the offsets rather ' +
+                'than the anchor: a finding whose original does not match the text at its offsets ' +
+                'is dropped.',
+            },
+            title: {
+              type: ValueType.String,
+              required: true,
+              description: 'A 2-4 word heading naming the issue. No trailing period.',
+            },
+            explanation: {
+              type: ValueType.String,
+              required: true,
+              description: 'One or two sentences on what to change about the span and why.',
+            },
+            replacement: {
+              type: ValueType.String,
+              description: 'A concrete rewrite of the span. Absent when there is nothing to swap in.',
+            },
+            // Optional because a checker with nothing to rank should leave it unset rather than
+            // invent a number. Set it when there is a real signal behind it: ranking is the
+            // reason this path exists.
+            //
+            // The 0-1 range cannot be expressed here -- ValueType.Number carries no bounds -- so
+            // it is enforced where the result is parsed. A value outside the range costs that one
+            // finding, not the whole result.
+            importance: {
+              type: ValueType.Number,
+              description:
+                'How much acting on this matters, from 0 (cosmetic) to 1 (the reader will be ' +
+                'misled without it). Judge it against the other findings for this text.',
+            },
+          },
+          displayProperty: 'title',
+          description: 'One finding about a span of the submitted text.',
+        }),
+      },
+      error: {type: ValueType.String, description: 'Why the check could not run. Absent on success.'},
+    },
+  });
+}

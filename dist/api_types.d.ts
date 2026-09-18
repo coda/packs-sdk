@@ -1039,6 +1039,70 @@ export interface InvocationLocation {
     userId?: string;
 }
 /**
+ * One finding a suggestion-producing formula reports about a span of the text it was given.
+ *
+ * The span is identified by offsets rather than by surrounding-text landmarks: a producer computes
+ * its findings deterministically and already knows where they are, so it does not need the
+ * string-matching affordances an LLM does. `SuggestionHighlightSchema` in
+ * `packs-sdk/dist/suggestion_schemas` is the zod counterpart of this type, kept in lockstep by a
+ * compile-time assertion there.
+ *
+ * Optional fields are omitted rather than set to `null`: a Coda object schema has no null, so an
+ * absent property is the only way it expresses "no value", and `makeSuggestionResultSchema()` has
+ * to be able to describe this shape.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionHighlight {
+    /**
+     * Offset of the first UTF-16 code unit of the span, counted from the start of the `text` the
+     * formula was given -- i.e. `text.slice(startOffset, endOffset)` must equal `original`.
+     *
+     * UTF-16 code units, not Unicode code points and not bytes: the unit JavaScript's `String`
+     * indexes in, so `slice` and `indexOf` agree with it. An emoji or other astral character counts
+     * as two.
+     */
+    startOffset: number;
+    /** Offset one past the last UTF-16 code unit of the span. Must be greater than `startOffset`. */
+    endOffset: number;
+    /**
+     * The span itself, copied verbatim from `text`. Not the anchor -- the offsets are -- but a
+     * checksum on them: the runtime drops a finding whose `original` does not match the text at its
+     * offsets, since that means the two disagree about which span is meant.
+     */
+    original: string;
+    /** Short heading naming the issue, 2-4 words. */
+    title: string;
+    /** What to change about the span, and why. */
+    explanation: string;
+    /**
+     * A concrete rewrite of the span. Omit it when there is nothing to swap in -- a finding that only
+     * comments on the span.
+     */
+    replacement?: string;
+    /**
+     * How much acting on this matters, from 0 (cosmetic) to 1 (the reader will be misled without it).
+     * Omit it when there is nothing to rank; an absent score reads as unranked, not as zero.
+     */
+    importance?: number;
+}
+/**
+ * What a suggestion-producing formula returns, the TypeScript counterpart of
+ * {@link makeSuggestionResultSchema}. Findings only: the runtime reconciles them against the
+ * suggestions already on screen, so a checker never describes an edit to that state and never
+ * needs to know what is on screen.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionResult {
+    /** Every finding for the submitted text, most important first. */
+    suggestions: SuggestionHighlight[];
+    /** Why the check could not run. Absent on success. */
+    error?: string;
+}
+/**
  * An object passed to the `execute` function of every formula invocation
  * with information and utilities for handling the invocation. In particular,
  * this contains the {@link core.Fetcher}, which is used for making HTTP requests.

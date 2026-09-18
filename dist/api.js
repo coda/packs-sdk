@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeSuggestionFormula = exports.SUGGESTION_TEXT_PARAMETER_NAME = exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -24,10 +24,11 @@ const schema_3 = require("./schema");
 const schema_4 = require("./schema");
 const schema_5 = require("./schema");
 const schema_6 = require("./schema");
+const schema_7 = require("./schema");
 const api_types_12 = require("./api_types");
 const migration_1 = require("./helpers/migration");
 const api_types_13 = require("./api_types");
-const schema_7 = require("./schema");
+const schema_8 = require("./schema");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -287,7 +288,7 @@ function makeParameter(paramDefinition) {
             crawlStrategy = {
                 parentTable: {
                     tableName,
-                    propertyKey: (0, schema_6.normalizeSchemaKey)(propertyKey),
+                    propertyKey: (0, schema_7.normalizeSchemaKey)(propertyKey),
                     inheritPermissions,
                 },
             };
@@ -551,7 +552,7 @@ function makeFormula(fullDefinition) {
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
                 resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
-                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
+                schema: (0, object_utils_1.deepCopy)((0, schema_6.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = arrayFormula;
@@ -564,7 +565,7 @@ function makeFormula(fullDefinition) {
                 ...rest,
                 resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
-                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)(schema)),
+                schema: (0, object_utils_1.deepCopy)((0, schema_6.normalizeSchema)(schema)),
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = objectFormula;
@@ -812,7 +813,7 @@ function makeObjectFormula({ response, ...definition }) {
         if (isResponseHandlerTemplate(response) && response.schema) {
             // Since the schema may be re-used, make a copy.
             const inputSchema = (0, object_utils_1.deepCopy)(response.schema);
-            response.schema = (0, schema_5.normalizeSchema)(inputSchema);
+            response.schema = (0, schema_6.normalizeSchema)(inputSchema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -915,7 +916,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
             name: `${identityName}.DynamicPropertyOptions`,
         });
     }
-    const normalizedSchema = (0, schema_5.normalizeSchema)(schema);
+    const normalizedSchema = (0, schema_6.normalizeSchema)(schema);
     const formulaSchema = getSchema
         ? undefined
         : { type: schema_2.ValueType.Array, items: normalizedSchema };
@@ -1109,7 +1110,7 @@ exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, ...rest } = definition;
     const { parameters } = rest;
-    response.schema = response.schema ? (0, schema_5.normalizeSchema)(response.schema) : undefined;
+    response.schema = response.schema ? (0, schema_6.normalizeSchema)(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
     const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)(response);
@@ -1214,7 +1215,7 @@ exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 function listPropertiesWithOptionsFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {
-        const propertySchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
+        const propertySchema = (0, schema_5.maybeUnwrapArraySchema)(schema.properties[propertyName]);
         if (!propertySchema || !('options' in propertySchema)) {
             continue;
         }
@@ -1242,10 +1243,10 @@ schema, identityName, }) {
         return undefined;
     }
     for (const propertyName of propertiesWithOptionsFunctions) {
-        const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
-        const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
-        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
-        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
+        const inputSchemaWithoutArray = (0, schema_5.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
+        const outputSchema = (0, schema_5.maybeUnwrapArraySchema)(schema.properties[propertyName]);
+        (0, ensure_1.assertCondition)((0, schema_8.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
+        (0, ensure_1.assertCondition)((0, schema_8.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
         outputSchema.options = propertyName;
         namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
             execute: inputSchemaWithoutArray.options,
@@ -1255,3 +1256,63 @@ schema, identityName, }) {
     }
     return namedPropertyOptions;
 }
+/**
+ * The name a {@link makeSuggestionFormula} formula gives its one parameter. The runtime invokes a
+ * producer by parameter name, so this is part of the wire contract rather than a cosmetic choice --
+ * which is why the factory owns it instead of leaving it to the caller.
+ *
+ * @internal
+ * @hidden
+ */
+exports.SUGGESTION_TEXT_PARAMETER_NAME = 'text';
+/**
+ * Builds the definition for a suggestion-producing formula: the formula an agent names in its
+ * {@link core.SuggestionProducerTool}, which the runtime calls directly instead of running an LLM.
+ *
+ * Fixes every part of the contract that a hand-written definition can get wrong, each of which is
+ * a silent failure rather than a loud one -- a producer that does not match is not rejected at
+ * runtime, it is skipped, and the run falls back to the model and returns a plausible answer:
+ *
+ * - the parameter list: one required string named `text`, because the runtime passes arguments by
+ *   parameter name;
+ * - the result schema: {@link makeSuggestionResultSchema}, so the runtime's parser recognizes it;
+ * - the result type: `execute` must return a {@link SuggestionResult}, checked at compile time.
+ *
+ * Pass the result to `pack.addFormula`.
+ *
+ * @example
+ * ```ts
+ * pack.addFormula(
+ *   makeSuggestionFormula({
+ *     name: 'CheckSuggestions',
+ *     description: 'Flags feedback that is too hedged to land.',
+ *     execute: async (text, context) => ({suggestions: await check(context, text)}),
+ *   }),
+ * );
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+function makeSuggestionFormula({ execute, ...rest }) {
+    var _a;
+    return {
+        ...rest,
+        cacheTtlSecs: (_a = rest.cacheTtlSecs) !== null && _a !== void 0 ? _a : 0,
+        resultType: schema_2.ValueType.Object,
+        schema: (0, schema_4.makeSuggestionResultSchema)(),
+        parameters: [
+            makeParameter({
+                type: api_types_3.ParameterType.String,
+                name: exports.SUGGESTION_TEXT_PARAMETER_NAME,
+                description: 'The text to check.',
+            }),
+        ],
+        // The tuple-to-argument unpacking is the only reason this wrapper exists at the `execute`
+        // level: a producer author writes `(text, context)` rather than destructuring a one-element
+        // parameter array, and the `SuggestionResult` return type is enforced by the signature above
+        // rather than inferred from whatever the schema happened to erase to.
+        execute: ([text], context) => execute(text, context),
+    };
+}
+exports.makeSuggestionFormula = makeSuggestionFormula;
