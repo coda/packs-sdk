@@ -343,7 +343,7 @@ You should see the name, description, and parameters in the help text, get back 
 </div>
 <div markdown>
 
-<img src="site:images/tutorial_formula_scaffold.png" srcset="site:images/tutorial_formula_scaffold_2x.png 2x" class="screenshot" alt="Working scaffold">
+{{screenshot("images/tutorial_formula_scaffold.png", "Working scaffold")}}
 
 </div>
 </section>
@@ -442,7 +442,7 @@ Rebuild your Pack, and refresh the formula the formula in the doc. If everything
 </div>
 <div markdown>
 
-<img src="site:images/tutorial_formula_logic.png" srcset="site:images/tutorial_formula_logic_2x.png 2x" class="screenshot" alt="The logic working.">
+{{screenshot("images/tutorial_formula_logic.png", "The logic working.")}}
 
 </div>
 </section>
@@ -601,7 +601,7 @@ Rebuild your Pack, and try out the new `byWord` parameter in a formula. If every
 </div>
 <div markdown>
 
-<img src="site:images/tutorial_formula_feature.png" srcset="site:images/tutorial_formula_feature_2x.png 2x" class="screenshot" alt="The new feature working.">
+{{screenshot("images/tutorial_formula_feature.png", "The new feature working.")}}
 
 </div>
 </section>

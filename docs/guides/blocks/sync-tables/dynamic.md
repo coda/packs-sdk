@@ -373,9 +373,9 @@ The `getSchema` function is first run when the table is initially dragged into t
 Instead of returning a flat list of datasets in the `listDynamicUrls` function, you can instead organize them into folders.
 
 === ":superhuman-go: Go"
-    <img src="site:images/dynamic_sync_table_folder_go.png" srcset="site:images/dynamic_sync_table_folder_go_2x.png 2x" class="screenshot" alt="Dataset list organized into folders in Superhuman Go">
+    {{screenshot("images/dynamic_sync_table_folder_go.png", "Dataset list organized into folders in Superhuman Go")}}
 === ":superhuman-docs: Docs"
-    <img src="site:images/dynamic_sync_table_folder.png" srcset="site:images/dynamic_sync_table_folder_2x.png 2x" class="screenshot" alt="Organize the URL list into folders">
+    {{screenshot("images/dynamic_sync_table_folder.png", "Organize the URL list into folders")}}
 
 To create a folder, return a [`MetadataFormulaObjectResultType`][MetadataFormulaObjectResultType] with `hasChildren: true`. When a user clicks on a folder, the `listDynamicUrls` function will be re-run, passing in the URL of the parent folder as the second parameter.
 
@@ -401,9 +401,9 @@ Folders can be nested inside of other folders, allowing you to represent complex
 Finding the desired dataset, even when [organized into folders](#folders), can be difficult when the there are many options to select from. If the underlying API supports it you can allow users to search for the dataset instead.
 
 === ":superhuman-go: Go"
-    <img src="site:images/dynamic_sync_table_search_go.png" srcset="site:images/dynamic_sync_table_search_go_2x.png 2x" class="screenshot" alt="Searching for a dataset in Superhuman Go">
+    {{screenshot("images/dynamic_sync_table_search_go.png", "Searching for a dataset in Superhuman Go")}}
 === ":superhuman-docs: Docs"
-    <img src="site:images/dynamic_sync_table_search.png" srcset="site:images/dynamic_sync_table_search_2x.png 2x" class="screenshot" alt="Searching for a dataset.">
+    {{screenshot("images/dynamic_sync_table_search.png", "Searching for a dataset.")}}
 
  To enable this search feature, add a `searchDynamicUrls` function to your sync table definition. This function works identically to `listDynamicUrls`, except that the 2nd parameter contains the user-entered search term instead of the folder URL.
 
@@ -429,7 +429,7 @@ pack.addDynamicSyncTable({
 
 In some cases it's not feasible to generate a list of all possible datasets the user can select from. In these cases you can omit the `listDynamicUrls` function and instead have your users directly enter the URL of the dataset.
 
-<img src="site:images/dynamic_sync_table_url.png" srcset="site:images/dynamic_sync_table_url_2x.png 2x" class="screenshot" alt="Manually entering the dynamic URL">
+{{screenshot("images/dynamic_sync_table_url.png", "Manually entering the dynamic URL")}}
 
 When using this approach you should use a user-facing URL as the dynamic URL, as that is what users will have access to. You'll need some way to translate those URLs into something you can use with the API, typically by extracting an ID.
 

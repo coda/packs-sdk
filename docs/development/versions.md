@@ -44,7 +44,7 @@ There are some restrictions to the version numbers you can select however:
 
 The **History** section in the Pack Studio shows a log of all past versions of your code, including when they were created and by who. For each version you can also download the code at that checkpoint or restore it.
 
-<img src="site:images/versions_restore.png" srcset="site:images/versions_restore_2x.png 2x" class="screenshot" alt="Version history of a Pack">
+{{screenshot("images/versions_restore.png", "Version history of a Pack")}}
 
 Restoring a previous version simply loads the code from that version into the web editor, and you'll need to re-build that code (and hence create a new version) to actually change the state of your Pack.
 
@@ -68,7 +68,7 @@ Each release is just a pointer an existing Pack version, so to release new code 
 
 To determine which version of your Pack a given release corresponds to, visit the **History** section of the Pack Studio. Release numbers will be displayed next to their corresponding version, and the **Released** tab can be used to filter the versions to just those that were released.
 
-<img src="site:images/versions_releases.png" srcset="site:images/versions_releases_2x.png 2x" class="screenshot" alt="Versions tagged with release">
+{{screenshot("images/versions_releases.png", "Versions tagged with release")}}
 
 
 ### Rollout
@@ -115,7 +115,7 @@ You can change which version is used at any time.
         1.  Click the gear icon :octicons-gear-16:.
         1.  Change the **Pack version** option as desired.
 
-    <img src="site:images/agent_version.png" srcset="site:images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the connector.">
+    {{screenshot("images/agent_version.png", "A screenshot of the dropdown that can switch the version of the Pack used by the connector.")}}
 
 === ":superhuman-docs: Docs"
 
@@ -125,7 +125,7 @@ You can change which version is used at any time.
     1. Click the gear icon on the panel.
     1. Change the **Installed in this doc** setting as desired.
 
-    <img src="site:images/pmt_settings.png" srcset="site:images/pmt_settings_2x.png 2x" class="screenshot" alt="Changing the version installed in a doc from the Pack maker tools settings">
+    {{screenshot("images/pmt_settings.png", "Changing the version installed in a doc from the Pack maker tools settings")}}
 
     !!! warning "Don't use latest version for published docs"
         The **Latest Version** option is useful while developing and testing, but you must switch to **Latest Release** before you can publish a doc or convert it to a template — and once a doc is published or turned into a template you won't be able to change the version at all. Using **Latest Release** also ensures you don't break your doc as you change your Pack, and that users get the same behavior when they copy it.

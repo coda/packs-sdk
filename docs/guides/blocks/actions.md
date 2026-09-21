@@ -18,18 +18,18 @@ Once your Pack is installed, its actions are available for users to run.
 
     An action is exposed as a tool that the agent can call while completing a task. Because actions typically create, update, or delete data, :superhuman-go: Go prompts the user to confirm before running one.
 
-    <img src="site:images/actions_go_approval.png" srcset="site:images/actions_go_approval_2x.png 2x" class="screenshot" alt="Action approval prompt in Superhuman Go">
+    {{screenshot("images/actions_go_approval.png", "Action approval prompt in Superhuman Go")}}
 
 === ":superhuman-docs: Docs"
 
     Actions provided by Packs appear as choices in the button and automation dialogs along-side built-in actions. Actions can also be used in the formula editor for those buttons and automations.
 
     === "In a button"
-        <img src="site:images/actions_button.png" srcset="site:images/actions_button_2x.png 2x" class="screenshot" alt="Selecting an action for a button">
+        {{screenshot("images/actions_button.png", "Selecting an action for a button")}}
     === "In an automation"
-        <img src="site:images/actions_automation.png" srcset="site:images/actions_automation_2x.png 2x" class="screenshot" alt="Selecting an action for an automation">
+        {{screenshot("images/actions_automation.png", "Selecting an action for an automation")}}
     === "In the formula editor"
-        <img src="site:images/actions_formula.png" srcset="site:images/actions_formula_2x.png 2x" class="screenshot" alt="Using actions in the formula editor.">
+        {{screenshot("images/actions_formula.png", "Using actions in the formula editor.")}}
 
 
 ## Creating actions
@@ -104,7 +104,7 @@ In some cases there is no meaningful result, in which case the convention is to 
 
 Like other building blocks, an action has an account parameter where you can select any account connected to the document. Actions can additionally use the special option "User's private account". When that option is selected, each user who presses the button takes the action using one of their own connected accounts, or is prompted to create one if they haven't set one up already.
 
-<img src="site:images/actions_private_account.png" srcset="site:images/actions_private_account_2x.png 2x" class="screenshot" alt="Private account option for actions">
+{{screenshot("images/actions_private_account.png", "Private account option for actions")}}
 
 
 ## Caching & recalculation
