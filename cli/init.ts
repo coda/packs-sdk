@@ -1,3 +1,4 @@
+import {confirmOrFail} from './confirm';
 import fs from 'fs-extra';
 import path from 'path';
 import {printAndExit} from '../testing/helpers';
@@ -34,7 +35,16 @@ function escapeShellCmd(cmd: string): string {
   return cmd.replace('>', '\\>').replace('<', '\\<');
 }
 
-export async function handleInit() {
+export async function handleInit({yes}: {yes?: boolean} = {}) {
+  // Warn before clobbering an existing pack.ts, since init copies the template over it.
+  if (fs.existsSync(path.join(process.cwd(), 'pack.ts'))) {
+    confirmOrFail({
+      yes,
+      prompt: 'A pack.ts file already exists. Do you want to overwrite it? (y/N)?',
+      example: 'packs init --yes',
+    });
+  }
+
   // stdout looks like `8.1.2\n`.
   const npmVersion = parseInt(spawnProcess('npm -v', {stdio: 'pipe'}).stdout.toString().trim().split('.', 1)[0], 10);
   if (npmVersion < 7) {

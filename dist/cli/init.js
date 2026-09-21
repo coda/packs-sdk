@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleInit = void 0;
+const confirm_1 = require("./confirm");
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
@@ -31,7 +32,15 @@ function isGitAvailable() {
 function escapeShellCmd(cmd) {
     return cmd.replace('>', '\\>').replace('<', '\\<');
 }
-async function handleInit() {
+async function handleInit({ yes } = {}) {
+    // Warn before clobbering an existing pack.ts, since init copies the template over it.
+    if (fs_extra_1.default.existsSync(path_1.default.join(process.cwd(), 'pack.ts'))) {
+        (0, confirm_1.confirmOrFail)({
+            yes,
+            prompt: 'A pack.ts file already exists. Do you want to overwrite it? (y/N)?',
+            example: 'packs init --yes',
+        });
+    }
     // stdout looks like `8.1.2\n`.
     const npmVersion = parseInt((0, helpers_2.spawnProcess)('npm -v', { stdio: 'pipe' }).stdout.toString().trim().split('.', 1)[0], 10);
     if (npmVersion < 7) {

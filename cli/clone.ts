@@ -66,14 +66,14 @@ export async function handleClone({packIdOrUrl, apiEndpoint, apiToken, yes}: Arg
       example: `packs clone ${packIdOrUrl} --yes`,
     });
 
-    await handleInit();
+    await handleInit({yes: true});
     storePackId(manifestDir, packId, apiEndpoint);
     return;
   }
 
   print(`Fetched source at version ${packVersion}`);
 
-  await handleInit();
+  await handleInit({yes: true});
   storePackId(manifestDir, packId, apiEndpoint);
 
   fs.writeFileSync(path.join(manifestDir, 'pack.ts'), sourceCode);

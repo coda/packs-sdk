@@ -57,12 +57,12 @@ async function handleClone({ packIdOrUrl, apiEndpoint, apiToken, yes }) {
             prompt: 'Do you want to continue initializing with template starter code instead (y/N)?',
             example: `packs clone ${packIdOrUrl} --yes`,
         });
-        await (0, init_1.handleInit)();
+        await (0, init_1.handleInit)({ yes: true });
         (0, config_storage_1.storePackId)(manifestDir, packId, apiEndpoint);
         return;
     }
     (0, helpers_5.print)(`Fetched source at version ${packVersion}`);
-    await (0, init_1.handleInit)();
+    await (0, init_1.handleInit)({ yes: true });
     (0, config_storage_1.storePackId)(manifestDir, packId, apiEndpoint);
     fs_extra_1.default.writeFileSync(path_1.default.join(manifestDir, 'pack.ts'), sourceCode);
     (0, helpers_6.printAndExit)(`cloned pack_id: ${packId}\nversion: ${packVersion}\nfile: pack.ts`, 0);
