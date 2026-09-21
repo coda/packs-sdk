@@ -41,5 +41,8 @@ Only Packs are uploadable today. Installing listing skills and UI, resolving com
 
 - `radical-candor/` shows an agent-owned review skill that uses a private feedback connector.
 - `harvey-assistant/` keeps an agent, a private Harvey REST connector (files, streaming, Vault), and Harvey's hosted MCP connector as separate Packs.
+- `customer-briefing/` gives one agent three private connectors with separate OAuth, bearer-token, and query-token authentication.
+
+The Harvey example's [`PLATFORM.md`](harvey-assistant/PLATFORM.md) separates reusable platform and SDK work from Harvey-specific connector and agent logic.
 
 The schema and plan are implemented in [`../../plugin/listing.ts`](../../plugin/listing.ts).

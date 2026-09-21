@@ -196,6 +196,38 @@ describe('Plugin listing', () => {
     ]);
   });
 
+  it('allows one agent to use multiple private connectors', () => {
+    const root = path.join(tmpDir, 'customer-briefing');
+    const listing = baseListing();
+    for (const connectorName of ['crm', 'billing', 'support']) {
+      listing.components[connectorName] = {
+        type: 'connector',
+        manifest: `${connectorName}/pack.ts`,
+        visibility: 'private',
+      };
+    }
+    const agent = listing.components.agent;
+    if (agent.type === 'agent') {
+      agent.uses = [
+        {component: 'crm', formulas: [{formulaName: 'GetAccount'}]},
+        {component: 'billing', formulas: [{formulaName: 'GetSubscription'}]},
+        {component: 'support', formulas: [{formulaName: 'ListOpenCases'}]},
+      ];
+    }
+    const pluginJsonPath = writePlugin(root, listing);
+
+    const plan = planPluginPublish(pluginJsonPath);
+    assert.deepEqual(plan.connectorPolicies, [
+      {connector: 'crm', visibility: 'private', allowedConsumers: ['agent']},
+      {connector: 'billing', visibility: 'private', allowedConsumers: ['agent']},
+      {connector: 'support', visibility: 'private', allowedConsumers: ['agent']},
+    ]);
+    assert.deepEqual(
+      plan.installBindings.map(binding => binding.connector),
+      ['crm', 'billing', 'support'],
+    );
+  });
+
   it('rejects duplicate connector references from one agent', () => {
     const root = path.join(tmpDir, 'duplicate-connector');
     const listing = baseListing();

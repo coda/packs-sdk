@@ -6,3 +6,5 @@ Connect two accounts. Harvey's REST API and hosted MCP server use different auth
 2. **Harvey MCP** (public connector): sign in with the Harvey account OAuth flow. Hosted MCP must be enabled for the user. MCP tools include legal Q&A, Vault listing and questions, and research knowledge sources.
 
 `AskHarvey` can attach a file or ground in a Vault folder, not both. Set `stream` to consume Harvey's SSE completion stream; the formula still returns one assembled string because Pack formulas do not stream tokens to the chat UI.
+
+See [`PLATFORM.md`](PLATFORM.md) for which parts should move into the plugin platform or reusable Packs SDK helpers.

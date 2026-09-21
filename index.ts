@@ -169,6 +169,15 @@ export {getQueryParams} from './helpers/url';
 export {join as joinUrl} from './helpers/url';
 export {withQueryParams} from './helpers/url';
 
+// HTTP helpers.
+export type {DownloadedFile} from './helpers/http';
+export type {MultipartBody} from './helpers/http';
+export type {MultipartFile} from './helpers/http';
+export type {ServerSentEvent} from './helpers/http';
+export {downloadFile} from './helpers/http';
+export {makeMultipartBody} from './helpers/http';
+export {parseServerSentEvents} from './helpers/http';
+
 // Schema helpers.
 export {getEffectivePropertyKeysFromSchema} from './helpers/schema';
 

@@ -66,22 +66,22 @@ pack.addFormula({
       fields.knowledge_sources = JSON.stringify([{type: 'vault', folder_id: vaultFolderId}]);
     }
 
-    const files = fileUrl ? [await readUpload(fileUrl, 'file', context)] : undefined;
-    const boundary = makeBoundary();
+    const files = fileUrl ? [{fieldName: 'file', ...(await sdk.downloadFile(fileUrl, context.fetcher))}] : undefined;
+    const multipart = sdk.makeMultipartBody(fields, files);
     const response = await context.fetcher.fetch({
       method: 'POST',
       url: CompletionUrl,
       headers: {
-        'Content-Type': `multipart/form-data; boundary=${boundary}`,
+        'Content-Type': multipart.contentType,
         Accept: useStream ? 'text/event-stream' : 'application/json',
       },
-      body: encodeMultipart(boundary, fields, files),
+      body: multipart.body,
       isBinaryResponse: useStream,
       cacheTtlSecs: 0,
     });
 
     if (useStream) {
-      return assembleSseResponse(bufferToString(response.body));
+      return assembleSseResponse(response.body as Buffer);
     }
 
     const body = response.body as CompletionBody;
@@ -147,19 +147,22 @@ pack.addFormula({
   ],
   resultType: sdk.ValueType.String,
   async execute([projectId, fileUrl, filePath], context) {
-    const upload = await readUpload(fileUrl, 'files', context);
+    const upload = {
+      fieldName: 'files',
+      ...(await sdk.downloadFile(fileUrl, context.fetcher)),
+    };
     const fields: Record<string, string> = {};
     if (filePath) {
       fields.file_paths = filePath;
     }
-    const boundary = makeBoundary();
+    const multipart = sdk.makeMultipartBody(fields, [upload]);
     const response = await context.fetcher.fetch<{file_ids: string[]; project_id: string}>({
       method: 'POST',
       url: `https://${ApiDomain}/api/v1/vault/upload_files/${encodeURIComponent(projectId)}`,
       headers: {
-        'Content-Type': `multipart/form-data; boundary=${boundary}`,
+        'Content-Type': multipart.contentType,
       },
-      body: encodeMultipart(boundary, fields, [upload]),
+      body: multipart.body,
       cacheTtlSecs: 0,
     });
     return JSON.stringify(response.body);
@@ -171,53 +174,11 @@ interface CompletionBody {
   response_with_citations?: string | null;
 }
 
-interface MultipartFile {
-  name: string;
-  filename: string;
-  contentType: string;
-  data: Buffer;
-}
-
-async function readUpload(fileUrl: string, fieldName: string, context: sdk.ExecutionContext): Promise<MultipartFile> {
-  const response = await context.fetcher.fetch({
-    method: 'GET',
-    url: fileUrl,
-    isBinaryResponse: true,
-    disableAuthentication: true,
-  });
-  const contentDisposition = String(response.headers['content-disposition'] || '');
-  const filename = contentDisposition.match(/filename="?([^";]+)"?/)?.[1] || fileUrl.split('/').pop() || 'document';
-  return {
-    name: fieldName,
-    filename,
-    contentType: String(response.headers['content-type'] || 'application/octet-stream'),
-    data: response.body as Buffer,
-  };
-}
-
-function encodeMultipart(boundary: string, fields: Record<string, string>, files: MultipartFile[] = []): Buffer {
-  const parts: Buffer[] = [];
-  for (const [name, value] of Object.entries(fields)) {
-    parts.push(Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n${value}\r\n`));
-  }
-  for (const file of files) {
-    parts.push(
-      Buffer.from(
-        `--${boundary}\r\nContent-Disposition: form-data; name="${file.name}"; filename="${file.filename}"\r\nContent-Type: ${file.contentType}\r\n\r\n`,
-      ),
-    );
-    parts.push(file.data);
-    parts.push(Buffer.from('\r\n'));
-  }
-  parts.push(Buffer.from(`--${boundary}--\r\n`));
-  return Buffer.concat(parts);
-}
-
-function assembleSseResponse(body: string): string {
+function assembleSseResponse(body: string | Buffer): string {
   const chunks: string[] = [];
   let cited: string | undefined;
-  for (const line of body.split(/\r?\n/)) {
-    const payload = line.startsWith('data:') ? line.slice(5).trim() : '';
+  for (const event of sdk.parseServerSentEvents(body)) {
+    const payload = event.data;
     if (!payload || payload === '[DONE]') {
       continue;
     }
@@ -230,15 +191,4 @@ function assembleSseResponse(body: string): string {
     }
   }
   return cited || chunks.join('');
-}
-
-function bufferToString(body: unknown): string {
-  if (Buffer.isBuffer(body)) {
-    return body.toString('utf8');
-  }
-  return String(body ?? '');
-}
-
-function makeBoundary(): string {
-  return `coda-packs-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
