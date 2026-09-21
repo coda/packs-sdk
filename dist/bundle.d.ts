@@ -5730,6 +5730,11 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
 	formulas?: Array<{
 		/** The name of the formula to use as a tool. */
 		formulaName: string;
+		/**
+		 * Whether the formula is offered. Defaults to true.
+		 * @hidden In development
+		 */
+		enabled?: boolean;
 	}>;
 }
 /**
@@ -6121,6 +6126,478 @@ export interface SuggestedPrompt {
 	prompt: string;
 }
 /**
+ * The definition of an agent.
+ *
+ * @internal
+ * @hidden
+ */
+export interface AgentDefinition {
+	/**
+	 * What the agent is told to do. A missing `setInstructions()` fails at `packs validate`.
+	 */
+	instructions: string;
+	/**
+	 * The tools the agent may use. An empty list means no tools, not a default set.
+	 */
+	tools: AgentTool[];
+}
+/**
+ * A tool an agent can use.
+ *
+ * @internal
+ * @hidden
+ */
+export type AgentTool = CodaDocsAndTablesTool | MailAndCalendarTool | WebSearchTool | (Omit<PackTool, "packId"> & {
+	packId: number;
+});
+/**
+ * The tools an agent can use, as written on the builder.
+ *
+ * @internal
+ * @hidden
+ */
+export interface AgentToolsDef {
+	/**
+	 * Read and write Superhuman Docs documents and tables.
+	 */
+	docs?: boolean;
+	/**
+	 * Read and send Superhuman Mail email, and read the calendar.
+	 */
+	mail?: boolean;
+	/**
+	 * Search the public internet, optionally restricted to `allowedDomains`.
+	 */
+	webSearch?: boolean | {
+		allowedDomains?: string[];
+	};
+	/**
+	 * Connector packs this agent can call, one entry per pack.
+	 */
+	connectors?: Array<{
+		/**
+		 * The id of the connector pack.
+		 */
+		packId: number;
+		/**
+		 * The formulas to offer, if not all of them.
+		 */
+		formulas?: Array<{
+			formulaName: string;
+		}>;
+	}>;
+}
+/**
+ * When a while-writing trigger offers proactive help, vs. only on request.
+ * Absent defaults to `Proactive`.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerAssistMode {
+	OnDemand = "on_demand",
+	Proactive = "proactive"
+}
+/**
+ * The color a while-writing trigger's suggestion renders in. Absent defaults to `Purple`.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerSuggestionColor {
+	Blue = "blue",
+	Green = "green",
+	Mulberry = "mulberry",
+	Neutral = "neutral",
+	Orange = "orange",
+	Purple = "purple",
+	Red = "red",
+	Yellow = "yellow"
+}
+/**
+ * How a while-writing trigger's suggestion renders. Absent defaults to `Auto`, which leaves the
+ * choice to the client.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerDecorationStyle {
+	Auto = "auto",
+	Underline = "underline",
+	Vbar = "vbar"
+}
+/**
+ * Where a while-writing agent may offer help. Absent defaults to every surface.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum ContextualTriggerSurface {
+	ChatAndMessages = "chat_messages",
+	CodingEnvironment = "coding_environment",
+	CustomerService = "customer_service",
+	Docs = "docs",
+	Email = "email",
+	SearchAndBrowser = "search_browser",
+	SocialMedia = "social_media"
+}
+/**
+ * Which kind of default trigger an entry declares. More kinds join this enum as they become
+ * authorable.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum DefaultTriggerKind {
+	Event = "event",
+	Schedule = "schedule",
+	WhileWriting = "whileWriting"
+}
+/**
+ * Base interface for all default trigger definitions.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
+	/** The kind identifier for this trigger. */
+	kind: T;
+}
+/**
+ * A default schedule trigger a pack's agent ships with. Adopters receive it paused.
+ *
+ * @internal
+ * @hidden
+ */
+export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.Schedule> {
+	/**
+	 * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line anchoring the start and a
+	 * `TZID` on it naming the timezone.
+	 *
+	 * Takes `FREQ` of `HOURLY` through `YEARLY`, with `INTERVAL`, `COUNT`, `UNTIL`, `WKST`, `BYDAY`,
+	 * `BYHOUR`, `BYMINUTE`, `BYMONTH`, `BYMONTHDAY`, and `BYSETPOS`. Rules the builder's picker
+	 * cannot draw, such as `FREQ=YEARLY` or `BYMONTHDAY=-1`, upload and render read-only.
+	 *
+	 * Rejected: a schedule firing more than once an hour, an rrule set, an unresolvable `TZID`, a
+	 * date that does not exist, an `UNTIL` before the `DTSTART`, and a rule over 512 characters.
+	 */
+	rruleString: string;
+}
+/**
+ * A default while-writing trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export interface WhileWritingTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.WhileWriting> {
+	/** Natural language condition the trigger fires on, e.g. "Offer a citation when the user asserts a statistic". */
+	condition: string;
+	assistMode?: ContextualTriggerAssistMode;
+	suggestionColor?: ContextualTriggerSuggestionColor;
+	decorationStyle?: ContextualTriggerDecorationStyle;
+	surfaces?: ContextualTriggerSurface[];
+	/** Domains this trigger will not activate on. Max 50. */
+	blockedDomains?: string[];
+}
+/**
+ * Which product's events a default event trigger listens to.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum EventTriggerType {
+	Mail = "mail",
+	Notetaker = "notetaker",
+	Slack = "slack"
+}
+/**
+ * Base interface for all default event trigger definitions.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseEventTrigger<T extends EventTriggerType> extends BaseDefaultTrigger<DefaultTriggerKind.Event> {
+	/** Which product's events this trigger listens to. */
+	type: T;
+}
+/**
+ * How a filter condition compares its field to its value.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum FilterOperator {
+	NumberAtLeast = "numberAtLeast",
+	NumberAtMost = "numberAtMost",
+	NumberEquals = "numberEquals",
+	TextContains = "textContains",
+	TextDoesNotContain = "textDoesNotContain",
+	TextDoesNotEqual = "textDoesNotEqual",
+	TextEquals = "textEquals"
+}
+/**
+ * The operators an address field accepts: whole value or substring.
+ *
+ * @internal
+ * @hidden
+ */
+export type AddressFilterOperator = FilterOperator.TextContains | FilterOperator.TextDoesNotContain | FilterOperator.TextDoesNotEqual | FilterOperator.TextEquals;
+/**
+ * The operators a free-text field accepts: substring only.
+ *
+ * @internal
+ * @hidden
+ */
+export type TextFilterOperator = FilterOperator.TextContains | FilterOperator.TextDoesNotContain;
+/**
+ * The operators an identifier field accepts: whole value only.
+ *
+ * @internal
+ * @hidden
+ */
+export type IdFilterOperator = FilterOperator.TextDoesNotEqual | FilterOperator.TextEquals;
+/**
+ * The operators a numeric field accepts.
+ *
+ * @internal
+ * @hidden
+ */
+export type NumericFilterOperator = FilterOperator.NumberAtLeast | FilterOperator.NumberAtMost | FilterOperator.NumberEquals;
+/**
+ * How a filter's conditions combine. Absent means `And`.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum FilterCombinator {
+	And = "and",
+	Or = "or"
+}
+/**
+ * The mail events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum MailEventType {
+	MessageReceived = "message_received",
+	MessageSent = "message_sent"
+}
+/**
+ * The part of a message a mail filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum MailFilterField {
+	Body = "body",
+	From = "from",
+	Subject = "subject",
+	To = "to"
+}
+/**
+ * Base interface for all mail filter conditions. Each field admits only the operators that make
+ * sense for it.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseMailFilterCondition<F extends MailFilterField, O extends FilterOperator> {
+	/** The part of the message to match on. */
+	field: F;
+	/** How to compare the field to {@link value}. */
+	operator: O;
+	/** What to match the field against. Max 320 characters on an address field, 998 on a text field. */
+	value: string;
+}
+/**
+ * A condition on an address field.
+ *
+ * @internal
+ * @hidden
+ */
+export type MailAddressFilterCondition = BaseMailFilterCondition<MailFilterField.From | MailFilterField.To, AddressFilterOperator>;
+/**
+ * A condition on a text field.
+ *
+ * @internal
+ * @hidden
+ */
+export type MailTextFilterCondition = BaseMailFilterCondition<MailFilterField.Body | MailFilterField.Subject, TextFilterOperator>;
+/**
+ * A single condition on a mail event trigger.
+ *
+ * @internal
+ * @hidden
+ */
+export type MailEventFilterCondition = MailAddressFilterCondition | MailTextFilterCondition;
+/**
+ * Which messages a mail event trigger fires on.
+ *
+ * @internal
+ * @hidden
+ */
+export interface MailEventFilters {
+	/** The conditions to match. One to 20 of them. */
+	conditions: MailEventFilterCondition[];
+	combinator?: FilterCombinator;
+}
+/**
+ * A default mail event trigger a pack's agent ships with. The mailbox is bound at install.
+ *
+ * @internal
+ * @hidden
+ */
+export interface MailEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Mail> {
+	/** The mail event that fires the trigger. */
+	mailEventType: MailEventType;
+	/** Which messages fire the trigger. */
+	filters: MailEventFilters;
+}
+/**
+ * The Slack events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum SlackEventType {
+	MessageKeyword = "message_keyword"
+}
+/**
+ * A default Slack event trigger a pack's agent ships with. The workspace and channels are bound
+ * at install.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SlackEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Slack> {
+	/** The Slack event that fires the trigger. */
+	eventType: SlackEventType;
+	/** Keywords to match, case insensitively. One to 50, each up to 200 characters. */
+	keywords: [
+		string,
+		...string[]
+	];
+}
+/**
+ * The notetaker events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum NotetakerEventType {
+	MeetingSummaryCompleted = "meeting.summary.completed"
+}
+/**
+ * The part of a meeting a notetaker filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+export declare enum NotetakerFilterField {
+	DurationMinutes = "durationMinutes",
+	HasExternalAttendees = "hasExternalAttendees",
+	IsRecurring = "isRecurring",
+	MeetingType = "meetingType",
+	Participant = "participant",
+	ParticipantCount = "participantCount",
+	ProjectTag = "projectTag"
+}
+/**
+ * Base interface for all notetaker filter conditions. Each field admits only the operators and
+ * the value bound that suit it.
+ *
+ * @internal
+ * @hidden
+ */
+export interface BaseNotetakerFilterCondition<F extends NotetakerFilterField, O extends FilterOperator> {
+	/** The part of the meeting to match on. */
+	field: F;
+	/** How to compare the field to {@link value}. */
+	operator: O;
+	/** What to match the field against. Max 320 characters on a participant, 128 on a tag. */
+	value: string;
+}
+/**
+ * A condition on a list-valued field.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerAddressFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.Participant | NotetakerFilterField.ProjectTag, AddressFilterOperator>;
+/**
+ * A condition on an identifier field.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerIdFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.MeetingType, IdFilterOperator>;
+/**
+ * A condition on a count field. The value is a one to four digit integer, as a string.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerNumericFilterCondition = BaseNotetakerFilterCondition<NotetakerFilterField.DurationMinutes | NotetakerFilterField.ParticipantCount, NumericFilterOperator>;
+/**
+ * A condition on a yes-or-no field.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NotetakerBooleanFilterCondition extends BaseNotetakerFilterCondition<NotetakerFilterField.HasExternalAttendees | NotetakerFilterField.IsRecurring, IdFilterOperator> {
+	value: "false" | "true";
+}
+/**
+ * A single condition on a notetaker event trigger.
+ *
+ * @internal
+ * @hidden
+ */
+export type NotetakerEventFilterCondition = NotetakerAddressFilterCondition | NotetakerBooleanFilterCondition | NotetakerIdFilterCondition | NotetakerNumericFilterCondition;
+/**
+ * Which meetings a notetaker event trigger fires on. Give conditions, keywords, or both.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NotetakerEventFilters {
+	/** The conditions to match. Up to 20 of them. */
+	conditions?: NotetakerEventFilterCondition[];
+	combinator?: FilterCombinator;
+	/**
+	 * Keywords to match case insensitively against the meeting title and summary, any one of which
+	 * fires the trigger. Up to 50, each up to 200 characters.
+	 */
+	keywords?: string[];
+}
+/**
+ * A default notetaker event trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export interface NotetakerEventTriggerDefinition extends BaseEventTrigger<EventTriggerType.Notetaker> {
+	/** The notetaker event that fires the trigger. */
+	eventType: NotetakerEventType;
+	/** Which meetings fire the trigger. */
+	filters: NotetakerEventFilters;
+}
+/**
+ * A single default event trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export type EventTriggerDefinition = MailEventTriggerDefinition | NotetakerEventTriggerDefinition | SlackEventTriggerDefinition;
+/**
+ * A single default trigger a pack's agent ships with.
+ *
+ * @internal
+ * @hidden
+ */
+export type DefaultTriggerDefinition = EventTriggerDefinition | ScheduleTriggerDefinition | WhileWritingTriggerDefinition;
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -6219,6 +6696,20 @@ export interface PackVersionDefinition {
 	 * Definitions of MCP servers that this pack can connect to.
 	 */
 	mcpServers?: MCPServer[];
+	/**
+	 * The agent defined by this pack, if it defines one. Authored via `sdk.newAgent()`.
+	 *
+	 * @internal
+	 * @hidden
+	 */
+	agent?: AgentDefinition;
+	/**
+	 * The triggers this pack's agent ships with, if it defines any. Authored via `sdk.newAgent()`.
+	 *
+	 * @internal
+	 * @hidden
+	 */
+	defaultTriggers?: DefaultTriggerDefinition[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -6286,11 +6777,44 @@ export declare enum HttpStatusCode {
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, "agent" | "defaultTriggers">>): PackDefinitionBuilder;
+/**
+ * Creates a new skeleton agent definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export declare function newAgent(): AgentDefinitionBuilder;
+declare class BaseDefinitionBuilder {
+	/**
+	 * See {@link PackVersionDefinition.version}.
+	 */
+	version?: string;
+	/**
+	 * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+	 *
+	 * This is optional, and you only need to provide a version if you are manually doing
+	 * semantic versioning, or using the CLI. If using the web editor, you can omit this
+	 * and the web editor will automatically provide an appropriate semantic version
+	 * each time you build a version.
+	 *
+	 * @example
+	 * ```
+	 * pack.setVersion('1.2.3');
+	 * ```
+	 */
+	setVersion(version: string): this;
+}
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-export declare class PackDefinitionBuilder implements BasicPackDefinition {
+export declare class PackDefinitionBuilder extends BaseDefinitionBuilder implements BasicPackDefinition {
 	/**
 	 * See {@link PackVersionDefinition.formulas}.
 	 */
@@ -6352,10 +6876,6 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	adminAuthentications?: AdminAuthentication[];
-	/**
-	 * See {@link PackVersionDefinition.version}.
-	 */
-	version?: string;
 	/** @deprecated */
 	formulaNamespace?: string;
 	private _defaultConnectionRequirement;
@@ -6363,7 +6883,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
 	 * rather than constructing a builder directly.
 	 */
-	constructor(definition?: Partial<PackVersionDefinition>);
+	constructor(definition?: Partial<Omit<PackVersionDefinition, "agent" | "defaultTriggers">>);
 	/**
 	 * Adds a formula definition to this pack.
 	 *
@@ -6624,21 +7144,112 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	addNetworkDomain(...domain: string[]): this;
+	private _setDefaultConnectionRequirement;
+}
+declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
-	 * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-	 *
-	 * This is optional, and you only need to provide a version if you are manually doing
-	 * semantic versioning, or using the CLI. If using the web editor, you can omit this
-	 * and the web editor will automatically provide an appropriate semantic version
-	 * each time you build a version.
+	 * See {@link PackVersionDefinition.agent}.
+	 */
+	agent: Partial<AgentDefinition>;
+	/**
+	 * See {@link PackVersionDefinition.defaultTriggers}.
+	 */
+	defaultTriggers?: DefaultTriggerDefinition[];
+	/**
+	 * Sets this agent's instructions.
 	 *
 	 * @example
 	 * ```
-	 * pack.setVersion('1.2.3');
+	 * pack.setInstructions('You help a team run async standups. Keep replies short.');
 	 * ```
 	 */
-	setVersion(version: string): this;
-	private _setDefaultConnectionRequirement;
+	setInstructions(instructions: string): this;
+	/**
+	 * Sets the tools this agent can use. Anything left out is off.
+	 *
+	 * @example
+	 * ```
+	 * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+	 * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+	 * ```
+	 */
+	setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+	/**
+	 * Sets the while-writing trigger this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.setDefaultWhileWritingTrigger({
+	 *   condition: 'Offer a citation when the user asserts a statistic',
+	 *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+	 * });
+	 * ```
+	 */
+	setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, "kind">): this;
+	/**
+	 * Adds a mail event trigger this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.addDefaultMailEventTrigger({
+	 *   mailEventType: sdk.MailEventType.MessageReceived,
+	 *   filters: {
+	 *     conditions: [
+	 *       {
+	 *         field: sdk.MailFilterField.From,
+	 *         operator: sdk.FilterOperator.TextContains,
+	 *         value: '@customers.example.com',
+	 *       },
+	 *     ],
+	 *   },
+	 * });
+	 * ```
+	 */
+	addDefaultMailEventTrigger(trigger: DistributiveOmit<MailEventTriggerDefinition, "kind" | "type">): this;
+	/**
+	 * Adds a Slack event trigger this agent runs on. The workspace and channels are bound at install.
+	 *
+	 * @example
+	 * ```
+	 * pack.addDefaultSlackEventTrigger({
+	 *   eventType: sdk.SlackEventType.MessageKeyword,
+	 *   keywords: ['deploy', 'rollback'],
+	 * });
+	 * ```
+	 */
+	addDefaultSlackEventTrigger(trigger: DistributiveOmit<SlackEventTriggerDefinition, "kind" | "type">): this;
+	/**
+	 * Adds a notetaker event trigger this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.addDefaultNotetakerEventTrigger({
+	 *   eventType: sdk.NotetakerEventType.MeetingSummaryCompleted,
+	 *   filters: {
+	 *     conditions: [
+	 *       {
+	 *         field: sdk.NotetakerFilterField.DurationMinutes,
+	 *         operator: sdk.FilterOperator.NumberAtLeast,
+	 *         value: '30',
+	 *       },
+	 *     ],
+	 *   },
+	 * });
+	 * ```
+	 */
+	addDefaultNotetakerEventTrigger(trigger: DistributiveOmit<NotetakerEventTriggerDefinition, "kind" | "type">): this;
+	private _addDefaultEventTrigger;
+	/**
+	 * Sets the schedule this agent runs on.
+	 *
+	 * @example
+	 * ```
+	 * pack.setDefaultScheduleTrigger({
+	 *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+	 * });
+	 * ```
+	 */
+	setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, "kind">): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
@@ -6657,6 +7268,12 @@ export interface PackFormatMetadata extends Omit<Format, "matchers"> {
 }
 /** @hidden */
 export type SkillMetadata = Omit<Skill, "prompt">;
+/**
+ * An agent definition without its instructions, for the browser-facing metadata.
+ * @internal
+ * @hidden
+ */
+export type AgentMetadata = Omit<AgentDefinition, "instructions">;
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormula"> & {
 	getOptions?: MetadataFormulaMetadata;
@@ -6695,7 +7312,7 @@ export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 /** @hidden */
 export type ExternalSkill = SkillMetadata;
-export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills">;
+export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills" | "agent" | "defaultTriggers">;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {
@@ -6720,6 +7337,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	formats?: ExternalPackFormat[];
 	syncTables?: ExternalSyncTable[];
 	skills?: ExternalSkill[];
+	agent?: AgentMetadata;
 }
 /** @hidden */
 export type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;

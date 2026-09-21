@@ -1,24 +1,36 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
+import type {AgentDefinition} from './types';
+import type {AgentTool} from './types';
+import type {AgentToolsDef} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {DefaultTriggerDefinition} from './types';
+import {DefaultTriggerKind} from './types';
+import type {DistributiveOmit} from './type_utils';
 import type {DynamicSyncTableOptions} from './api';
+import type {EventTriggerDefinition} from './types';
+import {EventTriggerType} from './types';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinitionOptions} from './api';
 import type {MCPServer} from './types';
+import type {MailEventTriggerDefinition} from './types';
+import type {NotetakerEventTriggerDefinition} from './types';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {PartialSkillDef} from './types';
+import type {ScheduleTriggerDefinition} from './types';
 import type {Schema} from './schema';
 import type {Skill} from './types';
 import type {SkillEntrypoints} from './types';
+import type {SlackEventTriggerDefinition} from './types';
 import type {SuggestedPrompt} from './types';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
@@ -26,8 +38,10 @@ import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
+import {ToolType} from './types';
 import type {UserAuthenticationDef} from './api_types';
 import type {ValueType} from './schema';
+import type {WhileWritingTriggerDefinition} from './types';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
@@ -48,14 +62,63 @@ import {wrapMetadataFunction} from './api';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder {
+export function newPack(
+  definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>,
+): PackDefinitionBuilder {
   return new PackDefinitionBuilder(definition);
+}
+
+/**
+ * Creates a new skeleton agent definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export function newAgent(): AgentDefinitionBuilder {
+  return new AgentDefinitionBuilder();
+}
+
+/**
+ * Fields and methods shared by {@link PackDefinitionBuilder} and {@link AgentDefinitionBuilder}.
+ *
+ * @internal
+ * @hidden
+ */
+export class BaseDefinitionBuilder {
+  /**
+   * See {@link PackVersionDefinition.version}.
+   */
+  version?: string;
+
+  /**
+   * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+   *
+   * This is optional, and you only need to provide a version if you are manually doing
+   * semantic versioning, or using the CLI. If using the web editor, you can omit this
+   * and the web editor will automatically provide an appropriate semantic version
+   * each time you build a version.
+   *
+   * @example
+   * ```
+   * pack.setVersion('1.2.3');
+   * ```
+   */
+  setVersion(version: string): this {
+    this.version = version;
+    return this;
+  }
 }
 
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-export class PackDefinitionBuilder implements BasicPackDefinition {
+export class PackDefinitionBuilder extends BaseDefinitionBuilder implements BasicPackDefinition {
   /**
    * See {@link PackVersionDefinition.formulas}.
    */
@@ -120,10 +183,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   adminAuthentications?: AdminAuthentication[];
 
-  /**
-   * See {@link PackVersionDefinition.version}.
-   */
-  version?: string;
   /** @deprecated */
   formulaNamespace?: string;
 
@@ -133,7 +192,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
    * rather than constructing a builder directly.
    */
-  constructor(definition?: Partial<PackVersionDefinition>) {
+  constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>) {
+    super();
     const {
       formulas,
       formats,
@@ -543,24 +603,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  /**
-   * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-   *
-   * This is optional, and you only need to provide a version if you are manually doing
-   * semantic versioning, or using the CLI. If using the web editor, you can omit this
-   * and the web editor will automatically provide an appropriate semantic version
-   * each time you build a version.
-   *
-   * @example
-   * ```
-   * pack.setVersion('1.2.3');
-   * ```
-   */
-  setVersion(version: string): this {
-    this.version = version;
-    return this;
-  }
-
   private _setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this {
     this._defaultConnectionRequirement = connectionRequirement;
 
@@ -610,6 +652,169 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       }
     });
 
+    return this;
+  }
+}
+
+/**
+ * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
+ *
+ * @internal
+ * @hidden
+ */
+export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
+  /**
+   * See {@link PackVersionDefinition.agent}.
+   */
+  agent: Partial<AgentDefinition> = {tools: []};
+  /**
+   * See {@link PackVersionDefinition.defaultTriggers}.
+   */
+  defaultTriggers?: DefaultTriggerDefinition[];
+
+  /**
+   * Sets this agent's instructions.
+   *
+   * @example
+   * ```
+   * pack.setInstructions('You help a team run async standups. Keep replies short.');
+   * ```
+   */
+  setInstructions(instructions: string): this {
+    this.agent.instructions = instructions;
+    return this;
+  }
+
+  /**
+   * Sets the tools this agent can use. Anything left out is off.
+   *
+   * @example
+   * ```
+   * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+   * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+   * ```
+   */
+  setTools({docs, mail, webSearch, connectors}: AgentToolsDef): this {
+    const tools: AgentTool[] = [];
+    if (webSearch) {
+      const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
+      tools.push({type: ToolType.WebSearch, ...(allowedDomains ? {allowedDomains} : {})});
+    }
+    if (docs) {
+      tools.push({type: ToolType.CodaDocsAndTables});
+    }
+    if (mail) {
+      tools.push({type: ToolType.MailAndCalendar});
+    }
+    for (const connector of connectors || []) {
+      tools.push({
+        type: ToolType.Pack,
+        packId: connector.packId,
+        ...(connector.formulas ? {formulas: connector.formulas} : {}),
+      });
+    }
+    this.agent.tools = tools;
+    return this;
+  }
+
+  /**
+   * Sets the while-writing trigger this agent runs on.
+   *
+   * @example
+   * ```
+   * pack.setDefaultWhileWritingTrigger({
+   *   condition: 'Offer a citation when the user asserts a statistic',
+   *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+   * });
+   * ```
+   */
+  setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, 'kind'>): this {
+    const otherTriggers = (this.defaultTriggers ?? []).filter(
+      trigger => trigger.kind !== DefaultTriggerKind.WhileWriting,
+    );
+    this.defaultTriggers = [...otherTriggers, {kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}];
+    return this;
+  }
+
+  /**
+   * Adds a mail event trigger this agent runs on.
+   *
+   * @example
+   * ```
+   * pack.addDefaultMailEventTrigger({
+   *   mailEventType: sdk.MailEventType.MessageReceived,
+   *   filters: {
+   *     conditions: [
+   *       {
+   *         field: sdk.MailFilterField.From,
+   *         operator: sdk.FilterOperator.TextContains,
+   *         value: '@customers.example.com',
+   *       },
+   *     ],
+   *   },
+   * });
+   * ```
+   */
+  addDefaultMailEventTrigger(trigger: DistributiveOmit<MailEventTriggerDefinition, 'kind' | 'type'>): this {
+    return this._addDefaultEventTrigger({type: EventTriggerType.Mail, ...trigger});
+  }
+
+  /**
+   * Adds a Slack event trigger this agent runs on. The workspace and channels are bound at install.
+   *
+   * @example
+   * ```
+   * pack.addDefaultSlackEventTrigger({
+   *   eventType: sdk.SlackEventType.MessageKeyword,
+   *   keywords: ['deploy', 'rollback'],
+   * });
+   * ```
+   */
+  addDefaultSlackEventTrigger(trigger: DistributiveOmit<SlackEventTriggerDefinition, 'kind' | 'type'>): this {
+    return this._addDefaultEventTrigger({type: EventTriggerType.Slack, ...trigger});
+  }
+
+  /**
+   * Adds a notetaker event trigger this agent runs on.
+   *
+   * @example
+   * ```
+   * pack.addDefaultNotetakerEventTrigger({
+   *   eventType: sdk.NotetakerEventType.MeetingSummaryCompleted,
+   *   filters: {
+   *     conditions: [
+   *       {
+   *         field: sdk.NotetakerFilterField.DurationMinutes,
+   *         operator: sdk.FilterOperator.NumberAtLeast,
+   *         value: '30',
+   *       },
+   *     ],
+   *   },
+   * });
+   * ```
+   */
+  addDefaultNotetakerEventTrigger(trigger: DistributiveOmit<NotetakerEventTriggerDefinition, 'kind' | 'type'>): this {
+    return this._addDefaultEventTrigger({type: EventTriggerType.Notetaker, ...trigger});
+  }
+
+  private _addDefaultEventTrigger(eventTrigger: DistributiveOmit<EventTriggerDefinition, 'kind'>): this {
+    this.defaultTriggers = [...(this.defaultTriggers ?? []), {kind: DefaultTriggerKind.Event, ...eventTrigger}];
+    return this;
+  }
+
+  /**
+   * Sets the schedule this agent runs on.
+   *
+   * @example
+   * ```
+   * pack.setDefaultScheduleTrigger({
+   *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+   * });
+   * ```
+   */
+  setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, 'kind'>): this {
+    const otherTriggers = (this.defaultTriggers ?? []).filter(trigger => trigger.kind !== DefaultTriggerKind.Schedule);
+    this.defaultTriggers = [...otherTriggers, {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}];
     return this;
   }
 }

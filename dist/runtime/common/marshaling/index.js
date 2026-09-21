@@ -186,7 +186,14 @@ function applyTransform(input, path, fn) {
         return fn(input);
     }
     else {
-        input[path[0]] = applyTransform(input[path[0]], path.slice(1), fn);
+        // Transform paths originate in the marshaled payload and are not trusted. Legitimate paths,
+        // built by fixUncopyableTypes, only ever descend through own properties of plain objects and
+        // arrays; anything else is rejected.
+        const key = path[0];
+        if (input === null || typeof input !== 'object' || !Object.prototype.hasOwnProperty.call(input, key)) {
+            throw new Error(`Invalid marshaled value: unexpected transform path segment "${key}"`);
+        }
+        input[key] = applyTransform(input[key], path.slice(1), fn);
         return input;
     }
 }

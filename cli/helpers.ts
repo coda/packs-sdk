@@ -68,7 +68,9 @@ export function assertApiToken(codaApiEndpoint: string, cliApiToken?: string): s
   }
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
-    return printAndExit('Missing API token. Please run `packs register` to register one.');
+    return printAndExit(
+      'Error: Missing API token.\n' + '  packs register --apiToken <token>\n' + 'Create a token: packs register --help',
+    );
   }
   return apiKey;
 }
@@ -77,7 +79,9 @@ export function assertPackId(manifestDir: string, codaApiEndpoint: string): numb
   const packId = getPackId(manifestDir, codaApiEndpoint);
   if (!packId) {
     return printAndExit(
-      `Could not find a Pack id in directory ${manifestDir}. You may need to run "packs create" first if this is a brand new pack.`,
+      `Error: Could not find a Pack id in directory ${manifestDir}.\n` +
+        `  packs create <manifestFile>\n` +
+        `  packs link <manifestDir> <packIdOrUrl>`,
     );
   }
   return packId;
@@ -86,7 +90,11 @@ export function assertPackId(manifestDir: string, codaApiEndpoint: string): numb
 export function assertPackIdOrUrl(packIdOrUrl: string): number {
   const packId = parsePackIdOrUrl(packIdOrUrl);
   if (!packId) {
-    return printAndExit(`Not a valid pack ID or URL: ${packIdOrUrl}`);
+    return printAndExit(
+      `Error: Not a valid pack ID or URL: ${packIdOrUrl}\n` +
+        `  packs clone 1234\n` +
+        `  packs clone https://coda.io/p/1234`,
+    );
   }
   return packId;
 }

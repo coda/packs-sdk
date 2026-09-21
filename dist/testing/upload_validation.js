@@ -33,36 +33,49 @@ const types_1 = require("../types");
 const schema_2 = require("../schema");
 const api_types_2 = require("../api_types");
 const schema_3 = require("../schema");
-const schema_4 = require("../schema");
-const api_types_3 = require("../api_types");
-const schema_5 = require("../schema");
-const schema_6 = require("../schema");
 const types_2 = require("../types");
 const types_3 = require("../types");
+const types_4 = require("../types");
+const types_5 = require("../types");
+const schema_4 = require("../schema");
+const api_types_3 = require("../api_types");
+const types_6 = require("../types");
+const schema_5 = require("../schema");
+const schema_6 = require("../schema");
+const types_7 = require("../types");
+const types_8 = require("../types");
+const types_9 = require("../types");
+const types_10 = require("../types");
+const types_11 = require("../types");
 const api_types_4 = require("../api_types");
 const schema_7 = require("../schema");
 const schema_8 = require("../schema");
 const schema_9 = require("../schema");
 const schema_10 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
-const types_4 = require("../types");
+const types_12 = require("../types");
 const schema_11 = require("../schema");
 const schema_12 = require("../schema");
+const types_13 = require("../types");
+const types_14 = require("../types");
 const api_types_5 = require("../api_types");
+const types_15 = require("../types");
+const types_16 = require("../types");
 const schema_13 = require("../schema");
 const api_types_6 = require("../api_types");
-const types_5 = require("../types");
+const types_17 = require("../types");
 const schema_14 = require("../schema");
-const types_6 = require("../types");
+const types_18 = require("../types");
 const __1 = require("..");
-const types_7 = require("../types");
+const types_19 = require("../types");
 const schema_15 = require("../schema");
-const types_8 = require("../types");
+const types_20 = require("../types");
 const schema_16 = require("../schema");
-const types_9 = require("../types");
+const types_21 = require("../types");
+const types_22 = require("../types");
 const api_types_7 = require("../api_types");
-const types_10 = require("../types");
-const types_11 = require("../types");
+const types_23 = require("../types");
+const types_24 = require("../types");
 const api_types_8 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
@@ -84,6 +97,7 @@ const schema_25 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
 const schema_26 = require("../schema");
+const rrule_validation_1 = require("./rrule_validation");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -108,12 +122,23 @@ exports.Limits = {
     BuildingBlockName: 50,
     BuildingBlockDescription: 1000,
     ColumnMatcherRegex: 300,
+    ConditionLength: 2000,
+    KeywordLength: 200,
+    MailFilterAddressValue: 320,
+    MailFilterTextValue: 998,
+    MaxBlockedDomains: 50,
+    MaxDefaultEventTriggers: 20,
+    MaxFilterConditions: 20,
+    MaxKeywords: 50,
     MaxSkillCount: 15,
     MaxSuggestedPromptsPerPack: 3,
+    NotetakerParticipantValue: 320,
+    NotetakerTagValue: 128,
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
     PromptLength: 20000,
+    RRuleStringLength: 512,
     SuggestedPromptText: 500,
     UpdateBatchSize: 1000,
     FilterableProperties: 5,
@@ -515,7 +540,7 @@ function zodUnionInput(schemas) {
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
-    type: zodDiscriminant(types_6.PostSetupType.SetEndpoint),
+    type: zodDiscriminant(types_18.PostSetupType.SetEndpoint),
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
@@ -611,7 +636,7 @@ function buildMetadataSchema({ sdkVersion }) {
             resource: z.string().refine(validateUrlParsesIfAbsolute).optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
-            credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
+            credentialsLocation: z.nativeEnum(types_23.TokenExchangeCredentialsLocation).optional(),
             useDynamicClientRegistration: z.boolean().optional(),
             ...baseAuthenticationValidators,
         }).superRefine((authDef, context) => {
@@ -664,7 +689,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             resource: z.string().url().refine(validateUrlParsesIfAbsolute).optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
-            credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
+            credentialsLocation: z.nativeEnum(types_23.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
         }).superRefine(({ requiresEndpointUrl, tokenUrl }, context) => {
             const isValid = requiresEndpointUrl
@@ -773,7 +798,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const variousSupportedAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
         .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
         .map(([_authType, schema]) => schema);
-    const reservedAuthenticationNames = Object.values(types_7.ReservedAuthenticationNames).map(value => value.toString());
+    const reservedAuthenticationNames = Object.values(types_19.ReservedAuthenticationNames).map(value => value.toString());
     const adminAuthenticationValidator = zodCompleteObject({
         authentication: z.union(zodUnionInput(Object.values(adminAuthenticationValidators))),
         name: z
@@ -1713,7 +1738,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
     });
     const packToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.Pack),
+        type: z.literal(types_24.ToolType.Pack),
         packId: z.number().optional(),
         formulas: z
             .array(zodCompleteStrictObject({
@@ -1729,69 +1754,70 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
             }),
             description: z.string().optional(),
+            enabled: z.boolean().optional(),
         }))
             .optional(),
     });
     const knowledgeToolSourceSchema = z.discriminatedUnion('type', [
         z.object({
-            type: z.literal(types_4.KnowledgeToolSourceType.Global),
+            type: z.literal(types_12.KnowledgeToolSourceType.Global),
         }),
         z.object({
-            type: z.literal(types_4.KnowledgeToolSourceType.Pack),
+            type: z.literal(types_12.KnowledgeToolSourceType.Pack),
             packId: z.number().optional(),
         }),
     ]);
     const knowledgeToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.Knowledge),
+        type: z.literal(types_24.ToolType.Knowledge),
         source: knowledgeToolSourceSchema,
     });
     const screenAnnotationSchema = z.discriminatedUnion('type', [
         z.object({
-            type: z.literal(types_8.ScreenAnnotationType.Rewrite),
+            type: z.literal(types_20.ScreenAnnotationType.Rewrite),
         }),
         z.object({
-            type: z.literal(types_8.ScreenAnnotationType.Guide),
+            type: z.literal(types_20.ScreenAnnotationType.Guide),
         }),
     ]);
     const screenAnnotationToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.ScreenAnnotation),
+        type: z.literal(types_24.ToolType.ScreenAnnotation),
         annotation: screenAnnotationSchema,
     });
     const embeddedContentSchema = z.discriminatedUnion('type', [
         z.object({
-            type: z.literal(types_2.EmbeddedContentType.CopyableBlock),
+            type: z.literal(types_7.EmbeddedContentType.CopyableBlock),
         }),
         z.object({
-            type: z.literal(types_2.EmbeddedContentType.CarouselView),
+            type: z.literal(types_7.EmbeddedContentType.CarouselView),
         }),
         z.object({
-            type: z.literal(types_2.EmbeddedContentType.TabView),
+            type: z.literal(types_7.EmbeddedContentType.TabView),
         }),
     ]);
     const embeddedContentToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.EmbeddedContent),
+        type: z.literal(types_24.ToolType.EmbeddedContent),
         embeddedContent: embeddedContentSchema,
     });
     const mcpToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.MCP),
+        type: z.literal(types_24.ToolType.MCP),
         serverNames: z.array(z.string()).optional(),
         packId: z.number().optional(),
     });
     const contactResolutionToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.ContactResolution),
+        type: z.literal(types_24.ToolType.ContactResolution),
     });
     const codaDocsToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.CodaDocsAndTables),
+        type: z.literal(types_24.ToolType.CodaDocsAndTables),
     });
     const mailAndCalendarToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.MailAndCalendar),
+        type: z.literal(types_24.ToolType.MailAndCalendar),
     });
     const webSearchToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.WebSearch),
+        type: z.literal(types_24.ToolType.WebSearch),
         allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
     });
     const skillModelConfigurationSchema = zodCompleteStrictObject({
-        model: z.nativeEnum(types_9.SkillModel),
+        model: z.nativeEnum(types_21.SkillModel),
         prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
     });
     const toolSchema = z.discriminatedUnion('type', [
@@ -1828,6 +1854,189 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         models: z.array(skillModelConfigurationSchema).optional(),
     });
     const chatSkillSchema = skillSchema.partial();
+    // Missing and empty are separate Zod failures, so both carry the same message.
+    const MissingInstructions = 'An agent must have instructions. Call setInstructions() on the agent.';
+    const agentToolSchema = z.discriminatedUnion('type', [packToolSchema.extend({ packId: z.number() }), codaDocsToolSchema, mailAndCalendarToolSchema, webSearchToolSchema], { error: 'An agent can only use the Docs, Mail, web search, and Pack tools.' });
+    const agentSchema = zodCompleteStrictObject({
+        instructions: z.string({ error: MissingInstructions }).min(1, MissingInstructions).max(exports.Limits.PromptLength),
+        tools: z
+            .array(agentToolSchema)
+            .optional()
+            .default([])
+            .superRefine((tools, context) => {
+            const seen = new Set();
+            tools.forEach((tool, index) => {
+                const key = tool.type === types_24.ToolType.Pack ? `${tool.type}:${tool.packId}` : tool.type;
+                if (seen.has(key)) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: [index],
+                        message: tool.type === types_24.ToolType.Pack
+                            ? `An agent can only name pack ${tool.packId} once.`
+                            : `An agent can only use the ${tool.type} tool once.`,
+                    });
+                }
+                seen.add(key);
+            });
+        }),
+    });
+    const domainSchema = z
+        .string()
+        .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
+        message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+    });
+    const whileWritingTriggerSchema = zodCompleteStrictObject({
+        kind: z.literal(types_6.DefaultTriggerKind.WhileWriting),
+        condition: z.string().min(1).max(exports.Limits.ConditionLength),
+        assistMode: z.nativeEnum(types_2.ContextualTriggerAssistMode).optional(),
+        suggestionColor: z.nativeEnum(types_4.ContextualTriggerSuggestionColor).optional(),
+        decorationStyle: z.nativeEnum(types_3.ContextualTriggerDecorationStyle).optional(),
+        surfaces: z.array(z.nativeEnum(types_5.ContextualTriggerSurface)).optional(),
+        blockedDomains: z.array(domainSchema).max(exports.Limits.MaxBlockedDomains).optional(),
+    });
+    const scheduleTriggerSchema = zodCompleteStrictObject({
+        kind: z.literal(types_6.DefaultTriggerKind.Schedule),
+        rruleString: z
+            .string()
+            .max(exports.Limits.RRuleStringLength)
+            .superRefine((rruleString, context) => {
+            const message = (0, rrule_validation_1.validateRRuleString)(rruleString);
+            if (message) {
+                context.addIssue({ code: 'custom', message });
+            }
+        }),
+    });
+    // The operator vocabulary each field family accepts.
+    const addressFilterOperatorSchema = z.enum([
+        types_11.FilterOperator.TextContains,
+        types_11.FilterOperator.TextDoesNotContain,
+        types_11.FilterOperator.TextDoesNotEqual,
+        types_11.FilterOperator.TextEquals,
+    ]);
+    const textFilterOperatorSchema = z.enum([types_11.FilterOperator.TextContains, types_11.FilterOperator.TextDoesNotContain]);
+    const idFilterOperatorSchema = z.enum([types_11.FilterOperator.TextDoesNotEqual, types_11.FilterOperator.TextEquals]);
+    const numericFilterOperatorSchema = z.enum([
+        types_11.FilterOperator.NumberAtLeast,
+        types_11.FilterOperator.NumberAtMost,
+        types_11.FilterOperator.NumberEquals,
+    ]);
+    const keywordSchema = z.string().min(1).max(exports.Limits.KeywordLength);
+    const eventTriggerKindSchema = z.literal(types_6.DefaultTriggerKind.Event);
+    const mailAddressFilterConditionSchema = zodCompleteStrictObject({
+        field: z.enum([types_14.MailFilterField.From, types_14.MailFilterField.To]),
+        operator: addressFilterOperatorSchema,
+        value: z.string().min(1).max(exports.Limits.MailFilterAddressValue),
+    });
+    const mailTextFilterConditionSchema = zodCompleteStrictObject({
+        field: z.enum([types_14.MailFilterField.Body, types_14.MailFilterField.Subject]),
+        operator: textFilterOperatorSchema,
+        value: z.string().min(1).max(exports.Limits.MailFilterTextValue),
+    });
+    const mailEventFiltersSchema = zodCompleteStrictObject({
+        conditions: z
+            .array(z.discriminatedUnion('field', [mailAddressFilterConditionSchema, mailTextFilterConditionSchema]))
+            .min(1)
+            .max(exports.Limits.MaxFilterConditions),
+        combinator: z.nativeEnum(types_10.FilterCombinator).optional(),
+    });
+    const mailEventTriggerSchema = zodCompleteStrictObject({
+        kind: eventTriggerKindSchema,
+        type: z.literal(types_8.EventTriggerType.Mail),
+        mailEventType: z.nativeEnum(types_13.MailEventType),
+        filters: mailEventFiltersSchema,
+    });
+    const slackEventTriggerSchema = zodCompleteStrictObject({
+        kind: eventTriggerKindSchema,
+        type: z.literal(types_8.EventTriggerType.Slack),
+        eventType: z.nativeEnum(types_22.SlackEventType),
+        keywords: z.array(keywordSchema).min(1).max(exports.Limits.MaxKeywords),
+    });
+    // Each notetaker field bounds its own value.
+    const notetakerParticipantConditionSchema = zodCompleteStrictObject({
+        field: z.literal(types_16.NotetakerFilterField.Participant),
+        operator: addressFilterOperatorSchema,
+        value: z.string().min(1).max(exports.Limits.NotetakerParticipantValue),
+    });
+    const notetakerProjectTagConditionSchema = zodCompleteStrictObject({
+        field: z.literal(types_16.NotetakerFilterField.ProjectTag),
+        operator: addressFilterOperatorSchema,
+        value: z.string().min(1).max(exports.Limits.NotetakerTagValue),
+    });
+    const notetakerMeetingTypeConditionSchema = zodCompleteStrictObject({
+        field: z.literal(types_16.NotetakerFilterField.MeetingType),
+        operator: idFilterOperatorSchema,
+        value: z.string().min(1).max(exports.Limits.NotetakerTagValue),
+    });
+    const notetakerNumericFilterConditionSchema = zodCompleteStrictObject({
+        field: z.enum([types_16.NotetakerFilterField.DurationMinutes, types_16.NotetakerFilterField.ParticipantCount]),
+        operator: numericFilterOperatorSchema,
+        value: z.string().regex(/^\d{1,4}$/, 'A count must be a whole number of up to four digits.'),
+    });
+    const notetakerBooleanFilterConditionSchema = zodCompleteStrictObject({
+        field: z.enum([types_16.NotetakerFilterField.HasExternalAttendees, types_16.NotetakerFilterField.IsRecurring]),
+        operator: idFilterOperatorSchema,
+        value: z.enum(['false', 'true']),
+    });
+    const notetakerEventFiltersSchema = zodCompleteStrictObject({
+        conditions: z
+            .array(z.discriminatedUnion('field', [
+            notetakerParticipantConditionSchema,
+            notetakerProjectTagConditionSchema,
+            notetakerMeetingTypeConditionSchema,
+            notetakerNumericFilterConditionSchema,
+            notetakerBooleanFilterConditionSchema,
+        ]))
+            .max(exports.Limits.MaxFilterConditions)
+            .optional(),
+        combinator: z.nativeEnum(types_10.FilterCombinator).optional(),
+        keywords: z.array(keywordSchema).max(exports.Limits.MaxKeywords).optional(),
+    }).refine(filters => { var _a, _b; return Boolean(((_a = filters.conditions) === null || _a === void 0 ? void 0 : _a.length) || ((_b = filters.keywords) === null || _b === void 0 ? void 0 : _b.length)); }, {
+        message: 'A notetaker filter needs at least one condition or keyword.',
+    });
+    const notetakerEventTriggerSchema = zodCompleteStrictObject({
+        kind: eventTriggerKindSchema,
+        type: z.literal(types_8.EventTriggerType.Notetaker),
+        eventType: z.nativeEnum(types_15.NotetakerEventType),
+        filters: notetakerEventFiltersSchema,
+    });
+    const eventTriggerSchema = z.discriminatedUnion('type', [
+        mailEventTriggerSchema,
+        slackEventTriggerSchema,
+        notetakerEventTriggerSchema,
+    ]);
+    const defaultTriggerSchema = z.discriminatedUnion('kind', [
+        eventTriggerSchema,
+        scheduleTriggerSchema,
+        whileWritingTriggerSchema,
+    ]);
+    const defaultTriggersSchema = z
+        .array(defaultTriggerSchema)
+        .superRefine((triggers, context) => {
+        const seen = new Set();
+        let eventTriggers = 0;
+        triggers.forEach((trigger, index) => {
+            // An agent listens to as many events as the server stores; the other kinds are one apiece.
+            if (trigger.kind === types_6.DefaultTriggerKind.Event) {
+                eventTriggers += 1;
+                if (eventTriggers > exports.Limits.MaxDefaultEventTriggers) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: [index],
+                        message: `An agent can only declare ${exports.Limits.MaxDefaultEventTriggers} event default triggers.`,
+                    });
+                }
+                return;
+            }
+            if (seen.has(trigger.kind)) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [index],
+                    message: `An agent can only declare one ${trigger.kind} default trigger.`,
+                });
+            }
+            seen.add(trigger.kind);
+        });
+    });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
     });
@@ -1968,6 +2177,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
         chatSkill: chatSkillSchema.optional(),
         benchInitializationSkill: chatSkillSchema.optional(),
+        agent: agentSchema.optional(),
+        defaultTriggers: defaultTriggersSchema.optional(),
         mcpServers: z
             .array(mcpServerSchema)
             .max(1)
@@ -2040,7 +2251,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (authentication.type !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
                     continue;
                 }
-                const allowedFirstPartyDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
+                const allowedFirstPartyDomains = [
+                    'coda.io',
+                    'localhost',
+                    'superhuman.com',
+                    'pp-sh.io',
+                    'qa-sh.io',
+                    'grammarlyaws.com',
+                ];
                 const isFirstPartyDomain = (domain) => allowedFirstPartyDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
                 const hasNonFirstPartyNetwork = (_a = metadata.networkDomains) === null || _a === void 0 ? void 0 : _a.some((domain) => !isFirstPartyDomain(domain));
                 if (!hasNonFirstPartyNetwork) {
@@ -2196,7 +2414,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     // Cross-pack tool calls (with packId set) are not validated here, though they will
                     // fail at runtime for third-party packs since only first-party Coda agents can
                     // access formulas from other packs.
-                    if (tool.type === types_11.ToolType.Pack && !tool.packId && tool.formulas) {
+                    if (tool.type === types_24.ToolType.Pack && !tool.packId && tool.formulas) {
                         tool.formulas.forEach((formula, formulaIndex) => {
                             const { formulaName } = formula;
                             if (!formulaNames.has(formulaName)) {
@@ -2246,11 +2464,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         shortDescription: z.string().nonempty().optional(),
         description: z.string().nonempty().optional(),
         permissionsDescription: z.string().optional(),
-        category: z.nativeEnum(types_5.PackCategory).optional(),
+        category: z.nativeEnum(types_17.PackCategory).optional(),
         logoPath: z.string().optional(),
         exampleImages: z.array(z.string()).optional(),
         exampleVideoIds: z.array(z.string()).optional(),
-        minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
+        minimumFeatureSet: z.nativeEnum(types_9.FeatureSet).optional(),
         quotas: z.any().optional(),
         rateLimits: z.any().optional(),
         isSystem: z.boolean().optional(),
@@ -2346,7 +2564,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 // This is a Various or None auth pack.
                 return;
             }
-            const readableAuthTitle = name === types_7.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+            const readableAuthTitle = name === types_19.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
             // Auth network domains must match pack network domains.
             for (const authNetworkDomain of authNetworkDomains) {
                 if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(authNetworkDomain))) {
@@ -2380,7 +2598,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         for (const authInfo of getAuthentications(data)) {
             const { name, authentication } = authInfo;
-            const readableAuthTitle = name === types_7.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+            const readableAuthTitle = name === types_19.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
             const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
             if (usedNetworkDomains) {
                 for (const usedNetworkDomain of usedNetworkDomains) {
@@ -2432,7 +2650,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const requiresEndpointUrl = auth && 'requiresEndpointUrl' in auth ? auth.requiresEndpointUrl : undefined;
         const endpointKey = auth && 'endpointKey' in auth ? auth.endpointKey : undefined;
         const postSetup = auth && 'postSetup' in auth ? auth.postSetup : undefined;
-        const hasSetEndpointStep = postSetup === null || postSetup === void 0 ? void 0 : postSetup.some(step => step.type === types_6.PostSetupType.SetEndpoint);
+        const hasSetEndpointStep = postSetup === null || postSetup === void 0 ? void 0 : postSetup.some(step => step.type === types_18.PostSetupType.SetEndpoint);
         const canResolveRelativeUrl = Boolean(requiresEndpointUrl || endpointKey || hasSetEndpointStep);
         data.mcpServers.forEach((server, i) => {
             if (!server.endpointUrl || isAbsoluteUrl(server.endpointUrl)) {
@@ -2465,7 +2683,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 // This is a Various or None auth pack.
                 return;
             }
-            const readableAuthTitle = name === types_7.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+            const readableAuthTitle = name === types_19.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
             // A pack with multiple networks and auth must choose which domain(s) get auth on them.
             if (!(authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length)) {
                 if (data.networkDomains && data.networkDomains.length > 1) {
@@ -2520,7 +2738,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     })
         .superRefine((data, context) => {
         const metadata = data;
-        const hasMcpToolWithoutPackId = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_11.ToolType.MCP && !tool.packId));
+        const hasMcpToolWithoutPackId = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_24.ToolType.MCP && !tool.packId));
         if (hasMcpToolWithoutPackId && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
             context.addIssue({
                 code: 'custom',
@@ -2546,17 +2764,73 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         });
+    })
+        .superRefine((data, context) => {
+        // The builder can't add these to an agent, but a hand-written manifest can.
+        if (!data.agent) {
+            if ((data.defaultTriggers || []).length) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['defaultTriggers'],
+                    message: 'Only an agent can define default triggers.',
+                });
+            }
+            return;
+        }
+        const listFields = [
+            ['formulas', 'formulas'],
+            ['syncTables', 'sync tables'],
+            ['formats', 'column formats'],
+            ['skills', 'skills'],
+            ['mcpServers', 'MCP servers'],
+            ['networkDomains', 'network domains'],
+            ['suggestedPrompts', 'suggested prompts'],
+            ['adminAuthentications', 'admin authentication'],
+        ];
+        for (const [field, label] of listFields) {
+            if ((data[field] || []).length) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `An agent cannot also define ${label}.`,
+                });
+            }
+        }
+        const singleFields = [
+            ['chatSkill', 'a chat skill'],
+            ['benchInitializationSkill', 'a bench initialization skill'],
+            ['skillEntrypoints', 'skill entrypoints'],
+        ];
+        for (const [field, label] of singleFields) {
+            if (data[field]) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `An agent cannot also define ${label}.`,
+                });
+            }
+        }
+        for (const field of ['defaultAuthentication', 'systemConnectionAuthentication']) {
+            const authentication = data[field];
+            if (authentication && authentication.type !== types_1.AuthenticationType.None) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [field],
+                    message: `An agent cannot also define authentication.`,
+                });
+            }
+        }
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };
 }
 function getAuthentications(data) {
     const authentications = [];
     if (data.defaultAuthentication) {
-        authentications.push({ name: types_7.ReservedAuthenticationNames.Default, authentication: data.defaultAuthentication });
+        authentications.push({ name: types_19.ReservedAuthenticationNames.Default, authentication: data.defaultAuthentication });
     }
     if (data.systemConnectionAuthentication) {
         authentications.push({
-            name: types_7.ReservedAuthenticationNames.System,
+            name: types_19.ReservedAuthenticationNames.System,
             authentication: data.systemConnectionAuthentication,
         });
     }

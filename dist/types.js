@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.NotetakerFilterField = exports.NotetakerEventType = exports.SlackEventType = exports.MailFilterField = exports.MailEventType = exports.FilterCombinator = exports.FilterOperator = exports.EventTriggerType = exports.DefaultTriggerKind = exports.ContextualTriggerSurface = exports.ContextualTriggerDecorationStyle = exports.ContextualTriggerSuggestionColor = exports.ContextualTriggerAssistMode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -329,6 +329,176 @@ var SkillModel;
     /** OpenAI GPT-5 series models. */
     SkillModel["OpenAIGPT5"] = "OpenAIGPT5";
 })(SkillModel || (exports.SkillModel = SkillModel = {}));
+/**
+ * When a while-writing trigger offers proactive help, vs. only on request.
+ * Absent defaults to `Proactive`.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerAssistMode;
+(function (ContextualTriggerAssistMode) {
+    ContextualTriggerAssistMode["OnDemand"] = "on_demand";
+    ContextualTriggerAssistMode["Proactive"] = "proactive";
+})(ContextualTriggerAssistMode || (exports.ContextualTriggerAssistMode = ContextualTriggerAssistMode = {}));
+/**
+ * The color a while-writing trigger's suggestion renders in. Absent defaults to `Purple`.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerSuggestionColor;
+(function (ContextualTriggerSuggestionColor) {
+    ContextualTriggerSuggestionColor["Blue"] = "blue";
+    ContextualTriggerSuggestionColor["Green"] = "green";
+    ContextualTriggerSuggestionColor["Mulberry"] = "mulberry";
+    ContextualTriggerSuggestionColor["Neutral"] = "neutral";
+    ContextualTriggerSuggestionColor["Orange"] = "orange";
+    ContextualTriggerSuggestionColor["Purple"] = "purple";
+    ContextualTriggerSuggestionColor["Red"] = "red";
+    ContextualTriggerSuggestionColor["Yellow"] = "yellow";
+})(ContextualTriggerSuggestionColor || (exports.ContextualTriggerSuggestionColor = ContextualTriggerSuggestionColor = {}));
+/**
+ * How a while-writing trigger's suggestion renders. Absent defaults to `Auto`, which leaves the
+ * choice to the client.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerDecorationStyle;
+(function (ContextualTriggerDecorationStyle) {
+    ContextualTriggerDecorationStyle["Auto"] = "auto";
+    ContextualTriggerDecorationStyle["Underline"] = "underline";
+    ContextualTriggerDecorationStyle["Vbar"] = "vbar";
+})(ContextualTriggerDecorationStyle || (exports.ContextualTriggerDecorationStyle = ContextualTriggerDecorationStyle = {}));
+/**
+ * Where a while-writing agent may offer help. Absent defaults to every surface.
+ *
+ * @internal
+ * @hidden
+ */
+var ContextualTriggerSurface;
+(function (ContextualTriggerSurface) {
+    ContextualTriggerSurface["ChatAndMessages"] = "chat_messages";
+    ContextualTriggerSurface["CodingEnvironment"] = "coding_environment";
+    ContextualTriggerSurface["CustomerService"] = "customer_service";
+    ContextualTriggerSurface["Docs"] = "docs";
+    ContextualTriggerSurface["Email"] = "email";
+    ContextualTriggerSurface["SearchAndBrowser"] = "search_browser";
+    ContextualTriggerSurface["SocialMedia"] = "social_media";
+})(ContextualTriggerSurface || (exports.ContextualTriggerSurface = ContextualTriggerSurface = {}));
+/**
+ * Which kind of default trigger an entry declares. More kinds join this enum as they become
+ * authorable.
+ *
+ * @internal
+ * @hidden
+ */
+var DefaultTriggerKind;
+(function (DefaultTriggerKind) {
+    DefaultTriggerKind["Event"] = "event";
+    DefaultTriggerKind["Schedule"] = "schedule";
+    DefaultTriggerKind["WhileWriting"] = "whileWriting";
+})(DefaultTriggerKind || (exports.DefaultTriggerKind = DefaultTriggerKind = {}));
+/**
+ * Which product's events a default event trigger listens to.
+ *
+ * @internal
+ * @hidden
+ */
+var EventTriggerType;
+(function (EventTriggerType) {
+    EventTriggerType["Mail"] = "mail";
+    EventTriggerType["Notetaker"] = "notetaker";
+    EventTriggerType["Slack"] = "slack";
+})(EventTriggerType || (exports.EventTriggerType = EventTriggerType = {}));
+/**
+ * How a filter condition compares its field to its value.
+ *
+ * @internal
+ * @hidden
+ */
+var FilterOperator;
+(function (FilterOperator) {
+    FilterOperator["NumberAtLeast"] = "numberAtLeast";
+    FilterOperator["NumberAtMost"] = "numberAtMost";
+    FilterOperator["NumberEquals"] = "numberEquals";
+    FilterOperator["TextContains"] = "textContains";
+    FilterOperator["TextDoesNotContain"] = "textDoesNotContain";
+    FilterOperator["TextDoesNotEqual"] = "textDoesNotEqual";
+    FilterOperator["TextEquals"] = "textEquals";
+})(FilterOperator || (exports.FilterOperator = FilterOperator = {}));
+/**
+ * How a filter's conditions combine. Absent means `And`.
+ *
+ * @internal
+ * @hidden
+ */
+var FilterCombinator;
+(function (FilterCombinator) {
+    FilterCombinator["And"] = "and";
+    FilterCombinator["Or"] = "or";
+})(FilterCombinator || (exports.FilterCombinator = FilterCombinator = {}));
+/**
+ * The mail events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+var MailEventType;
+(function (MailEventType) {
+    MailEventType["MessageReceived"] = "message_received";
+    MailEventType["MessageSent"] = "message_sent";
+})(MailEventType || (exports.MailEventType = MailEventType = {}));
+/**
+ * The part of a message a mail filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+var MailFilterField;
+(function (MailFilterField) {
+    MailFilterField["Body"] = "body";
+    MailFilterField["From"] = "from";
+    MailFilterField["Subject"] = "subject";
+    MailFilterField["To"] = "to";
+})(MailFilterField || (exports.MailFilterField = MailFilterField = {}));
+/**
+ * The Slack events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+var SlackEventType;
+(function (SlackEventType) {
+    SlackEventType["MessageKeyword"] = "message_keyword";
+})(SlackEventType || (exports.SlackEventType = SlackEventType = {}));
+/**
+ * The notetaker events a default trigger can fire on.
+ *
+ * @internal
+ * @hidden
+ */
+var NotetakerEventType;
+(function (NotetakerEventType) {
+    NotetakerEventType["MeetingSummaryCompleted"] = "meeting.summary.completed";
+})(NotetakerEventType || (exports.NotetakerEventType = NotetakerEventType = {}));
+/**
+ * The part of a meeting a notetaker filter condition matches on.
+ *
+ * @internal
+ * @hidden
+ */
+var NotetakerFilterField;
+(function (NotetakerFilterField) {
+    NotetakerFilterField["DurationMinutes"] = "durationMinutes";
+    NotetakerFilterField["HasExternalAttendees"] = "hasExternalAttendees";
+    NotetakerFilterField["IsRecurring"] = "isRecurring";
+    NotetakerFilterField["MeetingType"] = "meetingType";
+    NotetakerFilterField["Participant"] = "participant";
+    NotetakerFilterField["ParticipantCount"] = "participantCount";
+    NotetakerFilterField["ProjectTag"] = "projectTag";
+})(NotetakerFilterField || (exports.NotetakerFilterField = NotetakerFilterField = {}));
 /**
  * An enum of the HTTP status codes.
  */

@@ -74,6 +74,11 @@ Clone an existing Pack that was created using Pack Studio
 
     **Type:** string
 
+`--yes`, `-y`
+:   Skip confirmation prompts. Required in non-interactive environments.
+
+    **Type:** boolean | **Default:** `false`
+
 ---
 
 ## create
@@ -185,6 +190,11 @@ Link to a pre-existing Pack ID on the server
 
     **Type:** string
 
+`--yes`, `-y`
+:   Skip confirmation prompts. Required in non-interactive environments.
+
+    **Type:** boolean | **Default:** `false`
+
 ---
 
 ## register
@@ -199,6 +209,16 @@ Register API token to publish a Pack
 :   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `packs setOption <manifestFile> apiEndpoint <url>`.
 
     **Type:** string
+
+`--open`
+:   Open the API token creation page in a browser.
+
+    **Type:** boolean | **Default:** `false`
+
+`--yes`, `-y`
+:   Skip confirmation prompts. Required in non-interactive environments.
+
+    **Type:** boolean | **Default:** `false`
 
 ---
 
@@ -230,18 +250,21 @@ Set the Pack version that is installable for users. You may specify a specific v
 
     **Type:** string
 
+`--yes`, `-y`
+:   Skip confirmation prompts. Required in non-interactive environments.
+
+    **Type:** boolean | **Default:** `false`
+
+`--useLatest`
+:   Release the latest uploaded version when the manifest has no version.
+
+    **Type:** boolean | **Default:** `false`
+
 ---
 
 ## setOption
 
-Set a persistent build option for the pack. This will store the option alongside the pack id in the .coda-pack.json file and it will be used for all builds of the pack.<br>
-<br>
-Supported options:<br>
-  - timerStrategy: Valid values are "none", "error", or "fake".<br>
-  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.<br>
-  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.<br>
-<br>
-Usage: packs setOption path/to/pack.ts timerStrategy fake
+Set a persistent build option for the pack (.coda-pack.json)
 
 **Usage:** `packs setOption <manifestFile> <option> <value>`
 

@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PackDefinitionBuilder = exports.newPack = void 0;
+exports.AgentDefinitionBuilder = exports.PackDefinitionBuilder = exports.BaseDefinitionBuilder = exports.newAgent = exports.newPack = void 0;
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
+const types_2 = require("./types");
+const types_3 = require("./types");
+const types_4 = require("./types");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -27,14 +30,57 @@ function newPack(definition) {
 }
 exports.newPack = newPack;
 /**
+ * Creates a new skeleton agent definition that can be added to.
+ *
+ * @example
+ * ```
+ * export const pack = newAgent();
+ * pack.setInstructions('You help a team run async standups. Keep replies short.');
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+function newAgent() {
+    return new AgentDefinitionBuilder();
+}
+exports.newAgent = newAgent;
+/**
+ * Fields and methods shared by {@link PackDefinitionBuilder} and {@link AgentDefinitionBuilder}.
+ *
+ * @internal
+ * @hidden
+ */
+class BaseDefinitionBuilder {
+    /**
+     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+     *
+     * This is optional, and you only need to provide a version if you are manually doing
+     * semantic versioning, or using the CLI. If using the web editor, you can omit this
+     * and the web editor will automatically provide an appropriate semantic version
+     * each time you build a version.
+     *
+     * @example
+     * ```
+     * pack.setVersion('1.2.3');
+     * ```
+     */
+    setVersion(version) {
+        this.version = version;
+        return this;
+    }
+}
+exports.BaseDefinitionBuilder = BaseDefinitionBuilder;
+/**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */
-class PackDefinitionBuilder {
+class PackDefinitionBuilder extends BaseDefinitionBuilder {
     /**
      * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
      * rather than constructing a builder directly.
      */
     constructor(definition) {
+        super();
         const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
@@ -390,23 +436,6 @@ class PackDefinitionBuilder {
         this.networkDomains.push(...domain);
         return this;
     }
-    /**
-     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
-     *
-     * This is optional, and you only need to provide a version if you are manually doing
-     * semantic versioning, or using the CLI. If using the web editor, you can omit this
-     * and the web editor will automatically provide an appropriate semantic version
-     * each time you build a version.
-     *
-     * @example
-     * ```
-     * pack.setVersion('1.2.3');
-     * ```
-     */
-    setVersion(version) {
-        this.version = version;
-        return this;
-    }
     _setDefaultConnectionRequirement(connectionRequirement) {
         this._defaultConnectionRequirement = connectionRequirement;
         // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
@@ -454,3 +483,158 @@ class PackDefinitionBuilder {
     }
 }
 exports.PackDefinitionBuilder = PackDefinitionBuilder;
+/**
+ * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
+ *
+ * @internal
+ * @hidden
+ */
+class AgentDefinitionBuilder extends BaseDefinitionBuilder {
+    constructor() {
+        super(...arguments);
+        /**
+         * See {@link PackVersionDefinition.agent}.
+         */
+        this.agent = { tools: [] };
+    }
+    /**
+     * Sets this agent's instructions.
+     *
+     * @example
+     * ```
+     * pack.setInstructions('You help a team run async standups. Keep replies short.');
+     * ```
+     */
+    setInstructions(instructions) {
+        this.agent.instructions = instructions;
+        return this;
+    }
+    /**
+     * Sets the tools this agent can use. Anything left out is off.
+     *
+     * @example
+     * ```
+     * pack.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+     * pack.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+     * ```
+     */
+    setTools({ docs, mail, webSearch, connectors }) {
+        const tools = [];
+        if (webSearch) {
+            const allowedDomains = typeof webSearch === 'object' ? webSearch.allowedDomains : undefined;
+            tools.push({ type: types_4.ToolType.WebSearch, ...(allowedDomains ? { allowedDomains } : {}) });
+        }
+        if (docs) {
+            tools.push({ type: types_4.ToolType.CodaDocsAndTables });
+        }
+        if (mail) {
+            tools.push({ type: types_4.ToolType.MailAndCalendar });
+        }
+        for (const connector of connectors || []) {
+            tools.push({
+                type: types_4.ToolType.Pack,
+                packId: connector.packId,
+                ...(connector.formulas ? { formulas: connector.formulas } : {}),
+            });
+        }
+        this.agent.tools = tools;
+        return this;
+    }
+    /**
+     * Sets the while-writing trigger this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.setDefaultWhileWritingTrigger({
+     *   condition: 'Offer a citation when the user asserts a statistic',
+     *   surfaces: [sdk.ContextualTriggerSurface.Docs, sdk.ContextualTriggerSurface.Email],
+     * });
+     * ```
+     */
+    setDefaultWhileWritingTrigger(contextualTrigger) {
+        var _a;
+        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.WhileWriting);
+        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger }];
+        return this;
+    }
+    /**
+     * Adds a mail event trigger this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.addDefaultMailEventTrigger({
+     *   mailEventType: sdk.MailEventType.MessageReceived,
+     *   filters: {
+     *     conditions: [
+     *       {
+     *         field: sdk.MailFilterField.From,
+     *         operator: sdk.FilterOperator.TextContains,
+     *         value: '@customers.example.com',
+     *       },
+     *     ],
+     *   },
+     * });
+     * ```
+     */
+    addDefaultMailEventTrigger(trigger) {
+        return this._addDefaultEventTrigger({ type: types_3.EventTriggerType.Mail, ...trigger });
+    }
+    /**
+     * Adds a Slack event trigger this agent runs on. The workspace and channels are bound at install.
+     *
+     * @example
+     * ```
+     * pack.addDefaultSlackEventTrigger({
+     *   eventType: sdk.SlackEventType.MessageKeyword,
+     *   keywords: ['deploy', 'rollback'],
+     * });
+     * ```
+     */
+    addDefaultSlackEventTrigger(trigger) {
+        return this._addDefaultEventTrigger({ type: types_3.EventTriggerType.Slack, ...trigger });
+    }
+    /**
+     * Adds a notetaker event trigger this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.addDefaultNotetakerEventTrigger({
+     *   eventType: sdk.NotetakerEventType.MeetingSummaryCompleted,
+     *   filters: {
+     *     conditions: [
+     *       {
+     *         field: sdk.NotetakerFilterField.DurationMinutes,
+     *         operator: sdk.FilterOperator.NumberAtLeast,
+     *         value: '30',
+     *       },
+     *     ],
+     *   },
+     * });
+     * ```
+     */
+    addDefaultNotetakerEventTrigger(trigger) {
+        return this._addDefaultEventTrigger({ type: types_3.EventTriggerType.Notetaker, ...trigger });
+    }
+    _addDefaultEventTrigger(eventTrigger) {
+        var _a;
+        this.defaultTriggers = [...((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []), { kind: types_2.DefaultTriggerKind.Event, ...eventTrigger }];
+        return this;
+    }
+    /**
+     * Sets the schedule this agent runs on.
+     *
+     * @example
+     * ```
+     * pack.setDefaultScheduleTrigger({
+     *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+     * });
+     * ```
+     */
+    setDefaultScheduleTrigger(scheduleTrigger) {
+        var _a;
+        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.Schedule);
+        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.Schedule, ...scheduleTrigger }];
+        return this;
+    }
+}
+exports.AgentDefinitionBuilder = AgentDefinitionBuilder;

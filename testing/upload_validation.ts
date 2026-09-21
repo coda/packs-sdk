@@ -2,6 +2,8 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
+import type {AgentDefinition} from '../types';
+import type {AgentTool} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -18,12 +20,18 @@ import type {CommentContentCategorization} from '../schema';
 import {ConnectionRequirement} from '../api_types';
 import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
+import {ContextualTriggerAssistMode} from '../types';
+import {ContextualTriggerDecorationStyle} from '../types';
+import {ContextualTriggerSuggestionColor} from '../types';
+import {ContextualTriggerSurface} from '../types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
 import {DataIndexing} from '../api_types';
+import type {DefaultTriggerDefinition} from '../types';
+import {DefaultTriggerKind} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
@@ -34,7 +42,10 @@ import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import type {EmbeddedContentTool} from '../types';
 import {EmbeddedContentType} from '../types';
+import {EventTriggerType} from '../types';
 import {FeatureSet} from '../types';
+import {FilterCombinator} from '../types';
+import {FilterOperator} from '../types';
 import type {FormulaOptions} from '../api';
 import {FormulaPurpose} from '../api_types';
 import type {GenericObjectSchema} from '../schema';
@@ -56,13 +67,27 @@ import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MCPServer} from '../types';
 import type {MCPTool} from '../types';
+import type {MailAddressFilterCondition} from '../types';
 import type {MailAndCalendarTool} from '../types';
+import type {MailEventFilters} from '../types';
+import type {MailEventTriggerDefinition} from '../types';
+import {MailEventType} from '../types';
+import {MailFilterField} from '../types';
+import type {MailTextFilterCondition} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
+import type {NotetakerAddressFilterCondition} from '../types';
+import type {NotetakerBooleanFilterCondition} from '../types';
+import type {NotetakerEventFilters} from '../types';
+import type {NotetakerEventTriggerDefinition} from '../types';
+import {NotetakerEventType} from '../types';
+import {NotetakerFilterField} from '../types';
+import type {NotetakerIdFilterCondition} from '../types';
+import type {NotetakerNumericFilterCondition} from '../types';
 import type {NumericDateSchema} from '../schema';
 import type {NumericDateTimeSchema} from '../schema';
 import type {NumericDurationSchema} from '../schema';
@@ -96,6 +121,7 @@ import type {QueryParamTokenAuthentication} from '../types';
 import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
+import type {ScheduleTriggerDefinition} from '../types';
 import type {Schema} from '../schema';
 import type {ScreenAnnotationTool} from '../types';
 import {ScreenAnnotationType} from '../types';
@@ -107,6 +133,8 @@ import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
 import {SkillModel} from '../types';
 import type {SkillModelConfiguration} from '../types';
+import type {SlackEventTriggerDefinition} from '../types';
+import {SlackEventType} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -135,6 +163,7 @@ import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import type {WebSearchTool} from '../types';
+import type {WhileWritingTriggerDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
@@ -152,6 +181,7 @@ import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
 import {unwrappedSchemaSupportsOptions} from '../schema';
+import {validateRRuleString} from './rrule_validation';
 import * as z from 'zod';
 
 /**
@@ -179,12 +209,23 @@ export const Limits = {
   BuildingBlockName: 50,
   BuildingBlockDescription: 1000,
   ColumnMatcherRegex: 300,
+  ConditionLength: 2000,
+  KeywordLength: 200,
+  MailFilterAddressValue: 320,
+  MailFilterTextValue: 998,
+  MaxBlockedDomains: 50,
+  MaxDefaultEventTriggers: 20,
+  MaxFilterConditions: 20,
+  MaxKeywords: 50,
   MaxSkillCount: 15,
   MaxSuggestedPromptsPerPack: 3,
+  NotetakerParticipantValue: 320,
+  NotetakerTagValue: 128,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
   PromptLength: 20000,
+  RRuleStringLength: 512,
   SuggestedPromptText: 500,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,
@@ -2245,6 +2286,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         zodCompleteStrictObject<{
           formulaName: string;
           description?: string;
+          enabled?: boolean;
         }>({
           formulaName: z
             .string()
@@ -2258,6 +2300,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               }
             }),
           description: z.string().optional(),
+          enabled: z.boolean().optional(),
         }),
       )
       .optional(),
@@ -2371,6 +2414,218 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     models: z.array(skillModelConfigurationSchema).optional(),
   });
   const chatSkillSchema = skillSchema.partial();
+
+  // Missing and empty are separate Zod failures, so both carry the same message.
+  const MissingInstructions = 'An agent must have instructions. Call setInstructions() on the agent.';
+
+  const agentToolSchema = z.discriminatedUnion(
+    'type',
+    [packToolSchema.extend({packId: z.number()}), codaDocsToolSchema, mailAndCalendarToolSchema, webSearchToolSchema],
+    {error: 'An agent can only use the Docs, Mail, web search, and Pack tools.'},
+  );
+
+  const agentSchema = zodCompleteStrictObject<AgentDefinition>({
+    instructions: z.string({error: MissingInstructions}).min(1, MissingInstructions).max(Limits.PromptLength),
+    tools: z
+      .array(agentToolSchema)
+      .optional()
+      .default([])
+      .superRefine((tools, context) => {
+        const seen = new Set<string>();
+        (tools as AgentTool[]).forEach((tool, index) => {
+          const key = tool.type === ToolType.Pack ? `${tool.type}:${tool.packId}` : tool.type;
+          if (seen.has(key)) {
+            context.addIssue({
+              code: 'custom',
+              path: [index],
+              message:
+                tool.type === ToolType.Pack
+                  ? `An agent can only name pack ${tool.packId} once.`
+                  : `An agent can only use the ${tool.type} tool once.`,
+            });
+          }
+          seen.add(key);
+        });
+      }),
+  });
+
+  const domainSchema = z
+    .string()
+    .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
+      message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+    });
+
+  const whileWritingTriggerSchema = zodCompleteStrictObject<WhileWritingTriggerDefinition>({
+    kind: z.literal(DefaultTriggerKind.WhileWriting),
+    condition: z.string().min(1).max(Limits.ConditionLength),
+    assistMode: z.nativeEnum(ContextualTriggerAssistMode).optional(),
+    suggestionColor: z.nativeEnum(ContextualTriggerSuggestionColor).optional(),
+    decorationStyle: z.nativeEnum(ContextualTriggerDecorationStyle).optional(),
+    surfaces: z.array(z.nativeEnum(ContextualTriggerSurface)).optional(),
+    blockedDomains: z.array(domainSchema).max(Limits.MaxBlockedDomains).optional(),
+  });
+
+  const scheduleTriggerSchema = zodCompleteStrictObject<ScheduleTriggerDefinition>({
+    kind: z.literal(DefaultTriggerKind.Schedule),
+    rruleString: z
+      .string()
+      .max(Limits.RRuleStringLength)
+      .superRefine((rruleString, context) => {
+        const message = validateRRuleString(rruleString);
+        if (message) {
+          context.addIssue({code: 'custom', message});
+        }
+      }),
+  });
+
+  // The operator vocabulary each field family accepts.
+  const addressFilterOperatorSchema = z.enum([
+    FilterOperator.TextContains,
+    FilterOperator.TextDoesNotContain,
+    FilterOperator.TextDoesNotEqual,
+    FilterOperator.TextEquals,
+  ]);
+  const textFilterOperatorSchema = z.enum([FilterOperator.TextContains, FilterOperator.TextDoesNotContain]);
+  const idFilterOperatorSchema = z.enum([FilterOperator.TextDoesNotEqual, FilterOperator.TextEquals]);
+  const numericFilterOperatorSchema = z.enum([
+    FilterOperator.NumberAtLeast,
+    FilterOperator.NumberAtMost,
+    FilterOperator.NumberEquals,
+  ]);
+  const keywordSchema = z.string().min(1).max(Limits.KeywordLength);
+  const eventTriggerKindSchema = z.literal(DefaultTriggerKind.Event);
+
+  const mailAddressFilterConditionSchema = zodCompleteStrictObject<MailAddressFilterCondition>({
+    field: z.enum([MailFilterField.From, MailFilterField.To]),
+    operator: addressFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.MailFilterAddressValue),
+  });
+
+  const mailTextFilterConditionSchema = zodCompleteStrictObject<MailTextFilterCondition>({
+    field: z.enum([MailFilterField.Body, MailFilterField.Subject]),
+    operator: textFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.MailFilterTextValue),
+  });
+
+  const mailEventFiltersSchema = zodCompleteStrictObject<MailEventFilters>({
+    conditions: z
+      .array(z.discriminatedUnion('field', [mailAddressFilterConditionSchema, mailTextFilterConditionSchema]))
+      .min(1)
+      .max(Limits.MaxFilterConditions),
+    combinator: z.nativeEnum(FilterCombinator).optional(),
+  });
+
+  const mailEventTriggerSchema = zodCompleteStrictObject<MailEventTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Mail),
+    mailEventType: z.nativeEnum(MailEventType),
+    filters: mailEventFiltersSchema,
+  });
+
+  const slackEventTriggerSchema = zodCompleteStrictObject<SlackEventTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Slack),
+    eventType: z.nativeEnum(SlackEventType),
+    keywords: z.array(keywordSchema).min(1).max(Limits.MaxKeywords),
+  });
+
+  // Each notetaker field bounds its own value.
+  const notetakerParticipantConditionSchema = zodCompleteStrictObject<NotetakerAddressFilterCondition>({
+    field: z.literal(NotetakerFilterField.Participant),
+    operator: addressFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.NotetakerParticipantValue),
+  });
+
+  const notetakerProjectTagConditionSchema = zodCompleteStrictObject<NotetakerAddressFilterCondition>({
+    field: z.literal(NotetakerFilterField.ProjectTag),
+    operator: addressFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.NotetakerTagValue),
+  });
+
+  const notetakerMeetingTypeConditionSchema = zodCompleteStrictObject<NotetakerIdFilterCondition>({
+    field: z.literal(NotetakerFilterField.MeetingType),
+    operator: idFilterOperatorSchema,
+    value: z.string().min(1).max(Limits.NotetakerTagValue),
+  });
+
+  const notetakerNumericFilterConditionSchema = zodCompleteStrictObject<NotetakerNumericFilterCondition>({
+    field: z.enum([NotetakerFilterField.DurationMinutes, NotetakerFilterField.ParticipantCount]),
+    operator: numericFilterOperatorSchema,
+    value: z.string().regex(/^\d{1,4}$/, 'A count must be a whole number of up to four digits.'),
+  });
+
+  const notetakerBooleanFilterConditionSchema = zodCompleteStrictObject<NotetakerBooleanFilterCondition>({
+    field: z.enum([NotetakerFilterField.HasExternalAttendees, NotetakerFilterField.IsRecurring]),
+    operator: idFilterOperatorSchema,
+    value: z.enum(['false', 'true']),
+  });
+
+  const notetakerEventFiltersSchema = zodCompleteStrictObject<NotetakerEventFilters>({
+    conditions: z
+      .array(
+        z.discriminatedUnion('field', [
+          notetakerParticipantConditionSchema,
+          notetakerProjectTagConditionSchema,
+          notetakerMeetingTypeConditionSchema,
+          notetakerNumericFilterConditionSchema,
+          notetakerBooleanFilterConditionSchema,
+        ]),
+      )
+      .max(Limits.MaxFilterConditions)
+      .optional(),
+    combinator: z.nativeEnum(FilterCombinator).optional(),
+    keywords: z.array(keywordSchema).max(Limits.MaxKeywords).optional(),
+  }).refine(filters => Boolean(filters.conditions?.length || filters.keywords?.length), {
+    message: 'A notetaker filter needs at least one condition or keyword.',
+  });
+
+  const notetakerEventTriggerSchema = zodCompleteStrictObject<NotetakerEventTriggerDefinition>({
+    kind: eventTriggerKindSchema,
+    type: z.literal(EventTriggerType.Notetaker),
+    eventType: z.nativeEnum(NotetakerEventType),
+    filters: notetakerEventFiltersSchema,
+  });
+
+  const eventTriggerSchema = z.discriminatedUnion('type', [
+    mailEventTriggerSchema,
+    slackEventTriggerSchema,
+    notetakerEventTriggerSchema,
+  ]);
+
+  const defaultTriggerSchema = z.discriminatedUnion('kind', [
+    eventTriggerSchema,
+    scheduleTriggerSchema,
+    whileWritingTriggerSchema,
+  ]);
+
+  const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z
+    .array(defaultTriggerSchema)
+    .superRefine((triggers, context) => {
+      const seen = new Set<string>();
+      let eventTriggers = 0;
+      triggers.forEach((trigger, index) => {
+        // An agent listens to as many events as the server stores; the other kinds are one apiece.
+        if (trigger.kind === DefaultTriggerKind.Event) {
+          eventTriggers += 1;
+          if (eventTriggers > Limits.MaxDefaultEventTriggers) {
+            context.addIssue({
+              code: 'custom',
+              path: [index],
+              message: `An agent can only declare ${Limits.MaxDefaultEventTriggers} event default triggers.`,
+            });
+          }
+          return;
+        }
+        if (seen.has(trigger.kind)) {
+          context.addIssue({
+            code: 'custom',
+            path: [index],
+            message: `An agent can only declare one ${trigger.kind} default trigger.`,
+          });
+        }
+        seen.add(trigger.kind);
+      });
+    });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
@@ -2526,6 +2781,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
     chatSkill: chatSkillSchema.optional(),
     benchInitializationSkill: chatSkillSchema.optional(),
+    agent: agentSchema.optional(),
+    defaultTriggers: defaultTriggersSchema.optional(),
     mcpServers: z
       .array(mcpServerSchema)
       .max(1)
@@ -2607,7 +2864,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             continue;
           }
 
-          const allowedFirstPartyDomains = ['coda.io', 'localhost', 'superhuman.com', 'pp-sh.io', 'qa-sh.io'];
+          const allowedFirstPartyDomains = [
+            'coda.io',
+            'localhost',
+            'superhuman.com',
+            'pp-sh.io',
+            'qa-sh.io',
+            'grammarlyaws.com',
+          ];
           const isFirstPartyDomain = (domain: string) =>
             allowedFirstPartyDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
 
@@ -3172,6 +3436,62 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       });
+    })
+    .superRefine((data, context) => {
+      // The builder can't add these to an agent, but a hand-written manifest can.
+      if (!(data as PackVersionMetadata).agent) {
+        if (((data as PackVersionMetadata).defaultTriggers || []).length) {
+          context.addIssue({
+            code: 'custom',
+            path: ['defaultTriggers'],
+            message: 'Only an agent can define default triggers.',
+          });
+        }
+        return;
+      }
+      const listFields: Array<[keyof PackVersionMetadata, string]> = [
+        ['formulas', 'formulas'],
+        ['syncTables', 'sync tables'],
+        ['formats', 'column formats'],
+        ['skills', 'skills'],
+        ['mcpServers', 'MCP servers'],
+        ['networkDomains', 'network domains'],
+        ['suggestedPrompts', 'suggested prompts'],
+        ['adminAuthentications', 'admin authentication'],
+      ];
+      for (const [field, label] of listFields) {
+        if (((data as any)[field] || []).length) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `An agent cannot also define ${label}.`,
+          });
+        }
+      }
+      const singleFields: Array<[keyof PackVersionMetadata, string]> = [
+        ['chatSkill', 'a chat skill'],
+        ['benchInitializationSkill', 'a bench initialization skill'],
+        ['skillEntrypoints', 'skill entrypoints'],
+      ];
+      for (const [field, label] of singleFields) {
+        if ((data as any)[field]) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `An agent cannot also define ${label}.`,
+          });
+        }
+      }
+      for (const field of ['defaultAuthentication', 'systemConnectionAuthentication'] as const) {
+        const authentication = (data as any)[field];
+        if (authentication && authentication.type !== AuthenticationType.None) {
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `An agent cannot also define authentication.`,
+          });
+        }
+      }
     });
 
   return {legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema};

@@ -6,7 +6,54 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Changed
 
-- Deprecated `setChatSkill`, `setBenchInitializationSkill`, and `addSuggestedPrompt`. These features no longer function now that the SDK is used to create connectors, not agents.
+- Bumped dependencies to their latest compatible versions: `@aws-sdk/client-sts` 3.1135.0, `@smithy/signature-v4` 5.7.3, `qs` 6.16.0, `js-yaml` 4.3.2, `@aws-sdk/types` 3.974.5, `browserslist` 4.29.0, and `mkdocs-material` 9.7.7 (plus the Python lockfile refresh that brings `gitpython` 3.1.62 and `soupsieve` 2.9.2). No major-version upgrades.
+
+### Fixed
+
+- CLI commands now surface the server-side error message (and HTTP status) when an API request fails, instead of swallowing it behind a generic message. This affects `register`, `whoami`, `clone`, and `link`, and makes `formatResponseError` robust to non-JSON and empty error bodies.
+
+## [1.17.6] - 2026-09-16
+
+### Added
+
+- Added a `superhuman` CLI binary alias alongside the existing `packs` and `coda` aliases. `npx superhuman <cmd>` behaves identically to `npx packs <cmd>`.
+- Documented installing the `create-agent-pack` skill via the `skills` CLI in the README.
+- Internal changes to the trigger definition. Not currently available externally.
+
+### Fixed
+
+- Fixed invalid YAML metadata in the `create-agent-pack` skill's `SKILL.md` that made it unreadable by third-party skill-installer tooling.
+- `validate` now prints `Pack is valid.` on success instead of exiting silently.
+- The version-bump CI check failure message now mentions the `skip-version-check` label as an escape hatch for docs-only or CI-only changes.
+
+### Changed
+
+- CLI commands now fail immediately in non-interactive environments instead of waiting on confirmation prompts. Use `--yes` to skip confirmations on `clone`, `link`, `register`, and `release`. `register` requires `--apiToken` (or a pasted token on a TTY). `release` accepts `--use-latest` when the manifest has no version. `--help` for each command includes examples ready to run.
+- Removed the unused `bestEffortDefaultTriggers` validation option. Pack metadata validation remains strict and reports malformed triggers by array index.
+
+## [1.17.5] - 2026-09-08
+
+### Changed
+
+- Internal changes to the contextual and schedule trigger definition. Not currently available externally
+
+## [1.17.4] - 2026-09-01
+
+### Fixed
+
+- Fixed a security vulnerability related to Pack sandboxing. All injected closures now run in strict mode.
+
+## [1.17.3] - 2026-08-31
+
+### Changed
+
+- Internal changes to the custom agent definition, covering the tools an agent can be granted. Not currently available externally.
+
+## [1.17.2] - 2026-08-24
+
+### Changed
+
+- Deprecated `setChatSkill`, `setBenchInitializationSkill`, and `addSuggestedPrompt`. Connector packs no longer define an agent through those APIs.
 
 ## [1.17.1] - 2026-07-28
 
@@ -1085,7 +1132,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.17.1...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.17.6...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1165,3 +1212,9 @@ await myHelper(context);
 [1.16.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.16.0
 [1.17.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.0
 [1.17.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.1
+[1.17.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.2
+[1.17.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.3
+[1.17.4]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.4
+[1.17.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.5
+
+[1.17.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.6

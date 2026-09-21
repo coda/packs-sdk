@@ -6,6 +6,8 @@ interface ReleaseArgs {
     notes: string;
     apiToken?: string;
     gitTag?: boolean;
+    yes?: boolean;
+    useLatest?: boolean;
 }
-export declare function handleRelease({ manifestFile, packVersion: explicitPackVersion, apiEndpoint, notes, apiToken, gitTag, }: ArgumentsCamelCase<ReleaseArgs>): Promise<never>;
+export declare function handleRelease({ manifestFile, packVersion: explicitPackVersion, apiEndpoint, notes, apiToken, gitTag, yes, useLatest, }: ArgumentsCamelCase<ReleaseArgs>): Promise<never>;
 export {};

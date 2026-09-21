@@ -3,16 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.formatWhoami = exports.handleWhoami = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const errors_1 = require("./errors");
 const config_storage_1 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const helpers_3 = require("../testing/helpers");
-const errors_1 = require("./errors");
+const errors_2 = require("./errors");
 async function handleWhoami({ apiToken, apiEndpoint }) {
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(apiEndpoint);
     if (!apiToken) {
         apiToken = (0, config_storage_1.getApiKey)(apiEndpoint);
         if (!apiToken) {
-            return (0, helpers_3.printAndExit)('Missing API token. Please run `packs register` to register one.');
+            return (0, helpers_3.printAndExit)('Error: Missing API token.\n  packs register --apiToken <token>');
         }
     }
     const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
@@ -22,9 +23,9 @@ async function handleWhoami({ apiToken, apiEndpoint }) {
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {
-            return (0, helpers_3.printAndExit)(`Invalid API token provided.`);
+            return (0, helpers_3.printAndExit)(`Invalid API token provided: ${await (0, errors_1.formatResponseError)(err)}`);
         }
-        const errors = [`Unexpected error while checking owner of API token: ${err}`, (0, errors_1.tryParseSystemError)(err)];
+        const errors = [`Unexpected error while checking owner of API token: ${err}`, (0, errors_2.tryParseSystemError)(err)];
         return (0, helpers_3.printAndExit)(errors.join('\n'));
     }
 }

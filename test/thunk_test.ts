@@ -1,5 +1,6 @@
 import {testHelper} from './test_helper';
 import {getThunkPath} from '../runtime/bootstrap';
+import {injectAsyncFunction} from '../runtime/bootstrap';
 import {injectLogFunction} from '../runtime/bootstrap';
 import {injectSerializer} from '../runtime/bootstrap';
 import {marshalValue} from '../runtime/common/marshaling';
@@ -169,5 +170,48 @@ describeVmOnly('Thunk', () => {
       // Note the "%o" isn't supported due to limitations of util.format in pure js with esbuild.
       "%o { a: 'b' }",
     ]);
+  });
+
+  // Regression test for the isolate escape where a Pack planted an inherited setter on
+  // Object.prototype for the stub name, then walked the setter's `.caller.arguments`
+  // during the host-side stub assignment to capture the live isolated-vm Reference ($0).
+  // The injected closures run in strict mode, so Function.prototype.caller yields null
+  // and no host-injection path can leak a Reference into the isolate.
+  it('injected host closures cannot leak an isolated-vm Reference via prototype pollution', async () => {
+    const isolate = new ivm.Isolate({memoryLimit: 128});
+    const ivmContext = await isolate.createContext();
+    const jail = ivmContext.global;
+    await jail.set('global', jail.derefInto());
+    await jail.set('coda', {}, {copy: true});
+    await jail.set('executionContext', {temporaryBlobStorage: {}}, {copy: true});
+    await registerBundle(isolate, ivmContext, getThunkPath(), 'coda');
+
+    // Plant an inherited setter that walks its caller's arguments for the live Reference,
+    // exactly as the captured exploit did.
+    await ivmContext.eval(`
+      globalThis.__leaked = undefined;
+      function storeUrlTrap(v) {
+        var caller = storeUrlTrap.caller;
+        if (!caller) {
+          return;
+        }
+        var callerArgs = caller.arguments;
+        for (var i = 0; i < callerArgs.length; i++) {
+          var candidate = callerArgs[i];
+          if (candidate && candidate.applySync && candidate.getSync) {
+            globalThis.__leaked = candidate;
+          }
+        }
+      }
+      Object.defineProperty(Object.prototype, 'storeUrl', {
+        configurable: true,
+        set: storeUrlTrap,
+      });
+    `);
+
+    await injectAsyncFunction(ivmContext, 'executionContext.temporaryBlobStorage.storeUrl', async () => undefined);
+
+    const leaked = await ivmContext.eval('typeof globalThis.__leaked');
+    assert.equal(leaked, 'undefined');
   });
 });

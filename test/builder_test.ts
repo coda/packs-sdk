@@ -1,28 +1,47 @@
 import './test_helper';
+import type {AgentDefinitionBuilder} from '../builder';
 import {AuthenticationType} from '../types';
+import {BaseDefinitionBuilder} from '../builder';
 import {ConnectionRequirement} from '../api_types';
+import {ContextualTriggerAssistMode} from '../types';
+import {ContextualTriggerSurface} from '../types';
+import {DefaultTriggerKind} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
+import {EventTriggerType} from '../types';
+import type {ExternalPackVersionMetadata} from '../compiled_types';
+import {FilterCombinator} from '../types';
+import {FilterOperator} from '../types';
 import type {GenericObjectSchema} from '../schema';
 import {KnowledgeToolSourceType} from '../types';
+import type {MailEventFilters} from '../types';
+import type {MailEventTriggerDefinition} from '../types';
+import {MailEventType} from '../types';
+import {MailFilterField} from '../types';
 import type {MetadataFormulaDef} from '../api';
+import type {NotetakerEventFilters} from '../types';
+import {NotetakerEventType} from '../types';
 import type {ObjectFormulaDef} from '../api';
 import type {ObjectSchema} from '../schema';
-import type {PackDefinitionBuilder} from '../builder';
+import {PackDefinitionBuilder} from '../builder';
+import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '..';
 import type {Skill} from '../types';
+import {SlackEventType} from '../types';
 import type {StringPackFormula} from '../api';
 import type {SyncTableOptions} from '../api';
 import {ToolType} from '../types';
 import {ValueHintType} from '..';
 import {ValueType} from '../schema';
 import {assertCondition} from '..';
+import {compilePackMetadata} from '../helpers/metadata';
 import {makeMetadataFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeParameter} from '../api';
 import {makeSchema} from '../schema';
+import {newAgent} from '../builder';
 import {newPack} from '../builder';
 
 describe('Builder', () => {
@@ -596,6 +615,350 @@ describe('Builder', () => {
         execute: () => '',
       });
       assert.equal((pack.formulas[0].parameters[0] as any).instructions, 'param-instructions');
+    });
+  });
+});
+
+describe('Agent builder', () => {
+  let agent: AgentDefinitionBuilder;
+
+  beforeEach(() => {
+    agent = newAgent();
+  });
+
+  it('declares itself before it has any content', () => {
+    // The definition's presence is what marks this as an agent.
+    assert.deepEqual(agent.agent, {tools: []});
+  });
+
+  it('sets instructions', () => {
+    agent.setInstructions('You help a team run async standups.');
+    assert.deepEqual(agent.agent, {tools: [], instructions: 'You help a team run async standups.'});
+  });
+
+  it('keeps the last instructions set', () => {
+    agent.setInstructions('First.').setInstructions('Second.');
+    assert.deepEqual(agent.agent, {tools: [], instructions: 'Second.'});
+  });
+
+  it('survives compilePackMetadata rather than being stripped', () => {
+    agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
+    const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+    assert.deepEqual(metadata.agent, {tools: [], instructions: 'You help a team run async standups.'});
+  });
+
+  it('does not add a agent field to an ordinary pack', () => {
+    const metadata = compilePackMetadata(newPack().setVersion('1.0.0') as PackVersionDefinition);
+    assert.isUndefined(metadata.agent);
+  });
+
+  it('compiles with no connector building blocks of its own', () => {
+    agent.setInstructions('You help a team run async standups.').setVersion('1.0.0');
+    const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+    assert.deepEqual(metadata.formulas, []);
+    assert.deepEqual(metadata.syncTables, []);
+    assert.deepEqual(metadata.formats, []);
+    assert.isUndefined(metadata.networkDomains);
+    assert.isUndefined(metadata.defaultAuthentication);
+  });
+
+  describe('tools', () => {
+    it('starts with an empty tool list rather than no list at all', () => {
+      agent.setInstructions('Do a thing.');
+      assert.deepEqual(agent.agent.tools, []);
+    });
+
+    it('builds a tool for each capability turned on', () => {
+      agent.setTools({docs: true, mail: true, webSearch: {allowedDomains: ['docs.example.com']}});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.WebSearch, allowedDomains: ['docs.example.com']},
+        {type: ToolType.CodaDocsAndTables},
+        {type: ToolType.MailAndCalendar},
+      ]);
+    });
+
+    it('leaves out what was left out', () => {
+      agent.setTools({docs: true});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);
+    });
+
+    it('treats false the same as absent', () => {
+      agent.setTools({docs: true, mail: false});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);
+    });
+
+    it('takes web search without a domain restriction', () => {
+      agent.setTools({webSearch: true});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.WebSearch}]);
+    });
+
+    it('keeps an empty domain list, so validation can tell the author it is wrong', () => {
+      agent.setTools({webSearch: {allowedDomains: []}});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.WebSearch, allowedDomains: []}]);
+    });
+
+    it('adds a connector pack', () => {
+      agent.setTools({connectors: [{packId: 1234}]});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.Pack, packId: 1234}]);
+    });
+
+    it('limits a connector to specific formulas', () => {
+      agent.setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.Pack, packId: 1234, formulas: [{formulaName: 'CreateTask'}]},
+      ]);
+    });
+
+    it('takes more than one connector', () => {
+      agent.setTools({connectors: [{packId: 1}, {packId: 2}]});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.Pack, packId: 1},
+        {type: ToolType.Pack, packId: 2},
+      ]);
+    });
+
+    it('puts connectors after the built-in tools, the way the in-app builder does', () => {
+      agent.setTools({docs: true, webSearch: true, mail: true, connectors: [{packId: 1234}]});
+      assert.deepEqual(agent.agent.tools, [
+        {type: ToolType.WebSearch},
+        {type: ToolType.CodaDocsAndTables},
+        {type: ToolType.MailAndCalendar},
+        {type: ToolType.Pack, packId: 1234},
+      ]);
+    });
+
+    it('keeps the last call', () => {
+      agent.setTools({mail: true}).setTools({docs: true});
+      assert.deepEqual(agent.agent.tools, [{type: ToolType.CodaDocsAndTables}]);
+    });
+
+    it('takes everything off again', () => {
+      agent.setTools({docs: true}).setTools({});
+      assert.deepEqual(agent.agent.tools, []);
+    });
+
+    it('leaves instructions alone', () => {
+      agent.setInstructions('Do a thing.').setTools({docs: true});
+      assert.deepEqual(agent.agent, {instructions: 'Do a thing.', tools: [{type: ToolType.CodaDocsAndTables}]});
+    });
+
+    it('carries tools through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').setTools({docs: true}).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.agent, {
+        instructions: 'Do a thing.',
+        tools: [{type: ToolType.CodaDocsAndTables}],
+      });
+    });
+  });
+
+  describe('default while-writing trigger', () => {
+    const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic'};
+
+    it('has none until one is set', () => {
+      agent.setInstructions('Do a thing.');
+      assert.isUndefined(agent.defaultTriggers);
+    });
+
+    it('sets a trigger', () => {
+      agent.setDefaultWhileWritingTrigger(contextualTrigger);
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}]);
+    });
+
+    it('takes assist mode and surfaces', () => {
+      agent.setDefaultWhileWritingTrigger({
+        ...contextualTrigger,
+        assistMode: ContextualTriggerAssistMode.OnDemand,
+        surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
+      });
+      assert.deepEqual(agent.defaultTriggers, [
+        {
+          kind: DefaultTriggerKind.WhileWriting,
+          ...contextualTrigger,
+          assistMode: ContextualTriggerAssistMode.OnDemand,
+          surfaces: [ContextualTriggerSurface.Docs, ContextualTriggerSurface.Email],
+        },
+      ]);
+    });
+
+    it('replaces rather than appends on a second call', () => {
+      agent
+        .setDefaultWhileWritingTrigger({...contextualTrigger, surfaces: [ContextualTriggerSurface.Docs]})
+        .setDefaultWhileWritingTrigger(contextualTrigger);
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}]);
+    });
+
+    it('leaves the agent definition alone', () => {
+      agent.setInstructions('Do a thing.').setDefaultWhileWritingTrigger(contextualTrigger);
+      assert.deepEqual(agent.agent, {instructions: 'Do a thing.', tools: []});
+    });
+
+    it('carries through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').setDefaultWhileWritingTrigger(contextualTrigger).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.defaultTriggers, [{kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}]);
+    });
+
+    it('does not add a defaultTriggers field to an ordinary pack', () => {
+      const metadata = compilePackMetadata(newPack().setVersion('1.0.0') as PackVersionDefinition);
+      assert.isUndefined(metadata.defaultTriggers);
+    });
+  });
+
+  describe('default schedule trigger', () => {
+    const scheduleTrigger = {rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'};
+
+    it('sets a trigger', () => {
+      agent.setDefaultScheduleTrigger(scheduleTrigger);
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
+    });
+
+    it('replaces rather than appends on a second call', () => {
+      agent.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=DAILY'}).setDefaultScheduleTrigger(scheduleTrigger);
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
+    });
+
+    it('sits alongside a while-writing trigger', () => {
+      const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic'};
+      agent.setDefaultWhileWritingTrigger(contextualTrigger).setDefaultScheduleTrigger(scheduleTrigger);
+      assert.deepEqual(agent.defaultTriggers, [
+        {kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger},
+        {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger},
+      ]);
+    });
+
+    it('carries through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').setDefaultScheduleTrigger(scheduleTrigger).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
+    });
+  });
+
+  describe('default event trigger', () => {
+    const mailFilters: MailEventFilters = {
+      conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+    };
+    const notetakerFilters: NotetakerEventFilters = {keywords: ['renewal']};
+    const mailTrigger = {mailEventType: MailEventType.MessageReceived, filters: mailFilters};
+    const storedMailTrigger: MailEventTriggerDefinition = {
+      kind: DefaultTriggerKind.Event,
+      type: EventTriggerType.Mail,
+      ...mailTrigger,
+    };
+
+    it('adds a trigger', () => {
+      agent.addDefaultMailEventTrigger(mailTrigger);
+      assert.deepEqual(agent.defaultTriggers, [storedMailTrigger]);
+    });
+
+    it('appends rather than replaces on a second call', () => {
+      agent
+        .addDefaultMailEventTrigger(mailTrigger)
+        .addDefaultMailEventTrigger({mailEventType: MailEventType.MessageSent, filters: mailFilters});
+      assert.deepEqual(agent.defaultTriggers, [
+        storedMailTrigger,
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Mail,
+          mailEventType: MailEventType.MessageSent,
+          filters: mailFilters,
+        },
+      ]);
+    });
+
+    it('takes a combinator over several conditions', () => {
+      const filters: MailEventFilters = {
+        combinator: FilterCombinator.Or,
+        conditions: [
+          {field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'},
+          {field: MailFilterField.Subject, operator: FilterOperator.TextContains, value: 'invoice'},
+        ],
+      };
+      agent.addDefaultMailEventTrigger({...mailTrigger, filters});
+      assert.deepEqual(agent.defaultTriggers, [{...storedMailTrigger, filters}]);
+    });
+
+    it('adds a trigger of every event type', () => {
+      agent
+        .addDefaultMailEventTrigger(mailTrigger)
+        .addDefaultSlackEventTrigger({eventType: SlackEventType.MessageKeyword, keywords: ['deploy']})
+        .addDefaultNotetakerEventTrigger({
+          eventType: NotetakerEventType.MeetingSummaryCompleted,
+          filters: notetakerFilters,
+        });
+      assert.deepEqual(agent.defaultTriggers, [
+        storedMailTrigger,
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Slack,
+          eventType: SlackEventType.MessageKeyword,
+          keywords: ['deploy'],
+        },
+        {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Notetaker,
+          eventType: NotetakerEventType.MeetingSummaryCompleted,
+          filters: notetakerFilters,
+        },
+      ]);
+    });
+
+    it('sits alongside the other kinds', () => {
+      const scheduleTrigger = {rruleString: 'RRULE:FREQ=DAILY'};
+      agent.setDefaultScheduleTrigger(scheduleTrigger).addDefaultMailEventTrigger(mailTrigger);
+      assert.deepEqual(agent.defaultTriggers, [
+        {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger},
+        storedMailTrigger,
+      ]);
+    });
+
+    it('carries through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').addDefaultMailEventTrigger(mailTrigger).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.defaultTriggers, [storedMailTrigger]);
+    });
+  });
+
+  describe('withheld surface', () => {
+    it('is not reachable through the types', () => {
+      // Checked by tsc, not at runtime: if one of these stops being an error, the directive
+      // above it becomes the error and the build fails. Never actually called.
+      function checkedByTscOnly(builder: AgentDefinitionBuilder) {
+        // @ts-expect-error only newAgent() can stamp an agent
+        newPack({agent: {instructions: 'x'}});
+        // @ts-expect-error nor can the builder be constructed with one
+        new PackDefinitionBuilder({agent: {instructions: 'x'}});
+        // @ts-expect-error the browser-facing metadata must not carry the instructions
+        (undefined as unknown as ExternalPackVersionMetadata).agent!.instructions;
+        // @ts-expect-error connector building blocks are not authorable on an agent
+        builder.addFormula({});
+        // @ts-expect-error nor are their fields
+        builder.formulas.push();
+        // @ts-expect-error an agent takes no seed definition
+        newAgent({formulas: []});
+        // @ts-expect-error MCP belongs on a connector packId, not as a top-level boolean
+        builder.setTools({mcp: true});
+        // @ts-expect-error only newAgent() can stamp default triggers
+        newPack({defaultTriggers: {}});
+      }
+      assert.isFunction(checkedByTscOnly);
+    });
+
+    it('is not reachable at runtime either', () => {
+      // Enumerated rather than hardcoded, so a method added to PackDefinitionBuilder later
+      // can't quietly become reachable on an agent.
+      const packOnly = Object.getOwnPropertyNames(PackDefinitionBuilder.prototype).filter(
+        name => name !== 'constructor' && !name.startsWith('_'),
+      );
+      const reachable = packOnly.filter(name => (agent as any)[name] !== undefined);
+      assert.deepEqual(reachable, [], 'nothing pack-only is reachable on an agent');
+    });
+
+    it('shares nothing else through the base class', () => {
+      assert.deepEqual(
+        Object.getOwnPropertyNames(BaseDefinitionBuilder.prototype).filter(name => name !== 'constructor'),
+        ['setVersion'],
+      );
     });
   });
 });
