@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped dependencies to their latest compatible versions: `@aws-sdk/client-sts` 3.1135.0, `@smithy/signature-v4` 5.7.3, `qs` 6.16.0, `js-yaml` 4.3.2, `@aws-sdk/types` 3.974.5, `browserslist` 4.29.0, and `mkdocs-material` 9.7.7 (plus the Python lockfile refresh that brings `gitpython` 3.1.62 and `soupsieve` 2.9.2). No major-version upgrades.
+
 ### Fixed
 
 - CLI commands now surface the server-side error message (and HTTP status) when an API request fails, instead of swallowing it behind a generic message. This affects `register`, `whoami`, `clone`, and `link`, and makes `formatResponseError` robust to non-JSON and empty error bodies.

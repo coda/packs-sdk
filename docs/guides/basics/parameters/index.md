@@ -18,20 +18,20 @@ Before a formula, action, or sync table can be run, values must be supplied for 
     For formulas the agent fills in the parameter values automatically as it calls the tool, guided by each parameter's name and description. However, parameters are shown to users in a UI in two cases: when an action requires approval, and when a connector with sync tables is being set up.
 
     === "In an action approval card"
-        <img src="site:images/parameter_go_action.png" srcset="site:images/parameter_go_action_2x.png 2x" class="screenshot" alt="Parameters in a Go action approval card">
+        {{screenshot("images/parameter_go_action.png", "Parameters in a Go action approval card")}}
     === "On the connector install screen"
-        <img src="site:images/parameter_go_sync.png" srcset="site:images/parameter_go_sync_2x.png 2x" class="screenshot" alt="Sync table parameters on the connector install screen">
+        {{screenshot("images/parameter_go_sync.png", "Sync table parameters on the connector install screen")}}
 
 === ":superhuman-docs: Docs"
 
     In the formula editor parameters are entered as comma-separated values, while in the action dialog or sync table side panel they presented as input boxes.
 
     === "In the formula editor"
-        <img src="site:images/parameter_formula.png" srcset="site:images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
+        {{screenshot("images/parameter_formula.png", "Parameters in the formula editor")}}
     === "In the action builder"
-        <img src="site:images/parameter_action.png" srcset="site:images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
+        {{screenshot("images/parameter_action.png", "Parameters in the action builder")}}
     === "In the sync table settings"
-        <img src="site:images/parameter_sync.png" srcset="site:images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
+        {{screenshot("images/parameter_sync.png", "Parameters in the sync table settings")}}
 
 ## Defining parameters
 
@@ -492,7 +492,7 @@ pack.addFormula({
 
 Parameters of the type `DateArray` are often used for date ranges, with the first date representing the start of the range and the second date representing the end. When a `DateArray` parameter is used in an action or sync table, the input box displays a date range picker to make it easier for the user to select a range.
 
-<img src="site:images/parameter_daterange.png" srcset="site:images/parameter_daterange_2x.png 2x" class="screenshot" alt="Date array parameters displayed as a date range picker">
+{{screenshot("images/parameter_daterange.png", "Date array parameters displayed as a date range picker")}}
 
 These parameters also support a special set of [suggested values](#suggested) that represent date ranges relative to the current date. These are available in the [`PrecannedDateRange`][PrecannedDateRange] enumeration.
 

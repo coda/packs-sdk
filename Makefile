@@ -253,10 +253,22 @@ view-docs:
 		PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk MK_DOCS_GENERATE_ASSETS=false MK_DOCS_FAVICON='assets/favicon-local.svg' pipenv run mkdocs serve --livereload --watch-theme | grep -v 'mkdocs_site_urls:'; \
 	fi
 
-.PHONY: optimize-images
-optimize-images:
-	# Compress pngs.
-	npx sharp-cli -i docs/images/*.png -o docs/images/ --optimize
+.PHONY: generate-1x-images
+generate-1x-images:
+	# Screenshots are captured at 2x, and each needs a half-size 1x version to
+	# serve as the fallback in the `src` attribute.
+	TEMP_DIR=$$(mktemp -d); \
+	for IMAGE in ${ROOTDIR}/docs/images/*_2x.png; do \
+		[[ -e "$$IMAGE" ]] || continue; \
+		TARGET="$${IMAGE%_2x.png}.png"; \
+		[[ -e "$$TARGET" ]] && continue; \
+		FULL_WIDTH=$$(npx image-dimensions "$$IMAGE" | cut -d x -f 1); \
+		WIDTH=$$(( FULL_WIDTH / 2 )); \
+		echo "Generating $$(basename $$TARGET) at $${WIDTH}px wide"; \
+		npx sharp-cli --input "$$IMAGE" --output "$$TEMP_DIR" resize $$WIDTH > /dev/null; \
+		mv "$$TEMP_DIR/$$(basename $$IMAGE)" "$$TARGET"; \
+	done; \
+	rm -rf "$$TEMP_DIR"
 
 .PHONY: optimize-video
 optimize-video:

@@ -240,7 +240,7 @@ If everything is working correctly you should get back the currency value conver
 </div>
 <div markdown>
 
-<img src="site:images/tutorial_fetcher_result.png" srcset="site:images/tutorial_fetcher_result_2x.png 2x" class="screenshot" alt="The formula working in a doc.">
+{{screenshot("images/tutorial_fetcher_result.png", "The formula working in a doc.")}}
 
 </div>
 </section>
@@ -300,7 +300,7 @@ The platform logs every API request that your Pack makes, and examining those lo
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_fetcher_panel.png" srcset="site:images/tutorial_fetcher_panel_2x.png 2x" class="screenshot" alt="Where to fine the open logs button in the panel">
+    {{screenshot("images/tutorial_fetcher_panel.png", "Where to fine the open logs button in the panel")}}
 
     </div>
     </section>
@@ -318,7 +318,7 @@ The platform logs every API request that your Pack makes, and examining those lo
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_fetcher_logs.png" srcset="site:images/tutorial_fetcher_logs_2x.png 2x" class="screenshot" alt="The fetch request showing in the logs.">
+    {{screenshot("images/tutorial_fetcher_logs.png", "The fetch request showing in the logs.")}}
 
     </div>
     </section>
@@ -334,7 +334,7 @@ The platform logs every API request that your Pack makes, and examining those lo
     </div>
     <div markdown>
 
-    <img src="site:images/tutorial_fetcher_http.png" srcset="site:images/tutorial_fetcher_http_2x.png 2x" class="screenshot" alt="The raw HTTP request and response.">
+    {{screenshot("images/tutorial_fetcher_http.png", "The raw HTTP request and response.")}}
 
     </div>
     </section>

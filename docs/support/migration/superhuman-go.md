@@ -7,7 +7,7 @@ description: Information on how to update an existing Pack to work with Superhum
 
 If you've already built a Pack for Superhuman Docs, the good news is that it can also work as a connector in Superhuman Go.
 
-<img src="site:images/agent_upgrade.png" srcset="site:images/agent_upgrade_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
+{{screenshot("images/agent_upgrade.png", "A screenshot of the action confirmation UX.")}}
 
 In the screenshot above, you can see a user accessing data from the [Weather Pack][weather_pack], which hasn't had any code changes. The LLM knows all the formulas and actions in the Pack, calls them as needed, and displays the results in a human-friendly way.
 

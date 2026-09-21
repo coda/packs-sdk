@@ -135,7 +135,7 @@ Connectors are listed in the [Superhuman Go Store][store] and the [Superhuman Do
 </div>
 
 <div class="landing-item" markdown>
-<img src="site:images/store_connectors.png" srcset="site:images/store_connectors_2x.png 2x" class="screenshot" alt="Connectors listed in the Superhuman Go Store.">
+{{screenshot("images/store_connectors.png", "Connectors listed in the Superhuman Go Store.")}}
 </div>
 
 </section>

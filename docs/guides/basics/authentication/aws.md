@@ -23,7 +23,7 @@ pack.setUserAuthentication({
 
 When authenticating, the user will be prompted to enter their access key and secret.
 
-<img src="site:images/auth_aws_access_key.png" srcset="site:images/auth_aws_access_key_2x.png 2x" class="screenshot" alt="Prompting the user for their access key and secret">
+{{screenshot("images/auth_aws_access_key.png", "Prompting the user for their access key and secret")}}
 
 You can learn more about how to generate access keys in the [AWS documentation][awsdocs_accesskey].
 
@@ -45,7 +45,7 @@ pack.setUserAuthentication({
 
 When authenticating, the user will be prompted to enter the Amazon Resource Name (ARN) of the role to assume, as well as an associated external ID.
 
-<img src="site:images/auth_aws_assume_role.png" srcset="site:images/auth_aws_assume_role_2x.png 2x" class="screenshot" alt="Prompting the user for their role and external ID">
+{{screenshot("images/auth_aws_assume_role.png", "Prompting the user for their role and external ID")}}
 
 You can learn more about how to create roles in the [AWS documentation][awsdocs_createrole].
 
