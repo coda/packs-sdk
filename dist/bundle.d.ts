@@ -7372,6 +7372,36 @@ export declare function getQueryParams(url: string): {
  * @param tokens Zero or more tokens to be combined. If token doesn't end with '/', one will be added as the separator
  */
 declare function join(...tokens: string[]): string;
+export interface DownloadedFile {
+	filename: string;
+	contentType: string;
+	data: Buffer;
+}
+export interface MultipartFile extends DownloadedFile {
+	fieldName: string;
+}
+export interface MultipartBody {
+	body: Buffer;
+	contentType: string;
+}
+export interface ServerSentEvent {
+	data: string;
+	event?: string;
+	id?: string;
+	retry?: number;
+}
+/**
+ * Downloads a URL supplied by a File parameter without applying the Pack's authentication.
+ */
+export declare function downloadFile(fileUrl: string, fetcher: Fetcher): Promise<DownloadedFile>;
+/**
+ * Encodes text fields and files as a multipart/form-data request body.
+ */
+export declare function makeMultipartBody(fields: Record<string, string>, files?: MultipartFile[], boundary?: string): MultipartBody;
+/**
+ * Parses a complete server-sent events response into events.
+ */
+export declare function parseServerSentEvents(body: string | Buffer): ServerSentEvent[];
 /**
  * A helper to extract properties fromKeys from a schema object. This is mostly useful
  * in processing the context.sync.schema in a sync formula, where the schema would only

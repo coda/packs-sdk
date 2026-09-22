@@ -8,6 +8,7 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {DEFAULT_TIMER_STRATEGY} from './config_storage';
 import {Tools} from './extensions';
 import {backfillFromPackConfig} from './helpers';
+import {handleAddPlugin} from './plugin';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleClone} from './clone';
@@ -16,6 +17,8 @@ import {handleExecute} from './execute';
 import {handleExtensions} from './extensions';
 import {handleInit} from './init';
 import {handleLink} from './link';
+import {handlePluginPlan} from './plugin';
+import {handlePluginValidate} from './plugin';
 import {handleRegister} from './register';
 import {handleRelease} from './release';
 import {handleSetOption} from './set_option';
@@ -47,6 +50,14 @@ const YesArg = {
   alias: 'y',
   default: false,
   desc: 'Skip confirmation prompts. Required in non-interactive environments.',
+};
+
+const PluginOutputArg = {
+  string: true,
+  alias: 'o',
+  choices: ['text', 'json'],
+  default: 'text',
+  desc: 'Output format. Use json for scripts and agents.',
 };
 
 const CommandExamples: Record<string, Array<[string, string]>> = {
@@ -167,6 +178,78 @@ export const commands: yargs.CommandModule[] = [
       yes: YesArg,
     },
     handler: handleInit as any,
+  },
+  {
+    command: 'add',
+    describe: 'Add a project kind',
+    builder: (yargs: yargs.Argv) => {
+      return yargs
+        .command({
+          command: 'plugin [name]',
+          describe: 'Scaffold a plugin listing with separate agent and connector Packs',
+          builder: (pluginYargs: yargs.Argv) =>
+            pluginYargs
+              .positional('name', {
+                type: 'string',
+                default: 'my-plugin',
+                describe: 'Plugin name and output directory (kebab-case).',
+              })
+              .option('output', PluginOutputArg)
+              .example('$0 add plugin radical-candor', 'Create a plugin in ./radical-candor.')
+              .example('$0 add plugin radical-candor --output json', 'Create it and return machine-readable output.'),
+          handler: handleAddPlugin as any,
+        })
+        .demandCommand()
+        .example('$0 add plugin --help', 'Show help for scaffolding a plugin.');
+    },
+    handler: () => undefined,
+  },
+  {
+    command: 'plugin',
+    describe: 'Validate and inspect plugin listings that compose Packs',
+    builder: (yargs: yargs.Argv) => {
+      return yargs
+        .command({
+          command: 'validate [pluginJson]',
+          describe: 'Validate a plugin listing and every referenced Pack',
+          builder: (validateYargs: yargs.Argv) =>
+            validateYargs
+              .positional('pluginJson', {
+                type: 'string',
+                default: 'plugin.json',
+                describe: 'Path to the plugin listing.',
+              })
+              .option('output', PluginOutputArg)
+              .example('$0 plugin validate', 'Validate ./plugin.json.')
+              .example(
+                '$0 plugin validate examples/plugins/radical-candor/plugin.json --output json',
+                'Validate a listing and return machine-readable output.',
+              ),
+          handler: handlePluginValidate as any,
+        })
+        .command({
+          command: 'plan [pluginJson]',
+          describe: 'Show the staged publish plan without making changes',
+          builder: (planYargs: yargs.Argv) =>
+            planYargs
+              .positional('pluginJson', {
+                type: 'string',
+                default: 'plugin.json',
+                describe: 'Path to the plugin listing.',
+              })
+              .option('output', PluginOutputArg)
+              .example('$0 plugin plan', 'Plan publication for ./plugin.json.')
+              .example(
+                '$0 plugin plan examples/plugins/radical-candor/plugin.json --output json',
+                'Return a plan that can be piped to another command.',
+              ),
+          handler: handlePluginPlan as any,
+        })
+        .demandCommand()
+        .example('$0 plugin validate --help', 'Show validation inputs and examples.')
+        .example('$0 plugin plan --help', 'Show planning inputs and examples.');
+    },
+    handler: () => undefined,
   },
   {
     command: 'extensions <tools..>',

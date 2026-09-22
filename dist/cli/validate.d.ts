@@ -5,7 +5,9 @@ interface ValidateArgs {
     checkDeprecationWarnings: boolean;
 }
 export declare function handleValidate({ manifestFile, checkDeprecationWarnings }: ArgumentsCamelCase<ValidateArgs>): Promise<void>;
+export declare function loadPackMetadataForValidation(manifestFile: string): Promise<PackVersionMetadata>;
 export declare function validateMetadata(metadata: PackVersionMetadata, { checkDeprecationWarnings }?: {
     checkDeprecationWarnings?: boolean;
 }): Promise<void>;
+export declare function validateMetadataOrThrow(metadata: PackVersionMetadata): Promise<void>;
 export {};

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "name": "customer-briefing",
+  "displayName": "Customer Briefing",
+  "description": "One agent that prepares customer briefings from three private, independently authenticated connectors.",
+  "entrypoints": ["agent"],
+  "components": {
+    "agent": {
+      "type": "agent",
+      "manifest": "agent/pack.ts",
+      "uses": [
+        {
+          "component": "crm",
+          "formulas": [{"formulaName": "GetAccount"}]
+        },
+        {
+          "component": "billing",
+          "formulas": [{"formulaName": "GetSubscription"}]
+        },
+        {
+          "component": "support",
+          "formulas": [{"formulaName": "ListOpenCases"}]
+        }
+      ],
+      "skills": []
+    },
+    "crm": {
+      "type": "connector",
+      "manifest": "crm/pack.ts",
+      "visibility": "private"
+    },
+    "billing": {
+      "type": "connector",
+      "manifest": "billing/pack.ts",
+      "visibility": "private"
+    },
+    "support": {
+      "type": "connector",
+      "manifest": "support/pack.ts",
+      "visibility": "private"
+    }
+  },
+  "setup": "SETUP.md",
+  "starterPrompts": [
+    {
+      "name": "prepare-briefing",
+      "prompt": "Prepare a briefing for my next meeting with Acme."
+    }
+  ],
+  "testCases": {
+    "positive": [
+      {
+        "name": "combines-private-sources",
+        "prompt": "Prepare a briefing for Acme with its plan, renewal status, and open support cases.",
+        "expectedBehavior": "Uses all three private connectors and attributes each fact to the relevant system."
+      },
+      {
+        "name": "uses-only-needed-source",
+        "prompt": "What open support cases does Acme have?",
+        "expectedBehavior": "Uses ListOpenCases without calling the CRM or billing connector."
+      }
+    ],
+    "negative": [
+      {
+        "name": "does-not-invent-missing-data",
+        "prompt": "Tell me Acme's renewal risk even if the billing connector is not connected.",
+        "expectedBehavior": "Explains that billing data is unavailable instead of inferring a subscription state."
+      }
+    ]
+  }
+}
