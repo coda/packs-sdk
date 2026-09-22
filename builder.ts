@@ -664,13 +664,15 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
  */
 export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   /**
-   * See {@link PackVersionDefinition.agent}.
+   * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
    */
-  agent: Partial<AgentDefinition> = {tools: []};
+  agent: Readonly<Partial<AgentDefinition>> = {tools: []};
   /**
-   * See {@link PackVersionDefinition.defaultTriggers}.
+   * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
+   * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},
+   * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
    */
-  defaultTriggers?: DefaultTriggerDefinition[];
+  defaultTriggers?: readonly DefaultTriggerDefinition[];
 
   /**
    * Sets this agent's instructions.
@@ -681,7 +683,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setInstructions(instructions: string): this {
-    this.agent.instructions = instructions;
+    this.agent = {...this.agent, instructions};
     return this;
   }
 
@@ -713,7 +715,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         ...(connector.formulas ? {formulas: connector.formulas} : {}),
       });
     }
-    this.agent.tools = tools;
+    this.agent = {...this.agent, tools};
     return this;
   }
 

@@ -493,7 +493,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     constructor() {
         super(...arguments);
         /**
-         * See {@link PackVersionDefinition.agent}.
+         * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
          */
         this.agent = { tools: [] };
     }
@@ -506,7 +506,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setInstructions(instructions) {
-        this.agent.instructions = instructions;
+        this.agent = { ...this.agent, instructions };
         return this;
     }
     /**
@@ -537,7 +537,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
                 ...(connector.formulas ? { formulas: connector.formulas } : {}),
             });
         }
-        this.agent.tools = tools;
+        this.agent = { ...this.agent, tools };
         return this;
     }
     /**
