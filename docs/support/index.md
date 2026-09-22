@@ -59,7 +59,7 @@ To request approval please fill out the form linked below. Ensure you are signed
 [hc_share]: https://help.coda.io/hc/en-us/articles/39555880940557-Share-or-publish-a-Pack
 [fetcher_network_domains]: ../guides/basics/fetcher.md#network-domains
 [network_domains_form]: https://docs.superhuman.com/form/Pack-Network-Domains-Request_ddvuAhFq3IZ
-[office_hours]: https://calendly.com/ekoleda/packs-office-hours
+[office_hours]: https://calendar.superhuman.com/book/11UyNvg5cAyQzYM2Gi/DYvhy
 [authentication_custom_tokens]: ../guides/basics/authentication/index.md#custom-tokens
 [authentication_url_limitations]: ../guides/basics/authentication/oauth2.md#url-limitations
 [errors_max_fetcher_response_size]: errors.md#fetcherresponsesize
