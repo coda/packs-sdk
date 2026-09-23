@@ -940,6 +940,14 @@ describe('Agent builder', () => {
         builder.setTools({mcp: true});
         // @ts-expect-error only newAgent() can stamp default triggers
         newPack({defaultTriggers: {}});
+        // @ts-expect-error the agent is reachable only through its setters
+        builder.agent.instructions = 'x';
+        // @ts-expect-error as is its tool list
+        builder.agent.tools = [];
+        // @ts-expect-error which cannot be mutated in place either
+        builder.agent.tools?.push({type: ToolType.CodaDocsAndTables});
+        // @ts-expect-error nor can the default triggers
+        builder.defaultTriggers?.push({kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'});
       }
       assert.isFunction(checkedByTscOnly);
     });

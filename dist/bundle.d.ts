@@ -7150,7 +7150,9 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
 	 * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
 	 */
-	agent: Readonly<Partial<AgentDefinition>>;
+	agent: Readonly<Partial<Omit<AgentDefinition, "tools">>> & {
+		readonly tools?: readonly AgentTool[];
+	};
 	/**
 	 * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
 	 * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},

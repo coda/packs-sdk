@@ -1,6 +1,7 @@
 import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { AgentDefinition } from './types';
+import type { AgentTool } from './types';
 import type { AgentToolsDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
@@ -429,7 +430,9 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     /**
      * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
      */
-    agent: Readonly<Partial<AgentDefinition>>;
+    agent: Readonly<Partial<Omit<AgentDefinition, 'tools'>>> & {
+        readonly tools?: readonly AgentTool[];
+    };
     /**
      * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
      * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},
