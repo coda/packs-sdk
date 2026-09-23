@@ -1769,6 +1769,10 @@ export declare function makeSuggestionFormula<ContextT extends ExecutionContext 
                             type: ValueType.String;
                             description: string;
                         };
+                        importance: {
+                            type: ValueType.String;
+                            description: string;
+                        };
                     };
                     displayProperty: "title";
                     description: string;

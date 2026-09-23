@@ -1841,6 +1841,10 @@ export declare function makeSuggestionResultSchema(): {
                         type: ValueType.String;
                         description: string;
                     };
+                    importance: {
+                        type: ValueType.String;
+                        description: string;
+                    };
                 };
                 displayProperty: "title";
                 description: string;

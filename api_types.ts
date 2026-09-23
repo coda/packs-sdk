@@ -1221,6 +1221,18 @@ export interface InvocationLocation {
 }
 
 /**
+ * How much acting on a {@link Suggestion} matters. Each pack defines what the levels mean; order
+ * findings within a level most important first.
+ * @hidden
+ */
+export enum SuggestionImportance {
+  Critical = 'critical',
+  High = 'high',
+  Medium = 'medium',
+  Low = 'low',
+}
+
+/**
  * A finding about a span of a suggestion formula's input text.
  * @hidden
  */
@@ -1237,6 +1249,8 @@ export interface Suggestion {
   explanation: string;
   /** A concrete rewrite of the span, when applicable. */
   replacement?: string;
+  /** How much acting on this finding matters, or omitted when unranked. */
+  importance?: SuggestionImportance;
 }
 
 /**

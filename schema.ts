@@ -2599,6 +2599,12 @@ export function makeSuggestionResultSchema() {
               type: ValueType.String,
               description: 'A concrete rewrite of the span. Absent when there is nothing to swap in.',
             },
+            importance: {
+              type: ValueType.String,
+              description:
+                'How much acting on this matters: "critical", "high", "medium" or "low", as this ' +
+                'checker defines them. Absent when unranked.',
+            },
           },
           displayProperty: 'title',
           description: 'One finding about a span of the submitted text.',
