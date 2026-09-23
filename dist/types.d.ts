@@ -1669,8 +1669,7 @@ export declare enum ContextualTriggerSuggestionColor {
  */
 export declare enum ContextualTriggerDecorationStyle {
     Auto = "auto",
-    Underline = "underline",
-    Vbar = "vbar"
+    Underline = "underline"
 }
 /**
  * Where a while-writing agent may offer help. Absent defaults to every surface.
