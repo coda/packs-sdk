@@ -1263,8 +1263,8 @@ schema, identityName, }) {
  */
 exports.SUGGESTION_TEXT_PARAMETER_NAME = 'text';
 /**
- * Creates a formula that returns finished suggestions. An agent that lists its pack under
- * `connectors` runs it as a while-writing check instead of asking a model.
+ * Creates a formula that returns finished suggestions. On a while-writing check, the runtime calls
+ * each such formula on the agent's connectors in place of the model; the model never sees them.
  * @hidden
  */
 function makeSuggestionFormula(definition) {
