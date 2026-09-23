@@ -7,6 +7,7 @@ import type {CrawlStrategy} from './api_types';
 import type {DataIndexing} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
+import {FormulaPurpose} from './api_types';
 import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
 import type {NumberHintTypes} from './schema';
@@ -36,6 +37,7 @@ import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
+import type {SuggestionResult} from './api_types';
 import type {SyncCompletionMetadataResult} from './api_types';
 import type {SyncExecutionContext} from './api_types';
 import {TableRole} from './api_types';
@@ -58,6 +60,7 @@ import {htmlArray} from './api_types';
 import {imageArray} from './api_types';
 import {isPromise} from './helpers/object_utils';
 import {makeObjectSchema} from './schema';
+import {makeSuggestionResultSchema} from './schema';
 import {maybeUnwrapArraySchema} from './schema';
 import {normalizeSchema} from './schema';
 import {normalizeSchemaKey} from './schema';
@@ -3131,4 +3134,101 @@ function moveJsPropertyOptionsFunctionsToFormulas({
   }
 
   return namedPropertyOptions;
+}
+
+/**
+ * Parameter name the runtime uses when invoking a suggestion producer.
+ *
+ * @internal
+ * @hidden
+ */
+export const SUGGESTION_TEXT_PARAMETER_NAME = 'text';
+
+/**
+ * Configuration for a suggestion-producing formula: everything about it that is the pack's to
+ * decide. The parameter list, the result schema, the result type and the formula's purpose are the
+ * contract the runtime depends on, and {@link makeSuggestionFormula} supplies them.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionFormulaDef<ContextT extends ExecutionContext = ExecutionContext> {
+  /** The formula's name. */
+  name: string;
+  /** User-facing description of what the formula checks. */
+  description: string;
+  /**
+   * Runs the check on `text`. Offsets use UTF-16 code units, and `original` must equal the
+   * corresponding `text.slice(startOffset, endOffset)`. Throw on failure, like any other formula.
+   */
+  execute: (params: [text: string], context: ContextT) => Promise<SuggestionResult> | SuggestionResult;
+  /** See {@link PackFormulaDef.connectionRequirement}. */
+  connectionRequirement?: ConnectionRequirement;
+  /** See {@link PackFormulaDef.cacheTtlSecs}. Defaults to 0: a check runs against live text. */
+  cacheTtlSecs?: number;
+  /** See {@link PackFormulaDef.examples}. */
+  examples?: Array<{params: [string]; result: SuggestionResult}>;
+}
+
+/**
+ * Builds a suggestion-producing formula with the parameter and result contract the runtime expects.
+ *
+ * Pass the result to `pack.addFormula`. Every part of the contract that a hand-written definition
+ * can get wrong is supplied here, and each of those is a silent failure rather than a loud one --
+ * a producer the runtime cannot call is skipped, not rejected:
+ *
+ * - the parameter list: one required string named `text`, because the runtime passes arguments by
+ *   parameter name;
+ * - the result schema: {@link makeSuggestionResultSchema};
+ * - {@link FormulaPurpose.Suggestions}, which is what marks the formula as a producer in the
+ *   uploaded metadata.
+ *
+ * The formula lives in a connector, because only a connector holds formulas, authentication and
+ * network domains. An agent that lists the connector under `connectors` in `setTools` runs every
+ * suggestion formula it finds there when it runs as a while-writing check, instead of asking a
+ * model; its instructions are the fallback when none of them can be called.
+ *
+ * @example
+ * ```
+ * // pack.ts, in the connector.
+ * const pack = coda.newPack();
+ * pack.addNetworkDomain('radicalcandor.com');
+ * pack.setUserAuthentication({type: coda.AuthenticationType.HeaderBearerToken});
+ * pack.addFormula(
+ *   coda.makeSuggestionFormula({
+ *     name: 'CheckSuggestions',
+ *     description: 'Flags feedback that is too hedged to land.',
+ *     execute: async ([text], context) => ({suggestions: await check(context, text)}),
+ *   }),
+ * );
+ *
+ * // pack.ts, in the agent. 1234 is the connector's pack id.
+ * const agent = coda.newAgent();
+ * agent.setInstructions('Flag feedback that is too hedged to land, with a concrete rewrite.');
+ * agent.setTools({connectors: [{packId: 1234}]});
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export function makeSuggestionFormula<ContextT extends ExecutionContext = ExecutionContext>(
+  definition: SuggestionFormulaDef<ContextT>,
+) {
+  // Annotated rather than inferred: `[makeParameter(...)]` infers as an array, and `ParamDefs`
+  // is a non-empty tuple, so without this the result is not assignable to `addFormula`.
+  const parameters: [RequiredParamDef<Type.string>] = [
+    makeParameter({
+      type: ParameterType.String,
+      name: SUGGESTION_TEXT_PARAMETER_NAME,
+      description: 'The text to check.',
+    }),
+  ];
+  return {
+    ...definition,
+    cacheTtlSecs: definition.cacheTtlSecs ?? 0,
+    purpose: FormulaPurpose.Suggestions,
+    resultType: ValueType.Object as const,
+    schema: makeSuggestionResultSchema(),
+    parameters,
+  };
 }

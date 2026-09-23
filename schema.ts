@@ -2548,3 +2548,71 @@ export function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, pa
     );
   }
 }
+
+/**
+ * Builds the result schema for suggestion-producing formulas.
+ *
+ * The return type is deliberately left to inference rather than widened to
+ * {@link GenericObjectSchema}: widening erases the properties, so `addFormula` can no longer infer
+ * that a {@link SuggestionResult} satisfies this schema and every caller needs a cast.
+ *
+ * @internal
+ * @hidden
+ */
+export function makeSuggestionResultSchema() {
+  return makeObjectSchema({
+    properties: {
+      suggestions: {
+        type: ValueType.Array,
+        required: true,
+        description: 'Every finding for the submitted text, most important first.',
+        items: makeObjectSchema({
+          properties: {
+            startOffset: {
+              type: ValueType.Number,
+              required: true,
+              description:
+                'Offset of the first UTF-16 code unit of the span, counted from the start of the ' +
+                'text this formula was given.',
+            },
+            endOffset: {
+              type: ValueType.Number,
+              required: true,
+              description:
+                'Offset one past the last UTF-16 code unit of the span. Must be greater than ' +
+                'startOffset, and no greater than the length of the text.',
+            },
+            original: {
+              type: ValueType.String,
+              required: true,
+              description:
+                'The span itself, copied verbatim from the text. A checksum on the offsets rather ' +
+                'than the anchor: a finding whose original does not match the text at its offsets ' +
+                'is dropped.',
+            },
+            title: {
+              type: ValueType.String,
+              required: true,
+              description: 'A 2-4 word heading naming the issue. No trailing period.',
+            },
+            explanation: {
+              type: ValueType.String,
+              required: true,
+              description: 'One or two sentences on what to change about the span and why.',
+            },
+            replacement: {
+              type: ValueType.String,
+              description: 'A concrete rewrite of the span. Absent when there is nothing to swap in.',
+            },
+          },
+          displayProperty: 'title',
+          description: 'One finding about a span of the submitted text.',
+        }),
+      },
+      unavailable: {
+        type: ValueType.String,
+        description: 'Why the check could not assess the text right now. Absent when it could.',
+      },
+    },
+  });
+}

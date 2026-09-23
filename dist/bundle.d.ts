@@ -521,7 +521,13 @@ declare enum FormulaPurpose {
 	/**
 	 * Indicates this formula can be used for search.
 	 */
-	Search = "search"
+	Search = "search",
+	/**
+	 * Indicates this formula produces finished suggestions for an agent's while-writing checks.
+	 * Set by {@link core.makeSuggestionFormula}.
+	 * @hidden
+	 */
+	Suggestions = "suggestions"
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

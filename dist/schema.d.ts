@@ -1799,4 +1799,68 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  * failed to copy a function.
  */
 export declare function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string): void;
+/**
+ * Builds the result schema for suggestion-producing formulas.
+ *
+ * The return type is deliberately left to inference rather than widened to
+ * {@link GenericObjectSchema}: widening erases the properties, so `addFormula` can no longer infer
+ * that a {@link SuggestionResult} satisfies this schema and every caller needs a cast.
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionResultSchema(): {
+    properties: {
+        suggestions: {
+            type: ValueType.Array;
+            required: true;
+            description: string;
+            items: {
+                properties: {
+                    startOffset: {
+                        type: ValueType.Number;
+                        required: true;
+                        description: string;
+                    };
+                    endOffset: {
+                        type: ValueType.Number;
+                        required: true;
+                        description: string;
+                    };
+                    original: {
+                        type: ValueType.String;
+                        required: true;
+                        description: string;
+                    };
+                    title: {
+                        type: ValueType.String;
+                        required: true;
+                        description: string;
+                    };
+                    explanation: {
+                        type: ValueType.String;
+                        required: true;
+                        description: string;
+                    };
+                    replacement: {
+                        type: ValueType.String;
+                        description: string;
+                    };
+                };
+                displayProperty: "title";
+                description: string;
+            } & {
+                identity?: Identity | undefined;
+                type: ValueType.Object;
+            };
+        };
+        unavailable: {
+            type: ValueType.String;
+            description: string;
+        };
+    };
+} & {
+    identity?: Identity | undefined;
+    type: ValueType.Object;
+};
 export {};

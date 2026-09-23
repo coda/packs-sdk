@@ -1,33 +1,35 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeSuggestionFormula = exports.SUGGESTION_TEXT_PARAMETER_NAME = exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 const api_types_6 = require("./api_types");
+const api_types_7 = require("./api_types");
 const schema_1 = require("./schema");
 const schema_2 = require("./schema");
 const ensure_1 = require("./helpers/ensure");
-const api_types_7 = require("./api_types");
 const api_types_8 = require("./api_types");
+const api_types_9 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
-const api_types_9 = require("./api_types");
+const api_types_10 = require("./api_types");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
-const api_types_10 = require("./api_types");
 const api_types_11 = require("./api_types");
+const api_types_12 = require("./api_types");
 const object_utils_2 = require("./helpers/object_utils");
 const schema_3 = require("./schema");
 const schema_4 = require("./schema");
 const schema_5 = require("./schema");
 const schema_6 = require("./schema");
-const api_types_12 = require("./api_types");
-const migration_1 = require("./helpers/migration");
-const api_types_13 = require("./api_types");
 const schema_7 = require("./schema");
+const api_types_13 = require("./api_types");
+const migration_1 = require("./helpers/migration");
+const api_types_14 = require("./api_types");
+const schema_8 = require("./schema");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -265,7 +267,7 @@ exports.wrapGetSchema = wrapGetSchema;
  */
 function makeParameter(paramDefinition) {
     const { type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, allowManualInput: allowManualInputDef, ...rest } = paramDefinition;
-    const actualType = api_types_4.ParameterTypeInputMap[type];
+    const actualType = api_types_5.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
         // The conditional `autocomplete?` field on ParameterOptions guarantees
@@ -287,7 +289,7 @@ function makeParameter(paramDefinition) {
             crawlStrategy = {
                 parentTable: {
                     tableName,
-                    propertyKey: (0, schema_6.normalizeSchemaKey)(propertyKey),
+                    propertyKey: (0, schema_7.normalizeSchemaKey)(propertyKey),
                     inheritPermissions,
                 },
             };
@@ -309,72 +311,72 @@ function makeParameter(paramDefinition) {
 exports.makeParameter = makeParameter;
 /** @deprecated */
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.Type.string });
+    return Object.freeze({ ...args, name, description, type: api_types_7.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
 /** @deprecated */
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_13.stringArray });
+    return Object.freeze({ ...args, name, description, type: api_types_14.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 /** @deprecated */
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.Type.number });
+    return Object.freeze({ ...args, name, description, type: api_types_7.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
 /** @deprecated */
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_12.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_13.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 /** @deprecated */
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.Type.boolean });
+    return Object.freeze({ ...args, name, description, type: api_types_7.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 /** @deprecated */
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_7.booleanArray });
+    return Object.freeze({ ...args, name, description, type: api_types_8.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 /** @deprecated */
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.Type.date });
+    return Object.freeze({ ...args, name, description, type: api_types_7.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
 /** @deprecated */
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_8.dateArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 /** @deprecated */
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.Type.html });
+    return Object.freeze({ ...args, name, description, type: api_types_7.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 /** @deprecated */
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_10.htmlArray });
+    return Object.freeze({ ...args, name, description, type: api_types_11.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 /** @deprecated */
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.Type.image });
+    return Object.freeze({ ...args, name, description, type: api_types_7.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
 /** @deprecated */
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_11.imageArray });
+    return Object.freeze({ ...args, name, description, type: api_types_12.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 /** @deprecated */
 function makeFileParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.Type.file });
+    return Object.freeze({ ...args, name, description, type: api_types_7.Type.file });
 }
 exports.makeFileParameter = makeFileParameter;
 /** @deprecated */
 function makeFileArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_9.fileArray });
+    return Object.freeze({ ...args, name, description, type: api_types_10.fileArray });
 }
 exports.makeFileArrayParameter = makeFileArrayParameter;
 /** @deprecated */
@@ -390,11 +392,11 @@ function check(condition, msg) {
 }
 exports.check = check;
 function isObjectPackFormula(fn) {
-    return fn.resultType === api_types_6.Type.object;
+    return fn.resultType === api_types_7.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
-    return fn.resultType === api_types_6.Type.string;
+    return fn.resultType === api_types_7.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
@@ -420,7 +422,7 @@ var UpdateOutcome;
  */
 function makeNumericFormula(definition) {
     return Object.assign({}, definition, {
-        resultType: api_types_6.Type.number,
+        resultType: api_types_7.Type.number,
         validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
@@ -436,7 +438,7 @@ exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, {
-        resultType: api_types_6.Type.string,
+        resultType: api_types_7.Type.string,
         validateParameters: wrapMetadataFunction(definition.validateParameters),
         ...(response && { schema: response.schema }),
     });
@@ -512,7 +514,7 @@ function makeFormula(fullDefinition) {
             (0, ensure_1.assertCondition)(codaType !== schema_1.ValueHintType.SelectList, 'ValueHintType.SelectList is not supported for formula result types.');
             const stringFormula = {
                 ...rest,
-                resultType: api_types_6.Type.string,
+                resultType: api_types_7.Type.string,
                 schema: formulaSchema || (codaType ? { type: schema_2.ValueType.String, codaType } : undefined),
             };
             formula = stringFormula;
@@ -528,7 +530,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const numericFormula = {
                 ...rest,
-                resultType: api_types_6.Type.number,
+                resultType: api_types_7.Type.number,
                 schema: formulaSchema || (codaType ? { type: schema_2.ValueType.Number, codaType } : undefined),
             };
             formula = numericFormula;
@@ -538,7 +540,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const booleanFormula = {
                 ...rest,
-                resultType: api_types_6.Type.boolean,
+                resultType: api_types_7.Type.boolean,
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = booleanFormula;
@@ -549,9 +551,9 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
-                resultType: api_types_6.Type.object,
+                resultType: api_types_7.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
-                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
+                schema: (0, object_utils_1.deepCopy)((0, schema_6.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = arrayFormula;
@@ -562,9 +564,9 @@ function makeFormula(fullDefinition) {
             // need a force cast since execute has a different return value due to key normalization.
             const objectFormula = {
                 ...rest,
-                resultType: api_types_6.Type.object,
+                resultType: api_types_7.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
-                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)(schema)),
+                schema: (0, object_utils_1.deepCopy)((0, schema_6.normalizeSchema)(schema)),
                 validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = objectFormula;
@@ -645,13 +647,13 @@ function makeMetadataFormula(execute, options) {
         },
         parameters: [
             makeParameter({
-                type: api_types_3.ParameterType.String,
+                type: api_types_4.ParameterType.String,
                 name: 'search',
                 description: 'Metadata to search for.',
                 optional: true,
             }),
             makeParameter({
-                type: api_types_3.ParameterType.String,
+                type: api_types_4.ParameterType.String,
                 name: 'formulaContext',
                 description: 'Serialized JSON for metadata.',
                 optional: true,
@@ -812,7 +814,7 @@ function makeObjectFormula({ response, ...definition }) {
         if (isResponseHandlerTemplate(response) && response.schema) {
             // Since the schema may be re-used, make a copy.
             const inputSchema = (0, object_utils_1.deepCopy)(response.schema);
-            response.schema = (0, schema_5.normalizeSchema)(inputSchema);
+            response.schema = (0, schema_6.normalizeSchema)(inputSchema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -842,7 +844,7 @@ function makeObjectFormula({ response, ...definition }) {
         };
     }
     return Object.assign({}, definition, {
-        resultType: api_types_6.Type.object,
+        resultType: api_types_7.Type.object,
         execute,
         schema,
         validateParameters: wrapMetadataFunction(definition.validateParameters),
@@ -878,20 +880,20 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
     else {
         schemaDef.identity = { name: identityName };
     }
-    if (role === api_types_5.TableRole.Users) {
+    if (role === api_types_6.TableRole.Users) {
         if (!schemaDef.userEmailProperty) {
-            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.Users} must set a userEmailProperty`);
+            throw new Error(`Sync table schemas with role ${api_types_6.TableRole.Users} must set a userEmailProperty`);
         }
         if (!schemaDef.userIdProperty) {
-            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.Users} must set a userIdProperty`);
+            throw new Error(`Sync table schemas with role ${api_types_6.TableRole.Users} must set a userIdProperty`);
         }
     }
-    if (role === api_types_5.TableRole.GroupMembers) {
+    if (role === api_types_6.TableRole.GroupMembers) {
         if (!schemaDef.groupIdProperty) {
-            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.GroupMembers} must set a groupIdProperty`);
+            throw new Error(`Sync table schemas with role ${api_types_6.TableRole.GroupMembers} must set a groupIdProperty`);
         }
         if (!schemaDef.userIdProperty && !schemaDef.memberGroupIdProperty) {
-            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.GroupMembers} must set a userIdProperty or memberGroupIdProperty`);
+            throw new Error(`Sync table schemas with role ${api_types_6.TableRole.GroupMembers} must set a userIdProperty or memberGroupIdProperty`);
         }
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
@@ -903,7 +905,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
     });
     if (dynamicOptions.propertyOptions) {
         namedPropertyOptions !== null && namedPropertyOptions !== void 0 ? namedPropertyOptions : (namedPropertyOptions = {});
-        namedPropertyOptions[api_types_2.OptionsType.Dynamic] = makePropertyOptionsFormula({
+        namedPropertyOptions[api_types_3.OptionsType.Dynamic] = makePropertyOptionsFormula({
             execute: dynamicOptions.propertyOptions,
             schema: (0, schema_3.makeObjectSchema)({
                 // A dynamic autocomplete formula can return different result types depending
@@ -915,7 +917,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
             name: `${identityName}.DynamicPropertyOptions`,
         });
     }
-    const normalizedSchema = (0, schema_5.normalizeSchema)(schema);
+    const normalizedSchema = (0, schema_6.normalizeSchema)(schema);
     const formulaSchema = getSchema
         ? undefined
         : { type: schema_2.ValueType.Array, items: normalizedSchema };
@@ -987,7 +989,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
             supportsUpdates: Boolean(executeUpdate),
             supportsGetPermissions: Boolean(executeGetPermissions),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
-            resultType: api_types_6.Type.object,
+            resultType: api_types_7.Type.object,
             executeGetPermissions: executeGetPermissions,
             validateParameters: wrapMetadataFunction(definition.validateParameters),
         },
@@ -1109,7 +1111,7 @@ exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, ...rest } = definition;
     const { parameters } = rest;
-    response.schema = response.schema ? (0, schema_5.normalizeSchema)(response.schema) : undefined;
+    response.schema = response.schema ? (0, schema_6.normalizeSchema)(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
     const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)(response);
@@ -1125,7 +1127,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_6.Type.object,
+        resultType: api_types_7.Type.object,
         schema: response.schema,
         validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
@@ -1162,7 +1164,7 @@ function makeEmptyFormula(definition) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_6.Type.string,
+        resultType: api_types_7.Type.string,
         validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
@@ -1214,7 +1216,7 @@ exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 function listPropertiesWithOptionsFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {
-        const propertySchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
+        const propertySchema = (0, schema_5.maybeUnwrapArraySchema)(schema.properties[propertyName]);
         if (!propertySchema || !('options' in propertySchema)) {
             continue;
         }
@@ -1242,10 +1244,10 @@ schema, identityName, }) {
         return undefined;
     }
     for (const propertyName of propertiesWithOptionsFunctions) {
-        const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
-        const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
-        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
-        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
+        const inputSchemaWithoutArray = (0, schema_5.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
+        const outputSchema = (0, schema_5.maybeUnwrapArraySchema)(schema.properties[propertyName]);
+        (0, ensure_1.assertCondition)((0, schema_8.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
+        (0, ensure_1.assertCondition)((0, schema_8.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
         outputSchema.options = propertyName;
         namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
             execute: inputSchemaWithoutArray.options,
@@ -1255,3 +1257,72 @@ schema, identityName, }) {
     }
     return namedPropertyOptions;
 }
+/**
+ * Parameter name the runtime uses when invoking a suggestion producer.
+ *
+ * @internal
+ * @hidden
+ */
+exports.SUGGESTION_TEXT_PARAMETER_NAME = 'text';
+/**
+ * Builds a suggestion-producing formula with the parameter and result contract the runtime expects.
+ *
+ * Pass the result to `pack.addFormula`. Every part of the contract that a hand-written definition
+ * can get wrong is supplied here, and each of those is a silent failure rather than a loud one --
+ * a producer the runtime cannot call is skipped, not rejected:
+ *
+ * - the parameter list: one required string named `text`, because the runtime passes arguments by
+ *   parameter name;
+ * - the result schema: {@link makeSuggestionResultSchema};
+ * - {@link FormulaPurpose.Suggestions}, which is what marks the formula as a producer in the
+ *   uploaded metadata.
+ *
+ * The formula lives in a connector, because only a connector holds formulas, authentication and
+ * network domains. An agent that lists the connector under `connectors` in `setTools` runs every
+ * suggestion formula it finds there when it runs as a while-writing check, instead of asking a
+ * model; its instructions are the fallback when none of them can be called.
+ *
+ * @example
+ * ```
+ * // pack.ts, in the connector.
+ * const pack = coda.newPack();
+ * pack.addNetworkDomain('radicalcandor.com');
+ * pack.setUserAuthentication({type: coda.AuthenticationType.HeaderBearerToken});
+ * pack.addFormula(
+ *   coda.makeSuggestionFormula({
+ *     name: 'CheckSuggestions',
+ *     description: 'Flags feedback that is too hedged to land.',
+ *     execute: async ([text], context) => ({suggestions: await check(context, text)}),
+ *   }),
+ * );
+ *
+ * // pack.ts, in the agent. 1234 is the connector's pack id.
+ * const agent = coda.newAgent();
+ * agent.setInstructions('Flag feedback that is too hedged to land, with a concrete rewrite.');
+ * agent.setTools({connectors: [{packId: 1234}]});
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+function makeSuggestionFormula(definition) {
+    var _a;
+    // Annotated rather than inferred: `[makeParameter(...)]` infers as an array, and `ParamDefs`
+    // is a non-empty tuple, so without this the result is not assignable to `addFormula`.
+    const parameters = [
+        makeParameter({
+            type: api_types_4.ParameterType.String,
+            name: exports.SUGGESTION_TEXT_PARAMETER_NAME,
+            description: 'The text to check.',
+        }),
+    ];
+    return {
+        ...definition,
+        cacheTtlSecs: (_a = definition.cacheTtlSecs) !== null && _a !== void 0 ? _a : 0,
+        purpose: api_types_2.FormulaPurpose.Suggestions,
+        resultType: schema_2.ValueType.Object,
+        schema: (0, schema_4.makeSuggestionResultSchema)(),
+        parameters,
+    };
+}
+exports.makeSuggestionFormula = makeSuggestionFormula;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.makeSuggestionResultSchema = exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -991,3 +991,68 @@ function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
     }
 }
 exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;
+/**
+ * Builds the result schema for suggestion-producing formulas.
+ *
+ * The return type is deliberately left to inference rather than widened to
+ * {@link GenericObjectSchema}: widening erases the properties, so `addFormula` can no longer infer
+ * that a {@link SuggestionResult} satisfies this schema and every caller needs a cast.
+ *
+ * @internal
+ * @hidden
+ */
+function makeSuggestionResultSchema() {
+    return makeObjectSchema({
+        properties: {
+            suggestions: {
+                type: ValueType.Array,
+                required: true,
+                description: 'Every finding for the submitted text, most important first.',
+                items: makeObjectSchema({
+                    properties: {
+                        startOffset: {
+                            type: ValueType.Number,
+                            required: true,
+                            description: 'Offset of the first UTF-16 code unit of the span, counted from the start of the ' +
+                                'text this formula was given.',
+                        },
+                        endOffset: {
+                            type: ValueType.Number,
+                            required: true,
+                            description: 'Offset one past the last UTF-16 code unit of the span. Must be greater than ' +
+                                'startOffset, and no greater than the length of the text.',
+                        },
+                        original: {
+                            type: ValueType.String,
+                            required: true,
+                            description: 'The span itself, copied verbatim from the text. A checksum on the offsets rather ' +
+                                'than the anchor: a finding whose original does not match the text at its offsets ' +
+                                'is dropped.',
+                        },
+                        title: {
+                            type: ValueType.String,
+                            required: true,
+                            description: 'A 2-4 word heading naming the issue. No trailing period.',
+                        },
+                        explanation: {
+                            type: ValueType.String,
+                            required: true,
+                            description: 'One or two sentences on what to change about the span and why.',
+                        },
+                        replacement: {
+                            type: ValueType.String,
+                            description: 'A concrete rewrite of the span. Absent when there is nothing to swap in.',
+                        },
+                    },
+                    displayProperty: 'title',
+                    description: 'One finding about a span of the submitted text.',
+                }),
+            },
+            unavailable: {
+                type: ValueType.String,
+                description: 'Why the check could not assess the text right now. Absent when it could.',
+            },
+        },
+    });
+}
+exports.makeSuggestionResultSchema = makeSuggestionResultSchema;

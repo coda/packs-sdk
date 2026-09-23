@@ -6,6 +6,7 @@ import { ConnectionRequirement } from './api_types';
 import type { DataIndexing } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
+import { FormulaPurpose } from './api_types';
 import type { GetPermissionExecutionContext } from './api_types';
 import type { Identity } from './schema';
 import type { NumberHintTypes } from './schema';
@@ -32,6 +33,7 @@ import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
 import type { StringSchema } from './schema';
+import type { SuggestionResult } from './api_types';
 import type { SyncCompletionMetadataResult } from './api_types';
 import type { SyncExecutionContext } from './api_types';
 import { TableRole } from './api_types';
@@ -1637,7 +1639,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
-    purpose?: import("./api_types").FormulaPurpose | undefined;
+    purpose?: FormulaPurpose | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
     validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
@@ -1683,7 +1685,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
-    purpose?: import("./api_types").FormulaPurpose | undefined;
+    purpose?: FormulaPurpose | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
     validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
@@ -1694,3 +1696,155 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 };
 export declare function maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions: SyncTablePropertyOptions | undefined, connectionRequirement: ConnectionRequirement | undefined): SyncTablePropertyOptions | undefined;
 export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends FormulaOptions<ParamDefsT, CommonPackFormulaDef<ParamDefsT>> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;
+/**
+ * Parameter name the runtime uses when invoking a suggestion producer.
+ *
+ * @internal
+ * @hidden
+ */
+export declare const SUGGESTION_TEXT_PARAMETER_NAME = "text";
+/**
+ * Configuration for a suggestion-producing formula: everything about it that is the pack's to
+ * decide. The parameter list, the result schema, the result type and the formula's purpose are the
+ * contract the runtime depends on, and {@link makeSuggestionFormula} supplies them.
+ *
+ * @internal
+ * @hidden
+ */
+export interface SuggestionFormulaDef<ContextT extends ExecutionContext = ExecutionContext> {
+    /** The formula's name. */
+    name: string;
+    /** User-facing description of what the formula checks. */
+    description: string;
+    /**
+     * Runs the check on `text`. Offsets use UTF-16 code units, and `original` must equal the
+     * corresponding `text.slice(startOffset, endOffset)`. Throw on failure, like any other formula.
+     */
+    execute: (params: [text: string], context: ContextT) => Promise<SuggestionResult> | SuggestionResult;
+    /** See {@link PackFormulaDef.connectionRequirement}. */
+    connectionRequirement?: ConnectionRequirement;
+    /** See {@link PackFormulaDef.cacheTtlSecs}. Defaults to 0: a check runs against live text. */
+    cacheTtlSecs?: number;
+    /** See {@link PackFormulaDef.examples}. */
+    examples?: Array<{
+        params: [string];
+        result: SuggestionResult;
+    }>;
+}
+/**
+ * Builds a suggestion-producing formula with the parameter and result contract the runtime expects.
+ *
+ * Pass the result to `pack.addFormula`. Every part of the contract that a hand-written definition
+ * can get wrong is supplied here, and each of those is a silent failure rather than a loud one --
+ * a producer the runtime cannot call is skipped, not rejected:
+ *
+ * - the parameter list: one required string named `text`, because the runtime passes arguments by
+ *   parameter name;
+ * - the result schema: {@link makeSuggestionResultSchema};
+ * - {@link FormulaPurpose.Suggestions}, which is what marks the formula as a producer in the
+ *   uploaded metadata.
+ *
+ * The formula lives in a connector, because only a connector holds formulas, authentication and
+ * network domains. An agent that lists the connector under `connectors` in `setTools` runs every
+ * suggestion formula it finds there when it runs as a while-writing check, instead of asking a
+ * model; its instructions are the fallback when none of them can be called.
+ *
+ * @example
+ * ```
+ * // pack.ts, in the connector.
+ * const pack = coda.newPack();
+ * pack.addNetworkDomain('radicalcandor.com');
+ * pack.setUserAuthentication({type: coda.AuthenticationType.HeaderBearerToken});
+ * pack.addFormula(
+ *   coda.makeSuggestionFormula({
+ *     name: 'CheckSuggestions',
+ *     description: 'Flags feedback that is too hedged to land.',
+ *     execute: async ([text], context) => ({suggestions: await check(context, text)}),
+ *   }),
+ * );
+ *
+ * // pack.ts, in the agent. 1234 is the connector's pack id.
+ * const agent = coda.newAgent();
+ * agent.setInstructions('Flag feedback that is too hedged to land, with a concrete rewrite.');
+ * agent.setTools({connectors: [{packId: 1234}]});
+ * ```
+ *
+ * @internal
+ * @hidden
+ */
+export declare function makeSuggestionFormula<ContextT extends ExecutionContext = ExecutionContext>(definition: SuggestionFormulaDef<ContextT>): {
+    cacheTtlSecs: number;
+    purpose: FormulaPurpose;
+    resultType: ValueType.Object;
+    schema: {
+        properties: {
+            suggestions: {
+                type: ValueType.Array;
+                required: true;
+                description: string;
+                items: {
+                    properties: {
+                        startOffset: {
+                            type: ValueType.Number;
+                            required: true;
+                            description: string;
+                        };
+                        endOffset: {
+                            type: ValueType.Number;
+                            required: true;
+                            description: string;
+                        };
+                        original: {
+                            type: ValueType.String;
+                            required: true;
+                            description: string;
+                        };
+                        title: {
+                            type: ValueType.String;
+                            required: true;
+                            description: string;
+                        };
+                        explanation: {
+                            type: ValueType.String;
+                            required: true;
+                            description: string;
+                        };
+                        replacement: {
+                            type: ValueType.String;
+                            description: string;
+                        };
+                    };
+                    displayProperty: "title";
+                    description: string;
+                } & {
+                    identity?: Identity | undefined;
+                    type: ValueType.Object;
+                };
+            };
+            unavailable: {
+                type: ValueType.String;
+                description: string;
+            };
+        };
+    } & {
+        identity?: Identity | undefined;
+        type: ValueType.Object;
+    };
+    parameters: [RequiredParamDef<Type.string>];
+    /** The formula's name. */
+    name: string;
+    /** User-facing description of what the formula checks. */
+    description: string;
+    /**
+     * Runs the check on `text`. Offsets use UTF-16 code units, and `original` must equal the
+     * corresponding `text.slice(startOffset, endOffset)`. Throw on failure, like any other formula.
+     */
+    execute: (params: [text: string], context: ContextT) => SuggestionResult | Promise<SuggestionResult>;
+    /** See {@link PackFormulaDef.connectionRequirement}. */
+    connectionRequirement?: ConnectionRequirement | undefined;
+    /** See {@link PackFormulaDef.examples}. */
+    examples?: {
+        params: [string];
+        result: SuggestionResult;
+    }[] | undefined;
+};

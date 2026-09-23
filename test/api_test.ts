@@ -7,12 +7,13 @@ import {ConnectionRequirement} from '../api_types';
 import {DataIndexing} from '../api_types';
 import type {EnsureExtends} from '../type_utils';
 import type {ExecutionContext} from '../api_types';
+import {FormulaPurpose} from '../api_types';
 import {OptionsType} from '../api_types';
 import type {ParamValues} from '../api_types';
 import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
 import type {SyncExecutionContext} from '../api_types';
-import type {Type} from '../api_types';
+import {Type} from '../api_types';
 import {ValueType} from '../schema';
 import {ensureExists} from '../helpers/ensure';
 import {makeDynamicSyncTable} from '../api';
@@ -20,8 +21,10 @@ import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
 import {makeParameter} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSuggestionFormula} from '../api';
 import {makeSyncTable} from '../api';
 import {newMockSyncExecutionContext} from '../development';
+import {newPack} from '../builder';
 import {normalizePropertyOptionsResults} from '../api';
 import * as schema from '../schema';
 
@@ -804,6 +807,66 @@ describe('API test', () => {
       assert.deepEqual(childTable.getter.parameters[0].crawlStrategy, {
         parentTable: {tableName: 'Parent', propertyKey: 'Foo', inheritPermissions: false},
       });
+    });
+  });
+
+  describe('makeSuggestionFormula', () => {
+    function makeTestFormula() {
+      return makeSuggestionFormula({
+        name: 'CheckSuggestions',
+        description: 'Flags hedged feedback.',
+        execute: async ([text]) => ({
+          suggestions: [
+            {
+              startOffset: 0,
+              endOffset: 7,
+              original: text.slice(0, 7),
+              title: 'Hedged wording',
+              explanation: 'State the point directly.',
+            },
+          ],
+        }),
+      });
+    }
+
+    it('fixes the parameter the runtime invokes by name', () => {
+      const formula = makeTestFormula();
+      assert.equal(formula.parameters.length, 1);
+      assert.equal(formula.parameters[0].name, 'text');
+      assert.equal(formula.parameters[0].type, Type.string);
+      assert.isNotTrue(formula.parameters[0].optional);
+    });
+
+    it('marks the formula as a producer so the role survives into metadata', () => {
+      assert.equal(makeTestFormula().purpose, FormulaPurpose.Suggestions);
+    });
+
+    it('defaults to no caching, since a check runs against live text', () => {
+      assert.equal(makeTestFormula().cacheTtlSecs, 0);
+      const cached = makeSuggestionFormula({
+        name: 'CheckSuggestions',
+        description: 'Flags hedged feedback.',
+        cacheTtlSecs: 60,
+        execute: async () => ({suggestions: []}),
+      });
+      assert.equal(cached.cacheTtlSecs, 60);
+    });
+
+    it('takes the parameter tuple, like every other formula', async () => {
+      const formula = makeTestFormula();
+      const result = await formula.execute(['Probably fine'], newMockSyncExecutionContext());
+      assert.deepEqual(result.suggestions[0].original, 'Probabl');
+    });
+
+    // Regression guard: widening the result schema to `GenericObjectSchema` erases its properties,
+    // and `addFormula` then cannot see that a `SuggestionResult` satisfies it. If that comes back,
+    // this stops compiling.
+    it('registers through addFormula without a cast', () => {
+      const pack = newPack();
+      pack.addFormula(makeTestFormula());
+      assert.equal(pack.formulas.length, 1);
+      assert.equal(pack.formulas[0].name, 'CheckSuggestions');
+      assert.equal((pack.formulas[0] as any).purpose, FormulaPurpose.Suggestions);
     });
   });
 });
