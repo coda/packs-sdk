@@ -12,6 +12,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - CLI commands now surface the server-side error message (and HTTP status) when an API request fails, instead of swallowing it behind a generic message. This affects `register`, `whoami`, `clone`, and `link`, and makes `formatResponseError` robust to non-JSON and empty error bodies.
 - `packs init` (and its `coda`/`superhuman` aliases) now prompts before overwriting an existing `pack.ts` instead of silently clobbering it. Pass `--yes` to skip the prompt. Note that in non-interactive environments `init` now exits with a non-zero status when a `pack.ts` already exists unless `--yes` is passed, so scripts that relied on the previous silent overwrite must add `--yes`.
+- `packs init` no longer runs the obsolete `npm set-script` patching step that was removed in npm 9. When it is run outside the directory npm installs into, it now explains that the Pack's dependencies would be added elsewhere and how to proceed, instead of failing with a raw `ENOENT` after adding packages to the parent project. A missing npm or git, and failures installing the Pack examples or its dependencies, are all reported with actionable messages.
 
 ## [1.17.6] - 2026-09-16
 
@@ -31,10 +32,6 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - CLI commands now fail immediately in non-interactive environments instead of waiting on confirmation prompts. Use `--yes` to skip confirmations on `clone`, `link`, `register`, and `release`. `register` requires `--apiToken` (or a pasted token on a TTY). `release` accepts `--use-latest` when the manifest has no version. `--help` for each command includes examples ready to run.
 - Removed the unused `bestEffortDefaultTriggers` validation option. Pack metadata validation remains strict and reports malformed triggers by array index.
-
-### Fixed
-
-- `packs init` no longer runs the obsolete `npm set-script` patching step that was removed in npm 9. When it is run outside the directory npm installs into, it now explains that the Pack's dependencies would be added elsewhere and how to proceed, instead of failing with a raw `ENOENT` after adding packages to the parent project. A missing npm or git, and failures installing the Pack examples or its dependencies, are all reported with actionable messages.
 
 ## [1.17.5] - 2026-09-08
 
