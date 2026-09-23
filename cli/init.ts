@@ -3,11 +3,16 @@ import fs from 'fs-extra';
 import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
+import {resolvePackageDirectory} from './helpers';
 import {spawnProcess} from './helpers';
 
-const GitIgnore = `.coda.json
-.coda-credentials.json
-`;
+const PacksExamplesPackage = '@codahq/packs-examples';
+
+const GitIgnoreEntries = ['.coda.json', '.coda-credentials.json'];
+
+// Each dependency spec is double-quoted for the shell. These are the characters that stay special inside
+// double quotes in sh ($, `, ", \) or in cmd.exe (%, "), plus line breaks, which end a command in both.
+const UnsafeSpecCharacters = /[$`"\\%\r\n]/;
 
 function getNpmRoot(): string {
   const {status, stdout} = spawnProcess('npm prefix', {stdio: 'pipe'});
@@ -21,26 +26,19 @@ function getNpmRoot(): string {
   return fs.realpathSync(npmRoot);
 }
 
-// npm may hoist the examples above the npm root, so ask Node where they actually landed instead of
-// assuming they are in the nearest node_modules.
-function getPacksExamplesDirectory(): string {
+// `npm ls` exits non-zero when the package is installed but has a problem, such as a version that no
+// longer matches package.json, so read the listing instead of the exit code.
+function isInstalled(packageName: string): boolean {
+  const {stdout} = spawnProcess(`npm ls ${packageName} --json --depth=0`, {stdio: 'pipe'});
   try {
-    return path.dirname(require.resolve('@codahq/packs-examples/package.json', {paths: [process.cwd()]}));
-  } catch (error: any) {
-    return printAndExit(
-      `The packs init command could not find @codahq/packs-examples from ${process.cwd()}. ` +
-        'Check that you can reach https://github.com/coda/packs-examples and try again.',
-    );
+    return Boolean(JSON.parse(stdout.toString()).dependencies?.[packageName]?.version);
+  } catch {
+    return false;
   }
 }
 
 function isGitAvailable(): boolean {
   return spawnProcess('git --version').status === 0;
-}
-
-// By no means comprehensive, just an attempt to cover characters that can appear in a package.json declaration.
-function escapeShellCmd(cmd: string): string {
-  return cmd.replace(/>/g, '\\>').replace(/</g, '\\<');
 }
 
 export async function handleInit({yes}: {yes?: boolean} = {}) {
@@ -59,12 +57,23 @@ export async function handleInit({yes}: {yes?: boolean} = {}) {
   if (npmRoot !== fs.realpathSync(process.cwd())) {
     return printAndExit(
       `npm installs packages into ${npmRoot}, so a Pack created here would have its dependencies added there ` +
-        'instead. Run "npm init -y" here first to create the Pack in this directory, or run the packs init ' +
-        `command in ${npmRoot}.`,
+        'instead. Run "npm init -y" here first to create the Pack in this directory, or run this command ' +
+        `in ${npmRoot}.`,
     );
   }
 
-  const isPacksExamplesInstalled = spawnProcess('npm list @codahq/packs-examples').status === 0;
+  const isPacksExamplesInstalled = isInstalled(PacksExamplesPackage);
+
+  // Once we have installed the examples ourselves, every way out removes them again.
+  function removePacksExamples() {
+    if (!isPacksExamplesInstalled && spawnProcess(`npm uninstall ${PacksExamplesPackage}`).status !== 0) {
+      print(`The Pack examples could not be removed. Run "npm uninstall ${PacksExamplesPackage}" to remove them.`);
+    }
+  }
+  function exit(message: string) {
+    removePacksExamples();
+    return printAndExit(message);
+  }
 
   if (!isPacksExamplesInstalled) {
     if (!isGitAvailable()) {
@@ -81,34 +90,47 @@ export async function handleInit({yes}: {yes?: boolean} = {}) {
     }
   }
 
-  const packsExamplesDirectory = getPacksExamplesDirectory();
-  const packageJson = JSON.parse(fs.readFileSync(path.join(packsExamplesDirectory, 'package.json'), 'utf-8'));
-  const devDependencies = packageJson.devDependencies;
-  const devDependencyPackages = Object.keys(devDependencies)
-    .map(dependency => `${dependency}@${devDependencies[dependency]}`)
-    .join(' ');
-  if (spawnProcess(escapeShellCmd(`npm install --save-dev ${devDependencyPackages}`)).status !== 0) {
-    return printAndExit('The packs init command could not install the Pack development dependencies.');
+  let packsExamplesDirectory: string;
+  try {
+    packsExamplesDirectory = resolvePackageDirectory(PacksExamplesPackage);
+  } catch (error: any) {
+    return exit(
+      `The Pack examples are installed, but ${PacksExamplesPackage} could not be resolved from ${process.cwd()} ` +
+        `(${error.code ?? error.message}).`,
+    );
   }
-  if (
-    spawnProcess('npm list @codahq/packs-sdk --depth=0').status !== 0 &&
-    spawnProcess('npm install --save @codahq/packs-sdk').status !== 0
-  ) {
-    return printAndExit('The packs init command could not install @codahq/packs-sdk.');
+
+  const packageJson = JSON.parse(fs.readFileSync(path.join(packsExamplesDirectory, 'package.json'), 'utf-8'));
+  const devDependencies: Record<string, string> = packageJson.devDependencies ?? {};
+  const devDependencySpecs = Object.entries(devDependencies).map(([name, version]) => `${name}@${version}`);
+  const unsafeSpec = devDependencySpecs.find(spec => UnsafeSpecCharacters.test(spec));
+  if (unsafeSpec) {
+    return exit(`The Pack examples declare a development dependency that cannot be installed safely: ${unsafeSpec}`);
+  }
+  const quotedSpecs = devDependencySpecs.map(spec => `"${spec}"`).join(' ');
+  if (spawnProcess(`npm install --save-dev ${quotedSpecs}`).status !== 0) {
+    return exit('The packs init command could not install the Pack development dependencies.');
+  }
+  if (!isInstalled('@codahq/packs-sdk') && spawnProcess('npm install --save @codahq/packs-sdk').status !== 0) {
+    return exit('The packs init command could not install @codahq/packs-sdk.');
   }
 
   const templateDirectory = path.join(packsExamplesDirectory, 'examples/template');
   if (!fs.existsSync(templateDirectory)) {
-    return printAndExit(`The packs init command could not find the Pack template in ${templateDirectory}.`);
+    return exit(`The packs init command could not find the Pack template in ${templateDirectory}.`);
   }
   fs.copySync(templateDirectory, process.cwd());
   // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
   // in the template example alongside the other files. So we just create it explicitly
-  // here as part of the init step.
-  fs.appendFileSync(path.join(process.cwd(), '.gitignore'), GitIgnore);
+  // here as part of the init step, adding only what is missing and starting on a new line.
+  const gitIgnoreFile = path.join(process.cwd(), '.gitignore');
+  const gitIgnore = fs.existsSync(gitIgnoreFile) ? fs.readFileSync(gitIgnoreFile, 'utf-8') : '';
+  const missingEntries = GitIgnoreEntries.filter(entry => !gitIgnore.split(/\r?\n/).includes(entry));
+  if (missingEntries.length) {
+    const separator = gitIgnore && !gitIgnore.endsWith('\n') ? '\n' : '';
+    fs.appendFileSync(gitIgnoreFile, `${separator}${missingEntries.join('\n')}\n`);
+  }
 
   // The Pack is usable at this point, so failing to clean up the examples is only worth a warning.
-  if (!isPacksExamplesInstalled && spawnProcess('npm uninstall @codahq/packs-examples').status !== 0) {
-    print('The Pack examples could not be removed. Run "npm uninstall @codahq/packs-examples" to remove them.');
-  }
+  removePacksExamples();
 }

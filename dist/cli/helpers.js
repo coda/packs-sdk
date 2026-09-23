@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.backfillFromPackConfig = exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
+exports.backfillFromPackConfig = exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.resolvePackageDirectory = exports.spawnProcess = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
@@ -48,6 +48,11 @@ function spawnProcess(command, { stdio = 'inherit' } = {}) {
     });
 }
 exports.spawnProcess = spawnProcess;
+// Finds an installed package the way Node would from the current directory, so hoisted installs are found too.
+function resolvePackageDirectory(packageName) {
+    return path_1.default.dirname(require.resolve(`${packageName}/package.json`, { paths: [process.cwd()] }));
+}
+exports.resolvePackageDirectory = resolvePackageDirectory;
 function createCodaClient(apiToken, protocolAndHost) {
     return new coda_1.Client({ protocolAndHost, apiToken });
 }

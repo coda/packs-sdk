@@ -23,6 +23,11 @@ export function spawnProcess(command: string, {stdio = 'inherit'}: SpawnSyncOpti
   });
 }
 
+// Finds an installed package the way Node would from the current directory, so hoisted installs are found too.
+export function resolvePackageDirectory(packageName: string): string {
+  return path.dirname(require.resolve(`${packageName}/package.json`, {paths: [process.cwd()]}));
+}
+
 export function createCodaClient(apiToken: string, protocolAndHost?: string) {
   return new Client({protocolAndHost, apiToken});
 }
