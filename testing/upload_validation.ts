@@ -143,7 +143,6 @@ import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
 import type {SuggestedPrompt} from '../types';
-import {SuggestionImportance} from '../api_types';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
 import type {SyncPassthroughData} from '../api';
@@ -3027,33 +3026,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
           }
         }
-      })
-      .superRefine((data, context) => {
-        // The Coda schema can only say `importance` is a string, so an example that reports a
-        // number or an off-vocabulary tier is caught here rather than dropped at runtime.
-        const importanceTiers = new Set<unknown>(Object.values(SuggestionImportance));
-        ((data as PackVersionMetadata).formulas || []).forEach((formula, formulaIndex) => {
-          if (formula.purpose !== FormulaPurpose.Suggestions) {
-            return;
-          }
-          (formula.examples || []).forEach((example, exampleIndex) => {
-            const result = example.result as Record<string, unknown> | undefined;
-            const suggestions = result?.suggestions ?? result?.Suggestions;
-            if (!Array.isArray(suggestions)) {
-              return;
-            }
-            suggestions.forEach((suggestion, suggestionIndex) => {
-              const importance = suggestion?.importance ?? suggestion?.Importance;
-              if (importance !== undefined && !importanceTiers.has(importance)) {
-                context.addIssue({
-                  code: 'custom',
-                  path: ['formulas', formulaIndex, 'examples', exampleIndex, 'result', 'suggestions', suggestionIndex],
-                  message: `importance must be one of ${[...importanceTiers].join(', ')}, got ${JSON.stringify(importance)}.`,
-                });
-              }
-            });
-          });
-        });
       })
       .superRefine((data, context) => {
         const metadata = data as PackVersionMetadata;

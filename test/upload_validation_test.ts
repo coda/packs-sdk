@@ -90,7 +90,6 @@ import {makeReferenceSchemaFromObjectSchema} from '..';
 import {makeSchema} from '../schema';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
-import {makeSuggestionFormula} from '../api';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
 import {normalizeTool} from '../testing/upload_validation';
@@ -153,44 +152,6 @@ describe('Pack metadata Validation', async () => {
     const metadata = 'asdf';
     const err = await validateJsonAndAssertFails(metadata as unknown as Record<string, any>);
     assert.deepEqual(err.validationErrors, [{path: '', message: 'Invalid input: expected object, received string'}]);
-  });
-
-  describe('suggestion formula examples', () => {
-    function metadataWithExampleImportance(importance: unknown) {
-      const formula = makeFormula(
-        makeSuggestionFormula({
-          name: 'CheckSuggestions',
-          description: 'Flags hedged feedback.',
-          execute: async () => ({suggestions: []}),
-          examples: [
-            {
-              params: ['Probably fine'],
-              result: {
-                suggestions: [
-                  {startOffset: 0, endOffset: 8, original: 'Probably', title: 'Hedge', explanation: 'Drop it.'},
-                ],
-              },
-            },
-          ],
-        }),
-      );
-      (formula.examples![0].result as any).suggestions[0].importance = importance;
-      return createFakePackVersionMetadata({formulas: [compileFormulaMetadata(formula)], formulaNamespace: 'ns'});
-    }
-
-    it('accepts a tier', async () => {
-      await validateJson(metadataWithExampleImportance('high'));
-    });
-
-    it('rejects a number or an off-vocabulary tier', async () => {
-      for (const importance of [0.8, 'HIGH']) {
-        const err = await validateJsonAndAssertFails(metadataWithExampleImportance(importance));
-        assert.include(
-          err.validationErrors?.[0]?.message ?? '',
-          'importance must be one of critical, high, medium, low',
-        );
-      }
-    });
   });
 
   it('simple valid upload', async () => {
