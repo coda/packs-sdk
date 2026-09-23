@@ -545,8 +545,7 @@ export declare enum FormulaPurpose {
      */
     Search = "search",
     /**
-     * Indicates this formula produces finished suggestions for an agent's while-writing checks.
-     * Set by {@link core.makeSuggestionFormula}.
+     * Indicates this formula produces suggestions for an agent's while-writing checks.
      * @hidden
      */
     Suggestions = "suggestions"
@@ -1045,15 +1044,11 @@ export interface InvocationLocation {
     userId?: string;
 }
 /**
- * A suggestion-producing formula's finding about a span of its input text.
- *
- * @internal
+ * A finding about a span of a suggestion formula's input text.
  * @hidden
  */
 export interface Suggestion {
-    /**
-     * Zero-based UTF-16 offset where the span starts. The selected slice must equal `original`.
-     */
+    /** Zero-based UTF-16 offset where the span starts. */
     startOffset: number;
     /** Exclusive UTF-16 offset where the span ends. */
     endOffset: number;
@@ -1067,21 +1062,15 @@ export interface Suggestion {
     replacement?: string;
 }
 /**
- * Result from a suggestion-producing formula, matching {@link makeSuggestionResultSchema}.
- *
- * A formula that fails should throw, like any other formula. `unavailable` is for a check that ran
- * but could not assess the text right now; the suggestions already shown are kept.
- *
- * @internal
+ * Result of a suggestion formula. Return `unavailable` when the check could not assess the text,
+ * and throw on failure.
  * @hidden
  */
 export type SuggestionResult = {
-    /** Every finding for the submitted text, most important first. */
+    /** Every finding, most important first. */
     suggestions: Suggestion[];
-    /** A result with findings is never unavailable. */
     unavailable?: never;
 } | {
-    /** An unavailable result carries no findings the runtime might partially apply. */
     suggestions: [];
     /** Why the check could not assess the text. */
     unavailable: string;

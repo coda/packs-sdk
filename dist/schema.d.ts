@@ -1800,13 +1800,8 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  */
 export declare function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string): void;
 /**
- * Builds the result schema for suggestion-producing formulas.
- *
- * The return type is deliberately left to inference rather than widened to
- * {@link GenericObjectSchema}: widening erases the properties, so `addFormula` can no longer infer
- * that a {@link SuggestionResult} satisfies this schema and every caller needs a cast.
- *
- * @internal
+ * Returns the result schema for suggestion formulas. The return type is inferred, not widened, so
+ * `addFormula` can check a {@link SuggestionResult} against it.
  * @hidden
  */
 export declare function makeSuggestionResultSchema(): {

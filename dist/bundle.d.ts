@@ -523,8 +523,7 @@ declare enum FormulaPurpose {
 	 */
 	Search = "search",
 	/**
-	 * Indicates this formula produces finished suggestions for an agent's while-writing checks.
-	 * Set by {@link core.makeSuggestionFormula}.
+	 * Indicates this formula produces suggestions for an agent's while-writing checks.
 	 * @hidden
 	 */
 	Suggestions = "suggestions"

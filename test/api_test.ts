@@ -858,9 +858,7 @@ describe('API test', () => {
       assert.deepEqual(result.suggestions[0].original, 'Probabl');
     });
 
-    // Regression guard: widening the result schema to `GenericObjectSchema` erases its properties,
-    // and `addFormula` then cannot see that a `SuggestionResult` satisfies it. If that comes back,
-    // this stops compiling.
+    // Stops compiling if the result schema is widened to `GenericObjectSchema`.
     it('registers through addFormula without a cast', () => {
       const pack = newPack();
       pack.addFormula(makeTestFormula());
