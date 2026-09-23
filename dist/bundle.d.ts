@@ -7151,7 +7151,6 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	private _setDefaultConnectionRequirement;
 }
 declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
-	#private;
 	/**
 	 * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
 	 */
