@@ -369,6 +369,7 @@ var ContextualTriggerDecorationStyle;
 (function (ContextualTriggerDecorationStyle) {
     ContextualTriggerDecorationStyle["Auto"] = "auto";
     ContextualTriggerDecorationStyle["Underline"] = "underline";
+    ContextualTriggerDecorationStyle["Vbar"] = "vbar";
 })(ContextualTriggerDecorationStyle || (exports.ContextualTriggerDecorationStyle = ContextualTriggerDecorationStyle = {}));
 /**
  * Where a while-writing agent may offer help. Absent defaults to every surface.

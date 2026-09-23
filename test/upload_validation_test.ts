@@ -8455,7 +8455,7 @@ describe('Pack metadata Validation', async () => {
     it('validates a default schedule trigger', async () => {
       const scheduleTrigger: DefaultTriggerDefinition = {
         kind: DefaultTriggerKind.Schedule,
-        rruleString: 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0',
+        rruleString: 'DTSTART:20260105T090000Z\nRRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0',
       };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
@@ -8469,7 +8469,9 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers: [{kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'}],
+          defaultTriggers: [
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=MINUTELY'},
+          ],
         }),
       );
       assert.deepInclude(err.validationErrors!, {
@@ -8484,7 +8486,7 @@ describe('Pack metadata Validation', async () => {
           agent: {instructions: 'Do a thing.', tools: []},
           defaultTriggers: [
             {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
-            {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'},
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=MINUTELY'},
           ],
         }),
       );
@@ -8507,7 +8509,7 @@ describe('Pack metadata Validation', async () => {
           defaultTriggers: [
             contextualTrigger,
             contextualTrigger,
-            {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'},
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=MINUTELY'},
           ],
         }),
       );
@@ -8523,7 +8525,10 @@ describe('Pack metadata Validation', async () => {
 
     it('rejects a schedule longer than the column holds', async () => {
       // Valid apart from its length, so the length is the only thing left to complain about.
-      const rruleString = 'RRULE:FREQ=MONTHLY;BYMONTHDAY=1'.padEnd(Limits.RRuleStringLength + 1, ',1');
+      const rruleString = 'DTSTART:20260101T090000Z\nRRULE:FREQ=MONTHLY;BYMONTHDAY=1'.padEnd(
+        Limits.RRuleStringLength + 1,
+        ',1',
+      );
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
@@ -8538,7 +8543,7 @@ describe('Pack metadata Validation', async () => {
 
     it('takes a schedule trigger and a while-writing trigger together', async () => {
       const defaultTriggers: DefaultTriggerDefinition[] = [
-        {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
+        {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'},
         {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
       ];
       const metadata = createFakeAgentMetadata({
@@ -8746,7 +8751,7 @@ describe('Pack metadata Validation', async () => {
       };
       const defaultTriggers: DefaultTriggerDefinition[] = [
         ...new Array(Limits.MaxDefaultEventTriggers).fill(mailTrigger),
-        {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
+        {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'},
         {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
       ];
       const metadata = createFakeAgentMetadata({

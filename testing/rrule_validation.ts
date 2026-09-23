@@ -66,7 +66,10 @@ export function validateRRuleString(rruleString: string): string | undefined {
   if (rule === undefined) {
     return 'A schedule trigger must have an RRULE.';
   }
-  if (dtstart !== undefined && !isDateTime(dtstart)) {
+  if (dtstart === undefined) {
+    return 'A schedule trigger must have a DTSTART.';
+  }
+  if (!isDateTime(dtstart)) {
     return 'A schedule trigger has an invalid DTSTART.';
   }
   const timezone = dtstartParams.find(param => param.toUpperCase().startsWith(TimezoneParam));

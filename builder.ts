@@ -49,6 +49,7 @@ import {makeSyncTable} from './api';
 import {maybeRewriteConnectionForFormula} from './api';
 import {maybeRewriteConnectionForNamedPropertyOptions} from './api';
 import {setEndpointDefHelper} from './helpers/migration';
+import {validateRRuleString} from './testing/rrule_validation';
 import {wrapMetadataFunction} from './api';
 
 /**
@@ -803,7 +804,8 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   }
 
   /**
-   * Sets the schedule this agent runs on.
+   * Sets the schedule this agent runs on. Throws on a recurrence the runtime cannot fire, including
+   * one with no DTSTART to anchor it.
    *
    * @example
    * ```
@@ -813,6 +815,10 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, 'kind'>): this {
+    const message = validateRRuleString(scheduleTrigger.rruleString);
+    if (message) {
+      throw new Error(message);
+    }
     const otherTriggers = (this.defaultTriggers ?? []).filter(trigger => trigger.kind !== DefaultTriggerKind.Schedule);
     this.defaultTriggers = [...otherTriggers, {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}];
     return this;

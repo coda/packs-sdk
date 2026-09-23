@@ -1836,6 +1836,7 @@ export enum ContextualTriggerSuggestionColor {
 export enum ContextualTriggerDecorationStyle {
   Auto = 'auto',
   Underline = 'underline',
+  Vbar = 'vbar',
 }
 
 /**

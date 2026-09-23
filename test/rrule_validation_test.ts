@@ -3,6 +3,7 @@ import {validateRRuleString} from '../testing/rrule_validation';
 
 describe('validateRRuleString', () => {
   const TooFrequent = 'A schedule trigger must not run more frequently than once per hour.';
+  const Dtstart = 'DTSTART:20260101T090000Z';
 
   function assertValid(rruleString: string) {
     assert.isUndefined(validateRRuleString(rruleString), rruleString);
@@ -10,11 +11,18 @@ describe('validateRRuleString', () => {
 
   describe('shape', () => {
     it('takes a bare rule', () => {
-      assertValid('FREQ=DAILY');
+      assertValid(`${Dtstart}\nFREQ=DAILY`);
     });
 
     it('takes an RRULE line', () => {
-      assertValid('RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0');
+      assertValid(`${Dtstart}\nRRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0`);
+    });
+
+    it('rejects a rule without DTSTART', () => {
+      assert.equal(
+        validateRRuleString('RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0'),
+        'A schedule trigger must have a DTSTART.',
+      );
     });
 
     it('takes a DTSTART line with a timezone', () => {
@@ -26,13 +34,13 @@ describe('validateRRuleString', () => {
     });
 
     it('takes the parts the builder form omits', () => {
-      assertValid('RRULE:FREQ=MONTHLY;BYDAY=-1FR;BYSETPOS=-1;BYMONTH=3;WKST=SU;COUNT=10');
-      assertValid('RRULE:FREQ=DAILY;BYMINUTE=17;UNTIL=20270101T000000Z');
-      assertValid('RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=1');
+      assertValid(`${Dtstart}\nRRULE:FREQ=MONTHLY;BYDAY=-1FR;BYSETPOS=-1;BYMONTH=3;WKST=SU;COUNT=10`);
+      assertValid(`${Dtstart}\nRRULE:FREQ=DAILY;BYMINUTE=17;UNTIL=20270101T000000Z`);
+      assertValid(`${Dtstart}\nRRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=1`);
     });
 
     it('rejects a rule with no FREQ', () => {
-      assert.equal(validateRRuleString('RRULE:INTERVAL=2'), 'A schedule trigger must set FREQ.');
+      assert.equal(validateRRuleString(`${Dtstart}\nRRULE:INTERVAL=2`), 'A schedule trigger must set FREQ.');
     });
 
     it('rejects an empty string', () => {
@@ -41,50 +49,53 @@ describe('validateRRuleString', () => {
 
     it('rejects a second RRULE line', () => {
       assert.equal(
-        validateRRuleString('RRULE:FREQ=DAILY\nRRULE:FREQ=WEEKLY'),
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY\nRRULE:FREQ=WEEKLY`),
         'A schedule trigger takes one DTSTART line and one RRULE line.',
       );
     });
 
     it('rejects the dates an RRuleSet is made of', () => {
       assert.equal(
-        validateRRuleString('RRULE:FREQ=DAILY\nEXDATE:20260101T090000Z'),
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY\nEXDATE:20260101T090000Z`),
         'A schedule trigger takes one DTSTART line and one RRULE line.',
       );
     });
 
     it('rejects a part it does not know', () => {
       assert.equal(
-        validateRRuleString('RRULE:FREQ=DAILY;BYSECOND=0,30'),
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY;BYSECOND=0,30`),
         'A schedule trigger does not support "BYSECOND=0,30".',
       );
     });
 
     it('rejects a repeated part', () => {
       assert.equal(
-        validateRRuleString('RRULE:FREQ=DAILY;INTERVAL=1;INTERVAL=2'),
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY;INTERVAL=1;INTERVAL=2`),
         'A schedule trigger can only set INTERVAL once.',
       );
     });
 
     it('rejects 0 where RFC 5545 leaves it out of the range', () => {
       assert.equal(
-        validateRRuleString('RRULE:FREQ=MONTHLY;BYMONTHDAY=0'),
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=MONTHLY;BYMONTHDAY=0`),
         'A schedule trigger has an invalid BYMONTHDAY.',
       );
       assert.equal(
-        validateRRuleString('RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=0'),
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=0`),
         'A schedule trigger has an invalid BYSETPOS.',
       );
-      assert.equal(validateRRuleString('RRULE:FREQ=MONTHLY;BYDAY=0MO'), 'A schedule trigger has an invalid BYDAY.');
+      assert.equal(
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=MONTHLY;BYDAY=0MO`),
+        'A schedule trigger has an invalid BYDAY.',
+      );
     });
 
     it('ranges the occurrence a BYDAY picks at 1 through 53', () => {
-      assertValid('RRULE:FREQ=MONTHLY;BYDAY=+53MO');
-      assertValid('RRULE:FREQ=MONTHLY;BYDAY=-53SU,13WE');
+      assertValid(`${Dtstart}\nRRULE:FREQ=MONTHLY;BYDAY=+53MO`);
+      assertValid(`${Dtstart}\nRRULE:FREQ=MONTHLY;BYDAY=-53SU,13WE`);
       for (const day of ['00MO', '54MO', '99MO', '-54MO']) {
         assert.equal(
-          validateRRuleString(`RRULE:FREQ=MONTHLY;BYDAY=${day}`),
+          validateRRuleString(`${Dtstart}\nRRULE:FREQ=MONTHLY;BYDAY=${day}`),
           'A schedule trigger has an invalid BYDAY.',
           day,
         );
@@ -92,9 +103,18 @@ describe('validateRRuleString', () => {
     });
 
     it('rejects a value out of range', () => {
-      assert.equal(validateRRuleString('RRULE:FREQ=DAILY;BYHOUR=24'), 'A schedule trigger has an invalid BYHOUR.');
-      assert.equal(validateRRuleString('RRULE:FREQ=DAILY;INTERVAL=0'), 'A schedule trigger has an invalid INTERVAL.');
-      assert.equal(validateRRuleString('RRULE:FREQ=WEEKLY;BYDAY=XX'), 'A schedule trigger has an invalid BYDAY.');
+      assert.equal(
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY;BYHOUR=24`),
+        'A schedule trigger has an invalid BYHOUR.',
+      );
+      assert.equal(
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY;INTERVAL=0`),
+        'A schedule trigger has an invalid INTERVAL.',
+      );
+      assert.equal(
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=WEEKLY;BYDAY=XX`),
+        'A schedule trigger has an invalid BYDAY.',
+      );
       assert.equal(
         validateRRuleString('DTSTART:tomorrow\nRRULE:FREQ=DAILY'),
         'A schedule trigger has an invalid DTSTART.',
@@ -110,7 +130,7 @@ describe('validateRRuleString', () => {
         'A schedule trigger has an invalid DTSTART.',
       );
       assert.equal(
-        validateRRuleString('RRULE:FREQ=DAILY;UNTIL=20270431T000000Z'),
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY;UNTIL=20270431T000000Z`),
         'A schedule trigger has an invalid UNTIL.',
       );
     });
@@ -205,35 +225,38 @@ describe('validateRRuleString', () => {
 
     it('takes a lowercase UTC suffix, the way UNTIL does', () => {
       assertValid('DTSTART:20260101T090000z\nRRULE:FREQ=DAILY');
-      assertValid('RRULE:FREQ=DAILY;UNTIL=20270101T000000z');
+      assertValid(`${Dtstart}\nRRULE:FREQ=DAILY;UNTIL=20270101T000000z`);
     });
   });
 
   describe('frequency', () => {
     it('takes hourly', () => {
-      assertValid('RRULE:FREQ=HOURLY;BYMINUTE=30');
+      assertValid(`${Dtstart}\nRRULE:FREQ=HOURLY;BYMINUTE=30`);
     });
 
     it('takes a day full of hourly runs', () => {
-      assertValid('RRULE:FREQ=DAILY;BYHOUR=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23');
+      assertValid(`${Dtstart}\nRRULE:FREQ=DAILY;BYHOUR=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23`);
     });
 
     it('rejects frequencies below an hour', () => {
-      assert.equal(validateRRuleString('RRULE:FREQ=MINUTELY'), TooFrequent);
-      assert.equal(validateRRuleString('RRULE:FREQ=SECONDLY'), TooFrequent);
+      assert.equal(validateRRuleString(`${Dtstart}\nRRULE:FREQ=MINUTELY`), TooFrequent);
+      assert.equal(validateRRuleString(`${Dtstart}\nRRULE:FREQ=SECONDLY`), TooFrequent);
     });
 
     it('rejects an hourly rule that fires twice an hour', () => {
-      assert.equal(validateRRuleString('RRULE:FREQ=HOURLY;BYMINUTE=0,30'), TooFrequent);
+      assert.equal(validateRRuleString(`${Dtstart}\nRRULE:FREQ=HOURLY;BYMINUTE=0,30`), TooFrequent);
     });
 
     it('rejects minutes that pack two runs into one hour', () => {
-      assert.equal(validateRRuleString('RRULE:FREQ=DAILY;BYHOUR=9;BYMINUTE=0,30'), TooFrequent);
-      assert.equal(validateRRuleString('RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9,10;BYMINUTE=0,30'), TooFrequent);
+      assert.equal(validateRRuleString(`${Dtstart}\nRRULE:FREQ=DAILY;BYHOUR=9;BYMINUTE=0,30`), TooFrequent);
+      assert.equal(
+        validateRRuleString(`${Dtstart}\nRRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9,10;BYMINUTE=0,30`),
+        TooFrequent,
+      );
     });
 
     it('takes hours exactly an hour apart', () => {
-      assertValid('RRULE:FREQ=DAILY;BYHOUR=9,10;BYMINUTE=30');
+      assertValid(`${Dtstart}\nRRULE:FREQ=DAILY;BYHOUR=9,10;BYMINUTE=30`);
     });
 
     it('takes a rule with one occurrence a day', () => {

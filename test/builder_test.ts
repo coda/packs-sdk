@@ -806,15 +806,26 @@ describe('Agent builder', () => {
   });
 
   describe('default schedule trigger', () => {
-    const scheduleTrigger = {rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'};
+    const scheduleTrigger = {
+      rruleString: 'DTSTART;TZID=America/New_York:20260105T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0',
+    };
 
     it('sets a trigger', () => {
       agent.setDefaultScheduleTrigger(scheduleTrigger);
       assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
     });
 
+    it('rejects a trigger without DTSTART', () => {
+      assert.throws(
+        () => agent.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'}),
+        'A schedule trigger must have a DTSTART.',
+      );
+    });
+
     it('replaces rather than appends on a second call', () => {
-      agent.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=DAILY'}).setDefaultScheduleTrigger(scheduleTrigger);
+      agent
+        .setDefaultScheduleTrigger({rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'})
+        .setDefaultScheduleTrigger(scheduleTrigger);
       assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
     });
 
@@ -904,7 +915,7 @@ describe('Agent builder', () => {
     });
 
     it('sits alongside the other kinds', () => {
-      const scheduleTrigger = {rruleString: 'RRULE:FREQ=DAILY'};
+      const scheduleTrigger = {rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'};
       agent.setDefaultScheduleTrigger(scheduleTrigger).addDefaultMailEventTrigger(mailTrigger);
       assert.deepEqual(agent.defaultTriggers, [
         {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger},
