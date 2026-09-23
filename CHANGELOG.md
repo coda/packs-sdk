@@ -7,7 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - Bumped dependencies to their latest compatible versions: `@aws-sdk/client-sts` 3.1135.0, `@smithy/signature-v4` 5.7.3, `qs` 6.16.0, `js-yaml` 4.3.2, `@aws-sdk/types` 3.974.5, `browserslist` 4.29.0, and `mkdocs-material` 9.7.7 (plus the Python lockfile refresh that brings `gitpython` 3.1.62 and `soupsieve` 2.9.2). No major-version upgrades.
-- Internal changes to the agent builder's `agent` and `defaultTriggers` fields, which are now readonly-typed so they can no longer be modified in place, alongside `setInstructions`/`setTools` and the default-trigger setters. Not currently available externally.
+- Internal changes to the agent builder's `agent` and `defaultTriggers` fields, which are now read-only both in the types and at runtime, so they can only be changed through `setInstructions`/`setTools` and the default-trigger setters. Not currently available externally.
 
 ### Fixed
 

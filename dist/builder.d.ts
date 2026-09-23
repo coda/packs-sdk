@@ -1,10 +1,10 @@
 import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { AgentDefinition } from './types';
-import type { AgentTool } from './types';
 import type { AgentToolsDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { DeepReadonly } from './type_utils';
 import type { DefaultTriggerDefinition } from './types';
 import type { DistributiveOmit } from './type_utils';
 import type { DynamicSyncTableOptions } from './api';
@@ -427,18 +427,18 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
  * @hidden
  */
 export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
+    #private;
     /**
      * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
      */
-    agent: Readonly<Partial<Omit<AgentDefinition, 'tools'>>> & {
-        readonly tools?: readonly AgentTool[];
-    };
+    readonly agent: DeepReadonly<Partial<AgentDefinition>>;
     /**
      * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
      * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},
      * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
      */
-    defaultTriggers?: readonly DefaultTriggerDefinition[];
+    readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+    constructor();
     /**
      * Sets this agent's instructions.
      *

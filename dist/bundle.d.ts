@@ -2,6 +2,10 @@
 export type $Values<S> = S[keyof S];
 /** Omits properties over a union type, only if the union member has that property. */
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+/** Makes every property and array read-only, at every depth. Distributes over union types. */
+export type DeepReadonly<T> = T extends ReadonlyArray<infer E> ? ReadonlyArray<DeepReadonly<E>> : T extends object ? {
+	readonly [K in keyof T]: DeepReadonly<T[K]>;
+} : T;
 /**
  * Type helper to ensure that a given type can only contain keys from another given type.
  * Prevents extraneous keys from being allowable.
@@ -7147,18 +7151,18 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 	private _setDefaultConnectionRequirement;
 }
 declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
+	#private;
 	/**
 	 * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
 	 */
-	agent: Readonly<Partial<Omit<AgentDefinition, "tools">>> & {
-		readonly tools?: readonly AgentTool[];
-	};
+	readonly agent: DeepReadonly<Partial<AgentDefinition>>;
 	/**
 	 * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
 	 * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},
 	 * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
 	 */
-	defaultTriggers?: readonly DefaultTriggerDefinition[];
+	readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+	constructor();
 	/**
 	 * Sets this agent's instructions.
 	 *

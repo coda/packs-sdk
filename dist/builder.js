@@ -1,4 +1,16 @@
 "use strict";
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var _AgentDefinitionBuilder_agent, _AgentDefinitionBuilder_defaultTriggers;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AgentDefinitionBuilder = exports.PackDefinitionBuilder = exports.BaseDefinitionBuilder = exports.newAgent = exports.newPack = void 0;
 const types_1 = require("./types");
@@ -6,6 +18,8 @@ const api_types_1 = require("./api_types");
 const types_2 = require("./types");
 const types_3 = require("./types");
 const types_4 = require("./types");
+const object_utils_1 = require("./helpers/object_utils");
+const object_utils_2 = require("./helpers/object_utils");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -483,6 +497,10 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
     }
 }
 exports.PackDefinitionBuilder = PackDefinitionBuilder;
+// Copies before freezing so the caller's own arrays (connector formulas, trigger filters) stay theirs.
+function frozenCopy(value) {
+    return (0, object_utils_2.deepFreeze)((0, object_utils_1.deepCopy)(value));
+}
 /**
  * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
  *
@@ -491,11 +509,12 @@ exports.PackDefinitionBuilder = PackDefinitionBuilder;
  */
 class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     constructor() {
-        super(...arguments);
-        /**
-         * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
-         */
-        this.agent = { tools: [] };
+        super();
+        _AgentDefinitionBuilder_agent.set(this, frozenCopy({ tools: [] }));
+        _AgentDefinitionBuilder_defaultTriggers.set(this, void 0);
+        // Own and enumerable, unlike a class getter, so compilePackMetadata's object rest still copies them.
+        Object.defineProperty(this, 'agent', { enumerable: true, get: () => __classPrivateFieldGet(this, _AgentDefinitionBuilder_agent, "f") });
+        Object.defineProperty(this, 'defaultTriggers', { enumerable: true, get: () => __classPrivateFieldGet(this, _AgentDefinitionBuilder_defaultTriggers, "f") });
     }
     /**
      * Sets this agent's instructions.
@@ -506,7 +525,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setInstructions(instructions) {
-        this.agent = { ...this.agent, instructions };
+        __classPrivateFieldSet(this, _AgentDefinitionBuilder_agent, frozenCopy({ ...__classPrivateFieldGet(this, _AgentDefinitionBuilder_agent, "f"), instructions }), "f");
         return this;
     }
     /**
@@ -537,7 +556,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
                 ...(connector.formulas ? { formulas: connector.formulas } : {}),
             });
         }
-        this.agent = { ...this.agent, tools };
+        __classPrivateFieldSet(this, _AgentDefinitionBuilder_agent, frozenCopy({ ...__classPrivateFieldGet(this, _AgentDefinitionBuilder_agent, "f"), tools }), "f");
         return this;
     }
     /**
@@ -553,8 +572,11 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      */
     setDefaultWhileWritingTrigger(contextualTrigger) {
         var _a;
-        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.WhileWriting);
-        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger }];
+        const otherTriggers = ((_a = __classPrivateFieldGet(this, _AgentDefinitionBuilder_defaultTriggers, "f")) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.WhileWriting);
+        __classPrivateFieldSet(this, _AgentDefinitionBuilder_defaultTriggers, frozenCopy([
+            ...otherTriggers,
+            { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger },
+        ]), "f");
         return this;
     }
     /**
@@ -617,7 +639,10 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     }
     _addDefaultEventTrigger(eventTrigger) {
         var _a;
-        this.defaultTriggers = [...((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []), { kind: types_2.DefaultTriggerKind.Event, ...eventTrigger }];
+        __classPrivateFieldSet(this, _AgentDefinitionBuilder_defaultTriggers, frozenCopy([
+            ...((_a = __classPrivateFieldGet(this, _AgentDefinitionBuilder_defaultTriggers, "f")) !== null && _a !== void 0 ? _a : []),
+            { kind: types_2.DefaultTriggerKind.Event, ...eventTrigger },
+        ]), "f");
         return this;
     }
     /**
@@ -632,9 +657,10 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      */
     setDefaultScheduleTrigger(scheduleTrigger) {
         var _a;
-        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.Schedule);
-        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.Schedule, ...scheduleTrigger }];
+        const otherTriggers = ((_a = __classPrivateFieldGet(this, _AgentDefinitionBuilder_defaultTriggers, "f")) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.Schedule);
+        __classPrivateFieldSet(this, _AgentDefinitionBuilder_defaultTriggers, frozenCopy([...otherTriggers, { kind: types_2.DefaultTriggerKind.Schedule, ...scheduleTrigger }]), "f");
         return this;
     }
 }
 exports.AgentDefinitionBuilder = AgentDefinitionBuilder;
+_AgentDefinitionBuilder_agent = new WeakMap(), _AgentDefinitionBuilder_defaultTriggers = new WeakMap();

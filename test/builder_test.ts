@@ -43,6 +43,7 @@ import {makeParameter} from '../api';
 import {makeSchema} from '../schema';
 import {newAgent} from '../builder';
 import {newPack} from '../builder';
+import {validatePackVersionMetadata} from '../testing/upload_validation';
 
 describe('Builder', () => {
   let pack: PackDefinitionBuilder;
@@ -948,6 +949,22 @@ describe('Agent builder', () => {
         builder.agent.tools?.push({type: ToolType.CodaDocsAndTables});
         // @ts-expect-error nor can the default triggers
         builder.defaultTriggers?.push({kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'});
+        // @ts-expect-error nor can the agent be replaced wholesale
+        builder.agent = {tools: []};
+        // @ts-expect-error nor the default triggers
+        builder.defaultTriggers = [];
+        const tool = builder.agent.tools![0];
+        if (tool.type === ToolType.Pack) {
+          // @ts-expect-error and it reaches into each tool
+          tool.packId = 1234;
+          // @ts-expect-error including a connector's formula list
+          tool.formulas?.push({formulaName: 'CreateTask'});
+        }
+        const trigger = builder.defaultTriggers![0];
+        if (trigger.kind === DefaultTriggerKind.Schedule) {
+          // @ts-expect-error and into each trigger
+          trigger.rruleString = 'RRULE:FREQ=DAILY';
+        }
       }
       assert.isFunction(checkedByTscOnly);
     });
@@ -967,6 +984,49 @@ describe('Agent builder', () => {
         Object.getOwnPropertyNames(BaseDefinitionBuilder.prototype).filter(name => name !== 'constructor'),
         ['setVersion'],
       );
+    });
+
+    it('is read-only at runtime, not just in the types', () => {
+      agent
+        .setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]})
+        .setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=DAILY'});
+      const loose = agent as any;
+      assert.throws(() => (loose.agent = {tools: []}), TypeError);
+      assert.throws(() => (loose.agent.instructions = 'x'), TypeError);
+      assert.throws(() => loose.agent.tools.push({type: ToolType.CodaDocsAndTables}), TypeError);
+      assert.throws(() => loose.agent.tools[0].formulas.push({formulaName: 'Other'}), TypeError);
+      assert.throws(() => (loose.defaultTriggers = []), TypeError);
+      assert.throws(() => loose.defaultTriggers.push({kind: DefaultTriggerKind.Schedule}), TypeError);
+      assert.throws(() => (loose.defaultTriggers[0].rruleString = 'x'), TypeError);
+    });
+
+    it("copies the caller's input rather than freezing it", () => {
+      const formulas = [{formulaName: 'CreateTask'}];
+      const keywords = ['renewal'];
+      agent
+        .setTools({connectors: [{packId: 1234, formulas}]})
+        .addDefaultNotetakerEventTrigger({eventType: NotetakerEventType.MeetingSummaryCompleted, filters: {keywords}});
+      assert.isFalse(Object.isFrozen(formulas));
+      assert.isFalse(Object.isFrozen(keywords));
+    });
+
+    it('still compiles and validates once frozen', async () => {
+      agent
+        .setVersion('1.0.0')
+        .setInstructions('Do a thing.')
+        .setTools({
+          docs: true,
+          webSearch: {allowedDomains: ['docs.example.com']},
+          connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}],
+        })
+        .setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=DAILY'})
+        .addDefaultSlackEventTrigger({eventType: SlackEventType.MessageKeyword, keywords: ['deploy']});
+      const result = await validatePackVersionMetadata(
+        compilePackMetadata(agent as unknown as PackVersionDefinition),
+        undefined,
+      );
+      assert.lengthOf(result.agent!.tools, 3);
+      assert.lengthOf(result.defaultTriggers!, 2);
     });
   });
 });
