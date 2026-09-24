@@ -201,6 +201,18 @@ A definition of the request and any parameter transformations to make in order t
 
 ***
 
+### resourceOutputs?
+
+> `readonly` `optional` **resourceOutputs**: [`ResourceOutputHint`](../type-aliases/ResourceOutputHint.md)[]
+
+File-like fields in this formula's result that an agent may access through a resource handle.
+
+#### Inherited from
+
+[`SyncFormulaDef`](SyncFormulaDef.md).[`resourceOutputs`](SyncFormulaDef.md#resourceoutputs)
+
+***
+
 ### response
 
 > **response**: [`ResponseHandlerTemplate`](ResponseHandlerTemplate.md)\<`SchemaT`\>

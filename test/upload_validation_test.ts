@@ -6503,6 +6503,68 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('accepts declared reference and inline resource outputs for formulas and MCP tools', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'Example',
+        formulas: [
+          createFakePackFormulaMetadata({
+            resourceOutputs: [{selector: '$', representation: 'inline', encoding: 'utf8'}],
+          }),
+        ],
+        mcpServers: [{
+          name: 'Example',
+          endpointUrl: 'https://mcp.example.com/mcp',
+          resourceOutputs: [{
+            toolName: 'get_attachments',
+            outputs: [
+              {selector: 'structuredContent.files[].downloadUrl', representation: 'reference', locator: 'url', filenameSelector: 'structuredContent.files[].name'},
+              {selector: 'content[].resource.blob', representation: 'inline', encoding: 'base64'},
+            ],
+          }],
+        }],
+      });
+      await validateJson(metadata);
+    });
+
+    it('rejects malformed resource selectors and unsafe prototype paths', async () => {
+      const metadata = createFakePackVersionMetadata({
+        mcpServers: [{
+          name: 'Example',
+          endpointUrl: 'https://mcp.example.com/mcp',
+          resourceOutputs: [{
+            toolName: 'get_attachments',
+            outputs: [{selector: 'structuredContent.__proto__.url', representation: 'reference', locator: 'url'}],
+          }],
+        }],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [{
+        path: 'mcpServers[0].resourceOutputs[0].outputs[0].selector',
+        message: 'Resource output selectors must be property paths with optional [] array segments, or $.',
+      }]);
+    });
+
+    it('rejects duplicate MCP tool and output declarations', async () => {
+      const metadata = createFakePackVersionMetadata({
+        mcpServers: [{
+          name: 'Example',
+          endpointUrl: 'https://mcp.example.com/mcp',
+          resourceOutputs: [
+            {toolName: 'get_file', outputs: [
+              {selector: 'structuredContent.url', representation: 'reference', locator: 'url'},
+              {selector: 'structuredContent.url', representation: 'inline', encoding: 'utf8'},
+            ]},
+            {toolName: 'get_file', outputs: [{selector: '$', representation: 'inline', encoding: 'utf8'}]},
+          ],
+        }],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.includeDeepMembers(err.validationErrors || [], [
+        {path: 'mcpServers[0].resourceOutputs[0].outputs[1].selector', message: 'Resource output selectors must be unique.'},
+        {path: 'mcpServers[0].resourceOutputs[1].toolName', message: 'MCP tool resource output names must be unique within a server.'},
+      ]);
+    });
+
     it('fails when MCP server endpointUrl is invalid', async () => {
       const metadata = createFakePackVersionMetadata({
         mcpServers: [

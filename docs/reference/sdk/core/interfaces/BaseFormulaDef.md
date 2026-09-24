@@ -187,6 +187,18 @@ The parameter inputs to the formula, if any.
 
 ***
 
+### resourceOutputs?
+
+> `readonly` `optional` **resourceOutputs**: [`ResourceOutputHint`](../type-aliases/ResourceOutputHint.md)[]
+
+File-like fields in this formula's result that an agent may access through a resource handle.
+
+#### Inherited from
+
+[`PackFormulaDef`](PackFormulaDef.md).[`resourceOutputs`](PackFormulaDef.md#resourceoutputs)
+
+***
+
 ### validateParameters?
 
 > `optional` **validateParameters**: [`MetadataFormula`](../type-aliases/MetadataFormula.md)\<[`ExecutionContext`](ExecutionContext.md), [`ParameterValidationResult`](../type-aliases/ParameterValidationResult.md)\>

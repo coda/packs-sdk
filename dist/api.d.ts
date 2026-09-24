@@ -1625,6 +1625,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     name: string;
     description: string;
     instructions?: string | undefined;
+    resourceOutputs?: import("./api_types").ResourceOutputHint[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -1671,6 +1672,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     name: string;
     description: string;
     instructions?: string | undefined;
+    resourceOutputs?: import("./api_types").ResourceOutputHint[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {

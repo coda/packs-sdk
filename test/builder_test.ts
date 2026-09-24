@@ -74,6 +74,31 @@ describe('Builder', () => {
     });
   }
 
+  it('keeps formula and MCP resource output declarations in compiled metadata', () => {
+    pack.addFormula({
+      resultType: ValueType.String,
+      name: 'ReadFile',
+      description: 'Reads a file',
+      parameters: [],
+      resourceOutputs: [{selector: '$', representation: 'inline', encoding: 'utf8'}],
+      execute: () => 'file data',
+    });
+    pack.addMCPServer({
+      name: 'Files',
+      endpointUrl: 'https://example.com/mcp',
+      resourceOutputs: [{
+        toolName: 'get_file',
+        outputs: [{selector: 'structuredContent.downloadUrl', representation: 'reference', locator: 'url'}],
+      }],
+    });
+    const metadata = compilePackMetadata(pack.setVersion('1.0.0') as PackVersionDefinition);
+    assert.deepEqual(metadata.formulas[0].resourceOutputs, [{selector: '$', representation: 'inline', encoding: 'utf8'}]);
+    assert.deepEqual(metadata.mcpServers?.[0].resourceOutputs, [{
+      toolName: 'get_file',
+      outputs: [{selector: 'structuredContent.downloadUrl', representation: 'reference', locator: 'url'}],
+    }]);
+  });
+
   function addDummySyncTable(
     pack_: PackDefinitionBuilder,
     {

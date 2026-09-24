@@ -2,6 +2,7 @@ import type { $Values } from './type_utils';
 import type { Formula } from './api';
 import type { MetadataFormula } from './api';
 import type { MetadataFormulaDef } from './api';
+import type { ResourceOutputHint } from './api_types';
 import type { SyncTable } from './api';
 /**
  * @deprecated Use `number` in new code.
@@ -1400,6 +1401,11 @@ export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> 
      */
     embeddedContent: EmbeddedContent;
 }
+/** Resource-output declarations for one tool exposed by an MCP server. */
+export interface MCPToolResourceOutputs {
+    toolName: string;
+    outputs: ResourceOutputHint[];
+}
 /**
  * Definition of an MCP server that the pack can connect to.
  */
@@ -1412,6 +1418,8 @@ export interface MCPServer {
      * Stable identifier that can be used to distinguish multiple MCP servers.
      */
     name: string;
+    /** File-like result fields for tools on this server, including third-party servers. */
+    resourceOutputs?: MCPToolResourceOutputs[];
 }
 /**
  * Map of tool types to their corresponding tool interfaces.

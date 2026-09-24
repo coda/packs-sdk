@@ -59,6 +59,7 @@ import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
+import type {InlineResourceOutputHint} from '../api_types';
 import {JSONPath} from 'jsonpath-plus';
 import type {KnowledgeTool} from '../types';
 import {KnowledgeToolSourceType} from '../types';
@@ -67,6 +68,7 @@ import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MCPServer} from '../types';
 import type {MCPTool} from '../types';
+import type {MCPToolResourceOutputs} from '../types';
 import type {MailAddressFilterCondition} from '../types';
 import type {MailAndCalendarTool} from '../types';
 import type {MailEventFilters} from '../types';
@@ -118,6 +120,7 @@ import {PrecannedDateRange} from '..';
 import type {ProgressBarSchema} from '../schema';
 import type {PropertyIdentifier} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
+import type {ReferenceResourceOutputHint} from '../api_types';
 import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
@@ -1110,6 +1113,42 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       {message: 'allowedPresetValues for a date array parameter can only be a list of PrecannedDateRange values.'},
     );
 
+  const resourceOutputSelectorSchema = z
+    .string()
+    .max(256)
+    .refine(
+      selector =>
+        (selector === '$' || /^[A-Za-z_][A-Za-z0-9_]*(?:\[\])?(?:\.[A-Za-z_][A-Za-z0-9_]*(?:\[\])?)*$/.test(selector)) &&
+        !selector.split(/[.\[\]]+/).some(segment => ['__proto__', 'prototype', 'constructor'].includes(segment)),
+      'Resource output selectors must be property paths with optional [] array segments, or $.',
+    );
+  const resourceOutputHintSchema = z.discriminatedUnion('representation', [
+    zodCompleteStrictObject<ReferenceResourceOutputHint>({
+      selector: resourceOutputSelectorSchema,
+      representation: z.literal('reference'),
+      locator: z.enum(['url', 'mcp_resource_uri']),
+      filenameSelector: resourceOutputSelectorSchema.optional(),
+      mimeTypeSelector: resourceOutputSelectorSchema.optional(),
+    }),
+    zodCompleteStrictObject<InlineResourceOutputHint>({
+      selector: resourceOutputSelectorSchema,
+      representation: z.literal('inline'),
+      encoding: z.enum(['utf8', 'base64']),
+      filenameSelector: resourceOutputSelectorSchema.optional(),
+      mimeTypeSelector: resourceOutputSelectorSchema.optional(),
+    }),
+  ]);
+  const resourceOutputsSchema = z
+    .array(resourceOutputHintSchema)
+    .max(20)
+    .superRefine((outputs, context) => {
+      for (const [index, output] of outputs.entries()) {
+        if (outputs.findIndex(candidate => candidate.selector === output.selector) !== index) {
+          context.addIssue({code: 'custom', path: [index, 'selector'], message: 'Resource output selectors must be unique.'});
+        }
+      }
+    });
+
   const commonPackFormulaSchema = {
     // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
     // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
@@ -1117,6 +1156,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     name: z.string().max(Limits.BuildingBlockName),
     description: z.string().max(Limits.BuildingBlockDescription),
     instructions: z.string().max(Limits.PromptLength).optional(),
+    resourceOutputs: resourceOutputsSchema.optional(),
     examples: z
       .array(
         z.object({
@@ -2636,6 +2676,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     defaultChat: skillEntrypointConfigSchema.optional(),
   });
 
+  const mcpToolResourceOutputsSchema = zodCompleteStrictObject<MCPToolResourceOutputs>({
+    toolName: z.string().min(1).max(128).regex(/^\S+$/, 'MCP tool names cannot contain whitespace.'),
+    outputs: resourceOutputsSchema.min(1),
+  });
   const mcpServerSchema = zodCompleteStrictObject<MCPServer>({
     // Ensures an absolute URL parses; relative paths pass here and are checked against the auth
     // config in a later refinement.
@@ -2651,6 +2695,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       .min(1)
       .max(Limits.BuildingBlockName)
       .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.'),
+    resourceOutputs: z.array(mcpToolResourceOutputsSchema).max(100).optional(),
+  }).superRefine((server, context) => {
+    const tools: MCPToolResourceOutputs[] = server.resourceOutputs || [];
+    for (const [index, tool] of tools.entries()) {
+      if (tools.findIndex(candidate => candidate.toolName === tool.toolName) !== index) {
+        context.addIssue({
+          code: 'custom',
+          path: ['resourceOutputs', index, 'toolName'],
+          message: 'MCP tool resource output names must be unique within a server.',
+        });
+      }
+    }
   });
 
   const suggestedPromptSchema = zodCompleteStrictObject<SuggestedPrompt>({

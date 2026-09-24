@@ -27,3 +27,11 @@ The MCP endpoint URL (e.g. https://example.com/mcp).
 > **name**: `string`
 
 Stable identifier that can be used to distinguish multiple MCP servers.
+
+***
+
+### resourceOutputs?
+
+> `optional` **resourceOutputs**: [`MCPToolResourceOutputs`](MCPToolResourceOutputs.md)[]
+
+File-like result fields for tools on this server, including third-party servers.

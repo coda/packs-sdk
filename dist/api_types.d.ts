@@ -421,6 +421,30 @@ export interface SyncTableRelation {
     inheritPermissions?: boolean;
 }
 /**
+ * A path into a tool result. Use `$` for the entire result, `.` for object properties,
+ * and `[]` for every item of an array (for example, `entries[].content`).
+ * For MCP tools, paths start at the call result (`structuredContent` or `content`).
+ */
+export type ResourceOutputSelector = string;
+interface ResourceOutputHintBase {
+    selector: ResourceOutputSelector;
+    /** Paths to optional display metadata in the same result. */
+    filenameSelector?: ResourceOutputSelector;
+    mimeTypeSelector?: ResourceOutputSelector;
+}
+/** A field containing a downloadable URL or an MCP resource URI. Bytes are fetched only on demand. */
+export interface ReferenceResourceOutputHint extends ResourceOutputHintBase {
+    representation: 'reference';
+    locator: 'url' | 'mcp_resource_uri';
+}
+/** A field already containing file data. Agent runtime stages it before returning the tool result. */
+export interface InlineResourceOutputHint extends ResourceOutputHintBase {
+    representation: 'inline';
+    encoding: 'utf8' | 'base64';
+}
+/** A declared file-like output; this identifies a candidate and never grants access by itself. */
+export type ResourceOutputHint = ReferenceResourceOutputHint | InlineResourceOutputHint;
+/**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
  */
 export interface CommonPackFormulaDef<T extends ParamDefs> {
@@ -436,6 +460,8 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      * Instructions for LLMs to use the formula, overrides the description for LLMs if set.
      */
     readonly instructions?: string;
+    /** File-like fields in this formula's result that an agent may access through a resource handle. */
+    readonly resourceOutputs?: ResourceOutputHint[];
     /**
      * The parameter inputs to the formula, if any.
      */

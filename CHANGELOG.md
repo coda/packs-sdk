@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Pack formulas and MCP servers can declare resource-output fields for downloadable references or inline UTF-8/base64 data, with upload-time validation of the declarations.
+
 ### Changed
 
 - Internal changes to the trigger definition. Not currently available externally.
