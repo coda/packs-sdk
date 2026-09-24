@@ -2056,6 +2056,21 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .min(1)
             .max(exports.Limits.BuildingBlockName)
             .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.'),
+        searchToolNames: z
+            .array(z
+            .string()
+            .refine(name => name.length > 0 && name.trim() === name, 'MCP search tool names must be nonempty and must not have surrounding whitespace.'))
+            .min(1, 'MCP searchToolNames must contain at least one tool name.')
+            .superRefine((names, context) => {
+            for (const duplicate of getNonUniqueElements(names)) {
+                context.addIssue({
+                    code: 'custom',
+                    path: [names.indexOf(duplicate, names.indexOf(duplicate) + 1)],
+                    message: `MCP search tool names must be unique. Found duplicate name "${duplicate}".`,
+                });
+            }
+        })
+            .optional(),
     });
     const suggestedPromptSchema = zodCompleteStrictObject({
         name: z

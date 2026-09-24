@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- MCP servers can declare `searchToolNames` to make selected remote tools available to knowledge search, including multiple names during a server tool rename.
+
 ### Changed
 
 - Internal changes to the trigger definition. Not currently available externally.

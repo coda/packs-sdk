@@ -1565,6 +1565,13 @@ export interface MCPServer {
    * Stable identifier that can be used to distinguish multiple MCP servers.
    */
   name: string;
+  /**
+   * Names of this server's tools that search its data. Only tools returned by the MCP server's
+   * current tools/list response are available to the knowledge search agent. The declaration is
+   * stored with the Pack version; add a new name in a new Pack version when the server renames a
+   * search tool, and keep the old name while both versions may be served.
+   */
+  searchToolNames?: string[];
 }
 
 /**

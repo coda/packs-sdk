@@ -5713,6 +5713,51 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('accepts several MCP search tool names, including names retained during a rename', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['mcp.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+            searchToolNames: ['search_documents', 'search_files', 'find_files'],
+          },
+        ],
+      });
+      await validateJson(metadata);
+      assert.deepEqual(metadata.mcpServers?.[0].searchToolNames, ['search_documents', 'search_files', 'find_files']);
+    });
+
+    for (const [names, expectedPath, expectedMessage] of [
+      [[], 'mcpServers[0].searchToolNames', 'MCP searchToolNames must contain at least one tool name.'],
+      [
+        [''],
+        'mcpServers[0].searchToolNames[0]',
+        'MCP search tool names must be nonempty and must not have surrounding whitespace.',
+      ],
+      [
+        [' search_files'],
+        'mcpServers[0].searchToolNames[0]',
+        'MCP search tool names must be nonempty and must not have surrounding whitespace.',
+      ],
+      [
+        ['search_files', 'search_files'],
+        'mcpServers[0].searchToolNames[1]',
+        'MCP search tool names must be unique. Found duplicate name "search_files".',
+      ],
+    ] as const) {
+      it(`rejects invalid MCP search tool names: ${JSON.stringify(names)}`, async () => {
+        const metadata = createFakePackVersionMetadata({
+          networkDomains: ['mcp.example.com'],
+          defaultAuthentication: {type: AuthenticationType.None},
+          mcpServers: [{endpointUrl: 'https://mcp.example.com/mcp', name: 'Example', searchToolNames: [...names]}],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [{path: expectedPath, message: expectedMessage}]);
+      });
+    }
+
     it('mcpServer endpointUrl domain not covered by networkDomains', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: ['example.com'],

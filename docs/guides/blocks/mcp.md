@@ -21,6 +21,20 @@ pack.addMCPServer({
 });
 ```
 
+## Search tools
+
+To let Go's knowledge search use specific tools from this MCP server, list their exact MCP tool names in `searchToolNames`. You can declare several kinds of search, such as searching documents and files. The connector's Pack version stores this list; at runtime, only names that the server currently returns from `tools/list` are available. Other MCP tools remain available to the connector but are not used for knowledge search.
+
+```ts
+pack.addMCPServer({
+  name: "Example",
+  endpointUrl: "https://mcp.example.com/mcp",
+  searchToolNames: ["search_documents", "search_files"],
+});
+```
+
+If the external server renames `search_files` to `find_files`, release a new Pack version with both names while both may be served: `searchToolNames: ["search_documents", "search_files", "find_files"]`. A Pack version does not automatically mark newly introduced MCP tools as search tools.
+
 !!! warning "Only one MCP server per-connector"
 
     A connector is limited to connecting to only a single MCP server. The platform expects each connector to connect to a single external application, and users wishing to work across multiple applications would install multiple connectors.
