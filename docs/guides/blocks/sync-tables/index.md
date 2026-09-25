@@ -309,7 +309,7 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 
 !!! docs "Docs only"
 
-    Column selection is only available in :superhuman-docs: Docs. In :superhuman-go: Go all columns are always indexed.
+    Column selection is only available in :superhuman-docs: Docs. In :superhuman-go: Go all columns are always synced. Which of those properties are searchable is [set in schema][indexing_properties].
 
 Although only [featured columns][schemas_featured_columns] are shown in the table by default, all of the schema properties are synced and stored in the table as their own columns. Additionally, the object chip in the first column of the sync table provides quick access to view and formulaically access the value of all properties.
 
@@ -330,6 +330,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 
 [samples]: ../../../samples/topic/sync-table.md
 [indexing]: indexing/index.md
+[indexing_properties]: indexing/schema.md#properties-to-index
 [incremental]: indexing/incremental.md
 [source_detection]: ../../../support/migration/superhuman-go.md#source-application-detection
 [ingestion_logs]: ../../../development/logging.md#ingestion-logs

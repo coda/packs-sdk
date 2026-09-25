@@ -101,7 +101,7 @@ pack.addFormula({
 
 #### Specific formulas
 
-You can limit which formulas the skill has access to by specifying the `formulas` field of the tool. This can be useful when you want to focus the LLM on a specific set of tools, as too many tool options can lead to worse results.
+You can specify a subset of formulas the skill needs to by specifying the `formulas` field of the tool. This can be useful when you want to focus the LLM on a specific set of tools.
 
 ```ts
 pack.addSkill({
@@ -197,7 +197,7 @@ Under the hood, the rewrite tool has the following input format:
 ```json
 [
   {
-    "originalText": "<original text",
+    "originalText": "<original text>",
     "replacementText": "<suggested text>",
     "explanation": "<why the change matters>",
     "paragraphId": "<id of paragraph containing original text>"
@@ -239,7 +239,7 @@ Each contact has a name and email address only; it's not possible to retrieve ot
 
 ### Web search
 
-The `WebSearch` tool allows the :superhuman-go: Go to search the internet for information or fetch data from a public URL. It's useful when the it needs to do deeper research or reference information that may have changed after the LLM's training cutoff.
+The `WebSearch` tool allows :superhuman-go: Go to search the internet for information or fetch data from a public URL. It's useful when it needs to do deeper research or reference information that may have changed after the LLM's training cutoff.
 
 ```ts
 pack.addSkill({

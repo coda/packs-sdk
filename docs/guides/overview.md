@@ -104,4 +104,4 @@ Either way, there's a library of [sample Packs][samples] covering every major pa
 [mcp]: blocks/mcp.md
 [cards]: blocks/cards.md
 [migration_go]: ../support/migration/superhuman-go.md
-[gallery_packs]: https://docs.superhuman.com/gallery?filter=packs
+[gallery_packs]: https://coda.io/gallery?filter=packs

@@ -61,7 +61,7 @@ pack.addSyncTable({
 
 ## Incompatible parameters
 
-For some APIs, only some filters are compatible with incremental sync. If you need to hide an optional parameter when the table is used in the data layer, you can set the field `supportsIncrementalSync` to false.
+For some APIs, only some filters are compatible with incremental sync. If you need to hide an optional parameter when the table is used in the knowledge layer, you can set the field `supportsIncrementalSync` to false.
 
 ```{.ts hl_lines="6"}
 sdk.makeParameter({
@@ -76,7 +76,7 @@ sdk.makeParameter({
 
 ## Periodic full syncs
 
-Not all APIs provide perfect fidelity in their incremental syncs, so to ensure accurate information, the data layer will periodically perform a full sync instead. No changes are required to your Pack, as the sync engine will omit the `incrementalContinuation` when running your sync table.
+Not all APIs provide perfect fidelity in their incremental syncs, so to ensure accurate information, the knowledge layer will periodically perform a full sync instead. No changes are required to your Pack, as the sync engine will omit the `incrementalContinuation` when running your sync table.
 
 Full syncs are currently scheduled to run once a week, but this may change.
 

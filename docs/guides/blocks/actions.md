@@ -56,11 +56,11 @@ Like all formulas, action formula names can only contain letters, numbers, and u
 
 - Select a verb-noun pair that corresponds to the corresponding action and target of the action. For example, `DeleteFile` or `AddTask`.<br>
   {: .yes}
-- If you Pack primarily works with a single type of item, you may omit the noun. For example, `Tweet` or `MarkComplete`.<br>
+- If your Pack primarily works with a single type of item, you may omit the noun. For example, `Tweet` or `MarkComplete`.<br>
   {: .yes}
 - For multiple words, use upper camel case. For example, `SendEmail` or `CreateBugReport`.
   {: .yes}
-- Don't include the Pack name in the name of the column format. For example, use `CreateTask` instead of `CreateTodoistTask`.
+- Don't include the Pack name in the name of the action. For example, use `CreateTask` instead of `CreateTodoistTask`.
   {: .no}
 
 !!! warning
@@ -217,7 +217,6 @@ While there is no solution for the general case, there is for the common case wh
 [data-types]: ../basics/data-types.md
 [sync_table]: sync-tables/index.md
 [schemas]: ../advanced/schemas.md
-[two_way_sync]: ../advanced/two-way-sync.md
 [data_type_object]: ../basics/data-types.md#objects
 [getSchema]: ../blocks/sync-tables/dynamic.md#get-schema
 [includeUnknownProperties]: ../../reference/sdk/core/interfaces/ObjectSchemaDefinition.md#includeunknownproperties

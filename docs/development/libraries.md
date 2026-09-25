@@ -46,7 +46,7 @@ Some JavaScript libraries are written assuming the code is being run in either a
 
 Unfortunately there isn't an easy way to determine beforehand if a given library will fail due to an unavailable API. At the moment the best approach is to try the library and see if it runs successfully in the Packs environment.
 
-While many compatibility issues will be caught when the Pack is being built, there are others that are only exposed at runtime. In those cases your code will fail with an error like `<function> is not defined`. The `code execute` command runs your code in a VM with all of the same limitations in place, allowing you test compatibility without needing to upload your code to the server.
+While many compatibility issues will be caught when the Pack is being built, there are others that are only exposed at runtime. In those cases your code will fail with an error like `<function> is not defined`. The `packs execute` command runs your code in a VM with all of the same limitations in place, allowing you to test compatibility without needing to upload your code to the server.
 
 ### Shims
 

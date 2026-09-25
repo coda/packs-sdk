@@ -24,15 +24,15 @@ pack.addSyncTable({
   formula: {
     // ...
     parameters: [
-      makeParameter({
-        type: ParameterType.String,
-        name: 'project',
-        description: 'The ID of the project containing the tasks.',
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
+        name: "project",
+        description: "The ID of the project containing the tasks.",
         // Use the project IDs that come from the ID column in the Projects table.
         crawlStrategy: {
           parentTable: {
-            tableName: 'Projects',
-            propertyKey: 'id',
+            tableName: "Projects",
+            propertyKey: "id",
           },
         },
       }),
