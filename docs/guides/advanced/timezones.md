@@ -43,7 +43,7 @@ let formatted = date.toLocaleString("en-US", {
 });
 ```
 
-There are also equivalent `getLocaleDateString()` and `getLocaleTimeString()` methods for getting just the date or time component respectively.
+There are also equivalent `toLocaleDateString()` and `toLocaleTimeString()` methods for getting just the date or time component respectively.
 
 
 ### Localized parts

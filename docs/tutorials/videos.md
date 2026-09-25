@@ -56,7 +56,4 @@ Coda 4.0 included a new featured called two-way sync, that allows users to direc
 <iframe width="560" height="315" src="https://www.youtube.com/embed/jfFdBNfUta8" title="YouTube video player: Adding two-way sync to your Packs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-https://www.youtube.com/watch?v=yyk0Y5J1qpI
-
-
 [webinars]: https://docs.superhuman.com/webinars

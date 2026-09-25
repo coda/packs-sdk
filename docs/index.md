@@ -152,7 +152,7 @@ Stuck, or want to see it done first? There's a [library of videos][videos] walki
 [tutorials]: tutorials/index.md
 [community]: https://connect.superhuman.com/c/developers-central/making-packs/15
 [videos]: tutorials/videos.md
-[gallery]: https://docs.superhuman.com/gallery?filter=packs
+[gallery]: https://coda.io/gallery?filter=packs
 [store]: https://superhuman.com/store/connectors
 [sync_tables]: guides/blocks/sync-tables/index.md
 [formulas]: guides/blocks/formulas.md

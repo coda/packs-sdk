@@ -109,7 +109,7 @@ if (isThing) {
 let foo = isThing ? "bar" : "baz";
 ```
 
-The ternary operator isn't widely known among newer coders, and the syntax is very opaque if you haven't see it before.
+The ternary operator isn't widely known among newer coders, and the syntax is very opaque if you haven't seen it before.
 
 
 ### Avoid the spread operator

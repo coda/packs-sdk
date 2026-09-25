@@ -284,7 +284,7 @@ All of the commands shown so far have only affected your local machine. To get t
 
 ### Registering an API token {: #register}
 
-All of the Pack upload commands work with the Superhuman Docs API to upload your Pack, and hence require an API token to identify you as the user. Simply run this command, and you'll be given a link to the Account page to create an API token, which you can then paste in the terminal. You API token will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
+All of the Pack upload commands work with the Superhuman Docs API to upload your Pack, and hence require an API token to identify you as the user. Simply run this command, and you'll be given a link to the Account page to create an API token, which you can then paste in the terminal. Your API token will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
 
 ```sh
 npx packs register

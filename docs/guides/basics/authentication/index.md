@@ -268,7 +268,7 @@ Each token defined within the `params` array will result in an additional prompt
 {{screenshot("images/auth_custom.png", "Entering tokens for custom authentication")}}
 
 {% raw %}
-Unlike with other authentication types where the values are added to your fetch requests automatically, with `Custom` authentication you must manually add these tokens to your request. Wherever you need to inject one of these tokens enter a placeholder value instead, and before your request is sent the platform will replace it with the value of the corresponding token. The placeholder format is `{{<paramName>-<invocationToken>}}`, where `<paramName>` is the name of the token you defined and `<invocateToken>` is the unique ID generated for that execution of your Pack.
+Unlike with other authentication types where the values are added to your fetch requests automatically, with `Custom` authentication you must manually add these tokens to your request. Wherever you need to inject one of these tokens enter a placeholder value instead, and before your request is sent the platform will replace it with the value of the corresponding token. The placeholder format is `{{<paramName>-<invocationToken>}}`, where `<paramName>` is the name of the token you defined and `<invocationToken>` is the unique ID generated for that execution of your Pack.
 {% endraw %}
 
 {% raw %}

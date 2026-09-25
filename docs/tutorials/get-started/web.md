@@ -80,12 +80,12 @@ Now that you have your Pack up and running let's make a change to how it works.
 
 --8<-- "tutorials/get-started/.rebuild.md"
 
-<video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="site:images/web_ide_rebuild.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Recording of rebuilding the Pack." class="screenshot"><source src="site:images/web_ide_rebuild.mp4" type="video/mp4"></source></video>
 
 
 ## Next steps
 
-You've built your fist Pack, congrats! 🎉 Now that you have some experience with the mechanics of building and using Packs, here are some recommended next steps:
+You've built your first Pack, congrats! 🎉 Now that you have some experience with the mechanics of building and using Packs, here are some recommended next steps:
 
 - Learn about Pack basics by reading through the [available guides][guides].
 - Check out the [code samples][samples] to see examples of specific Pack features as well as complete sample Packs.

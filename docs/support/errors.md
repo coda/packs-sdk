@@ -1,6 +1,6 @@
 ---
 nav: Errors
-description: A list of common errors your Pack can may encounter, and how to handle them.
+description: A list of common errors your Pack may encounter, and how to handle them.
 ---
 
 # Common errors
@@ -9,7 +9,7 @@ description: A list of common errors your Pack can may encounter, and how to han
 
 - `The given domain <domain> does not resolve to a public IP`
 
-This error indicates that the domain you provided in an `addNetworkDomain()` call doesn't resolved to an accessible IP address. This could be due to a typo in the domain name. However there are some cases where a service assigns IP addresses to subdomains (`foo.example.com`) but not the root domain you are trying to add (`example.com`). If that is the case, either add the subdomain or [contact support][support] to have the root domain manually added to your Pack.
+This error indicates that the domain you provided in an `addNetworkDomain()` call doesn't resolve to an accessible IP address. This could be due to a typo in the domain name. However there are some cases where a service assigns IP addresses to subdomains (`foo.example.com`) but not the root domain you are trying to add (`example.com`). If that is the case, either add the subdomain or [contact support][support] to have the root domain manually added to your Pack.
 
 
 ## Missing required developer tooling

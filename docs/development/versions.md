@@ -34,7 +34,7 @@ pack.setVersion("1.0.5");
 There are some restrictions to the version numbers you can select however:
 
 - The version numbers must increase with each new build / upload.
-- The version numbers must follow the [SemVer standard][semver], meaning them must be of the form `1`, `1.2`, or `1.2.3`.
+- The version numbers must follow the [SemVer standard][semver], meaning they must be of the form `1`, `1.2`, or `1.2.3`.
 - If you make a user-visible change to your Pack the platform will enforce standards on your version number:
     - A new minor version if you make a backwards-compatible change (add a new building block or parameter, etc).
     - A new major version if you make a backwards-incompatible change (add a new request parameter, remove a building block, etc).
@@ -62,7 +62,7 @@ A new release is created when:
 - You click the **Release version** option in the **History** tab of the Pack Studio.
 - You run the `npx packs release` command using the Pack CLI.
 
-Each release is just a pointer an existing Pack version, so to release new code you must create a version first and then release it. Additionally, each new release must use a newer version than that of the current release.
+Each release is just a pointer to an existing Pack version, so to release new code you must create a version first and then release it. Additionally, each new release must use a newer version than that of the current release.
 
 ### Corresponding versions
 
@@ -103,17 +103,9 @@ You can change which version is used at any time.
 
     To change the version used by Go:
 
-    === "Agent"
-
-        1.  Open the [agent's settings screen][navigation_agent_settings]{ data-preview }.
-        1.  Click the gear icon :octicons-gear-16:.
-        1.  Change the **Pack version** option as desired.
-
-    === "Connector"
-
-        1.  Open the [connector's settings screen][navigation_connector_settings]{ data-preview }.
-        1.  Click the gear icon :octicons-gear-16:.
-        1.  Change the **Pack version** option as desired.
+    1.  Open the [connector's settings screen][navigation_connector_settings]{ data-preview }.
+    1.  Click the gear icon :octicons-gear-16:.
+    1.  Change the **Pack version** option as desired.
 
     {{screenshot("images/agent_version.png", "A screenshot of the dropdown that can switch the version of the Pack used by the connector.")}}
 

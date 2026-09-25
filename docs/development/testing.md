@@ -97,7 +97,7 @@ Testing a sync is very similar to testing a regular formula. However, you want t
 import type {MockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
 import {assert} from 'chai';
 import {describe} from 'mocha';
-import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
+import {executeSyncFormula} from '@codahq/packs-sdk/dist/development';
 import {it} from 'mocha';
 import {newJsonFetchResponse} from '@codahq/packs-sdk/dist/development';
 import {newMockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
@@ -121,16 +121,16 @@ describe('Sync Formula', () => {
       nextPageNumber: undefined,
     });
     syncContext.fetcher.fetch
-      .withArgs('/api/users')
+      .withArgs(sinon.match({method: 'GET', url: '/api/users'}))
       .returns(page1Response)
-      .withArgs('/api/users?page=2')
+      .withArgs(sinon.match({method: 'GET', url: '/api/users?page=2'}))
       .returns(page2Response);
 
-    const result = await executeSyncFormulaFromPackDef(pack, 'MySync', [], syncContext);
+    const result = await executeSyncFormula(pack, 'MySync', [], syncContext);
 
-    assert.equal(result.length, 2);
-    assert.equal(result[0].Id, 123);
-    assert.equal(result[1].Id, 456);
+    assert.equal(result.result.length, 2);
+    assert.equal(result.result[0].Id, 123);
+    assert.equal(result.result[1].Id, 456);
     sinon.assert.calledTwice(syncContext.fetcher.fetch);
   });
 });
@@ -158,7 +158,7 @@ describe('Formula integration test', () => {
 });
 ```
 
-The fetcher will apply authentication to these requests if you have configured authentication locally using `packs auth`. For this to work you must specify the `manifestPath` and set it to the directory where the `.coda-credentials.json` file is located (usually the same directory as the Pack definition).
+The fetcher will apply authentication to these requests if you have configured authentication locally using `packs auth`. For this to work you must specify the `manifestPath` and set it to the path of your Pack definition file. Credentials are loaded from `.coda-credentials.json` in that file's directory.
 
 ### Return value validation
 
