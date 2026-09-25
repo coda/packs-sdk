@@ -11,10 +11,10 @@ At a minimum, the schema must specify:
 
 - The title property, via `titleProperty`
 - The link property, via `linkProperty`
+- The properties to split into chunks, via `index.properties`
 
 Additional fields allow for better index tuning. Most schemas should set:
 
-- The properties to split into chunks, via `index.properties`
 - The properties to replicate in each chunk, via `index.contextProperties`
 - The properties to use to filter results, via `index.filterableProperties`
 
@@ -65,7 +65,7 @@ const ProductSchema = sdk.makeObjectSchema({
 
 ## Properties to index
 
-Optionally set `index.properties` to the list of properties that contain long-form text that should be indexed for the record. These are typically properties such as descriptions, notes, and message bodies. The content of these properties will be broken down into smaller chunks for retrieval and usage by the LLM.
+Set `index.properties` to the list of properties that contain long-form text that should be indexed for the record. These are typically properties such as descriptions, notes, and message bodies. The content of these properties will be broken down into smaller chunks for retrieval and usage by the LLM.
 
 ```{.ts hl_lines="10-12"}
 const ProductSchema = sdk.makeObjectSchema({
