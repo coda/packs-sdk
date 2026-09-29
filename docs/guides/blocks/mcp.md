@@ -129,6 +129,22 @@ Requests to MCP servers use the same [authentication system][authentication] as 
 
 :superhuman-go: Go prompts users for confirmation before performing actions that mutate records or have side effects. An MCP tool will be considered such an action if the `readOnlyHint` annotation on the tool is any value other than `true`. See the [`ToolAnnotations`][mcp_tool_annotations] type in the MCP specification for more information.
 
+## Search tools
+
+To allow :superhuman-go: Go's knowledge search feature to connect to an MCP server, list the server's search-related tools in the field `searchToolNames`. If the server has multiple tools that provide search, include all of them.
+
+```ts
+pack.addMCPServer({
+  name: "Example",
+  endpointUrl: "https://mcp.example.com/mcp",
+  searchToolNames: ["search_documents", "search_files"],
+});
+```
+
+MCP servers can add, remove, or rename tools without warning, so you will need to keep the list in sync with what the server provides. Tool names listed in `searchToolNames` but not present on the server will be ignored.
+
+List at most 16 search tools per server. Each name can have at most 128 characters.
+
 
 [mcp]: https://modelcontextprotocol.io/
 [fetcher]: ../basics/fetcher.md

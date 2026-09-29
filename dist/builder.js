@@ -6,6 +6,8 @@ const api_types_1 = require("./api_types");
 const types_2 = require("./types");
 const types_3 = require("./types");
 const types_4 = require("./types");
+const object_utils_1 = require("./helpers/object_utils");
+const object_utils_2 = require("./helpers/object_utils");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -13,6 +15,7 @@ const api_4 = require("./api");
 const api_5 = require("./api");
 const api_6 = require("./api");
 const migration_1 = require("./helpers/migration");
+const rrule_validation_1 = require("./testing/rrule_validation");
 const api_7 = require("./api");
 /**
  * Creates a new skeleton pack definition that can be added to.
@@ -483,6 +486,15 @@ class PackDefinitionBuilder extends BaseDefinitionBuilder {
     }
 }
 exports.PackDefinitionBuilder = PackDefinitionBuilder;
+// Copies before freezing so the caller's own arrays (connector formulas, trigger filters) stay theirs.
+function frozenCopy(value) {
+    return (0, object_utils_2.deepFreeze)((0, object_utils_1.deepCopy)(value));
+}
+// Off the instance: an own property leaks into the metadata, and `#private` breaks pre-ES2015 .d.ts consumers.
+const agentBuilderStates = new WeakMap();
+function stateOf(builder) {
+    return agentBuilderStates.get(builder);
+}
 /**
  * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
  *
@@ -491,11 +503,12 @@ exports.PackDefinitionBuilder = PackDefinitionBuilder;
  */
 class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     constructor() {
-        super(...arguments);
-        /**
-         * See {@link PackVersionDefinition.agent}.
-         */
-        this.agent = { tools: [] };
+        super();
+        const state = { agent: frozenCopy({ tools: [] }) };
+        agentBuilderStates.set(this, state);
+        // Own and enumerable, unlike a class getter, so compilePackMetadata's object rest still copies them.
+        Object.defineProperty(this, 'agent', { enumerable: true, get: () => state.agent });
+        Object.defineProperty(this, 'defaultTriggers', { enumerable: true, get: () => state.defaultTriggers });
     }
     /**
      * Sets this agent's instructions.
@@ -506,7 +519,8 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setInstructions(instructions) {
-        this.agent.instructions = instructions;
+        const state = stateOf(this);
+        state.agent = frozenCopy({ ...state.agent, instructions });
         return this;
     }
     /**
@@ -537,7 +551,8 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
                 ...(connector.formulas ? { formulas: connector.formulas } : {}),
             });
         }
-        this.agent.tools = tools;
+        const state = stateOf(this);
+        state.agent = frozenCopy({ ...state.agent, tools });
         return this;
     }
     /**
@@ -553,8 +568,12 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      */
     setDefaultWhileWritingTrigger(contextualTrigger) {
         var _a;
-        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.WhileWriting);
-        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger }];
+        const state = stateOf(this);
+        const otherTriggers = ((_a = state.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.WhileWriting);
+        state.defaultTriggers = frozenCopy([
+            ...otherTriggers,
+            { kind: types_2.DefaultTriggerKind.WhileWriting, ...contextualTrigger },
+        ]);
         return this;
     }
     /**
@@ -617,11 +636,16 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     }
     _addDefaultEventTrigger(eventTrigger) {
         var _a;
-        this.defaultTriggers = [...((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []), { kind: types_2.DefaultTriggerKind.Event, ...eventTrigger }];
+        const state = stateOf(this);
+        state.defaultTriggers = frozenCopy([
+            ...((_a = state.defaultTriggers) !== null && _a !== void 0 ? _a : []),
+            { kind: types_2.DefaultTriggerKind.Event, ...eventTrigger },
+        ]);
         return this;
     }
     /**
-     * Sets the schedule this agent runs on.
+     * Sets the schedule this agent runs on. Throws on a recurrence the runtime cannot fire, including
+     * one with no DTSTART to anchor it.
      *
      * @example
      * ```
@@ -632,8 +656,16 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      */
     setDefaultScheduleTrigger(scheduleTrigger) {
         var _a;
-        const otherTriggers = ((_a = this.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.Schedule);
-        this.defaultTriggers = [...otherTriggers, { kind: types_2.DefaultTriggerKind.Schedule, ...scheduleTrigger }];
+        const message = (0, rrule_validation_1.validateRRuleString)(scheduleTrigger.rruleString);
+        if (message) {
+            throw new Error(message);
+        }
+        const state = stateOf(this);
+        const otherTriggers = ((_a = state.defaultTriggers) !== null && _a !== void 0 ? _a : []).filter(trigger => trigger.kind !== types_2.DefaultTriggerKind.Schedule);
+        state.defaultTriggers = frozenCopy([
+            ...otherTriggers,
+            { kind: types_2.DefaultTriggerKind.Schedule, ...scheduleTrigger },
+        ]);
         return this;
     }
 }
