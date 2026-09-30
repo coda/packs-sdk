@@ -26,7 +26,9 @@ export declare const Limits: {
     MaxDefaultEventTriggers: number;
     MaxFilterConditions: number;
     MaxKeywords: number;
+    MaxMcpSearchToolsPerServer: number;
     MaxSkillCount: number;
+    McpSearchToolName: number;
     MaxSuggestedPromptsPerPack: number;
     NotetakerParticipantValue: number;
     NotetakerTagValue: number;

@@ -46,7 +46,7 @@
     "rootDirs": [
       "./documentation/samples"
     ] /* List of root folders whose combined content represents the structure of the project at runtime. */,
-    // "typeRoots": [],                       /* List of folders to include type definitions from. */
+    "typeRoots": ["./node_modules/@types"] /* Keep the parent monorepo's Jest globals out of SDK tests. */,
     // "types": [],                           /* Type declaration files to be included in compilation. */
     // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
 
