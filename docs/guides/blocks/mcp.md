@@ -172,4 +172,4 @@ List at most 16 search tools per server. Each name can have at most 128 characte
 [mcp_tool_annotations]: https://modelcontextprotocol.io/specification/2025-11-25/schema#toolannotations
 [navigation_pack_list]: ../../support/navigation.md#pack-list
 [versions]: ../../development/versions.md
-[migrate]: ../../development/cli/#migrating-from-the-web-editor
+[migrate]: ../../development/cli.md#migrating-from-the-web-editor
