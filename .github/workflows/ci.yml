@@ -18,7 +18,9 @@ jobs:
       - uses: ./.github/actions/setup_node
 
       - name: Test
-        run: make test
+        run: |
+          node --test .github/releases/release.test.cjs
+          make test
 
   validate-no-changes:
     runs-on: ubuntu-latest

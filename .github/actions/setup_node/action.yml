@@ -1,6 +1,14 @@
 name: Setup Node Environment
 description: Sets up Node.js with pnpm, installs dependencies, and configures necessary tools
 
+inputs:
+  cache:
+    description: 'Cache installed dependencies'
+    default: 'true'
+  frozen-lockfile:
+    description: 'Require an unchanged dependency lockfile'
+    default: 'false'
+
 runs:
   using: composite
   steps:
@@ -8,21 +16,20 @@ runs:
       shell: bash
       run: sudo apt update && sudo apt install -y g++ build-essential python3 python3-pip && sudo python3 -m pip install pipenv --break-system-packages
 
-    - name: Use Node 22
+    - name: Use supported Node 22
       uses: actions/setup-node@v6
       with:
-        node-version: 22
+        node-version: '22.22.2'
         # TODO(jonathan): Figure out why using this causes isolated-vm to fail to build,
         # resulting in test failures.
         # node-version-file: package.json
 
     - name: Cache pnpm dependencies
+      if: inputs.cache == 'true'
       uses: actions/cache@v4
       with:
         path: node_modules
-        key: pnpm-v7-dependencies-${{ hashFiles('package.json') }}
-        restore-keys: |
-          pnpm-v7-dependencies-
+        key: pnpm-10-node-22.22.2-${{ hashFiles('pnpm-lock.yaml') }}
 
     - name: Install pnpm
       shell: bash
@@ -30,4 +37,11 @@ runs:
 
     - name: Install Node dependencies
       shell: bash
-      run: make _bootstrap-node
+      env:
+        FROZEN_LOCKFILE: ${{ inputs.frozen-lockfile }}
+      run: |
+        args=()
+        if [[ "$FROZEN_LOCKFILE" == true ]]; then
+          args+=(--frozen-lockfile)
+        fi
+        .pnpm_install/bin/pnpm install "${args[@]}"
