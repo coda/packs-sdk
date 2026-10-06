@@ -130,7 +130,9 @@ exports.Limits = {
     MaxDefaultEventTriggers: 20,
     MaxFilterConditions: 20,
     MaxKeywords: 50,
+    MaxMcpSearchToolsPerServer: 16,
     MaxSkillCount: 15,
+    McpSearchToolName: 128,
     MaxSuggestedPromptsPerPack: 3,
     NotetakerParticipantValue: 320,
     NotetakerTagValue: 128,
@@ -2056,6 +2058,27 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .min(1)
             .max(exports.Limits.BuildingBlockName)
             .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.'),
+        searchToolNames: z
+            .array(z
+            .string()
+            .max(exports.Limits.McpSearchToolName)
+            .refine(name => name.length > 0 && name.trim() === name, 'MCP search tool names must be nonempty and must not have surrounding whitespace.'))
+            .min(1, 'MCP searchToolNames must contain at least one tool name.')
+            .max(exports.Limits.MaxMcpSearchToolsPerServer)
+            .superRefine((names, context) => {
+            const seen = new Set();
+            names.forEach((name, index) => {
+                if (seen.has(name)) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: [index],
+                        message: `MCP search tool names must be unique. Found duplicate name "${name}".`,
+                    });
+                }
+                seen.add(name);
+            });
+        })
+            .optional(),
     });
     const suggestedPromptSchema = zodCompleteStrictObject({
         name: z

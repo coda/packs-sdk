@@ -23,31 +23,82 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateMetadata = exports.handleValidate = void 0;
+exports.validateMetadata = exports.checkAgentConnectorListings = exports.getConnectorPackIds = exports.handleValidate = void 0;
+const types_1 = require("../types");
 const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const errors_1 = require("./errors");
+const config_storage_1 = require("./config_storage");
 const helpers_3 = require("./helpers");
-const helpers_4 = require("../testing/helpers");
-const helpers_5 = require("../testing/helpers");
+const coda_1 = require("../helpers/external-api/coda");
+const helpers_4 = require("./helpers");
+const helpers_5 = require("./helpers");
+const helpers_6 = require("../testing/helpers");
+const helpers_7 = require("../testing/helpers");
 const upload_validation_1 = require("../testing/upload_validation");
-async function handleValidate({ manifestFile, checkDeprecationWarnings }) {
-    const fullManifestPath = (0, helpers_3.makeManifestFullPath)(manifestFile);
+async function handleValidate({ manifestFile, checkDeprecationWarnings, checkConnectors, apiToken, apiEndpoint, }) {
+    var _a, _b;
+    const fullManifestPath = (0, helpers_5.makeManifestFullPath)(manifestFile);
     const { bundlePath } = await (0, compile_1.compilePackBundle)({ manifestPath: fullManifestPath, minify: false });
-    const manifest = await (0, helpers_1.importManifest)(bundlePath);
+    const manifest = await (0, helpers_3.importManifest)(bundlePath);
     // Since it's okay to not specify a version, we inject one if it's not provided.
     if (!manifest.version) {
         manifest.version = '1';
+    }
+    if (manifest.agent) {
+        if (((_a = manifest.agent.tools) !== null && _a !== void 0 ? _a : []).length === 0) {
+            (0, helpers_6.print)('tools: none (chat-only)');
+        }
+        if (checkConnectors !== false) {
+            const endpoint = (0, helpers_2.formatEndpoint)(apiEndpoint);
+            const token = apiToken !== null && apiToken !== void 0 ? apiToken : (0, config_storage_1.getApiKey)(endpoint);
+            if (token) {
+                const client = (0, helpers_1.createCodaClient)(token, endpoint);
+                const connectorIds = getConnectorPackIds((_b = manifest.agent.tools) !== null && _b !== void 0 ? _b : []);
+                for (const warning of await checkAgentConnectorListings(client, connectorIds)) {
+                    (0, helpers_6.print)(`warning: ${warning}`);
+                }
+            }
+        }
     }
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     return validateMetadata(metadata, { checkDeprecationWarnings });
 }
 exports.handleValidate = handleValidate;
+function getConnectorPackIds(tools) {
+    const packIds = [];
+    for (const tool of tools) {
+        if (tool.type === types_1.ToolType.Pack) {
+            packIds.push(tool.packId);
+        }
+    }
+    return packIds;
+}
+exports.getConnectorPackIds = getConnectorPackIds;
+async function checkAgentConnectorListings(client, packIds) {
+    const results = await Promise.allSettled(packIds.map(packId => client.getPackListing(packId)));
+    const warnings = [];
+    for (const [index, result] of results.entries()) {
+        if (result.status === 'rejected') {
+            const err = result.reason;
+            if ((0, coda_1.isResponseError)(err)) {
+                warnings.push(`Connector pack ${packIds[index]} was not found or is not visible to this token: ${await (0, errors_1.formatResponseError)(err)}. ` +
+                    'Find connector IDs at https://superhuman.com/store/connectors.');
+            }
+            else {
+                throw err;
+            }
+        }
+    }
+    return warnings;
+}
+exports.checkAgentConnectorListings = checkAgentConnectorListings;
 async function validateMetadata(metadata, { checkDeprecationWarnings = true } = {}) {
     var _a, _b;
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve(`${(0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json'}`).then(s => __importStar(require(s)));
+    const packageJson = await Promise.resolve(`${(0, helpers_4.isTestCommand)() ? '../package.json' : '../../package.json'}`).then(s => __importStar(require(s)));
     const codaPacksSDKVersion = packageJson.version;
     try {
         await (0, upload_validation_1.validatePackVersionMetadata)(metadata, codaPacksSDKVersion);
@@ -55,10 +106,10 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     catch (e) {
         const packMetadataValidationError = e;
         const validationErrors = (_a = packMetadataValidationError.validationErrors) === null || _a === void 0 ? void 0 : _a.map(makeErrorMessage).join('\n');
-        (0, helpers_5.printAndExit)(`${e.message}: \n${validationErrors}`);
+        (0, helpers_7.printAndExit)(`${e.message}: \n${validationErrors}`);
     }
     if (!checkDeprecationWarnings) {
-        (0, helpers_4.print)('Pack is valid.');
+        (0, helpers_6.print)('Pack is valid.');
         return;
     }
     try {
@@ -67,9 +118,9 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     catch (e) {
         const packMetadataValidationError = e;
         const deprecationWarnings = (_b = packMetadataValidationError.validationErrors) === null || _b === void 0 ? void 0 : _b.map(makeWarningMessage).join('\n');
-        (0, helpers_5.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
+        (0, helpers_7.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
     }
-    (0, helpers_4.print)('Pack is valid.');
+    (0, helpers_6.print)('Pack is valid.');
 }
 exports.validateMetadata = validateMetadata;
 function makeErrorMessage({ path, message }) {

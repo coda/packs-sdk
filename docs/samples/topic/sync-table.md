@@ -818,10 +818,10 @@ pack.addSyncTable({
             name: document.lawName,
           },
           // The PDF contents of the document is accessed via an API endpoint.
-          /* eslint-disable max-len */
+          /* oxlint-disable stylistic/max-len */
           pdf: `https://legislation.nysenate.gov/pdf/laws/${documentId}?full=true`,
           link: `https://www.nysenate.gov/legislation/laws/${document.lawId}/${document.locationId}`,
-          /* eslint-enable max-len */
+          /* oxlint-enable stylistic/max-len */
           lastModified: document.activeDate,
         };
       });

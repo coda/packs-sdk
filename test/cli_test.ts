@@ -1,9 +1,20 @@
+import type {AgentTool} from '../types';
 import type {PackVersionDefinition} from '../types';
 import {PublicApiType} from '../helpers/external-api/v1';
+import {ResponseError} from '../helpers/external-api/coda';
+import {ToolType} from '../types';
+import {buildAgentChatUrl} from '../cli/agent_chat';
+import {checkAgentConnectorListings} from '../cli/validate';
+import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {formatWhoami} from '../cli/whoami';
+import fs from 'fs-extra';
 import {getApiTokenCreationUrl} from '../cli/register';
+import {getConnectorPackIds} from '../cli/validate';
+import {importManifest} from '../cli/helpers';
 import {parsePackIdOrUrl} from '../cli/link';
+import path from 'path';
+import {renderAgentPackTemplate} from '../cli/agent_template';
 
 describe('CLI', () => {
   describe('compile pack metadata', () => {
@@ -89,6 +100,86 @@ describe('CLI', () => {
       assert.equal(
         formatWhoami({...nonScopedToken, scoped: true}),
         `You are Some Name (email@example.com) using scoped token "This Token's Name"`,
+      );
+    });
+  });
+
+  describe('agent template', () => {
+    it('renders an agent pack with instructions, tools, and a schedule trigger', () => {
+      const template = renderAgentPackTemplate('standup-bot');
+      assert.include(template, 'sdk.newAgent()');
+      assert.include(template, 'pack.setInstructions(');
+      assert.include(template, 'standup-bot');
+      assert.include(template, 'pack.setTools({');
+      assert.include(template, 'pack.setDefaultScheduleTrigger({');
+    });
+
+    it('renders a template that compiles with quotes and backslashes in the name', async () => {
+      const agentName = 'bot "the \\ builder"';
+      // The template imports the published package name, which does not resolve inside this repo,
+      // so point it at the local source for the compile check. Everything else stays verbatim.
+      const template = renderAgentPackTemplate(agentName).replace('@codahq/packs-sdk', '../../../index');
+      const dir = fs.mkdtempSync(path.join(__dirname, 'packs', '.tmp-agent-template-'));
+      try {
+        const manifestPath = path.join(dir, 'pack.ts');
+        fs.writeFileSync(manifestPath, template);
+        const {bundlePath} = await compilePackBundle({manifestPath, minify: false});
+        const manifest = await importManifest<PackVersionDefinition>(bundlePath);
+        assert.equal(manifest.agent?.instructions, `You are ${agentName}. Keep replies short.`);
+      } finally {
+        fs.removeSync(dir);
+      }
+    });
+  });
+
+  describe('agent connector pack ids', () => {
+    it('collects connector pack ids and skips built-in tools', () => {
+      const tools: AgentTool[] = [
+        {type: ToolType.CodaDocsAndTables},
+        {type: ToolType.Pack, packId: 1234},
+        {type: ToolType.WebSearch},
+      ];
+      assert.deepEqual(getConnectorPackIds(tools), [1234]);
+    });
+
+    it('returns empty for no tools', () => {
+      assert.deepEqual(getConnectorPackIds([]), []);
+    });
+  });
+
+  describe('agent connector listings', () => {
+    it('warns on listings that fail to load and passes on success', async () => {
+      const missing = new ResponseError(
+        new Response(JSON.stringify({statusCode: 404, message: 'Not found'}), {status: 404}),
+      );
+      const client = {
+        getPackListing: async (packId: number) => {
+          if (packId === 1234) {
+            return {id: packId};
+          }
+          throw missing;
+        },
+      };
+      const warnings = await checkAgentConnectorListings(client as any, [1234, 9999]);
+      assert.lengthOf(warnings, 1);
+      assert.include(warnings[0], '9999');
+      assert.include(warnings[0], 'superhuman.com/store/connectors');
+      assert.deepEqual(await checkAgentConnectorListings(client as any, []), []);
+    });
+  });
+
+  describe('agent chat url', () => {
+    it('targets the versioned agent route', () => {
+      assert.equal(
+        buildAgentChatUrl('https://coda.io', 1234, '1.0.0'),
+        'https://coda.io/apis/v1/packs/1234/versions/1.0.0/agentChat',
+      );
+    });
+
+    it('adds https to bare endpoints', () => {
+      assert.equal(
+        buildAgentChatUrl('tenant.example.com', 1234, '2'),
+        'https://tenant.example.com/apis/v1/packs/1234/versions/2/agentChat',
       );
     });
   });

@@ -85,7 +85,7 @@ export const pack = sdk.newPack();
 
 // System-wide authentication to Blizzard's Battle.net APIs, using the OAuth2
 // client_credentials flow.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://develop.battle.net/documentation/guides/using-oauth/client-credentials-flow.
 pack.setSystemAuthentication({
   type: sdk.AuthenticationType.OAuth2ClientCredentials,
@@ -236,7 +236,7 @@ import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
 // Per-user authentication to Facebook (Meta) APIs, using OAuth2.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://developers.facebook.com/docs/facebook-login/guides/advanced/manual-flow
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
@@ -447,7 +447,7 @@ import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
 // Per-user authentication to Microsoft APIs, using OAuth2.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
@@ -455,7 +455,7 @@ pack.setUserAuthentication({
     "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
   tokenUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
 
-  // eslint-disable-next-line max-len
+  // oxlint-disable-next-line stylistic/max-len
   // Learn more: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent
   scopes: [
     "offline_access",
@@ -546,7 +546,7 @@ export const pack = sdk.newPack();
 
 // Per-user authentication to the Salesforce API, using OAuth2 and an
 // automatically determined account-specific endpoint.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authenticate.htm&type=5
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,

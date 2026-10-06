@@ -1,0 +1,19 @@
+{
+  "extends": ["./.oxlintrc.jsonc"],
+  "overrides": [{"files": ["**/*.ts"], "rules": {
+    "object-shorthand": ["error", "never"],
+    "no-unused-vars": ["error", {"varsIgnorePattern": "response|datasetUrl|MySchema|snippet|data|parameters|row|_", "argsIgnorePattern": "context|param|parameters"}],
+    "stylistic/max-len": ["error", {"code": 80}],
+    "stylistic/quotes": ["error", "double"],
+    "prefer-const": "off",
+    "prefer-let/prefer-let": "error",
+    "typescript/restrict-plus-operands": "off",
+    "func-style": ["error", "declaration"],
+    "proper-arrows/where": "error",
+    "prefer-arrow-callback": "off",
+    "stylistic/object-curly-spacing": ["error", "always"],
+    "stylistic/comma-dangle": ["error", "always-multiline"],
+    "stylistic/semi": ["error", "always"],
+    "one-var": "off"
+  }}]
+}

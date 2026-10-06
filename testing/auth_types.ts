@@ -70,6 +70,7 @@ export type Credentials =
   | AWSAccessKeyCredentials
   | AWSAssumeRoleCredentials;
 
+/* oxlint-disable id-match -- OAuth protocol field names. */
 interface BaseOauth2RequestAccessTokenParams {
   client_id: string;
   client_secret: string;
@@ -86,3 +87,4 @@ export interface OAuth2ClientCredentialsRequestAccessTokenParams extends BaseOau
   grant_type: 'client_credentials';
   scope?: string;
 }
+/* oxlint-enable id-match */

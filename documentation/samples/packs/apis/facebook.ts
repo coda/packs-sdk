@@ -2,7 +2,7 @@ import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
 // Per-user authentication to Facebook (Meta) APIs, using OAuth2.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://developers.facebook.com/docs/facebook-login/guides/advanced/manual-flow
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,

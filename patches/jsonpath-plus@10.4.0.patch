@@ -1,0 +1,325 @@
+diff --git a/dist/index-browser-esm.js b/dist/index-browser-esm.js
+index 7cc39bf6c4fff54e0c355981e02b0fc25146b647..64dc50370c99d6842687635e3ab2e56796915a27 100644
+--- a/dist/index-browser-esm.js
++++ b/dist/index-browser-esm.js
+@@ -1207,6 +1207,21 @@ jsep.addUnaryOp('void');
+ jsep.addLiteral('null', null);
+ jsep.addLiteral('undefined', undefined);
+ const BLOCKED_PROTO_PROPERTIES = new Set(['constructor', '__proto__', '__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__']);
++const BLOCKED_FUNCTIONS = new WeakSet([Function, function* () {}.constructor, async function () {}.constructor, async function* () {}.constructor, Function.prototype.call, Function.prototype.apply, Function.prototype.bind, Reflect.apply, Reflect.construct, ...[...BLOCKED_PROTO_PROPERTIES].map(name => Reflect.get(Object.prototype, name)).filter(value => typeof value === 'function')]);
++const isBlockedFunction = value => typeof value === 'function' && BLOCKED_FUNCTIONS.has(value);
++const getSafeProperty = (obj, prop) => {
++  if (obj === undefined || obj === null) {
++    throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
++  }
++  if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
++    throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
++  }
++  const result = obj[prop];
++  if (isBlockedFunction(result)) {
++    throw new TypeError('Function constructor is disabled');
++  }
++  return result;
++};
+ const SafeEval = {
+   /**
+    * @param {jsep.Expression} ast
+@@ -1306,13 +1321,7 @@ const SafeEval = {
+     : ast.property.name // `object.property` property is Identifier
+     );
+     const obj = SafeEval.evalAst(ast.object, subs);
+-    if (obj === undefined || obj === null) {
+-      throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
+-    }
+-    if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
+-      throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
+-    }
+-    const result = obj[prop];
++    const result = getSafeProperty(obj, prop);
+     if (typeof result === 'function') {
+       return result.bind(obj); // arrow functions aren't affected by bind.
+     }
+@@ -1337,12 +1346,9 @@ const SafeEval = {
+   evalCallExpression(ast, subs) {
+     const args = ast.arguments.map(arg => SafeEval.evalAst(arg, subs));
+     const func = SafeEval.evalAst(ast.callee, subs);
+-    /* c8 ignore start  */
+-    if (func === Function) {
+-      // unreachable since BLOCKED_PROTO_PROPERTIES includes 'constructor'
++    if (isBlockedFunction(func) || args.some(arg => isBlockedFunction(arg))) {
+       throw new Error('Function constructor is disabled');
+     }
+-    /* c8 ignore end  */
+     return func(...args);
+   },
+   evalAssignmentExpression(ast, subs) {
+@@ -1777,7 +1783,7 @@ JSONPath.prototype._trace = function (expr, val, path, parent, parentPropName, c
+       // add them to the result set if there is at least one match
+       this._walk(val, m => {
+         const npath = [nested[2]];
+-        const nvalue = nested[1] ? val[m][nested[1]] : val[m];
++        const nvalue = nested[1] ? getSafeProperty(val[m], nested[1]) : val[m];
+         const filterResults = this._trace(npath, nvalue, path, parent, parentPropName, callback, true);
+         if (filterResults.length > 0) {
+           addRet(this._trace(x, val[m], push(path, m), val, m, callback, true));
+diff --git a/dist/index-node-cjs.cjs b/dist/index-node-cjs.cjs
+index 698a5c31c8d2580fbc9cfd7d56a8368144ac7075..4688231c84c1effaa2e8affd86b8d2347811b59b 100644
+--- a/dist/index-node-cjs.cjs
++++ b/dist/index-node-cjs.cjs
+@@ -1208,6 +1208,21 @@ jsep.addUnaryOp('void');
+ jsep.addLiteral('null', null);
+ jsep.addLiteral('undefined', undefined);
+ const BLOCKED_PROTO_PROPERTIES = new Set(['constructor', '__proto__', '__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__']);
++const BLOCKED_FUNCTIONS = new WeakSet([Function, function* () {}.constructor, async function () {}.constructor, async function* () {}.constructor, Function.prototype.call, Function.prototype.apply, Function.prototype.bind, Reflect.apply, Reflect.construct, ...[...BLOCKED_PROTO_PROPERTIES].map(name => Reflect.get(Object.prototype, name)).filter(value => typeof value === 'function')]);
++const isBlockedFunction = value => typeof value === 'function' && BLOCKED_FUNCTIONS.has(value);
++const getSafeProperty = (obj, prop) => {
++  if (obj === undefined || obj === null) {
++    throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
++  }
++  if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
++    throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
++  }
++  const result = obj[prop];
++  if (isBlockedFunction(result)) {
++    throw new TypeError('Function constructor is disabled');
++  }
++  return result;
++};
+ const SafeEval = {
+   /**
+    * @param {jsep.Expression} ast
+@@ -1307,13 +1322,7 @@ const SafeEval = {
+     : ast.property.name // `object.property` property is Identifier
+     );
+     const obj = SafeEval.evalAst(ast.object, subs);
+-    if (obj === undefined || obj === null) {
+-      throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
+-    }
+-    if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
+-      throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
+-    }
+-    const result = obj[prop];
++    const result = getSafeProperty(obj, prop);
+     if (typeof result === 'function') {
+       return result.bind(obj); // arrow functions aren't affected by bind.
+     }
+@@ -1338,12 +1347,9 @@ const SafeEval = {
+   evalCallExpression(ast, subs) {
+     const args = ast.arguments.map(arg => SafeEval.evalAst(arg, subs));
+     const func = SafeEval.evalAst(ast.callee, subs);
+-    /* c8 ignore start  */
+-    if (func === Function) {
+-      // unreachable since BLOCKED_PROTO_PROPERTIES includes 'constructor'
++    if (isBlockedFunction(func) || args.some(arg => isBlockedFunction(arg))) {
+       throw new Error('Function constructor is disabled');
+     }
+-    /* c8 ignore end  */
+     return func(...args);
+   },
+   evalAssignmentExpression(ast, subs) {
+@@ -1778,7 +1784,7 @@ JSONPath.prototype._trace = function (expr, val, path, parent, parentPropName, c
+       // add them to the result set if there is at least one match
+       this._walk(val, m => {
+         const npath = [nested[2]];
+-        const nvalue = nested[1] ? val[m][nested[1]] : val[m];
++        const nvalue = nested[1] ? getSafeProperty(val[m], nested[1]) : val[m];
+         const filterResults = this._trace(npath, nvalue, path, parent, parentPropName, callback, true);
+         if (filterResults.length > 0) {
+           addRet(this._trace(x, val[m], push(path, m), val, m, callback, true));
+diff --git a/dist/index-node-esm.js b/dist/index-node-esm.js
+index 53c30b6782f412cb141b61d1f70b16a8402bcde7..f1ba3112d523a4f853f979eb8b5f11026ef72006 100644
+--- a/dist/index-node-esm.js
++++ b/dist/index-node-esm.js
+@@ -1206,6 +1206,21 @@ jsep.addUnaryOp('void');
+ jsep.addLiteral('null', null);
+ jsep.addLiteral('undefined', undefined);
+ const BLOCKED_PROTO_PROPERTIES = new Set(['constructor', '__proto__', '__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__']);
++const BLOCKED_FUNCTIONS = new WeakSet([Function, function* () {}.constructor, async function () {}.constructor, async function* () {}.constructor, Function.prototype.call, Function.prototype.apply, Function.prototype.bind, Reflect.apply, Reflect.construct, ...[...BLOCKED_PROTO_PROPERTIES].map(name => Reflect.get(Object.prototype, name)).filter(value => typeof value === 'function')]);
++const isBlockedFunction = value => typeof value === 'function' && BLOCKED_FUNCTIONS.has(value);
++const getSafeProperty = (obj, prop) => {
++  if (obj === undefined || obj === null) {
++    throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
++  }
++  if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
++    throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
++  }
++  const result = obj[prop];
++  if (isBlockedFunction(result)) {
++    throw new TypeError('Function constructor is disabled');
++  }
++  return result;
++};
+ const SafeEval = {
+   /**
+    * @param {jsep.Expression} ast
+@@ -1305,13 +1320,7 @@ const SafeEval = {
+     : ast.property.name // `object.property` property is Identifier
+     );
+     const obj = SafeEval.evalAst(ast.object, subs);
+-    if (obj === undefined || obj === null) {
+-      throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
+-    }
+-    if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
+-      throw TypeError(`Cannot read properties of ${obj} (reading '${prop}')`);
+-    }
+-    const result = obj[prop];
++    const result = getSafeProperty(obj, prop);
+     if (typeof result === 'function') {
+       return result.bind(obj); // arrow functions aren't affected by bind.
+     }
+@@ -1336,12 +1345,9 @@ const SafeEval = {
+   evalCallExpression(ast, subs) {
+     const args = ast.arguments.map(arg => SafeEval.evalAst(arg, subs));
+     const func = SafeEval.evalAst(ast.callee, subs);
+-    /* c8 ignore start  */
+-    if (func === Function) {
+-      // unreachable since BLOCKED_PROTO_PROPERTIES includes 'constructor'
++    if (isBlockedFunction(func) || args.some(arg => isBlockedFunction(arg))) {
+       throw new Error('Function constructor is disabled');
+     }
+-    /* c8 ignore end  */
+     return func(...args);
+   },
+   evalAssignmentExpression(ast, subs) {
+@@ -1776,7 +1782,7 @@ JSONPath.prototype._trace = function (expr, val, path, parent, parentPropName, c
+       // add them to the result set if there is at least one match
+       this._walk(val, m => {
+         const npath = [nested[2]];
+-        const nvalue = nested[1] ? val[m][nested[1]] : val[m];
++        const nvalue = nested[1] ? getSafeProperty(val[m], nested[1]) : val[m];
+         const filterResults = this._trace(npath, nvalue, path, parent, parentPropName, callback, true);
+         if (filterResults.length > 0) {
+           addRet(this._trace(x, val[m], push(path, m), val, m, callback, true));
+diff --git a/src/Safe-Script.js b/src/Safe-Script.js
+index a7a49148ff9bae5da92b8d4fdf8a421b4e4f72b9..2b9ff5f1619e320d2d4b349fd13a0ab66469daa8 100644
+--- a/src/Safe-Script.js
++++ b/src/Safe-Script.js
+@@ -19,6 +19,63 @@ const BLOCKED_PROTO_PROPERTIES = new Set([
+     '__lookupSetter__'
+ ]);
+ 
++// Every function-constructor variant, along with the invocation helpers which
++//   could otherwise reach them indirectly, e.g., `Function.call(0, 'code')()`,
++//   plus whichever BLOCKED_PROTO_PROPERTIES names resolve to an own method on
++//   Object.prototype (e.g. `__defineGetter__`) - an own-property access on a
++//   shared prototype (`@.prototype.__defineGetter__`) bypasses the
++//   inherited-only name check below, so those methods need blocking by value.
++/** @type {WeakSet<object>} */
++const BLOCKED_FUNCTIONS = new WeakSet([
++    Function,
++    // eslint-disable-next-line no-empty-function -- Only need the constructor
++    function *() {}.constructor,
++    // eslint-disable-next-line no-empty-function -- Only need the constructor
++    async function () {}.constructor,
++    // eslint-disable-next-line no-empty-function -- Only need the constructor
++    async function *() {}.constructor,
++    Function.prototype.call,
++    Function.prototype.apply,
++    Function.prototype.bind,
++    Reflect.apply,
++    Reflect.construct,
++    ...[...BLOCKED_PROTO_PROPERTIES]
++        .map((name) => Reflect.get(Object.prototype, name))
++        .filter((value) => typeof value === 'function')
++]);
++
++/**
++ * @param {unknown} value
++ * @returns {boolean}
++ */
++const isBlockedFunction = (value) => {
++    return typeof value === 'function' && BLOCKED_FUNCTIONS.has(value);
++};
++
++/**
++ * Guarded `obj[prop]`, applying the same restrictions as a MemberExpression.
++ * @param {unknown} obj
++ * @param {string} prop
++ * @returns {unknown}
++ */
++const getSafeProperty = (obj, prop) => {
++    if (obj === undefined || obj === null) {
++        throw TypeError(
++            `Cannot read properties of ${obj} (reading '${prop}')`
++        );
++    }
++    if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
++        throw TypeError(
++            `Cannot read properties of ${obj} (reading '${prop}')`
++        );
++    }
++    const result = /** @type {Record<string, unknown>} */ (obj)[prop];
++    if (isBlockedFunction(result)) {
++        throw new TypeError('Function constructor is disabled');
++    }
++    return result;
++};
++
+ const SafeEval = {
+     /**
+      * @param {jsep.Expression} ast
+@@ -127,17 +184,7 @@ const SafeEval = {
+                 : ast.property.name // `object.property` property is Identifier
+         );
+         const obj = SafeEval.evalAst(ast.object, subs);
+-        if (obj === undefined || obj === null) {
+-            throw TypeError(
+-                `Cannot read properties of ${obj} (reading '${prop}')`
+-            );
+-        }
+-        if (!Object.hasOwn(obj, prop) && BLOCKED_PROTO_PROPERTIES.has(prop)) {
+-            throw TypeError(
+-                `Cannot read properties of ${obj} (reading '${prop}')`
+-            );
+-        }
+-        const result = obj[prop];
++        const result = getSafeProperty(obj, prop);
+         if (typeof result === 'function') {
+             return result.bind(obj); // arrow functions aren't affected by bind.
+         }
+@@ -162,12 +209,12 @@ const SafeEval = {
+     evalCallExpression (ast, subs) {
+         const args = ast.arguments.map((arg) => SafeEval.evalAst(arg, subs));
+         const func = SafeEval.evalAst(ast.callee, subs);
+-        /* c8 ignore start  */
+-        if (func === Function) {
+-            // unreachable since BLOCKED_PROTO_PROPERTIES includes 'constructor'
++        if (
++            isBlockedFunction(func) ||
++            args.some((arg) => isBlockedFunction(arg))
++        ) {
+             throw new Error('Function constructor is disabled');
+         }
+-        /* c8 ignore end  */
+         return func(...args);
+     },
+     evalAssignmentExpression (ast, subs) {
+@@ -205,4 +252,4 @@ class SafeScript {
+     }
+ }
+ 
+-export {SafeScript};
++export {SafeScript, getSafeProperty};
+diff --git a/src/jsonpath.js b/src/jsonpath.js
+index 15be42686860abdf4ce618e7d2c9c48382edc250..e15ca2c268b7d5b453bee9879c603074ffa7bb56 100644
+--- a/src/jsonpath.js
++++ b/src/jsonpath.js
+@@ -1,6 +1,6 @@
+ /* eslint-disable camelcase -- Convenient for escaping */
+ 
+-import {SafeScript} from './Safe-Script.js';
++import {SafeScript, getSafeProperty} from './Safe-Script.js';
+ 
+ /**
+  * @typedef {null|boolean|number|string|object|GenericArray} JSONObject
+@@ -441,8 +441,9 @@ JSONPath.prototype._trace = function (
+             // add them to the result set if there is at least one match
+             this._walk(val, (m) => {
+                 const npath = [nested[2]];
++                // guard against nested[1] resolving to `constructor`
+                 const nvalue = nested[1]
+-                    ? val[m][nested[1]]
++                    ? getSafeProperty(val[m], nested[1])
+                     : val[m];
+                 const filterResults = this._trace(npath, nvalue, path,
+                     parent, parentPropName, callback, true);

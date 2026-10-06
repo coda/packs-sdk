@@ -14,7 +14,7 @@ Formulas, actions, and sync tables receive take in user input via parameters. Th
 ## Template
 The basic structure of a parameter. This sample is for a string parameter.
 
-```ts
+```ts no_lint
 {% raw %}
 sdk.makeParameter({
   type: sdk.ParameterType.String,

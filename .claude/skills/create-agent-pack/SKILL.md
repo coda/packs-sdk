@@ -14,8 +14,8 @@ An agent is defined almost entirely by three builder calls on `pack.ts`:
 import * as sdk from "@codahq/packs-sdk";
 
 export const pack = sdk.newAgent();
-pack.setInstructions("Print hello world.");   // the only required call
-pack.setTools({ docs: true, mail: true, webSearch: true, connectors: [{packId: 1000}] });
+pack.setInstructions("Print hello world."); // the only required call
+pack.setTools({ docs: true }); // least privilege: uncomment more as needed
 ```
 
 See `references/api.md` for the full `setTools`/trigger signatures (connector formula filters,
@@ -27,9 +27,11 @@ Work in a directory that isn't a checkout of this SDK's own repo — a real pack
 repo checked out, they just install the **published** `@codahq/packs-sdk` package. This is what gives
 you the `packs` CLI (`npx packs <cmd>`).
 
-Each pack lives in its own directory. `.coda.json` (your API token) and `.coda-pack.json` (the pack's
-ID) are stored **per-directory**, not globally — see "Two packs, or a second install" below before
-reusing a directory for a second pack.
+Each pack lives in its own directory. The pack ID (`.coda-pack.json`) is stored **per-directory**,
+not globally — see "Two packs, or a second install" below before reusing a directory for a second
+pack. The API token (`.coda.json`) is looked up from the current directory up through its parents,
+so registering once in a parent folder covers every pack beneath it. Keep that token file out of
+version control.
 
 ## Pre-setup (once per machine)
 
@@ -45,37 +47,33 @@ npm install --save-dev @codahq/packs-sdk@latest
 ### Register an API token (once per directory)
 
 ```bash
-npx packs register
+npx packs login
 ```
 
-Run without a token and it opens your account page to create a **Pack-scoped** API token, then prompts
-you to paste it in. (Non-interactively, or for a single-tenant/custom-domain account, pass
-`--apiToken <token>` and, if your org uses a custom domain, `--codaApiEndpoint https://your-org.coda.io`.)
+Opens your account page to create a **Pack-scoped** API token, then prompts
+you to paste it in and prints your identity to confirm. (Non-interactively, or for a
+single-tenant/custom-domain account, pass `--apiToken <token>` and, if your org uses a
+custom domain, `--codaApiEndpoint https://your-org.coda.io`.)
 
 ```bash
 npx packs whoami
 ```
 
-Confirms the token by printing your name and email. Because registration is per-directory, repeat
-`register` (with the same token) in every new directory you create.
+Confirms the token by printing your name and email. Because the token is found via parent folders,
+you only repeat `login` when you start a directory tree outside the one you already registered.
 
 ## Steps
 
 ### 1. Write `pack.ts`
 
-`npx packs init` scaffolds an empty `pack.ts`. Fill in `setInstructions` (required) and `setTools`
+`npx packs init --agent --name "<name>"` scaffolds a `pack.ts` with `sdk.newAgent()`,
+`setInstructions`, docs-only `setTools` presets, and a commented-out schedule trigger — no git or
+template install needed. (Bare `npx packs init` scaffolds an empty formula pack instead.)
+Fill in `setInstructions` (required) and `setTools`
 (everything left out of `setTools` is off). Ask what the agent should actually do and which
 tools/connectors it needs before writing this — don't guess a persona or connector IDs.
 
-### 2. Build (local, no token needed)
-
-```bash
-npx packs build pack.ts
-```
-
-Only bundles the TypeScript — does not execute `pack.ts`. A too-old SDK is **not** caught here.
-
-### 3. Validate (local, no token needed)
+### 2. Validate (local, no token needed)
 
 ```bash
 npx packs validate pack.ts
@@ -83,7 +81,16 @@ npx packs validate pack.ts
 
 This is the first command that actually imports `pack.ts`, so a too-old SDK surfaces here as
 `sdk.newAgent is not a function` (fix: `npm install @codahq/packs-sdk@latest`). Exit code 0 with no
-output means it passed. Always run this after any edit, before uploading.
+output means it passed. Always run this after any edit, before uploading. Proceed when validation
+exits 0.
+
+### 3. Build (only for debugging bundling issues)
+
+```bash
+npx packs build pack.ts
+```
+
+Only bundles the TypeScript — does not execute `pack.ts`. A too-old SDK is **not** caught here.
 
 ### 4. Create the pack (once per pack)
 
@@ -108,7 +115,22 @@ npx packs upload pack.ts --notes "<what changed>"
 Every upload **creates a new version** (1, 2, 3, ... auto-assigned) — it never overwrites a prior
 version. Because the pack declares an agent, upload is what actually writes/updates the agent
 definition. Re-run this after every `pack.ts` edit (new tools, new instructions, new trigger, etc.) —
-there is no separate "save" step.
+there is no separate "save" step. Proceed when upload succeeds and reports the new version.
+
+### 5b. Check from the terminal (no browser)
+
+```bash
+npx packs validate pack.ts   # single pre-upload check: schema, instructions, triggers, connector warnings
+npx packs agent chat pack.ts "what can you do?"        # remote run against the latest upload
+```
+
+Run `validate` after any edit, before uploading — for agent packs it also warns about
+connector pack IDs that don't resolve (when you're logged in; pass `--no-checkConnectors`
+to skip). Run `agent chat` after uploading and installing —
+it runs your installed agent instance and defaults to the latest version, which is safe
+because uploads never overwrite.
+If `chat` reports the endpoint missing (404), the server alias hasn't landed;
+fall back to step 7 in the browser.
 
 ### 6. Set the listing name/description (UI)
 
@@ -119,7 +141,9 @@ these are listing fields, not part of `pack.ts`.
 
 Open the agent directory (https://go.superhuman.com/agent-directory), search for the agent by the name
 set in step 4/6, click **Open** → **install agent**. An uploaded-but-unreleased agent still runs for the
-installer; a release (step 8) is only needed to make it broadly installable.
+installer; a release (step 8) is only needed to make it broadly installable. Finish when the installed
+agent runs the requested task and its tools/triggers match the definition. If account access or
+installation is unavailable, report the blocked verification rather than claiming success.
 
 ### 8. (Optional) Release — make a version broadly installable
 
@@ -137,14 +161,15 @@ you already installed an agent, then upload a new version that changes `setDefau
 tools), the already-installed instance's builder view won't reflect the change. To actually see a new
 trigger/tool definition rendered in the builder, either:
 
-- Create a **fresh pack in a new directory** (`cp pack.ts` into it, `npm install`, `register`,
+- Create a **fresh pack in a new directory** (`cp pack.ts` into it, `npm install`, `login`,
   `create` with a new name, `upload`) and install *that*, so the very first install already carries the
   new definition, or
 - Reinstall the existing agent after the new upload (if your product surface supports refreshing an
   install).
 
 The new-directory route is simpler and is what this skill defaults to when verifying a trigger/tool
-change actually shows up in the builder UI.
+change actually shows up in the builder UI. See
+[installation refresh](references/api.md#installation-refresh) for the full checklist.
 
 ## Testing recurrence rules
 
@@ -154,4 +179,6 @@ start), `COUNT` (bounded occurrences instead of `UNTIL`), ordinal `BYDAY` like `
 may not have a corresponding field in a simple recurrence-picker UI. Example:
 `RRULE:FREQ=MONTHLY;BYDAY=-1FR;BYSETPOS=-1;BYMONTH=3;WKST=SU;COUNT=10`. Frequencies below hourly
 (`MINUTELY`, `SECONDLY`) are rejected outright rather than being a "valid but unrepresentable" case —
-see `references/api.md` for the full set of accepted/rejected rule parts.
+see `references/api.md` for the full set of accepted/rejected rule parts, and
+[schedule validation and UI limits](references/api.md#schedule-validation-and-ui-limits) when choosing
+test cases.

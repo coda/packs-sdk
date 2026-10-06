@@ -9,6 +9,7 @@ import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {DeepReadonly} from './type_utils';
 import type {DefaultTriggerDefinition} from './types';
 import {DefaultTriggerKind} from './types';
 import type {DistributiveOmit} from './type_utils';
@@ -42,6 +43,8 @@ import {ToolType} from './types';
 import type {UserAuthenticationDef} from './api_types';
 import type {ValueType} from './schema';
 import type {WhileWritingTriggerDefinition} from './types';
+import {deepCopy} from './helpers/object_utils';
+import {deepFreeze} from './helpers/object_utils';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
@@ -49,6 +52,7 @@ import {makeSyncTable} from './api';
 import {maybeRewriteConnectionForFormula} from './api';
 import {maybeRewriteConnectionForNamedPropertyOptions} from './api';
 import {setEndpointDefHelper} from './helpers/migration';
+import {validateRRuleString} from './testing/rrule_validation';
 import {wrapMetadataFunction} from './api';
 
 /**
@@ -656,6 +660,23 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
   }
 }
 
+// Copies before freezing so the caller's own arrays (connector formulas, trigger filters) stay theirs.
+function frozenCopy<T extends {}>(value: T): T {
+  return deepFreeze(deepCopy(value)) as T;
+}
+
+interface AgentBuilderState {
+  agent: Partial<AgentDefinition>;
+  defaultTriggers?: DefaultTriggerDefinition[];
+}
+
+// Off the instance: an own property leaks into the metadata, and `#private` breaks pre-ES2015 .d.ts consumers.
+const agentBuilderStates = new WeakMap<AgentDefinitionBuilder, AgentBuilderState>();
+
+function stateOf(builder: AgentDefinitionBuilder): AgentBuilderState {
+  return agentBuilderStates.get(builder)!;
+}
+
 /**
  * A class that assists in constructing an agent definition. Use {@link newAgent} to create one.
  *
@@ -664,13 +685,24 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
  */
 export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   /**
-   * See {@link PackVersionDefinition.agent}.
+   * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
    */
-  agent: Partial<AgentDefinition> = {tools: []};
+  declare readonly agent: DeepReadonly<Partial<AgentDefinition>>;
   /**
-   * See {@link PackVersionDefinition.defaultTriggers}.
+   * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
+   * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},
+   * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
    */
-  defaultTriggers?: DefaultTriggerDefinition[];
+  declare readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+
+  constructor() {
+    super();
+    const state: AgentBuilderState = {agent: frozenCopy({tools: []})};
+    agentBuilderStates.set(this, state);
+    // Own and enumerable, unlike a class getter, so compilePackMetadata's object rest still copies them.
+    Object.defineProperty(this, 'agent', {enumerable: true, get: () => state.agent});
+    Object.defineProperty(this, 'defaultTriggers', {enumerable: true, get: () => state.defaultTriggers});
+  }
 
   /**
    * Sets this agent's instructions.
@@ -681,7 +713,8 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setInstructions(instructions: string): this {
-    this.agent.instructions = instructions;
+    const state = stateOf(this);
+    state.agent = frozenCopy({...state.agent, instructions});
     return this;
   }
 
@@ -713,7 +746,8 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         ...(connector.formulas ? {formulas: connector.formulas} : {}),
       });
     }
-    this.agent.tools = tools;
+    const state = stateOf(this);
+    state.agent = frozenCopy({...state.agent, tools});
     return this;
   }
 
@@ -729,10 +763,14 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setDefaultWhileWritingTrigger(contextualTrigger: Omit<WhileWritingTriggerDefinition, 'kind'>): this {
-    const otherTriggers = (this.defaultTriggers ?? []).filter(
+    const state = stateOf(this);
+    const otherTriggers = (state.defaultTriggers ?? []).filter(
       trigger => trigger.kind !== DefaultTriggerKind.WhileWriting,
     );
-    this.defaultTriggers = [...otherTriggers, {kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger}];
+    state.defaultTriggers = frozenCopy<DefaultTriggerDefinition[]>([
+      ...otherTriggers,
+      {kind: DefaultTriggerKind.WhileWriting, ...contextualTrigger},
+    ]);
     return this;
   }
 
@@ -798,12 +836,17 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
   }
 
   private _addDefaultEventTrigger(eventTrigger: DistributiveOmit<EventTriggerDefinition, 'kind'>): this {
-    this.defaultTriggers = [...(this.defaultTriggers ?? []), {kind: DefaultTriggerKind.Event, ...eventTrigger}];
+    const state = stateOf(this);
+    state.defaultTriggers = frozenCopy<DefaultTriggerDefinition[]>([
+      ...(state.defaultTriggers ?? []),
+      {kind: DefaultTriggerKind.Event, ...eventTrigger},
+    ]);
     return this;
   }
 
   /**
-   * Sets the schedule this agent runs on.
+   * Sets the schedule this agent runs on. Throws on a recurrence the runtime cannot fire, including
+   * one with no DTSTART to anchor it.
    *
    * @example
    * ```
@@ -813,8 +856,16 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * ```
    */
   setDefaultScheduleTrigger(scheduleTrigger: Omit<ScheduleTriggerDefinition, 'kind'>): this {
-    const otherTriggers = (this.defaultTriggers ?? []).filter(trigger => trigger.kind !== DefaultTriggerKind.Schedule);
-    this.defaultTriggers = [...otherTriggers, {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}];
+    const message = validateRRuleString(scheduleTrigger.rruleString);
+    if (message) {
+      throw new Error(message);
+    }
+    const state = stateOf(this);
+    const otherTriggers = (state.defaultTriggers ?? []).filter(trigger => trigger.kind !== DefaultTriggerKind.Schedule);
+    state.defaultTriggers = frozenCopy<DefaultTriggerDefinition[]>([
+      ...otherTriggers,
+      {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger},
+    ]);
     return this;
   }
 }

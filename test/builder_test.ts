@@ -43,6 +43,7 @@ import {makeParameter} from '../api';
 import {makeSchema} from '../schema';
 import {newAgent} from '../builder';
 import {newPack} from '../builder';
+import {validatePackVersionMetadata} from '../testing/upload_validation';
 
 describe('Builder', () => {
   let pack: PackDefinitionBuilder;
@@ -806,15 +807,26 @@ describe('Agent builder', () => {
   });
 
   describe('default schedule trigger', () => {
-    const scheduleTrigger = {rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'};
+    const scheduleTrigger = {
+      rruleString: 'DTSTART;TZID=America/New_York:20260105T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0',
+    };
 
     it('sets a trigger', () => {
       agent.setDefaultScheduleTrigger(scheduleTrigger);
       assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
     });
 
+    it('rejects a trigger without DTSTART', () => {
+      assert.throws(
+        () => agent.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'}),
+        'A schedule trigger must have a DTSTART.',
+      );
+    });
+
     it('replaces rather than appends on a second call', () => {
-      agent.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=DAILY'}).setDefaultScheduleTrigger(scheduleTrigger);
+      agent
+        .setDefaultScheduleTrigger({rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'})
+        .setDefaultScheduleTrigger(scheduleTrigger);
       assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
     });
 
@@ -904,7 +916,7 @@ describe('Agent builder', () => {
     });
 
     it('sits alongside the other kinds', () => {
-      const scheduleTrigger = {rruleString: 'RRULE:FREQ=DAILY'};
+      const scheduleTrigger = {rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'};
       agent.setDefaultScheduleTrigger(scheduleTrigger).addDefaultMailEventTrigger(mailTrigger);
       assert.deepEqual(agent.defaultTriggers, [
         {kind: DefaultTriggerKind.Schedule, ...scheduleTrigger},
@@ -940,6 +952,30 @@ describe('Agent builder', () => {
         builder.setTools({mcp: true});
         // @ts-expect-error only newAgent() can stamp default triggers
         newPack({defaultTriggers: {}});
+        // @ts-expect-error the agent is reachable only through its setters
+        builder.agent.instructions = 'x';
+        // @ts-expect-error as is its tool list
+        builder.agent.tools = [];
+        // @ts-expect-error which cannot be mutated in place either
+        builder.agent.tools?.push({type: ToolType.CodaDocsAndTables});
+        // @ts-expect-error nor can the default triggers
+        builder.defaultTriggers?.push({kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'});
+        // @ts-expect-error nor can the agent be replaced wholesale
+        builder.agent = {tools: []};
+        // @ts-expect-error nor the default triggers
+        builder.defaultTriggers = [];
+        const tool = builder.agent.tools![0];
+        if (tool.type === ToolType.Pack) {
+          // @ts-expect-error and it reaches into each tool
+          tool.packId = 1234;
+          // @ts-expect-error including a connector's formula list
+          tool.formulas?.push({formulaName: 'CreateTask'});
+        }
+        const trigger = builder.defaultTriggers![0];
+        if (trigger.kind === DefaultTriggerKind.Schedule) {
+          // @ts-expect-error and into each trigger
+          trigger.rruleString = 'RRULE:FREQ=DAILY';
+        }
       }
       assert.isFunction(checkedByTscOnly);
     });
@@ -959,6 +995,49 @@ describe('Agent builder', () => {
         Object.getOwnPropertyNames(BaseDefinitionBuilder.prototype).filter(name => name !== 'constructor'),
         ['setVersion'],
       );
+    });
+
+    it('is read-only at runtime, not just in the types', () => {
+      agent
+        .setTools({connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}]})
+        .setDefaultScheduleTrigger({rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'});
+      const loose = agent as any;
+      assert.throws(() => (loose.agent = {tools: []}), TypeError);
+      assert.throws(() => (loose.agent.instructions = 'x'), TypeError);
+      assert.throws(() => loose.agent.tools.push({type: ToolType.CodaDocsAndTables}), TypeError);
+      assert.throws(() => loose.agent.tools[0].formulas.push({formulaName: 'Other'}), TypeError);
+      assert.throws(() => (loose.defaultTriggers = []), TypeError);
+      assert.throws(() => loose.defaultTriggers.push({kind: DefaultTriggerKind.Schedule}), TypeError);
+      assert.throws(() => (loose.defaultTriggers[0].rruleString = 'x'), TypeError);
+    });
+
+    it("copies the caller's input rather than freezing it", () => {
+      const formulas = [{formulaName: 'CreateTask'}];
+      const keywords = ['renewal'];
+      agent
+        .setTools({connectors: [{packId: 1234, formulas}]})
+        .addDefaultNotetakerEventTrigger({eventType: NotetakerEventType.MeetingSummaryCompleted, filters: {keywords}});
+      assert.isFalse(Object.isFrozen(formulas));
+      assert.isFalse(Object.isFrozen(keywords));
+    });
+
+    it('still compiles and validates once frozen', async () => {
+      agent
+        .setVersion('1.0.0')
+        .setInstructions('Do a thing.')
+        .setTools({
+          docs: true,
+          webSearch: {allowedDomains: ['docs.example.com']},
+          connectors: [{packId: 1234, formulas: [{formulaName: 'CreateTask'}]}],
+        })
+        .setDefaultScheduleTrigger({rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'})
+        .addDefaultSlackEventTrigger({eventType: SlackEventType.MessageKeyword, keywords: ['deploy']});
+      const result = await validatePackVersionMetadata(
+        compilePackMetadata(agent as unknown as PackVersionDefinition),
+        undefined,
+      );
+      assert.lengthOf(result.agent!.tools, 3);
+      assert.lengthOf(result.defaultTriggers!, 2);
     });
   });
 });

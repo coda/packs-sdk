@@ -2,7 +2,7 @@ import * as sdk from "@codahq/packs-sdk";
 export const pack = sdk.newPack();
 
 // Per-user authentication to Microsoft APIs, using OAuth2.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
@@ -10,7 +10,7 @@ pack.setUserAuthentication({
     "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
   tokenUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
 
-  // eslint-disable-next-line max-len
+  // oxlint-disable-next-line stylistic/max-len
   // Learn more: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent
   scopes: [
     "offline_access",

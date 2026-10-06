@@ -19,7 +19,7 @@ description: {{description}}
 ## {{name}}{{#if (isBeta this)}} 🚧{{/if}}
 {{content}}
 
-```ts
+```ts{{#if (isFragment code)}} no_lint{{/if}}
 {% raw %}
 {{{code}}}
 {% endraw %}

@@ -87,9 +87,9 @@ The following section includes information about how to contribute to the SDK it
 
 ### Publishing Changes Process
 
-Adjustments to the `CHANGELOG.md` file should be marked under `### Not yet released` until a release commit is made that updates `package.json` and `CHANGELOG.md` file with a new, later version, and publishes the new version to NPM using `make release`.
+Add every new `CHANGELOG.md` entry only under `## [Unreleased]`, within an appropriate [Keep a Changelog][keepachangelog] category such as `### Added`, `### Changed`, or `### Fixed`. Category headings belong inside Unreleased; standalone bullets directly beneath the release heading fail `make lint-changelog`. Never add new entries to a versioned release section.
 
-Our `CHANGELOG.md` follows the [Keep a Changelog][keepachangelog] standards, where there is a "Unreleased" section at the top for any unreleased changes. Upon release, it is named according to a semantic versioning system and dated.
+Only the release process moves Unreleased entries into a dated version section, updates `package.json`, and publishes to NPM using `make release`. Run `make lint-changelog` before committing a changelog edit.
 
 
 [docs]: https://docs.superhuman.com/packs/build

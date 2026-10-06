@@ -7,11 +7,7 @@ export default {
       "remark-lint-code",
       {
         "ts": {
-          "module": "./documentation/remark_lint_code_plugin.js",
-          "options": {
-            "fix": false,
-            "configFile": "documentation/samples/.eslintrc.js"
-          }
+          "module": "./documentation/remark_lint_code_plugin.js"
         }
       }
     ],
