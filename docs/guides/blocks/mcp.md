@@ -12,7 +12,25 @@ cSpell:words: Streamable
 
 The [Model Context Protocol (MCP)][mcp] offers a standard way to expose resources and tools to LLMs. Many apps are adopting this standard and hosting MCP servers, making it easy for AI tools to interact with their data and features.
 
-Connectors can integrate with MCP servers to take advantage of the tools provided. Adding an MCP server to a connector requires only a few lines of code, specifying an internal name and the server's URL.
+
+## Generate a connector {: #generate}
+
+You can get started quickly by generating a connector from the MCP URL.
+
+1. Navigate to the [Packs page][navigation_pack_list]{ data-preview } in your Superhuman Docs workspace.
+1. Click **Create an MCP Connector**.
+1. Enter the URL of the MCP server.
+1. Check the detected settings, and adjust if needed.
+1. Click **Create Connector**.
+
+<video style="width:auto" loop muted autoplay alt="Recording of generating a connector from an MCP server." class="screenshot"><source src="site:images/mcp_generator.mp4" type="video/mp4"></source></video>
+
+This will create a new Pack, populated with generated code, released and ready to use. You can edit the code in the Pack Studio, or [migrate the code][migrate] to a local project. Later edits need their own [build and release][versions] before an installed connector picks them up.
+
+
+## Write the connector yourself
+
+Adding an MCP server to a connector takes only a few lines of code: an internal name and the server's URL.
 
 ```ts
 pack.addMCPServer({
@@ -54,7 +72,7 @@ pack.addNetworkDomain("icons8.com");
 
 ## Authentication
 
-Requests to MCP servers use the same [authentication system][authentication] as the rest of the platform, supporting common patterns like static tokens or OAuth2. Your code must declare the type of auth used.
+Requests to MCP servers use the same [authentication system][authentication] as the rest of the platform, supporting common patterns like static tokens or OAuth2. Your code must declare the type of auth used. **OAuth (Auto)** and **OAuth (Manual)** in the [dialog](#generate) match the first two examples.
 
 === "OAuth2 (DCR)"
 
@@ -147,7 +165,11 @@ List at most 16 search tools per server. Each name can have at most 128 characte
 
 
 [mcp]: https://modelcontextprotocol.io/
+[mcp_transport]: https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#streamable-http
 [fetcher]: ../basics/fetcher.md
 [authentication]: ../basics/authentication/index.md
 [oauth2_dcr]: ../basics/authentication/oauth2.md#dcr
 [mcp_tool_annotations]: https://modelcontextprotocol.io/specification/2025-11-25/schema#toolannotations
+[navigation_pack_list]: ../../support/navigation.md#pack-list
+[versions]: ../../development/versions.md
+[migrate]: ../../development/cli.md#migrating-from-the-web-editor

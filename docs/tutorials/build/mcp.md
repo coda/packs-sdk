@@ -24,6 +24,9 @@ There are two options for how to build the Pack in this tutorial, with a tab for
 - **:octicons-terminal-16: CLI** — Work locally with the `packs` command line tool. Assumes you're comfortable in a terminal with `npm`.
 - **:octicons-browser-16: Pack Studio** — Work entirely in the browser, with nothing to install.
 
+!!! tip "Generate the connector"
+    This tutorial walks through writing the connector code manually. However, you can save time by generating the code automatically using a button in the UI. See [Generate a connector][mcp_generate] in the MCP guide for more information.
+
 
 ## :material-magnify: Gather information about the MCP server
 
@@ -379,6 +382,7 @@ Now that you have an MCP server running as a connector, here are some more resou
 [hc_doc_maker]: https://help.coda.io/hc/en-us/articles/39556004184077-Roles-in-Coda-Doc-Makers-Admins-and-Editors
 [navigation_create_pack]: ../../support/navigation.md#create-pack
 [pricing]: https://superhuman.com/pricing
+[mcp_generate]: ../../guides/blocks/mcp.md#generate
 [mcp_compatibility]: ../../guides/blocks/mcp.md#compatibility
 [mcp_auth]: ../../guides/blocks/mcp.md#authentication
 [fetcher]: ../../guides/basics/fetcher.md
