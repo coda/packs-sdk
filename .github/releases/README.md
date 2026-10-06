@@ -14,6 +14,23 @@
 
 Author release-tool dependency changes internally and export through Copybara.
 
-Until the publish workflow lands, use preparation dry runs only. Use the manual
-runbook on an unprepared source branch; its version bump would double-bump a
-prepared PR.
+## Publish
+
+Merging the release PR starts **Publish SDK release**. Validation runs first;
+live publishing requires a separate `sdk-release` approval. Recheck internal
+sync and deployment before approving. npm OIDC publishes without an OTP or token,
+then the job creates the version tag and GitHub release.
+
+For verification, manually dispatch with the release PR number and
+`dry-run: true`; validation needs no approval or publishing identity.
+For an interrupted live release, rerun the original Actions run until its tag
+exists. Afterward, dispatch from that `v<version>` tag with the same PR number
+and `dry-run: false`. Matching npm bytes skip republishing; conflicts stop.
+Preserve the version, PR, commit and release tag when retrying.
+
+To pause releases or change approval policy, disable publication and cancel
+pending/running release workflows. Changing the variable alone does not stop
+runs already in progress.
+
+After publication, review documentation deployments and open the internal
+dependency-update PR described in the runbook.
