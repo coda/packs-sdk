@@ -2,6 +2,10 @@
 export type $Values<S> = S[keyof S];
 /** Omits properties over a union type, only if the union member has that property. */
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+/** Makes every property and array read-only, at every depth. Distributes over union types. */
+export type DeepReadonly<T> = T extends ReadonlyArray<infer E> ? ReadonlyArray<DeepReadonly<E>> : T extends object ? {
+	readonly [K in keyof T]: DeepReadonly<T[K]>;
+} : T;
 /**
  * Type helper to ensure that a given type can only contain keys from another given type.
  * Prevents extraneous keys from being allowable.
@@ -5966,6 +5970,12 @@ export interface MCPServer {
 	 * Stable identifier that can be used to distinguish multiple MCP servers.
 	 */
 	name: string;
+	/**
+	 * Names of this server's tools that Go's knowledge search should use to search its data. Include
+	 * every search tool it should use. Only listed tools returned by the server's current tools/list
+	 * response will be available. List at most 16 names, each with at most 128 characters.
+	 */
+	searchToolNames?: string[];
 }
 /**
  * Map of tool types to their corresponding tool interfaces.
@@ -7147,13 +7157,16 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
 }
 declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	/**
-	 * See {@link PackVersionDefinition.agent}.
+	 * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
 	 */
-	agent: Partial<AgentDefinition>;
+	readonly agent: DeepReadonly<Partial<AgentDefinition>>;
 	/**
-	 * See {@link PackVersionDefinition.defaultTriggers}.
+	 * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
+	 * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},
+	 * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
 	 */
-	defaultTriggers?: DefaultTriggerDefinition[];
+	readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+	constructor();
 	/**
 	 * Sets this agent's instructions.
 	 *
@@ -7239,7 +7252,8 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	addDefaultNotetakerEventTrigger(trigger: DistributiveOmit<NotetakerEventTriggerDefinition, "kind" | "type">): this;
 	private _addDefaultEventTrigger;
 	/**
-	 * Sets the schedule this agent runs on.
+	 * Sets the schedule this agent runs on. Throws on a recurrence the runtime cannot fire, including
+	 * one with no DTSTART to anchor it.
 	 *
 	 * @example
 	 * ```

@@ -345,7 +345,7 @@ export const pack = sdk.newPack();
 
 // System-wide authentication to Blizzard's Battle.net APIs, using the OAuth2
 // client_credentials flow.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://develop.battle.net/documentation/guides/using-oauth/client-credentials-flow.
 pack.setSystemAuthentication({
   type: sdk.AuthenticationType.OAuth2ClientCredentials,
@@ -403,7 +403,7 @@ export const pack = sdk.newPack();
 
 // Per-user authentication to the Salesforce API, using OAuth2 and an
 // automatically determined account-specific endpoint.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authenticate.htm&type=5
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,

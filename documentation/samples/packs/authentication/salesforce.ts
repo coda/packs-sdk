@@ -3,7 +3,7 @@ export const pack = sdk.newPack();
 
 // Per-user authentication to the Salesforce API, using OAuth2 and an
 // automatically determined account-specific endpoint.
-// eslint-disable-next-line max-len
+// oxlint-disable-next-line stylistic/max-len
 // See https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authenticate.htm&type=5
 pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,

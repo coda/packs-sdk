@@ -8,6 +8,7 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {DEFAULT_TIMER_STRATEGY} from './config_storage';
 import {Tools} from './extensions';
 import {backfillFromPackConfig} from './helpers';
+import {handleAgentChat} from './agent_chat';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleClone} from './clone';
@@ -67,8 +68,10 @@ const CommandExamples: Record<string, Array<[string, string]>> = {
   register: [
     ['$0 register --apiToken <token>', 'Validate and store a Pack API token.'],
     ['$0 register --open', 'Open the token creation page, then pass --apiToken to store it.'],
+    ['$0 login --apiToken <token>', 'Alias for register: store the token without opening a browser.'],
   ],
   whoami: [['$0 whoami', 'Print the account and token currently registered.']],
+  agent: [['$0 agent chat pack.ts "what can you do?"', 'Talk to the latest uploaded agent version.']],
   build: [
     ['$0 build pack.ts', 'Compile the Pack bundle locally.'],
     ['$0 build pack.ts --outputDir dist', 'Write the bundle to a directory.'],
@@ -165,6 +168,15 @@ export const commands: yargs.CommandModule[] = [
     describe: 'Scaffold a Pack in the current directory',
     builder: {
       yes: YesArg,
+      agent: {
+        boolean: true,
+        default: false,
+        desc: 'Scaffold an agent pack (sdk.newAgent()) instead of a formula pack. No git or network template install needed.',
+      },
+      name: {
+        string: true,
+        desc: 'Agent name used in the scaffolded pack.ts (with --agent). Defaults to the directory name.',
+      },
     },
     handler: handleInit as any,
   },
@@ -193,6 +205,7 @@ export const commands: yargs.CommandModule[] = [
   },
   {
     command: 'register [apiToken]',
+    aliases: ['login'],
     describe: 'Register API token to publish a Pack',
     builder: {
       apiEndpoint: ApiEndpointArg,
@@ -212,6 +225,33 @@ export const commands: yargs.CommandModule[] = [
       apiEndpoint: ApiEndpointArg,
     },
     handler: handleWhoami as any,
+  },
+  {
+    command: 'agent',
+    describe: 'Build and run agents',
+    builder: (yargs: Argv) =>
+      yargs
+        .command({
+          command: 'chat <manifestPath> <prompt>',
+          // Hidden until the server route ships; restore a describe string to list it in help.
+          describe: false,
+          builder: {
+            version: {
+              string: true,
+              desc: 'Agent version to chat with. Defaults to the latest upload.',
+            },
+            thread: {
+              string: true,
+              desc: 'Thread id for multi-turn follow-ups. Omit for a new thread.',
+            },
+            apiToken: ApiTokenArg,
+            apiEndpoint: ApiEndpointArg,
+          },
+          handler: handleAgentChat as any,
+        })
+        .demandCommand()
+        .help(),
+    handler: () => {},
   },
   {
     command: 'build <manifestFile>',
@@ -304,6 +344,13 @@ export const commands: yargs.CommandModule[] = [
         desc: 'Also check for warnings about deprecated properties and features that will become errors in a future SDK version.',
         default: true,
       },
+      checkConnectors: {
+        boolean: true,
+        desc: 'For agent packs, check granted connector pack IDs against the server (needs a token). Pass --no-checkConnectors to skip.',
+        default: true,
+      },
+      apiToken: ApiTokenArg,
+      apiEndpoint: ApiEndpointArg,
     },
     handler: handleValidate as any,
   },

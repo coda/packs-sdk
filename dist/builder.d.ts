@@ -4,6 +4,7 @@ import type { AgentDefinition } from './types';
 import type { AgentToolsDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { DeepReadonly } from './type_utils';
 import type { DefaultTriggerDefinition } from './types';
 import type { DistributiveOmit } from './type_utils';
 import type { DynamicSyncTableOptions } from './api';
@@ -427,13 +428,16 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
  */
 export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     /**
-     * See {@link PackVersionDefinition.agent}.
+     * See {@link PackVersionDefinition.agent}. Set via {@link setInstructions} and {@link setTools}.
      */
-    agent: Partial<AgentDefinition>;
+    readonly agent: DeepReadonly<Partial<AgentDefinition>>;
     /**
-     * See {@link PackVersionDefinition.defaultTriggers}.
+     * See {@link PackVersionDefinition.defaultTriggers}. Set via {@link setDefaultWhileWritingTrigger},
+     * {@link addDefaultMailEventTrigger}, {@link addDefaultSlackEventTrigger},
+     * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
      */
-    defaultTriggers?: DefaultTriggerDefinition[];
+    readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+    constructor();
     /**
      * Sets this agent's instructions.
      *
@@ -519,7 +523,8 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     addDefaultNotetakerEventTrigger(trigger: DistributiveOmit<NotetakerEventTriggerDefinition, 'kind' | 'type'>): this;
     private _addDefaultEventTrigger;
     /**
-     * Sets the schedule this agent runs on.
+     * Sets the schedule this agent runs on. Throws on a recurrence the runtime cannot fire, including
+     * one with no DTSTART to anchor it.
      *
      * @example
      * ```

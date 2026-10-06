@@ -4,13 +4,20 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- MCP servers can declare `searchToolNames` to make selected remote tools available to knowledge search.
+
 ### Changed
 
+- Upgraded esbuild to 0.28.2. Compiling Packs now requires macOS 12 (Monterey) or later, or Linux kernel 3.2 or later; Node.js 22 remains supported.
 - Internal changes to the trigger definition. Not currently available externally.
 - Bumped dependencies to their latest compatible versions: `@aws-sdk/client-sts` 3.1135.0, `@smithy/signature-v4` 5.7.3, `qs` 6.16.0, `js-yaml` 4.3.2, `@aws-sdk/types` 3.974.5, `browserslist` 4.29.0, and `mkdocs-material` 9.7.7 (plus the Python lockfile refresh that brings `gitpython` 3.1.62 and `soupsieve` 2.9.2). No major-version upgrades.
+- Internal changes to the agent builder's `agent` and `defaultTriggers` fields, which are now read-only both in the types and at runtime, so they can only be changed through `setInstructions`/`setTools` and the default-trigger setters. Not currently available externally.
 
 ### Fixed
 
+- SDK-authored agents now reject default schedule triggers without a `DTSTART` instead of accepting a schedule that disappears when the agent loads.
 - CLI commands now surface the server-side error message (and HTTP status) when an API request fails, instead of swallowing it behind a generic message. This affects `register`, `whoami`, `clone`, and `link`, and makes `formatResponseError` robust to non-JSON and empty error bodies.
 - `packs init` (and its `coda`/`superhuman` aliases) now prompts before overwriting an existing `pack.ts` instead of silently clobbering it. Pass `--yes` to skip the prompt. Note that in non-interactive environments `init` now exits with a non-zero status when a `pack.ts` already exists unless `--yes` is passed, so scripts that relied on the previous silent overwrite must add `--yes`.
 
