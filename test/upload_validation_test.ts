@@ -122,6 +122,7 @@ describe('Pack metadata Validation', async () => {
 
   async function validateJson(obj: Record<string, any>, sdkVersion?: string) {
     try {
+      // oxlint-disable-next-line typescript/return-await -- Await keeps rejection inside this catch.
       return await doValidateJson(obj, sdkVersion);
     } catch (err) {
       const message = err instanceof PackMetadataValidationError ? JSON.stringify(err.validationErrors) : err;
@@ -5713,6 +5714,107 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('accepts several MCP search tool names, including names retained during a rename', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['mcp.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+            searchToolNames: ['search_documents', 'search_files', 'find_files'],
+          },
+        ],
+      });
+      await validateJson(metadata);
+      assert.deepEqual(metadata.mcpServers?.[0].searchToolNames, ['search_documents', 'search_files', 'find_files']);
+    });
+
+    it('accepts MCP search tool names at the length and count limits', async () => {
+      const names = [
+        'a'.repeat(Limits.McpSearchToolName),
+        ...Array.from({length: Limits.MaxMcpSearchToolsPerServer - 1}, (_, index) => `search_${index}`),
+      ];
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['mcp.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [{endpointUrl: 'https://mcp.example.com/mcp', name: 'Example', searchToolNames: names}],
+      });
+
+      await validateJson(metadata);
+    });
+
+    it('accepts MCP search tool names that differ only by case', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['mcp.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {endpointUrl: 'https://mcp.example.com/mcp', name: 'Example', searchToolNames: ['Search', 'search']},
+        ],
+      });
+
+      await validateJson(metadata);
+    });
+
+    it('reports each repeated MCP search tool name at its own index', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['mcp.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [{endpointUrl: 'https://mcp.example.com/mcp', name: 'Example', searchToolNames: ['a', 'a', 'a']}],
+      });
+
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].searchToolNames[1]',
+          message: 'MCP search tool names must be unique. Found duplicate name "a".',
+        },
+        {
+          path: 'mcpServers[0].searchToolNames[2]',
+          message: 'MCP search tool names must be unique. Found duplicate name "a".',
+        },
+      ]);
+    });
+
+    for (const [names, expectedPath, expectedMessage] of [
+      [[], 'mcpServers[0].searchToolNames', 'MCP searchToolNames must contain at least one tool name.'],
+      [
+        [''],
+        'mcpServers[0].searchToolNames[0]',
+        'MCP search tool names must be nonempty and must not have surrounding whitespace.',
+      ],
+      [
+        [' search_files'],
+        'mcpServers[0].searchToolNames[0]',
+        'MCP search tool names must be nonempty and must not have surrounding whitespace.',
+      ],
+      [
+        ['search_files', 'search_files'],
+        'mcpServers[0].searchToolNames[1]',
+        'MCP search tool names must be unique. Found duplicate name "search_files".',
+      ],
+      [
+        ['a'.repeat(Limits.McpSearchToolName + 1)],
+        'mcpServers[0].searchToolNames[0]',
+        `Too big: expected string to have <=${Limits.McpSearchToolName} characters`,
+      ],
+      [
+        Array.from({length: Limits.MaxMcpSearchToolsPerServer + 1}, (_, index) => `search_${index}`),
+        'mcpServers[0].searchToolNames',
+        `Too big: expected array to have <=${Limits.MaxMcpSearchToolsPerServer} items`,
+      ],
+    ] as const) {
+      it(`rejects invalid MCP search tool names: ${JSON.stringify(names)}`, async () => {
+        const metadata = createFakePackVersionMetadata({
+          networkDomains: ['mcp.example.com'],
+          defaultAuthentication: {type: AuthenticationType.None},
+          mcpServers: [{endpointUrl: 'https://mcp.example.com/mcp', name: 'Example', searchToolNames: [...names]}],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [{path: expectedPath, message: expectedMessage}]);
+      });
+    }
+
     it('mcpServer endpointUrl domain not covered by networkDomains', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: ['example.com'],
@@ -8455,7 +8557,7 @@ describe('Pack metadata Validation', async () => {
     it('validates a default schedule trigger', async () => {
       const scheduleTrigger: DefaultTriggerDefinition = {
         kind: DefaultTriggerKind.Schedule,
-        rruleString: 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0',
+        rruleString: 'DTSTART:20260105T090000Z\nRRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;BYHOUR=9;BYMINUTE=0',
       };
       const metadata = createFakeAgentMetadata({
         agent: {instructions: 'Do a thing.', tools: []},
@@ -8469,7 +8571,9 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
-          defaultTriggers: [{kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'}],
+          defaultTriggers: [
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=MINUTELY'},
+          ],
         }),
       );
       assert.deepInclude(err.validationErrors!, {
@@ -8484,7 +8588,7 @@ describe('Pack metadata Validation', async () => {
           agent: {instructions: 'Do a thing.', tools: []},
           defaultTriggers: [
             {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
-            {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'},
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=MINUTELY'},
           ],
         }),
       );
@@ -8507,7 +8611,7 @@ describe('Pack metadata Validation', async () => {
           defaultTriggers: [
             contextualTrigger,
             contextualTrigger,
-            {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=MINUTELY'},
+            {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=MINUTELY'},
           ],
         }),
       );
@@ -8523,7 +8627,10 @@ describe('Pack metadata Validation', async () => {
 
     it('rejects a schedule longer than the column holds', async () => {
       // Valid apart from its length, so the length is the only thing left to complain about.
-      const rruleString = 'RRULE:FREQ=MONTHLY;BYMONTHDAY=1'.padEnd(Limits.RRuleStringLength + 1, ',1');
+      const rruleString = 'DTSTART:20260101T090000Z\nRRULE:FREQ=MONTHLY;BYMONTHDAY=1'.padEnd(
+        Limits.RRuleStringLength + 1,
+        ',1',
+      );
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
@@ -8538,7 +8645,7 @@ describe('Pack metadata Validation', async () => {
 
     it('takes a schedule trigger and a while-writing trigger together', async () => {
       const defaultTriggers: DefaultTriggerDefinition[] = [
-        {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
+        {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'},
         {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
       ];
       const metadata = createFakeAgentMetadata({
@@ -8746,7 +8853,7 @@ describe('Pack metadata Validation', async () => {
       };
       const defaultTriggers: DefaultTriggerDefinition[] = [
         ...new Array(Limits.MaxDefaultEventTriggers).fill(mailTrigger),
-        {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
+        {kind: DefaultTriggerKind.Schedule, rruleString: 'DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY'},
         {kind: DefaultTriggerKind.WhileWriting, condition: 'Do a thing.'},
       ];
       const metadata = createFakeAgentMetadata({

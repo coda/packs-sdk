@@ -1412,6 +1412,12 @@ export interface MCPServer {
      * Stable identifier that can be used to distinguish multiple MCP servers.
      */
     name: string;
+    /**
+     * Names of this server's tools that Go's knowledge search should use to search its data. Include
+     * every search tool it should use. Only listed tools returned by the server's current tools/list
+     * response will be available. List at most 16 names, each with at most 128 characters.
+     */
+    searchToolNames?: string[];
 }
 /**
  * Map of tool types to their corresponding tool interfaces.

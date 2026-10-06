@@ -243,6 +243,9 @@ Handlebars.registerHelper('indent', (content, numSpaces) => {
   return content.replace(/\n(?!\n)/g, '\n' + indent);
 });
 
+// Array-element snippets ending with a comma are not standalone programs.
+Handlebars.registerHelper('isFragment', (code: string) => code.trimEnd().endsWith(','));
+
 Handlebars.registerHelper('isTopic', (example: CompiledExample) => {
   return example.category === ExampleCategory.Topic;
 });

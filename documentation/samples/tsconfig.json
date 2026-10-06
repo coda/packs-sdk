@@ -4,6 +4,7 @@
     "strict": false,
     "noImplicitAny": false,
     "noUnusedLocals": false,
+    "typeRoots": ["../../node_modules/@types"],
   },
   "include": ["**/*.ts"],
   "exclude": []

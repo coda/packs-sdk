@@ -1,0 +1,9 @@
+{
+  "extends": ["./.oxlintrc.samples.jsonc"],
+  "overrides": [{"files": ["**/*.ts"], "rules": {
+    "unicorn/filename-case": "off",
+    "no-unused-vars": "off",
+    "no-console": "off",
+    "proper-arrows/where": ["error", {"global": false}]
+  }}]
+}

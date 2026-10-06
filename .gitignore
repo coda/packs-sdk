@@ -13,6 +13,7 @@ site
 .npmrc
 .devcontainer
 .cache
+.oxlint-*/
 .pnpm_install
 .idea
 .python-version

@@ -68,6 +68,18 @@ trigger accepts:
   SDK but may not have a corresponding field in the builder's schedule-trigger form — see "Testing
   recurrence rules" in `SKILL.md`.
 
+### Schedule validation and UI limits
+
+Some accepted rule parts (`BYSETPOS`, `WKST`, `COUNT`, ordinal `BYDAY`) may have no
+corresponding field in a simple recurrence-picker UI. Distinguish SDK validation from UI
+representation when reporting results. For example:
+
+```text
+RRULE:FREQ=MONTHLY;BYDAY=-1FR;BYSETPOS=-1;BYMONTH=3;WKST=SU;COUNT=10
+```
+
+Use the accepted/rejected parts above when choosing test cases.
+
 ## `setDefaultWhileWritingTrigger({condition, surfaces})`
 
 ```typescript
@@ -79,6 +91,40 @@ pack.setDefaultWhileWritingTrigger({
 
 `condition` is a natural-language string describing when the trigger should fire. `surfaces` is an
 array of `sdk.ContextualTriggerSurface` values (e.g. `Docs`, `Email`) naming where it's active.
+
+## Installation refresh
+
+Triggers and tool grants are copied at install time; later uploads do not live-sync them.
+To verify a changed definition in the builder, reinstall the agent if the product surface
+supports refreshing an install. Otherwise create a fresh pack in a new directory and install it:
+
+1. Copy `pack.ts` into the new directory and install the published SDK there.
+2. Confirm credentials with `whoami`; register only if no parent credentials are available.
+3. Validate, create with a distinct name, and upload using the main workflow.
+4. Install the new agent and inspect its tools/triggers.
+
+The fresh-pack route is the default when installation refresh is unavailable.
+
+## Build debugging
+
+```bash
+npx packs build pack.ts
+```
+
+Build only bundles TypeScript; it does not execute `pack.ts` or detect a missing `sdk.newAgent`.
+Use it to diagnose bundling failures, then return to validation before uploading.
+
+## Release
+
+An uploaded-but-unreleased agent can run for its installer. Release a version only when
+it should become broadly installable:
+
+```bash
+npx packs release pack.ts <version> --notes "<release notes>"
+```
+
+Choose an uploaded version greater than the latest release. If the pack directory is a git
+repository, use a clean working tree.
 
 ## Full working example
 

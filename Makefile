@@ -1,12 +1,10 @@
-MAKEFLAGS = -s ${MAX_PARALLEL_MAKEFLAG}
-SHELL = /bin/bash
+MAKEFLAGS=-s ${MAX_PARALLEL_MAKEFLAG}
+SHELL=/bin/bash
 ROOTDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-ISOLATED_VM_VERSION_COMMAND="require('./node_modules/isolated-vm/package.json').version"
-ISOLATED_VM_VERSION=$(shell node -p -e $(ISOLATED_VM_VERSION_COMMAND))
+ISOLATED_VM_VERSION=$(shell node -p -e "require('./node_modules/isolated-vm/package.json').version")
 
 PIPENV := PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 pipenv
-MIN_PIPENV_VERSION = "2022.10.4"
 
 DOC_DISABLE_SOURCES ?= true
 DOC_GIT_REVISION ?= main
@@ -69,32 +67,31 @@ lint: lint-code lint-md lint-changelog
 
 .PHONY: lint-code
 lint-code:
-	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v "\.d\.ts" | xargs ${ROOTDIR}/node_modules/.bin/eslint
+	find . -name "*.ts" | grep -v '/\.oxlint-' | grep -v /dist/ | grep -v /node_modules/ | grep -v "\.d\.ts" | xargs ${ROOTDIR}/node_modules/.bin/oxlint --type-aware
 
 .PHONY: lint-md
 lint-md:
 	# Ensure markdown has frontmatter
-	MISSING="$(shell awk '/^[^-]/{print FILENAME}; {nextfile}' ./docs/**/*.md)"; \
-	if [[ "$$MISSING" != "" ]]; then \
-		echo "These markdown files are missing frontmatter: $$MISSING"; \
+	if awk '/^[^-]/{print FILENAME}; {nextfile}' ./docs/**/*.md | grep -q .; then \
+		echo "These markdown files are missing frontmatter:"; \
+		awk '/^[^-]/{print FILENAME}; {nextfile}' ./docs/**/*.md; \
 		exit 1; \
 	fi
 
 	# Markdown lint.
-	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*' --ignore-pattern 'docs/.abbreviations.md'
+	${ROOTDIR}/node_modules/.bin/remark docs --quiet --frail --ignore-pattern 'docs/reference/*' --ignore-pattern 'docs/.abbreviations.md'
 
 	# Spellcheck docs lint.
-	npx cspell lint '{docs,documentation}/**/*.md' 'CHANGELOG.md' --no-progress
+	${ROOTDIR}/node_modules/.bin/cspell lint '{docs,documentation}/**/*.md' 'CHANGELOG.md' --no-progress
 
 .PHONY: lint-changelog
 lint-changelog:
 	# Changelog lint.
-	npx kacl lint
+	${ROOTDIR}/node_modules/.bin/kacl lint
 
 	# release-it only understands "Unreleased" as the name of an upcoming release
-	RELEASE_NAME="$(shell egrep -m 1 '^## ' CHANGELOG.md | egrep -v "^## \[")"; \
-	if [[ "$$RELEASE_NAME" != "" && "$$RELEASE_NAME" != "## Unreleased" ]]; then \
-		echo "Changelog should begin with "## Unreleased", not $$RELEASE_NAME"; \
+	if egrep -m 1 '^## ' CHANGELOG.md | egrep -v "^## \[" | grep -qvx '## Unreleased'; then \
+		echo "Changelog should begin with ## Unreleased"; \
 		exit 1; \
 	fi
 
@@ -115,7 +112,7 @@ lint-links:
 
 .PHONY: lint-fix
 lint-fix:
-	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
+	find . -name "*.ts" | grep -v '/\.oxlint-' | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/oxlint --type-aware --fix
 
 .PHONY: do-compile-isolated-vm-22
 do-compile-isolated-vm-22:
@@ -161,7 +158,7 @@ compile-thunk:
 compile-ts:
 	echo "Compiling Typescript... if this fails to build isolated-vm, you may need to install plain python (python 2 was removed in MacOS Monterey 12.3)";
 	rm -rf dist/
-	${ROOTDIR}/node_modules/.bin/tsc
+	${ROOTDIR}/node_modules/.bin/tsc --project tsconfig.build.json
 
 	$(MAKE) compile-thunk
 	$(MAKE) compile-documentation-scripts
@@ -215,12 +212,7 @@ compile-documentation-scripts:
 compile-samples:
 	${ROOTDIR}/node_modules/.bin/tsc --project ./documentation/samples/tsconfig.json
 
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-	REPL_SIZE :=
-else
-	REPL_SIZE := -S1024
-endif
+REPL_SIZE := $(shell [ "$$(uname -s)" = Linux ] || printf '%s' -S1024)
 
 .PHONY: validate-samples
 validate-samples:
@@ -343,6 +335,7 @@ publish-docs-gh-pages:
 
 .PHONY: test
 test:
+	node --test dev/oxlint/remark_lint_code_test.cjs
 	TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
 
 .PHONY: test-file
@@ -368,7 +361,11 @@ publish-local: build
 
 .PHONY: autoformat-ts
 autoformat-ts:
-	(cd ${ROOTDIR}; echo -n "autoformat-ts "; ${PRETTIER} --cache --concurrency $${CIRCLE_CORE_COUNT:-16} $${PRETTIER_COMMAND:---write}  $$(git ls-files '*.ts' '*.tsx'))
+	cd ${ROOTDIR} && \
+		echo -n "autoformat-ts " && \
+		git ls-files -z '*.ts' '*.tsx' | \
+		xargs -0 ${PRETTIER} --cache --concurrency $${CIRCLE_CORE_COUNT:-16} \
+		$${PRETTIER_COMMAND:---write}
 
 .PHONY: autoformat-all
 autoformat-all: autoformat-ts
@@ -402,7 +399,7 @@ release:
 	@echo "Checking for main branch..." && test main = "`git rev-parse --abbrev-ref HEAD`" || \
 		(echo "Refusing to publish from non-main branch `git rev-parse --abbrev-ref HEAD`" && false)
 	@echo "Checking for unpushed commits..." && git fetch
-	@test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
+	@ test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
 
 	npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
 	@npm owner ls @codahq/packs-sdk && echo
@@ -421,6 +418,6 @@ release-manual:
 	@echo "Checking that we're not on main branch..." && test main != "`git rev-parse --abbrev-ref HEAD`" || \
 		(echo "Refusing to publish from main branch. Please create a new branch and push it up first." && false)
 	@echo "Checking for unpushed commits..." && git fetch
-	@test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
+	@ test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
 
 	npx release-it --npm.tag=latest

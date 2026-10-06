@@ -1693,6 +1693,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
     const wrappedExecute = formula.execute;
     formula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
       try {
+        // oxlint-disable-next-line typescript/return-await -- Returns values/promises; await catches rejections.
         return await wrappedExecute(params, context);
       } catch (err: any) {
         return onError(err);

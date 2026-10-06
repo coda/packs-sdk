@@ -578,6 +578,7 @@ function makeFormula(fullDefinition) {
         const wrappedExecute = formula.execute;
         formula.execute = async function (params, context) {
             try {
+                // oxlint-disable-next-line typescript/return-await -- Returns values/promises; await catches rejections.
                 return await wrappedExecute(params, context);
             }
             catch (err) {

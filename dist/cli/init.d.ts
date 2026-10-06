@@ -1,3 +1,5 @@
-export declare function handleInit({ yes }?: {
+export declare function handleInit({ yes, agent, name }?: {
     yes?: boolean;
-}): Promise<undefined>;
+    agent?: boolean;
+    name?: string;
+}): Promise<void>;

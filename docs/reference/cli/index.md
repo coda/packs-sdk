@@ -12,6 +12,14 @@ search:
 
 Reference documentation for the `packs` CLI.
 
+## agent
+
+Build and run agents
+
+**Usage:** `packs agent`
+
+---
+
 ## auth
 
 Set up authentication for a Pack
@@ -177,6 +185,16 @@ Scaffold a Pack in the current directory
 
     **Type:** boolean | **Default:** `false`
 
+`--agent`
+:   Scaffold an agent pack (sdk.newAgent()) instead of a formula pack. No git or network template install needed.
+
+    **Type:** boolean | **Default:** `false`
+
+`--name`
+:   Agent name used in the scaffolded pack.ts (with --agent). Defaults to the directory name.
+
+    **Type:** string
+
 ---
 
 ## link
@@ -327,6 +345,21 @@ Validate your Pack definition
 :   Also check for warnings about deprecated properties and features that will become errors in a future SDK version.
 
     **Type:** boolean | **Default:** `true`
+
+`--checkConnectors`
+:   For agent packs, check granted connector pack IDs against the server (needs a token). Pass --no-checkConnectors to skip.
+
+    **Type:** boolean | **Default:** `true`
+
+`--apiToken`, `-t`
+:   API token to use for the operation. Use the `register` command to define a default token.
+
+    **Type:** string
+
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `packs setOption <manifestFile> apiEndpoint <url>`.
+
+    **Type:** string
 
 ---
 

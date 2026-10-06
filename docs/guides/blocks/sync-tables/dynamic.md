@@ -267,7 +267,7 @@ Similar to property names, you must also determine the schema for each property.
 
 ```ts
 function getPropertySchema(
-  customField
+  customField,
 ): sdk.Schema & sdk.ObjectSchemaProperty {
   // Select the schema type depending on the custom field type.
   switch (customField.type) {

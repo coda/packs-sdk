@@ -27,3 +27,13 @@ The MCP endpoint URL (e.g. https://example.com/mcp).
 > **name**: `string`
 
 Stable identifier that can be used to distinguish multiple MCP servers.
+
+***
+
+### searchToolNames?
+
+> `optional` **searchToolNames**: `string`[]
+
+Names of this server's tools that Go's knowledge search should use to search its data. Include
+every search tool it should use. Only listed tools returned by the server's current tools/list
+response will be available. List at most 16 names, each with at most 128 characters.

@@ -1,12 +1,27 @@
 import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import {newMockSyncExecutionContext} from '../testing/mocks';
+import os from 'os';
 import path from 'path';
 import {readFileSync} from 'fs';
 import sinon from 'sinon';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 
 describe('compile', () => {
+  it('rejects macOS versions older than Monterey', async () => {
+    const sandbox = sinon.createSandbox();
+    sandbox.stub(os, 'platform').returns('darwin');
+    sandbox.stub(os, 'release').returns('20.6.0');
+    try {
+      await compilePackBundle({manifestPath: `${__dirname}/packs/fake.ts`}).then(
+        () => assert.fail('Compilation should reject unsupported macOS.'),
+        error => assert.equal(error.message, 'Packs SDK requires macOS 12 (Monterey) or later'),
+      );
+    } finally {
+      sandbox.restore();
+    }
+  });
+
   it('works with source map', async () => {
     const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
       manifestPath: `${__dirname}/packs/fake.ts`,
@@ -27,7 +42,7 @@ describe('compile', () => {
         vmFilename: bundlePath,
       });
 
-      /* eslint-disable max-len */
+      /* oxlint-disable stylistic/max-len */
       // the error stack should be properly formatted. for example,
       //
       // at throwError (/Users/<user>/code/packs-sdk/test/packs/fake.ts:25:9)
@@ -37,7 +52,7 @@ describe('compile', () => {
       // at <unknown> (<isolated-vm>:1:48)
       //
       // The /var/folders/.../bundle.js files are mapping to the bundle-helper and is not the Pack code.
-      /* eslint-enable max-len */
+      /* oxlint-enable stylistic/max-len */
 
       assert.include(stack, path.join(__dirname, 'packs/fake.ts'));
     }
