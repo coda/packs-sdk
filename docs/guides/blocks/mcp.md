@@ -56,6 +56,18 @@ Additionally, not all MCP features are supported by the platform.
 - **Tools only** - Although MCP servers can provide additional types of resources, connectors can only use the tools.
 - **No streaming support** - Connectors must wait for the complete response from the MCP server, and cannot take advantage of streamed responses.
 
+
+### MCP Apps
+
+:superhuman-go: Go supports the [MCP Apps][mcp_apps] standard, which lets an MCP server return an interactive UI with a tool result. No additional code or configuration is required in your connector to enable this feature.
+
+{{screenshot("images/mcp_apps.png", "An MCP App rendered in a Go chat.")}}
+
+!!! warning "Web client only"
+
+    MCP Apps are only available in the [web client][go_web] (`go.superhuman.com`). In other clients (browser extensions and desktop clients) the tool will still function, but the app UI is not shown.
+
+
 ## Network access
 
 As with all network traffic, MCP requests go through the [Fetcher][fetcher], and the domains used must be declared in advance. While MCP servers are often hosted on a subdomain, it's a best practice to declare the root domain to allow for future expansion to other endpoints.
@@ -165,6 +177,8 @@ List at most 16 search tools per server. Each name can have at most 128 characte
 
 
 [mcp]: https://modelcontextprotocol.io/
+[mcp_apps]: https://modelcontextprotocol.io/extensions/apps/overview
+[go_web]: https://go.superhuman.com
 [mcp_transport]: https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#streamable-http
 [fetcher]: ../basics/fetcher.md
 [authentication]: ../basics/authentication/index.md
