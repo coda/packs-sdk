@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.18.0] - 2026-10-07
+
 ### Added
 
 - MCP servers can declare `searchToolNames` to make selected remote tools available to knowledge search.
@@ -1141,7 +1143,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.17.6...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.18.0...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1227,3 +1229,4 @@ await myHelper(context);
 [1.17.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.5
 
 [1.17.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.6
+[1.18.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.18.0
