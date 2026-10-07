@@ -1,19 +1,5 @@
 # SDK releases
 
-## Setup
-
-Create the `sdk-release` GitHub environment with:
-
-- Only `@coda/go-ecosystem` as required reviewers.
-- Self-review prevented and administrator bypass disabled.
-- Deployment rules allowing branch `main` and tags `v*`.
-
-Verify approval waits and settings readback with the workflow token before use.
-The helper requires `can_admins_bypass: false`; GitHub exposes this field but
-its REST schema does not document it. Missing protection fields stop the job.
-Enable GitHub Actions PR creation. Preparation needs no npm credentials.
-Cancel pending/running release workflows before changing approval policy.
-
 ## Prepare
 
 1. Complete the documentation import and SDK snapshot export, and confirm the
