@@ -24,7 +24,7 @@ We've also worked to make it easier for legacy Packs to be upgraded to agents, w
 
 
 [mcp]: ../../guides/blocks/mcp.md
-[bench_initialization]: ../../guides/blocks/skills.md#bench
+[bench_initialization]: ../../guides/blocks/skills.md
 [agent_logs]: ../../development/logging.md
 [parameter_validation]: ../../guides/basics/parameters/index.md#validation
 [suggested_values]: ../../support/migration/superhuman-go.md#alternate-suggested-parameter-values
