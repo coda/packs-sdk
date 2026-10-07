@@ -23,8 +23,8 @@ Cancel pending/running release workflows before changing approval policy.
    default dry run before running with `dry-run: false` to create the release PR.
 3. Review the changelog and diff, then merge after CI passes. If `main` advances,
    close the stale PR, delete its branch, and prepare the same unpublished
-   version again. Keep release PRs unre-based; retry interrupted preparation
-   with the same version to resume.
+   version again instead of rebasing. Retry interrupted preparation with the
+   same version to resume.
 
 Author release-tool dependency changes internally and export through Copybara.
 
