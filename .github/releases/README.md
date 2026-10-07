@@ -1,43 +1,32 @@
-# Public SDK release jobs
+# SDK releases
 
-Complete the reviewed documentation import and SDK snapshot export first.
-Confirm that Coda's live deployment supports the intended SDK changes.
+## Setup
 
-Repository administrators must create `sdk-release` before using preparation.
-Require only `@coda/go-ecosystem` (Team 16002834, the CODEOWNERS team), prevent
-self-review, disable administrator bypass, and allow only the `main` branch and
-`v*` tags. Preparation waits for a member of that team to approve, including dry
-runs. Do not put npm credentials or trusted-publisher identity on preparation.
-Cancel pending/running release workflows before changing approval policy.
+Create the `sdk-release` GitHub environment with:
 
-Use repository settings to disable administrator bypass. The environment API's
-`can_admins_bypass` field is observed but undocumented; it must read back as
-`false` using the workflow's Actions:read token. Missing fields fail closed.
-Administrator setup and a harmless hosted approval test are operator prerequisites;
-local fixture tests do not prove GitHub's approval wait.
+- Only `@coda/go-ecosystem` as required reviewers.
+- Self-review prevented and administrator bypass disabled.
+- Deployment rules allowing branch `main` and tags `v*`.
 
-Run **Prepare SDK release** on `main` with an exact stable version and the
-sync confirmation. Dry run is the default; inspect its diff before a live run.
-A live run creates one `release/v<version>` PR. Approve its GitHub workflow
-runs if requested, review the release diff and changelog, then merge after CI.
-If main moves first, close/delete the stale preparation and recreate it from
-current main with the same unpublished version; do not rebase that release PR.
-Preparation never creates an npm version, tag, or GitHub release.
+Verify approval waits and settings readback with the workflow token before use.
+The helper requires `can_admins_bypass: false`; GitHub exposes this field but
+its REST schema does not document it. Missing protection fields stop the job.
+Enable GitHub Actions PR creation. Preparation needs no npm credentials.
 
-Until the Publish SDK release layer is delivered, use preparation dry runs
-only. The existing manual runbook remains usable from its normal unprepared
-source branch. Do not run its version-bumping command on a prepared release PR.
-Once the publisher is delivered, an authorized first candidate may be prepared
-and merged with publication disabled to validate the new publish dry-run path.
+## Prepare
 
-Source synchronization and the production deployment are human-reviewed
-prerequisites. This public job cannot prove completion of internal imports.
-An open snapshot blocks preparation; the checkbox does not replace review.
+1. Complete the documentation import and SDK snapshot export, and confirm the
+   intended changes are deployed internally. Follow the [release runbook](https://docs.superhuman.com/d/Go-on-call-go-go-oncall_dkJe3Z8RRKc/Releasing-Packs-SDK-to-the-Public_suM7Qe50#_luFTQOHz).
+2. Run **Prepare SDK release** on `main` with an exact stable version and sync
+   confirmation. Approve `sdk-release`, including for dry runs. Review the
+   default dry run before running with `dry-run: false` to create the release PR.
+3. Review the changelog and diff, then merge after CI passes. If `main` advances,
+   close the stale PR, delete its branch, and prepare the same unpublished
+   version again. Keep release PRs unre-based; retry interrupted preparation
+   with the same version to resume.
 
-A conflicting or stale release branch stops preparation. Do not force-push or
-reuse it; inspect and close/delete it deliberately before a new preparation.
-The PR summary records partial branch/PR creation so a retry can resume safely.
+Author release-tool dependency changes internally and export through Copybara.
 
-The public job files live under `.github/`. Author release-tool dependency
-changes internally and bring them here through a reviewed Copybara export.
-Dependencies use pnpm; preparation rejects an unexpected npm lockfile.
+Until the publish workflow lands, use preparation dry runs only. Use the manual
+runbook on an unprepared source branch; its version bump would double-bump a
+prepared PR.
