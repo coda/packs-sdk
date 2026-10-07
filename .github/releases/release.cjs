@@ -55,6 +55,54 @@ async function checkLive(sourceVersion) {
     `source snapshot ${sourceVersion} is not live (${live.packsSdkVersion})`,
   );
 }
+function api(endpoint, paginated = false) {
+  return JSON.parse(
+    command('gh', ['api', ...(paginated ? ['--paginate', '--slurp'] : []), `repos/${REPOSITORY}/${endpoint}`]),
+  );
+}
+function protectedEnvironment() {
+  const environment = api('environments/sdk-release');
+  assert(Array.isArray(environment?.protection_rules), 'invalid sdk-release protection rules');
+  const rules = environment.protection_rules.filter(rule => rule?.type === 'required_reviewers');
+  assert.equal(rules.length, 1, 'sdk-release requires one reviewer rule');
+  const rule = rules[0];
+  assert.equal(rule.prevent_self_review, true, 'sdk-release must prevent self-review');
+  assert.equal(environment.can_admins_bypass, false, 'sdk-release must disallow admin bypass');
+  assert(Array.isArray(rule.reviewers), 'invalid sdk-release reviewer response');
+  assert.equal(rule.reviewers.length, 1, 'sdk-release must require only @coda/go-ecosystem');
+  const reviewer = rule.reviewers[0];
+  assert.equal(reviewer?.type, 'Team', 'sdk-release must require @coda/go-ecosystem');
+  assert.equal(reviewer.reviewer?.id, 16002834, 'sdk-release must require @coda/go-ecosystem');
+  assert.equal(reviewer.reviewer?.slug, 'go-ecosystem', 'sdk-release team identity changed');
+  assert.equal(
+    environment.deployment_branch_policy?.custom_branch_policies,
+    true,
+    'sdk-release needs explicit main/tag policies',
+  );
+  assert.equal(
+    environment.deployment_branch_policy?.protected_branches,
+    false,
+    'sdk-release needs explicit main/tag policies',
+  );
+  const pages = api('environments/sdk-release/deployment-branch-policies', true);
+  assert(Array.isArray(pages), 'invalid sdk-release policy response');
+  const policies = pages.flat().flatMap(page => {
+    assert(page && Array.isArray(page.branch_policies), 'invalid sdk-release policy page');
+    return page.branch_policies;
+  });
+  assert(
+    policies.every(
+      policy =>
+        (policy?.name === 'main' && policy.type === 'branch') || (policy?.name === 'v*' && policy.type === 'tag'),
+    ),
+    'sdk-release has unexpected ref policies',
+  );
+  assert(
+    policies.some(policy => policy.name === 'main' && policy.type === 'branch') &&
+      policies.some(policy => policy.name === 'v*' && policy.type === 'tag'),
+    'sdk-release must allow main and v* tags',
+  );
+}
 function openPullRequests() {
   const pages = JSON.parse(
     command('gh', ['api', '--paginate', '--slurp', `repos/${REPOSITORY}/pulls?state=open&per_page=100`]),
@@ -222,6 +270,7 @@ async function prepare(env) {
   const version = stableVersion(env.RELEASE_VERSION);
   assert.equal(env.GITHUB_REPOSITORY, REPOSITORY, 'untrusted repository');
   assert.equal(env.GITHUB_REF, 'refs/heads/main', 'preparation requires main');
+  protectedEnvironment();
   assert.equal(git('status', '--porcelain'), '', 'checkout must be clean');
   const source = git('rev-parse', 'HEAD');
   assert.equal(source, env.GITHUB_SHA, 'source SHA mismatch');

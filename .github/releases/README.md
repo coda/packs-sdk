@@ -3,6 +3,19 @@
 Complete the reviewed documentation import and SDK snapshot export first.
 Confirm that Coda's live deployment supports the intended SDK changes.
 
+Repository administrators must create `sdk-release` before using preparation.
+Require only `@coda/go-ecosystem` (Team 16002834, the CODEOWNERS team), prevent
+self-review, disable administrator bypass, and allow only the `main` branch and
+`v*` tags. Preparation waits for a member of that team to approve, including dry
+runs. Do not put npm credentials or trusted-publisher identity on preparation.
+Cancel pending/running release workflows before changing approval policy.
+
+Use repository settings to disable administrator bypass. The environment API's
+`can_admins_bypass` field is observed but undocumented; it must read back as
+`false` using the workflow's Actions:read token. Missing fields fail closed.
+Administrator setup and a harmless hosted approval test are operator prerequisites;
+local fixture tests do not prove GitHub's approval wait.
+
 Run **Prepare SDK release** on `main` with an exact stable version and the
 sync confirmation. Dry run is the default; inspect its diff before a live run.
 A live run creates one `release/v<version>` PR. Approve its GitHub workflow

@@ -13,6 +13,29 @@ test('prepare rejects missing sync confirmation before external operations', () 
 });
 const fs = require('node:fs');
 const os = require('node:os');
+function protection() {
+  return {
+    can_admins_bypass: false,
+    protection_rules: [
+      {
+        type: 'required_reviewers',
+        prevent_self_review: true,
+        reviewers: [{type: 'Team', reviewer: {id: 16002834, slug: 'go-ecosystem'}}],
+      },
+    ],
+    deployment_branch_policy: {protected_branches: false, custom_branch_policies: true},
+  };
+}
+function policies() {
+  return [
+    {
+      branch_policies: [
+        {name: 'main', type: 'branch'},
+        {name: 'v*', type: 'tag'},
+      ],
+    },
+  ];
+}
 function fixture(t, options = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdk-release-test-'));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
@@ -50,14 +73,22 @@ function fixture(t, options = {}) {
   fs.mkdirSync(bin);
   const log = path.join(root, 'effects');
   const state = path.join(root, 'state.json');
-  fs.writeFileSync(state, JSON.stringify({prs: [], ...options}));
+  fs.writeFileSync(state, JSON.stringify({prs: [], environment: protection(), policies: policies(), ...options}));
   const fake = `#!/usr/bin/env node
 const fs=require('node:fs'); const path=require('node:path');
 const args=process.argv.slice(2), name=path.basename(process.argv[1]);
 const state=JSON.parse(fs.readFileSync(process.env.FIXTURE_STATE));
 fs.appendFileSync(process.env.FIXTURE_LOG, JSON.stringify([name,...args])+'\\n');
 if(name==='gh') {
- if(args[0]==='api') { console.log(JSON.stringify(state.prs)); }
+ if(args[0]==='api') {
+  const endpoint=args.at(-1);
+  const environment=endpoint.includes('/environments/');
+  if(environment && state.environmentStatus) {console.error('HTTP '+state.environmentStatus);process.exit(1);}
+  if(environment && state.malformedEnvironment) {console.log('{invalid');process.exit(0);}
+  let data=endpoint.endsWith('/environments/sdk-release')?state.environment:endpoint.endsWith('/deployment-branch-policies')?state.policies:state.prs;
+  if(data==null) {console.error('HTTP 404');process.exit(1);}
+  console.log(JSON.stringify(data));
+ }
  else if(args[0]==='pr' && args[1]==='create') {
   if(state.prFailure) process.exit(1); console.log('https://github.com/coda/packs-sdk/pull/42');
  } else process.exit(1);
@@ -195,7 +226,7 @@ test('missing reviewed tool export or an npm lock blocks preparation', t => {
     const r = f.run();
     assert.notEqual(r.status, 0);
     assert.match(r.stderr, /export required|npm lockfile/);
-    assert.equal(f.effects(), '');
+    assert.doesNotMatch(f.effects(), /"pnpm","exec"|"HTTP"/);
   }
 });
 test('same prepared PR retry returns its identity without repeating tooling', t => {
@@ -207,6 +238,8 @@ test('same prepared PR retry returns its identity without repeating tooling', t 
   fs.writeFileSync(
     f.state,
     JSON.stringify({
+      environment: protection(),
+      policies: policies(),
       prs: [
         {
           head: {ref: 'release/v1.18.0', sha: head, repo: {full_name: 'coda/packs-sdk'}},
@@ -230,7 +263,7 @@ test('retry recovers a pushed branch after PR creation failed without another co
   assert.match(first.stdout, /Partial preparation/);
   const head = f.git('rev-parse', 'HEAD');
   f.git('switch', 'main');
-  fs.writeFileSync(f.state, JSON.stringify({prs: []}));
+  fs.writeFileSync(f.state, JSON.stringify({prs: [], environment: protection(), policies: policies()}));
   const r = f.run({RELEASE_DRY_RUN: 'false'});
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /pull\/42/);
@@ -244,6 +277,8 @@ test('changed or stale existing prepared PR is rejected', t => {
   fs.writeFileSync(
     f.state,
     JSON.stringify({
+      environment: protection(),
+      policies: policies(),
       prs: [
         {
           head: {ref: 'release/v1.18.0', sha: head, repo: {full_name: 'coda/packs-sdk'}},
@@ -292,4 +327,88 @@ test('generated-output drift after the release commit prevents pushing the branc
   assert.notEqual(r.status, 0);
   assert.match(r.stderr, /generated-output mismatch/);
   assert.equal(f.git('ls-remote', 'origin', 'refs/heads/release/v1.18.0'), '');
+});
+
+test('preparation refuses missing or wrong-team protection before release effects', t => {
+  for (const environment of [
+    null,
+    {protection_rules: [{type: 'required_reviewers', reviewers: [{type: 'Team', reviewer: {id: 1}}]}]},
+  ]) {
+    for (const dryRun of ['true', 'false']) {
+      const f = fixture(t, {environment});
+      const result = f.run({RELEASE_DRY_RUN: dryRun});
+      assert.notEqual(result.status, 0);
+      assert.doesNotMatch(f.effects(), /"pnpm","exec"|"pr","create"|"npm","publish"/);
+      assert.equal(f.git('branch', '--list', 'release/v1.18.0'), '');
+      assert.equal(f.git('ls-remote', 'origin', 'refs/heads/release/v1.18.0'), '');
+      assert.equal(f.git('ls-remote', 'origin', 'refs/tags/v*'), '');
+    }
+  }
+});
+
+test('preparation rejects weakened or malformed policies in dry and live runs', t => {
+  const changed = change => {
+    const environment = protection();
+    change(environment);
+    return {environment};
+  };
+  const cases = [
+    {environmentStatus: 403},
+    {environmentStatus: 404},
+    {malformedEnvironment: true},
+    {environment: {}},
+    changed(e => (e.protection_rules = {})),
+    changed(e => (e.protection_rules = [])),
+    changed(e => e.protection_rules.push(e.protection_rules[0])),
+    changed(e => (e.protection_rules[0].reviewers = {})),
+    changed(e => (e.protection_rules[0].reviewers = [])),
+    changed(e => (e.protection_rules[0].reviewers[0].type = 'User')),
+    changed(e => (e.protection_rules[0].reviewers[0].reviewer.id = 1)),
+    changed(e => (e.protection_rules[0].reviewers[0].reviewer.slug = 'other')),
+    changed(e => e.protection_rules[0].reviewers.push({type: 'User', reviewer: {id: 2}})),
+    changed(e => (e.protection_rules[0].prevent_self_review = false)),
+    changed(e => delete e.protection_rules[0].prevent_self_review),
+    changed(e => (e.can_admins_bypass = true)),
+    changed(e => delete e.can_admins_bypass),
+    changed(e => (e.deployment_branch_policy.custom_branch_policies = false)),
+    changed(e => (e.deployment_branch_policy.protected_branches = true)),
+    {policies: {}},
+    {policies: []},
+    {policies: [{}]},
+    {policies: [{branch_policies: {}}]},
+    {policies: [{branch_policies: [{name: 'main', type: 'branch'}]}]},
+    {policies: [{branch_policies: [{name: 'v*', type: 'tag'}]}]},
+    {policies: [{branch_policies: [...policies()[0].branch_policies, {name: '*', type: 'branch'}]}]},
+    {policies: [{branch_policies: [null]}]},
+  ];
+  for (const options of cases)
+    for (const dryRun of ['true', 'false']) {
+      const f = fixture(t, options);
+      const r = f.run({RELEASE_DRY_RUN: dryRun});
+      assert.notEqual(r.status, 0, JSON.stringify(options));
+      assert.doesNotMatch(f.effects(), /"pnpm","exec"|"pr","create"|"npm","publish"|npm-release/);
+      assert.equal(f.git('branch', '--list', 'release/v1.18.0'), '');
+      assert.equal(f.git('ls-remote', 'origin', 'refs/heads/release/v1.18.0'), '');
+      assert.equal(f.git('ls-remote', 'origin', 'refs/tags/v*'), '');
+    }
+});
+test('preparation accepts explicit main and tag policies across empty and multiple API pages', t => {
+  const f = fixture(t, {
+    policies: [
+      {branch_policies: []},
+      {branch_policies: [{name: 'main', type: 'branch'}]},
+      {branch_policies: [{name: 'v*', type: 'tag'}]},
+    ],
+  });
+  assert.equal(f.run().status, 0);
+  assert.match(f.effects(), /"--paginate","--slurp"/);
+});
+test('preparation workflow requires team approval without npm OIDC', () => {
+  const workflow = require('js-yaml').load(
+    fs.readFileSync(path.join(__dirname, '../workflows/prepare-release.yml'), 'utf8'),
+  );
+  assert.equal(workflow.jobs.prepare.environment, 'sdk-release');
+  assert.equal(workflow.jobs.prepare.permissions.actions, 'read');
+  assert.notEqual(workflow.jobs.prepare.permissions['id-token'], 'write');
+  assert.notEqual(workflow.permissions?.['id-token'], 'write');
 });
