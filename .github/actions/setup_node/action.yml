@@ -6,7 +6,12 @@ runs:
   steps:
     - name: Install basic tools
       shell: bash
-      run: sudo apt update && sudo apt install -y g++ build-essential python3 python3-pip && sudo python3 -m pip install pipenv --break-system-packages
+      run: |
+        sudo apt update && sudo apt install -y g++ build-essential python3 python3-venv
+        pipenv_tools="$RUNNER_TEMP/packs-sdk-pipenv"
+        python3 -m venv "$pipenv_tools"
+        "$pipenv_tools/bin/python" -m pip install 'pipenv==2026.8.0'
+        echo "$pipenv_tools/bin" >> "$GITHUB_PATH"
 
     - name: Use Node 22
       uses: actions/setup-node@v6
