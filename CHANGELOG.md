@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.18.1] - 2026-10-08
+
 ### Changed
 
 - Upgraded release tooling to release-it 21.1.0 and its compatible changelog plugin; local interactive publishing supports security-key browser approval. The SDK keeps pnpm as its sole lockfile policy.
@@ -1159,7 +1161,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.18.0...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.18.1...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1245,4 +1247,5 @@ await myHelper(context);
 [1.17.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.5
 
 [1.17.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.6
+[1.18.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.18.1
 [1.18.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.18.0
