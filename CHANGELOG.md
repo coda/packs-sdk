@@ -4,6 +4,14 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded release tooling to release-it 21.1.0 and its compatible changelog plugin; local interactive publishing supports security-key browser approval. The SDK keeps pnpm as its sole lockfile policy.
+
+### Fixed
+
+- Agent chat polling now sends the trigger execution id, waits for confirmed completion, and retries transient polling failures until the timeout. Pack mismatch errors identify the run already queued on the other instance.
+
 ## [1.18.0] - 2026-10-07
 
 ### Added
@@ -1227,6 +1235,5 @@ await myHelper(context);
 [1.17.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.3
 [1.17.4]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.4
 [1.17.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.5
-
 [1.17.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.17.6
 [1.18.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.18.0

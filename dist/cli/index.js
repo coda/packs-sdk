@@ -13,6 +13,8 @@ const config_storage_3 = require("./config_storage");
 const extensions_1 = require("./extensions");
 const helpers_1 = require("./helpers");
 const agent_chat_1 = require("./agent_chat");
+const agent_install_1 = require("./agent_install");
+const agent_logs_1 = require("./agent_logs");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
 const clone_1 = require("./clone");
@@ -70,7 +72,14 @@ const CommandExamples = {
         ['$0 login --apiToken <token>', 'Alias for register: store the token without opening a browser.'],
     ],
     whoami: [['$0 whoami', 'Print the account and token currently registered.']],
-    agent: [['$0 agent chat pack.ts "what can you do?"', 'Talk to the latest uploaded agent version.']],
+    agent: [
+        [
+            '$0 agent chat pack.ts "what can you do?" --agentInstanceId <id> --tenantId <tenant>',
+            'Run your installed agent and print its reply.',
+        ],
+        ['$0 agent install pack.ts', 'Install the latest uploaded agent version to your account.'],
+        ['$0 agent logs pack.ts --tenant <id> --instance <id>', 'Show recent logs for the installed agent.'],
+    ],
     build: [
         ['$0 build pack.ts', 'Compile the Pack bundle locally.'],
         ['$0 build pack.ts --outputDir dist', 'Write the bundle to a directory.'],
@@ -227,21 +236,76 @@ exports.commands = [
         builder: (yargs) => yargs
             .command({
             command: 'chat <manifestPath> <prompt>',
-            // Hidden until the server route ships; restore a describe string to list it in help.
-            describe: false,
+            describe: 'Run your installed agent from the terminal and print its reply',
             builder: {
-                version: {
+                agentInstanceId: {
                     string: true,
-                    desc: 'Agent version to chat with. Defaults to the latest upload.',
+                    demandOption: true,
+                    desc: 'Installed agent instance to run. Copy it from the installed agent URL.',
                 },
-                thread: {
+                tenantId: {
                     string: true,
-                    desc: 'Thread id for multi-turn follow-ups. Omit for a new thread.',
+                    desc: 'Brain tenant id for the agent install. Defaults to the trigger response.',
+                },
+                timeout: {
+                    number: true,
+                    default: 120,
+                    desc: 'Seconds to wait for a reply before giving up.',
                 },
                 apiToken: ApiTokenArg,
                 apiEndpoint: ApiEndpointArg,
             },
             handler: agent_chat_1.handleAgentChat,
+        })
+            .command({
+            command: 'install <manifestPath>',
+            describe: 'Install an uploaded agent version to your account',
+            builder: {
+                version: {
+                    string: true,
+                    desc: 'Agent version to install. Defaults to the latest upload.',
+                },
+                reinstall: {
+                    boolean: true,
+                    default: false,
+                    desc: 'Rebind even if already installed. Needed after changing tools or triggers.',
+                },
+                yes: YesArg,
+                apiToken: ApiTokenArg,
+                apiEndpoint: ApiEndpointArg,
+            },
+            handler: agent_install_1.handleAgentInstall,
+        })
+            .command({
+            command: 'logs <manifestPath>',
+            describe: 'Show recent logs for an installed agent instance',
+            builder: {
+                tenant: {
+                    string: true,
+                    desc: 'Tenant id owning the agent instance. Ask your workspace admin for it.',
+                },
+                instance: {
+                    string: true,
+                    desc: 'Agent instance id. Shown in the agent builder page URL (/go/builder/<id>) after installing.',
+                },
+                session: {
+                    string: true,
+                    desc: 'Show only this agent session. Defaults to the latest session (tail follows new sessions).',
+                },
+                limit: {
+                    number: true,
+                    default: 20,
+                    desc: 'Maximum log records per fetch.',
+                },
+                tail: {
+                    boolean: true,
+                    default: false,
+                    desc: 'Keep polling for new logs for up to 5 minutes, then stop (re-run to continue, Ctrl-C exits).',
+                },
+                apiToken: ApiTokenArg,
+                apiEndpoint: ApiEndpointArg,
+            },
+            handler: agent_logs_1.handleAgentLogs,
         })
             .demandCommand()
             .help(),

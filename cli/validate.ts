@@ -90,7 +90,7 @@ export async function checkAgentConnectorListings(
             'Find connector IDs at https://superhuman.com/store/connectors.',
         );
       } else {
-        throw err;
+        warnings.push(`Could not verify connector pack ${packIds[index]}: ${String(err)}.`);
       }
     }
   }

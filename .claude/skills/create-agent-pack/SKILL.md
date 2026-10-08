@@ -11,11 +11,11 @@ account. Full SDK docs: https://docs.superhuman.com/packs/build/latest.
 An agent is defined almost entirely by three builder calls on `pack.ts`:
 
 ```typescript
-import * as sdk from "@codahq/packs-sdk";
+import * as sdk from '@codahq/packs-sdk';
 
 export const pack = sdk.newAgent();
-pack.setInstructions("Print hello world."); // the only required call
-pack.setTools({ docs: true }); // least privilege: uncomment more as needed
+pack.setInstructions('Print hello world.'); // the only required call
+pack.setTools({docs: true}); // least privilege: uncomment more as needed
 ```
 
 See `references/api.md` for the full `setTools`/trigger signatures (connector formula filters,
@@ -121,16 +121,16 @@ there is no separate "save" step. Proceed when upload succeeds and reports the n
 
 ```bash
 npx packs validate pack.ts   # single pre-upload check: schema, instructions, triggers, connector warnings
-npx packs agent chat pack.ts "what can you do?"        # remote run against the latest upload
+npx packs agent chat pack.ts "what can you do?" --agentInstanceId <id> --tenantId <tenant>   # remote run
 ```
 
 Run `validate` after any edit, before uploading — for agent packs it also warns about
 connector pack IDs that don't resolve (when you're logged in; pass `--no-checkConnectors`
 to skip). Run `agent chat` after uploading and installing —
-it runs your installed agent instance and defaults to the latest version, which is safe
-because uploads never overwrite.
-If `chat` reports the endpoint missing (404), the server alias hasn't landed;
-fall back to step 7 in the browser.
+it runs your installed agent instance and polls until the reply lands (or `--timeout` expires).
+Copy `--agentInstanceId` from the installed agent's URL; `--tenantId` usually comes back
+from the trigger, so pass it only to override. The command checks the instance belongs
+to this pack. Multi-turn threads are not supported yet: every chat starts a new run.
 
 ### 6. Set the listing name/description (UI)
 
@@ -162,7 +162,7 @@ tools), the already-installed instance's builder view won't reflect the change. 
 trigger/tool definition rendered in the builder, either:
 
 - Create a **fresh pack in a new directory** (`cp pack.ts` into it, `npm install`, `login`,
-  `create` with a new name, `upload`) and install *that*, so the very first install already carries the
+  `create` with a new name, `upload`) and install _that_, so the very first install already carries the
   new definition, or
 - Reinstall the existing agent after the new upload (if your product surface supports refreshing an
   install).
