@@ -19,11 +19,23 @@ When contributing to the documentation, please ensure your changes comply with t
 
 While some documentation changes require only a single edit, others require building or validating your changes using the scripts in this repo's `Makefile`. This build system is designed to work on Unix-like command lines (Linux, Mac OSX, etc) and has a lot of dependencies.
 
+The development and release tools require Node.js `^22.22.2 || ^24.15.0 || >=26.0.0`.
+Use the version pinned in `.nvmrc`. On your own computer, install
+[nvm](https://github.com/nvm-sh/nvm#installing-and-updating) and run the following
+each time you open a terminal in the packs-sdk directory:
+
+```sh
+source setup-env.sh
+```
+
+Dependency installation uses pnpm 10.28.2, pinned in `package.json`.
+`make bootstrap` installs that version locally and uses it to install dependencies.
+
 An easy way to get setup is to use [Google Cloud Shell][cloud_shell], an hosted command-line environment and web IDE that comes with most of the dependencies already installed. You can launch Google Cloud Shell and clone this repo using the button below:
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/coda/packs-sdk.git&cloudshell_workspace=.&cloudshell_open_in_editor=docs/index.md)
 
-The only dependency that needs to be installed manually in Google Cloud Shell is `pipenv`:
+In Google Cloud Shell, also install `pipenv`:
 
 ```sh
 pip install --user pipenv
@@ -34,13 +46,6 @@ You can then install the other dependencies using the Makefile using the bootstr
 
 ```sh
 make bootstrap
-```
-
-To develop on your own computer, make sure you have a compatible version of node installed in your environment. The simplest way to make sure you're using a compatible
-version of node is to install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) and run the following command each time you open a terminal in the packs-sdk repo:
-
-```sh
-source setup-env.sh
 ```
 
 ### Preview documentation

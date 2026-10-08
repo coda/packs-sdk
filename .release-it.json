@@ -12,8 +12,7 @@
       "addVersionUrl": true,
       "versionUrlFormats": {
         "repositoryUrl": "https://github.com/coda/packs-sdk"
-      },
-      "strictLatest": false
+      }
     }
   }
 }

@@ -52,7 +52,13 @@ npx packs upload pack.ts --notes "First version"
 
 `create` runs once per pack and records the id in `.coda-pack.json`. Every upload mints a new version — uploads never overwrite, so re-run `upload` freely after each edit.
 
-`agent chat` returns once the server route ships — until then, verify the live version in the browser: open the agent directory, search the listing name, install the agent, and talk to it there.
+`agent chat` runs your installed agent from the terminal and prints its reply:
+
+```bash
+npx packs agent chat pack.ts "what can you do?" --agentInstanceId <id> --tenantId <tenant>
+```
+
+It triggers a run on the instance, polls its status, and prints the full reply transcript when the run settles. If the run fails or pauses for input, the command says so instead of hanging. Install the agent first (browser agent directory for now), and reinstall after uploads that change tools or triggers.
 
 ## Common pitfalls
 
