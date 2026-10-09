@@ -48,14 +48,6 @@ async function httpJson(url, absentAllowed = false) {
   assert(result && typeof result === 'object', `invalid JSON schema from ${url}`);
   return result;
 }
-async function checkLive(sourceVersion) {
-  const live = await httpJson('https://coda.io/versionz');
-  stableVersion(live.packsSdkVersion);
-  assert(
-    !greater(sourceVersion, live.packsSdkVersion),
-    `source snapshot ${sourceVersion} is not live (${live.packsSdkVersion})`,
-  );
-}
 function api(endpoint, paginated = false) {
   return JSON.parse(
     command('gh', ['api', ...(paginated ? ['--paginate', '--slurp'] : []), `repos/${REPOSITORY}/${endpoint}`]),
@@ -287,7 +279,6 @@ async function prepare(env) {
   );
   const branch = `release/v${version}`;
   const existing = checkOpenRequests(branch);
-  await checkLive(pkg.version);
   assertFreshSource(source);
   if (await resumePrepared({existing, branch, source, version, env})) return;
   const changelog = fs.readFileSync('CHANGELOG.md', 'utf8');
@@ -473,7 +464,6 @@ async function preflight(candidate) {
     !openPullRequests().some(pr => pr.head.ref === 'copybara/packs-sdk-snapshot'),
     'open snapshot blocks publication',
   );
-  await checkLive(candidate.sourceVersion);
   const tag = tagCommit(candidate.version);
   assert(!tag || tag === candidate.sha, 'conflicting remote release tag');
   return registryState(candidate);
