@@ -7,12 +7,12 @@ on:
         required: true
         type: string
       sync-confirmed:
-        description: 'Confirm documentation imported, snapshot merged, intended SDK changes live (--sync-confirmed)'
+        description: 'I have confirmed that all changes intended for release have been exported to this repository and merged to main.'
         required: true
         default: false
         type: boolean
       dry-run:
-        description: 'Validate and prepare locally without pushing a branch or opening a PR (--dry-run)'
+        description: 'Validate and prepare locally without pushing a branch or opening a PR (dry run)'
         default: true
         type: boolean
 permissions:

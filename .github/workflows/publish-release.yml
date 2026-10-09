@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       dry-run:
-        description: 'Validate the package without publishing, tagging, or creating a GitHub release (--dry-run)'
+        description: 'Validate the package without publishing, tagging, or creating a GitHub release (dry run)'
         default: true
         type: boolean
 permissions:
