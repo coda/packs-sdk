@@ -16,21 +16,30 @@ running it again with the same version.
 ## Publish
 
 Merging the release PR starts **Publish SDK release**. After validation, confirm
-internal deployment is current and approve `sdk-release`. The job tags the merge
-commit, publishes to npm and creates the GitHub release.
+internal deployment is current and approve `sdk-release`. release-it stages the
+package, tags the merge commit and creates a draft GitHub release. The run summary
+links the draft and reports the npm stage ID; the package is not public yet.
+
+Inspect the stage and check npm `latest`, then approve with your YubiKey on
+npmjs.com or with `npm stage approve <stage-id>`. After npm approval, publish the
+GitHub draft using the summary link. If a newer GitHub release exists, leave
+**Set as latest release** unchecked. Complete the documentation deployments and
+internal dependency update in the runbook.
 
 For a manual dry run, run from `main` at the release PR's merge commit. Enter the
 merged PR number in `release-pr` (e.g. `1234`) and leave `dry-run` checked.
 
-After publication, complete the documentation deployments and internal dependency
-update in the runbook.
-
 ## Retry or pause
 
-Before a release tag exists, rerun the original Actions run. Afterward, select
-`v<version>` as the workflow ref, enter the same PR number and uncheck `dry-run`.
-Keep the version, commit and tag unchanged. Matching npm publications are skipped;
-conflicting state stops the job.
+Inspect npm before retrying a failed submission. If it was accepted, select
+`skip-npm` to finish Git/GitHub without resubmitting. Matching public package bytes
+skip submission automatically; conflicting package, tag or release state stops
+the job.
+
+Run manually with the same PR number and uncheck `dry-run`. Select `v<version>` if
+the tag exists; otherwise use `main` while it still points to the release's merge
+commit. If `main` advanced before tagging, pause for maintainer recovery. Keep the
+version and commit unchanged; never move an existing tag.
 
 To pause releases, set `PACKS_SDK_PUBLISH_ENABLED=false` and cancel pending/running
 release workflows. Cancel those workflows before changing approval policy too.

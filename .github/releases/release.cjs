@@ -565,23 +565,22 @@ function optionalApi(endpoint) {
     .join('\n\n');
   return JSON.parse(body);
 }
-function githubState(candidate, registry) {
-  const release = optionalApi(`releases/tags/v${candidate.version}`);
+function githubState(candidate) {
+  // The by-tag endpoint omits drafts; authenticated listings include them.
+  const pages = api('releases?per_page=100', true);
+  assert(Array.isArray(pages) && pages.every(Array.isArray), 'invalid GitHub releases response');
+  const releases = pages.flat().filter(release => release?.tag_name === `v${candidate.version}`);
+  assert(releases.length <= 1, 'multiple GitHub releases for the candidate tag');
+  const release = releases[0];
   const latest = optionalApi('releases/latest');
   if (latest) stableVersion(latest.tag_name?.replace(/^v/, ''));
   if (release) {
     assert.equal(release.tag_name, `v${candidate.version}`, 'GitHub release tag mismatch');
     assert.equal(release.name, `v${candidate.version}`, 'conflicting GitHub release title');
     assert.equal(release.body?.trim(), candidate.notes, 'conflicting GitHub release notes');
-    assert.equal(release.draft, false, 'conflicting GitHub draft state');
+    assert.equal(typeof release.draft, 'boolean', 'invalid GitHub draft state');
     assert.equal(release.prerelease, false, 'conflicting GitHub prerelease state');
-    assert(registry.exact, 'GitHub release exists without confirmed npm publication');
-    if (latest?.tag_name === release.tag_name)
-      assert.equal(
-        registry.latest.version,
-        candidate.version,
-        'conflicting GitHub latest state for an older npm version',
-      );
+    assert.equal(tagCommit(candidate.version), candidate.sha, 'GitHub release requires the reviewed remote tag');
   } else assert(latest?.tag_name !== `v${candidate.version}`, 'GitHub release API state is inconsistent');
   return {release, latest};
 }
@@ -613,21 +612,6 @@ function rejectNpmTokens(env) {
   }
   assert(env.ACTIONS_ID_TOKEN_REQUEST_URL && env.ACTIONS_ID_TOKEN_REQUEST_TOKEN, 'GitHub OIDC identity is unavailable');
 }
-async function verifyRegistry(candidate, packed, isNew) {
-  for (let attempt = 0; attempt < 6; attempt++) {
-    const exact = await httpJson(`https://registry.npmjs.org/@codahq%2fpacks-sdk/${candidate.version}`, true);
-    if (exact) {
-      assert.equal(exact.dist?.integrity, packed.integrity, 'published registry integrity mismatch');
-      if (isNew) {
-        const latest = await httpJson('https://registry.npmjs.org/@codahq%2fpacks-sdk/latest');
-        assert.equal(latest.version, candidate.version, 'new publication did not become npm latest');
-      }
-      return;
-    }
-    if (attempt < 5) await new Promise(resolve => setTimeout(resolve, 2000));
-  }
-  throw new Error('registry visibility remains unconfirmed; inspect state before rerunning the same candidate');
-}
 async function publish(env) {
   assert.equal(env.PACKS_SDK_PUBLISH_ENABLED, 'true', 'publication is disabled');
   assert.equal(env.RELEASE_DRY_RUN, 'false', 'publication requires an explicit live run');
@@ -636,109 +620,90 @@ async function publish(env) {
   assert(candidate, 'publication requires a prepared release PR');
   assert.equal(candidate.sha, env.RELEASE_SHA, 'validated/publish SHA mismatch');
   assert.equal(candidate.version, env.RELEASE_VERSION, 'validated/publish version mismatch');
+  assert.equal(git('rev-parse', 'HEAD'), candidate.sha, 'publish checkout SHA mismatch');
   assert.equal(git('status', '--porcelain'), '', 'publish checkout must be clean');
   exportedTools(sourceJson(candidate.sha, 'package.json'));
   protectedEnvironment();
   let packed,
-    registry,
-    tagged = false,
-    attempted = false;
+    output = '';
+  const stageId = () =>
+    output.match(
+      /^📦 Staged, not yet published\. Approve at \S+ \(or `npm stage approve ([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})`\)\.$/im,
+    )?.[1];
   try {
-    registry = await preflight(candidate);
-    tagged = tagCommit(candidate.version) === candidate.sha;
-    let github = githubState(candidate, registry);
+    await preflight(candidate);
+    githubState(candidate);
+    const localTag = spawnSync('git', ['show-ref', '--verify', '--quiet', `refs/tags/v${candidate.version}`]);
+    assert([0, 1].includes(localTag.status), 'local release tag lookup failed');
+    if (localTag.status === 0)
+      assert.equal(
+        git('rev-parse', `refs/tags/v${candidate.version}^{commit}`),
+        candidate.sha,
+        'conflicting local release tag',
+      );
     packed = packArchive(candidate.sha);
     assert.equal(packed.version, candidate.version, 'packed candidate version mismatch');
-    registry = await registryState(candidate);
-    github = githubState(candidate, registry);
+    const registry = await registryState(candidate);
+    const github = githubState(candidate);
     if (registry.exact)
       assert.equal(registry.exact.dist.integrity, packed.integrity, 'existing npm integrity mismatch');
-    let tag = tagCommit(candidate.version);
-    if (!tag) {
-      try {
-        git('show-ref', '--verify', `refs/tags/v${candidate.version}`);
-      } catch {
-        git('tag', `v${candidate.version}`, candidate.sha);
-      }
-      assert.equal(git('rev-parse', `v${candidate.version}^{commit}`), candidate.sha, 'conflicting local tag');
-      git('push', 'origin', `refs/tags/v${candidate.version}`);
-      tag = tagCommit(candidate.version);
-    }
-    assert.equal(tag, candidate.sha, 'tag publication identity mismatch');
-    tagged = true;
-    if (!registry.exact) {
-      attempted = true;
-      command('npm', [
-        'publish',
-        packed.path,
-        '--access',
-        'public',
-        '--tag',
-        'latest',
-        '--registry',
-        'https://registry.npmjs.org',
-      ]);
-    }
-    await verifyRegistry(candidate, packed, !registry.exact);
-    assert.equal(tagCommit(candidate.version), candidate.sha, 'release tag changed after npm publication');
-    if (!github.release) {
-      const notes = path.join(path.dirname(packed.path), 'release-notes.md');
-      fs.writeFileSync(notes, candidate.notes);
-      registry = await registryState(candidate);
-      github = githubState(candidate, registry);
-      const older = newerReleaseExists(candidate, registry, github);
-      if (!github.release)
-        command('gh', [
-          'release',
-          'create',
-          `v${candidate.version}`,
-          '--repo',
-          REPOSITORY,
-          '--verify-tag',
-          '--title',
-          `v${candidate.version}`,
-          '--notes-file',
-          notes,
-          older ? '--latest=false' : '--latest',
-        ]);
-    }
-    const finalRegistry = await registryState(candidate);
-    const finalGitHub = githubState(candidate, finalRegistry);
-    const older = newerReleaseExists(candidate, finalRegistry, finalGitHub);
-    assert(finalGitHub.release, 'GitHub release finalization is unconfirmed');
-    if (!older && finalRegistry.latest.version === candidate.version) {
-      assert.equal(finalGitHub.latest?.tag_name, `v${candidate.version}`, 'GitHub latest finalization is unconfirmed');
-    }
+    const existingTag = tagCommit(candidate.version);
+    assert(!existingTag || existingTag === candidate.sha, 'conflicting remote release tag');
+    const skipNpm = Boolean(registry.exact) || env.RELEASE_SKIP_NPM === 'true';
+    const args = [
+      'exec',
+      'release-it',
+      '--ci',
+      '--no-increment',
+      '--quiet',
+      '--config',
+      '.github/releases/publish.config.cjs',
+      '--npm.publishPath',
+      packed.path,
+    ];
+    if (skipNpm) args.push('--no-npm.publish');
+    if (existingTag) args.push('--no-git.tag');
+    if (github.release) args.push('--no-github.release');
+    if (newerReleaseExists(candidate, registry, github)) args.push('--github.makeLatest=false');
+    output = command(PNPM, args, {
+      env: {
+        ...env,
+        GIT_COMMITTER_NAME: 'github-actions[bot]',
+        GIT_COMMITTER_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com',
+      },
+    });
+    console.log(output);
+    if (!skipNpm) assert(stageId(), 'npm stage ID is unconfirmed; inspect npm before retrying');
+    assert.equal(tagCommit(candidate.version), candidate.sha, 'release tag identity changed');
+    const releaseUrl =
+      github.release?.html_url || output.match(/^🔗 (https:\/\/github\.com\/coda\/packs-sdk\/releases\/[^\s]+)$/m)?.[1];
+    assert(
+      typeof releaseUrl === 'string' && /^https:\/\/github\.com\/coda\/packs-sdk\/releases\/[^\s]+$/.test(releaseUrl),
+      'GitHub release URL is unconfirmed; inspect GitHub before retrying',
+    );
+    const npmStatus = registry.exact
+      ? 'npm: matching public package; submission skipped.'
+      : skipNpm
+        ? 'npm: submission skipped by the operator; inspect the existing stage and approve it if pending.'
+        : `npm: pending approval. Stage ID: ${stageId()}. Approve with npm stage approve ${stageId()}.`;
     summary(
-      `Verified https://www.npmjs.com/package/@codahq/packs-sdk/v/${candidate.version}\n` +
-        `GitHub: https://github.com/${REPOSITORY}/releases/tag/v${candidate.version}\n` +
-        `PR #${candidate.pr}; merge ${candidate.sha}; source snapshot ${candidate.source}\n${packed.integrity}\n` +
-        'Follow up: https://github.com/coda/packs-sdk/actions/workflows/publish-docs.yml and https://docs.superhuman.com/d/Go-on-call-go-go-oncall_dkJe3Z8RRKc/Releasing-Packs-SDK-to-the-Public_suM7Qe50#_luFTQOHz for internal dependency updates.',
+      `Release v${candidate.version}: PR #${candidate.pr}; merge ${candidate.sha}; source ${candidate.source}\n` +
+        `${packed.integrity}\n${npmStatus}\nGitHub: ${releaseUrl}\n` +
+        (github.release?.draft === false
+          ? 'GitHub release was already published.\n'
+          : 'After npm approval, publish the GitHub draft using this URL.\n') +
+        'Complete the documentation deployments and internal dependency update in the release runbook.',
       env,
     );
   } catch (error) {
-    let npmState = !registry
-      ? 'not inspected'
-      : registry.exact
-        ? 'existing version'
-        : 'confirmed absent before attempted publication';
-    if (attempted) {
-      try {
-        const current = await httpJson(`https://registry.npmjs.org/@codahq%2fpacks-sdk/${candidate.version}`, true);
-        npmState =
-          current?.dist?.integrity === packed?.integrity
-            ? 'matching integrity confirmed'
-            : current
-              ? 'conflicting/unknown integrity'
-              : 'not visible; publication may be ambiguous';
-      } catch {
-        npmState = 'registry state unavailable';
-      }
+    if (error.stdout) {
+      output = String(error.stdout);
+      console.log(output);
     }
     summary(
       `Incomplete release v${candidate.version}: PR #${candidate.pr}; merge ${candidate.sha}; source ${candidate.source}.\n` +
-        `Tag ${tagged ? 'confirmed' : 'not confirmed'}; npm ${npmState}; packed integrity ${packed?.integrity || 'not packed'}.\n` +
-        `Rerun the original Actions run before tag creation. After the tag exists, dispatch on v${candidate.version} with PR #${candidate.pr}. Never move tags or choose another version.`,
+        `Stage ID: ${stageId() || 'unconfirmed'}; packed integrity ${packed?.integrity || 'not packed'}.\n` +
+        'Inspect npm and GitHub before retrying. If submission was accepted, select skip-npm to finish the missing steps; keep the version and commit unchanged.',
       env,
     );
     throw error;
@@ -753,7 +718,7 @@ async function main(env = process.env) {
   assert.equal(process.argv[2], 'prepare', 'unknown release command');
   return prepare(env);
 }
-module.exports = {stableVersion};
+module.exports = {stableVersion, changelogEntry};
 if (require.main === module)
   main().catch(error => {
     console.error(error.message);
