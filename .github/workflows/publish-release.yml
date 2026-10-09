@@ -1,0 +1,104 @@
+name: Publish SDK release
+on:
+  push:
+    branches: [main]
+    paths: [package.json, CHANGELOG.md]
+  workflow_dispatch:
+    inputs:
+      release-pr:
+        description: 'Merged prepared release PR; run on main at its merge SHA or its v<version> tag'
+        required: true
+        type: string
+      dry-run:
+        description: 'Validate the package without publishing, tagging, or creating a GitHub release'
+        default: true
+        type: boolean
+      skip-npm:
+        description: 'I have verified this version is already staged or published; skip npm submission'
+        default: false
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: packs-sdk-release
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+    outputs:
+      eligible: ${{ steps.inspect.outputs.eligible }}
+      sha: ${{ steps.inspect.outputs.sha }}
+      version: ${{ steps.inspect.outputs.version }}
+      pr: ${{ steps.inspect.outputs.pr }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.22.2'
+          package-manager-cache: false
+      - id: inspect
+        run: node .github/releases/release.cjs inspect
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_PR: ${{ inputs.release-pr }}
+          PACKS_SDK_PUBLISH_ENABLED: ${{ vars.PACKS_SDK_PUBLISH_ENABLED }}
+          RELEASE_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
+  validate:
+    needs: inspect
+    if: needs.inspect.outputs.eligible == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.inspect.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup_node
+        with:
+          cache: 'false'
+          frozen-lockfile: 'true'
+      - uses: ./.github/actions/setup_python
+      - run: make test lint autoformat-all-no-fix validate-samples validate-no-changes
+      - run: npm install --global npm@11.15.0
+      - run: node .github/releases/release.cjs check-package
+        env:
+          RELEASE_SHA: ${{ needs.inspect.outputs.sha }}
+  publish:
+    needs: [inspect, validate]
+    if: >-
+      needs.inspect.outputs.eligible == 'true' &&
+      vars.PACKS_SDK_PUBLISH_ENABLED == 'true' &&
+      (github.event_name == 'push' || inputs.dry-run == false)
+    runs-on: ubuntu-latest
+    environment: sdk-release
+    permissions:
+      contents: write
+      pull-requests: read
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.inspect.outputs.sha }}
+          fetch-depth: 0
+      - uses: ./.github/actions/setup_node
+        with:
+          cache: 'false'
+          frozen-lockfile: 'true'
+      - run: npm install --global npm@11.15.0
+      - run: node .github/releases/release.cjs publish
+        env:
+          RELEASE_SKIP_NPM: ${{ inputs.skip-npm || false }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKS_SDK_PUBLISH_ENABLED: ${{ vars.PACKS_SDK_PUBLISH_ENABLED }}
+          RELEASE_DRY_RUN: 'false'
+          RELEASE_PR: ${{ needs.inspect.outputs.pr }}
+          RELEASE_SHA: ${{ needs.inspect.outputs.sha }}
+          RELEASE_VERSION: ${{ needs.inspect.outputs.version }}
