@@ -13,6 +13,10 @@ on:
         description: 'Validate the package without publishing, tagging, or creating a GitHub release (dry run)'
         default: true
         type: boolean
+      skip-npm:
+        description: 'I have verified this version is already staged or published; skip npm submission'
+        default: false
+        type: boolean
 permissions:
   contents: read
 concurrency:
@@ -91,6 +95,7 @@ jobs:
       - run: npm install --global npm@11.15.0
       - run: node .github/releases/release.cjs publish
         env:
+          RELEASE_SKIP_NPM: ${{ inputs.skip-npm || false }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKS_SDK_PUBLISH_ENABLED: ${{ vars.PACKS_SDK_PUBLISH_ENABLED }}
           RELEASE_DRY_RUN: 'false'
