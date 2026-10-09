@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       release-pr:
-        description: 'Merged prepared release PR; run on main at its merge SHA or its v<version> tag (--release-pr)'
+        description: 'Number of the merged PR created by Prepare SDK release, e.g. 1234. Run on main at its merge commit or its v<version> tag for retries.'
         required: true
         type: string
       dry-run:
