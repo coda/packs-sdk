@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       release-pr:
-        description: 'Merged prepared release PR; run on main at its merge SHA or its v<version> tag'
+        description: 'Merged prepared release PR; run on main at its merge SHA or its v<version> tag (--release-pr)'
         required: true
         type: string
       dry-run:
-        description: 'Validate the package without publishing, tagging, or creating a GitHub release'
+        description: 'Validate the package without publishing, tagging, or creating a GitHub release (--dry-run)'
         default: true
         type: boolean
 permissions:
