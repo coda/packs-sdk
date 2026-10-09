@@ -1,0 +1,46 @@
+name: Prepare SDK release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Exact stable version, for example 1.17.7'
+        required: true
+        type: string
+      sync-confirmed:
+        description: 'Documentation imported, snapshot merged, intended SDK changes live'
+        required: true
+        default: false
+        type: boolean
+      dry-run:
+        description: 'Validate and prepare locally without pushing a branch or opening a PR'
+        default: true
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: packs-sdk-release
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: sdk-release
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup_node
+        with:
+          cache: 'false'
+          frozen-lockfile: 'true'
+      - uses: ./.github/actions/setup_python
+      - run: node .github/releases/release.cjs prepare
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          SYNC_CONFIRMED: ${{ inputs.sync-confirmed }}
+          RELEASE_DRY_RUN: ${{ inputs.dry-run }}
