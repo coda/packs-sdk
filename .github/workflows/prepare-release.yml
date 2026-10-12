@@ -3,16 +3,16 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Exact stable version, for example 1.17.7'
+        description: 'Exact stable version, for example 1.17.7 (--version)'
         required: true
         type: string
       sync-confirmed:
-        description: 'Documentation imported, snapshot merged, intended SDK changes live'
+        description: 'I have confirmed that all changes intended for release have been exported to this repository and merged to main.'
         required: true
         default: false
         type: boolean
       dry-run:
-        description: 'Validate and prepare locally without pushing a branch or opening a PR'
+        description: 'Validate and prepare locally without pushing a branch or opening a PR (dry run)'
         default: true
         type: boolean
 permissions:

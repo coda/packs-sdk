@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       release-pr:
-        description: 'Merged prepared release PR; run on main at its merge SHA or its v<version> tag'
+        description: 'PR # created by Prepare SDK release. Run on main after it has been merged at its merge commit, or on its v<version> tag for retries.'
         required: true
         type: string
       dry-run:
-        description: 'Validate the package without publishing, tagging, or creating a GitHub release'
+        description: 'Validate the package without publishing, tagging, or creating a GitHub release (dry run)'
         default: true
         type: boolean
       skip-npm:
