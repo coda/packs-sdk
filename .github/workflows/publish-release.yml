@@ -32,7 +32,6 @@ jobs:
     outputs:
       eligible: ${{ steps.inspect.outputs.eligible }}
       sha: ${{ steps.inspect.outputs.sha }}
-      version: ${{ steps.inspect.outputs.version }}
       pr: ${{ steps.inspect.outputs.pr }}
     steps:
       - uses: actions/checkout@v4
@@ -48,8 +47,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_PR: ${{ inputs.release-pr }}
-          PACKS_SDK_PUBLISH_ENABLED: ${{ vars.PACKS_SDK_PUBLISH_ENABLED }}
-          RELEASE_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
   validate:
     needs: inspect
     if: needs.inspect.outputs.eligible == 'true'
@@ -66,10 +63,6 @@ jobs:
           frozen-lockfile: 'true'
       - uses: ./.github/actions/setup_python
       - run: make test lint autoformat-all-no-fix validate-samples validate-no-changes
-      - run: npm install --global npm@11.15.0
-      - run: node .github/releases/release.cjs check-package
-        env:
-          RELEASE_SHA: ${{ needs.inspect.outputs.sha }}
   publish:
     needs: [inspect, validate]
     if: >-
@@ -99,6 +92,3 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKS_SDK_PUBLISH_ENABLED: ${{ vars.PACKS_SDK_PUBLISH_ENABLED }}
           RELEASE_DRY_RUN: 'false'
-          RELEASE_PR: ${{ needs.inspect.outputs.pr }}
-          RELEASE_SHA: ${{ needs.inspect.outputs.sha }}
-          RELEASE_VERSION: ${{ needs.inspect.outputs.version }}

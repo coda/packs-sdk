@@ -9,16 +9,18 @@
    each run. Review the default dry run, then uncheck `dry-run` to create the PR.
 3. Review the changelog and diff, then merge after CI passes.
 
-If `main` advances before merging, close the PR, delete its branch and prepare
-again with the same unpublished version. Resume interrupted preparation by
-running it again with the same version.
+If release-it selects no new version, no release PR is prepared. If preparation
+stops after pushing its branch, open the PR for that branch or delete the branch
+before preparing again.
 
 ## Publish
 
-Merging the release PR starts **Publish SDK release**. After validation, confirm
+Merging a `release/v...` PR starts **Publish SDK release**. After validation, confirm
 internal deployment is current and approve `sdk-release`. release-it stages the
 package, tags the merge commit and creates a draft GitHub release. The run summary
-links the draft and reports the npm stage ID; the package is not public yet.
+includes native release-it output with the draft URL and npm stage approval
+command, including output produced before a failure. The package is not public
+yet.
 
 Inspect the stage and check npm `latest`, then approve with your YubiKey on
 npmjs.com or with `npm stage approve <stage-id>`. After npm approval, publish the
@@ -29,12 +31,17 @@ internal dependency update in the runbook.
 For a manual dry run, run from `main` at the release PR's merge commit. Enter the
 merged PR number in `release-pr` (e.g. `1234`) and leave `dry-run` checked.
 
+The workflows retain clean-checkout checks, normal SDK validation and
+`sdk-release` approval. Release-it and npm handle version, changelog and
+publication checks; recovery requires the operator steps below.
+
 ## Retry or pause
 
 Inspect npm before retrying a failed submission. If it was accepted, select
-`skip-npm` to finish Git/GitHub without resubmitting. Matching public package bytes
-skip submission automatically; conflicting package, tag or release state stops
-the job.
+`skip-npm` to finish missing Git/GitHub steps without resubmitting. Select it for
+an already published version too. If the stage and GitHub draft already exist,
+approve npm and publish the draft; another CI run is unnecessary. Existing-state
+conflicts surface as native tool errors and require maintainer recovery.
 
 Run manually with the same PR number and uncheck `dry-run`. Select `v<version>` if
 the tag exists; otherwise use `main` while it still points to the release's merge
