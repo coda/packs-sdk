@@ -41,6 +41,12 @@ async function prepare(env) {
   releaseIt(
     ['--ci', '--quiet', '--config', '.github/releases/prepare.config.cjs', `--increment=${env.RELEASE_VERSION}`],
     env,
+    {
+      GIT_AUTHOR_NAME: 'github-actions[bot]',
+      GIT_COMMITTER_NAME: 'github-actions[bot]',
+      GIT_AUTHOR_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com',
+      GIT_COMMITTER_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com',
+    },
   );
   const version = readJson('package.json').version;
   if (version === originalVersion) {
@@ -48,25 +54,11 @@ async function prepare(env) {
     return;
   }
   const branch = `release/v${version}`;
-  git('switch', '-c', branch);
-  command(PNPM, ['install', '--frozen-lockfile']);
-  command('make', ['build']);
   if (env.RELEASE_DRY_RUN !== 'false') {
     summary(git('diff'), env);
     summary(`Dry run: ${version}; no branch pushed or PR created.`, env);
     return;
   }
-  git('add', '--all');
-  command('git', ['commit', '-m', `packs-sdk: release v${version}`], {
-    env: {
-      ...env,
-      GIT_AUTHOR_NAME: 'github-actions[bot]',
-      GIT_COMMITTER_NAME: 'github-actions[bot]',
-      GIT_AUTHOR_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com',
-      GIT_COMMITTER_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com',
-    },
-  });
-  git('push', 'origin', `HEAD:refs/heads/${branch}`);
   const url = command('gh', [
     'pr',
     'create',
