@@ -1,6 +1,7 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
 import type {AgentDefinition} from './types';
+import type {AgentRoutineDefinition} from './types';
 import type {AgentTool} from './types';
 import type {AgentToolsDef} from './types';
 import type {AllowedAuthentication} from './types';
@@ -67,7 +68,7 @@ import {wrapMetadataFunction} from './api';
  * ```
  */
 export function newPack(
-  definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>,
+  definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers' | 'defaultRoutines'>>,
 ): PackDefinitionBuilder {
   return new PackDefinitionBuilder(definition);
 }
@@ -196,7 +197,7 @@ export class PackDefinitionBuilder extends BaseDefinitionBuilder implements Basi
    * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
    * rather than constructing a builder directly.
    */
-  constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>) {
+  constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers' | 'defaultRoutines'>>) {
     super();
     const {
       formulas,
@@ -668,6 +669,7 @@ function frozenCopy<T extends {}>(value: T): T {
 interface AgentBuilderState {
   agent: Partial<AgentDefinition>;
   defaultTriggers?: DefaultTriggerDefinition[];
+  defaultRoutines?: AgentRoutineDefinition[];
 }
 
 // Off the instance: an own property leaks into the metadata, and `#private` breaks pre-ES2015 .d.ts consumers.
@@ -694,6 +696,8 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
    */
   declare readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+  /** See {@link PackVersionDefinition.defaultRoutines}. Set via {@link addDefaultRoutine}. */
+  declare readonly defaultRoutines?: DeepReadonly<AgentRoutineDefinition[]>;
 
   constructor() {
     super();
@@ -702,6 +706,35 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     // Own and enumerable, unlike a class getter, so compilePackMetadata's object rest still copies them.
     Object.defineProperty(this, 'agent', {enumerable: true, get: () => state.agent});
     Object.defineProperty(this, 'defaultTriggers', {enumerable: true, get: () => state.defaultTriggers});
+    Object.defineProperty(this, 'defaultRoutines', {enumerable: true, get: () => state.defaultRoutines});
+  }
+
+  /**
+   * Adds a routine with its own name or instructions and one trigger.
+   * Schedules install paused; event triggers install disabled until configured by the adopter.
+   *
+   * @example
+   * ```
+   * pack.addDefaultRoutine({
+   *   name: 'Daily brief',
+   *   instruction: 'Summarize overnight changes. Include source links.',
+   *   trigger: {
+   *     kind: sdk.DefaultTriggerKind.Schedule,
+   *     rruleString: 'DTSTART;TZID=America/New_York:20261012T090000\nRRULE:FREQ=DAILY',
+   *   },
+   * });
+   * ```
+   */
+  addDefaultRoutine(routine: AgentRoutineDefinition): this {
+    if (routine.trigger.kind === DefaultTriggerKind.Schedule) {
+      const message = validateRRuleString(routine.trigger.rruleString);
+      if (message) {
+        throw new Error(message);
+      }
+    }
+    const state = stateOf(this);
+    state.defaultRoutines = frozenCopy<AgentRoutineDefinition[]>([...(state.defaultRoutines ?? []), routine]);
+    return this;
   }
 
   /**

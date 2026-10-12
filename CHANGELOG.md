@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Internal agent routine authoring via `addDefaultRoutine({name, instruction, trigger})`, with metadata validation and shared default-trigger limits. Requires routine-aware server release and installation support before use.
+
 ## [1.18.1] - 2026-10-08
 
 ### Changed

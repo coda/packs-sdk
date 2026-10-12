@@ -37,6 +37,8 @@ export declare const Limits: {
     PermissionsBatchSize: number;
     PromptLength: number;
     RRuleStringLength: number;
+    RoutineNameLength: number;
+    RoutineInstructionLength: number;
     SuggestedPromptText: number;
     UpdateBatchSize: number;
     FilterableProperties: number;

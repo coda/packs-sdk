@@ -9272,6 +9272,137 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(result.defaultTriggers, defaultTriggers);
     });
 
+    describe('default routines', () => {
+      const routineAgentMetadata = () => createFakeAgentMetadata({agent: {instructions: 'Base.', tools: []}});
+      const schedule: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Schedule,
+        rruleString: 'DTSTART;TZID=America/New_York:20261012T090000\nRRULE:FREQ=DAILY',
+      };
+      const writing: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.WhileWriting,
+        condition: 'When writing statistics',
+      };
+      const slack: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Slack,
+        eventType: SlackEventType.MessageKeyword,
+        keywords: ['deploy'],
+      };
+      const mail: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Mail,
+        mailEventType: MailEventType.MessageReceived,
+        filters: {
+          conditions: [{field: MailFilterField.From, operator: FilterOperator.TextContains, value: '@example.com'}],
+        },
+      };
+      const notetaker: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.Event,
+        type: EventTriggerType.Notetaker,
+        eventType: NotetakerEventType.MeetingSummaryCompleted,
+        filters: {keywords: ['renewal']},
+      };
+      for (const trigger of [schedule, writing, slack, mail, notetaker]) {
+        it(`preserves ${trigger.kind}${'type' in trigger ? `/${trigger.type}` : ''} routines through JSON validation`, async () => {
+          const routine = {name: 'Routine', instruction: 'Include links.', trigger};
+          const metadata = {...routineAgentMetadata(), defaultRoutines: [routine]};
+          const validated = await validateJson(JSON.parse(JSON.stringify(metadata)));
+          assert.deepEqual(validated.defaultRoutines, [routine]);
+        });
+      }
+
+      for (const fields of [{}, {name: ''}, {instruction: '  \n'}, {name: '  ', instruction: ''}]) {
+        it(`rejects a blank routine wrapper ${JSON.stringify(fields)}`, async () => {
+          await validateJsonAndAssertFails({
+            ...routineAgentMetadata(),
+            defaultRoutines: [{...fields, trigger: writing}],
+          });
+        });
+      }
+
+      it('allows name-only and instruction-only routines without trimming authored text', async () => {
+        const defaultRoutines = [
+          {name: ' Watch ', trigger: slack},
+          {instruction: ' Act. ', trigger: slack},
+        ];
+        const validated = await validateJson({...routineAgentMetadata(), defaultRoutines});
+        assert.deepEqual(validated.defaultRoutines, defaultRoutines);
+      });
+
+      it('enforces routine name and instruction bounds', async () => {
+        const routine = {name: 'n'.repeat(80), instruction: 'i'.repeat(20_000), trigger: writing};
+        const validated = await validateJson({...routineAgentMetadata(), defaultRoutines: [routine]});
+        assert.deepEqual(validated.defaultRoutines, [routine]);
+        for (const overLimit of [
+          {...routine, name: 'n'.repeat(81)},
+          {...routine, instruction: 'i'.repeat(20_001)},
+        ]) {
+          await validateJsonAndAssertFails({...routineAgentMetadata(), defaultRoutines: [overLimit]});
+        }
+      });
+
+      it('validates nested trigger configuration and rejects unknown routine keys', async () => {
+        for (const routine of [
+          {name: 'Brief', trigger: {...schedule, rruleString: 'RRULE:FREQ=DAILY'}},
+          {name: 'Watch', trigger: {...slack, keywords: []}},
+          {name: 'Brief', instructions: 'Wrong field.', trigger: schedule},
+          {name: 'Brief', trigger: {...writing, instruction: 'Wrong level.'}},
+          {name: 'Chat', trigger: {kind: 'chat'}},
+        ]) {
+          await validateJsonAndAssertFails({...routineAgentMetadata(), defaultRoutines: [routine]});
+        }
+      });
+
+      for (const trigger of [schedule, writing]) {
+        it(`enforces one ${trigger.kind} across plain triggers and routines`, async () => {
+          const err = await validateJsonAndAssertFails({
+            ...routineAgentMetadata(),
+            defaultTriggers: [trigger],
+            defaultRoutines: [{name: 'Routine', trigger}],
+          });
+          assert.deepInclude(err.validationErrors!, {
+            path: 'defaultRoutines[0].trigger',
+            message: `An agent can only declare one ${trigger.kind} default trigger.`,
+          });
+          await validateJsonAndAssertFails({
+            ...routineAgentMetadata(),
+            defaultRoutines: [
+              {name: 'First', trigger},
+              {name: 'Second', trigger},
+            ],
+          });
+        });
+      }
+
+      it('shares the event cap across plain triggers and routines', async () => {
+        const metadata = {
+          ...routineAgentMetadata(),
+          defaultTriggers: Array.from({length: Limits.MaxDefaultEventTriggers - 1}, () => slack),
+          defaultRoutines: [{name: 'Watch', trigger: mail}],
+        };
+        await validateJson(metadata);
+        const err = await validateJsonAndAssertFails({
+          ...metadata,
+          defaultRoutines: [...metadata.defaultRoutines, {name: 'Meeting', trigger: notetaker}],
+        });
+        assert.deepInclude(err.validationErrors!, {
+          path: 'defaultRoutines[1].trigger',
+          message: `An agent can only declare ${Limits.MaxDefaultEventTriggers} event default triggers.`,
+        });
+      });
+
+      it('rejects routines on a connector-only manifest', async () => {
+        const err = await validateJsonAndAssertFails({
+          ...createFakeAgentMetadata({agent: undefined}),
+          defaultRoutines: [{name: 'Brief', trigger: schedule}],
+        });
+        assert.deepInclude(err.validationErrors!, {
+          path: 'defaultRoutines',
+          message: 'Only an agent can define routines.',
+        });
+      });
+    });
+
     it('rejects default triggers on a pack that is not an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({

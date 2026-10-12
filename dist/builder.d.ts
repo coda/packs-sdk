@@ -1,6 +1,7 @@
 import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { AgentDefinition } from './types';
+import type { AgentRoutineDefinition } from './types';
 import type { AgentToolsDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
@@ -45,7 +46,7 @@ import type { WhileWritingTriggerDefinition } from './types';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  * ```
  */
-export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers' | 'defaultRoutines'>>): PackDefinitionBuilder;
 /**
  * Creates a new skeleton agent definition that can be added to.
  *
@@ -157,7 +158,7 @@ export declare class PackDefinitionBuilder extends BaseDefinitionBuilder impleme
      * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
      * rather than constructing a builder directly.
      */
-    constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers'>>);
+    constructor(definition?: Partial<Omit<PackVersionDefinition, 'agent' | 'defaultTriggers' | 'defaultRoutines'>>);
     /**
      * Adds a formula definition to this pack.
      *
@@ -437,7 +438,26 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
      */
     readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+    /** See {@link PackVersionDefinition.defaultRoutines}. Set via {@link addDefaultRoutine}. */
+    readonly defaultRoutines?: DeepReadonly<AgentRoutineDefinition[]>;
     constructor();
+    /**
+     * Adds a routine with its own name or instructions and one trigger.
+     * Schedules install paused; event triggers install disabled until configured by the adopter.
+     *
+     * @example
+     * ```
+     * pack.addDefaultRoutine({
+     *   name: 'Daily brief',
+     *   instruction: 'Summarize overnight changes. Include source links.',
+     *   trigger: {
+     *     kind: sdk.DefaultTriggerKind.Schedule,
+     *     rruleString: 'DTSTART;TZID=America/New_York:20261012T090000\nRRULE:FREQ=DAILY',
+     *   },
+     * });
+     * ```
+     */
+    addDefaultRoutine(routine: AgentRoutineDefinition): this;
     /**
      * Sets this agent's instructions.
      *

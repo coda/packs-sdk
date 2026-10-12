@@ -1,10 +1,12 @@
 import './test_helper';
 import type {AgentDefinitionBuilder} from '../builder';
+import type {AgentRoutineDefinition} from '../types';
 import {AuthenticationType} from '../types';
 import {BaseDefinitionBuilder} from '../builder';
 import {ConnectionRequirement} from '../api_types';
 import {ContextualTriggerAssistMode} from '../types';
 import {ContextualTriggerSurface} from '../types';
+import type {DefaultTriggerDefinition} from '../types';
 import {DefaultTriggerKind} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
@@ -637,6 +639,69 @@ describe('Agent builder', () => {
     assert.deepEqual(agent.agent, {tools: [], instructions: 'You help a team run async standups.'});
   });
 
+  describe('routines', () => {
+    it('keeps routines separate from plain triggers through JSON compilation', () => {
+      const routine = {
+        name: 'Daily brief',
+        instruction: 'Include source links.',
+        trigger: {kind: DefaultTriggerKind.WhileWriting, condition: 'When writing statistics'},
+      } satisfies AgentRoutineDefinition;
+      assert.strictEqual(agent.addDefaultRoutine(routine), agent);
+      agent.addDefaultSlackEventTrigger({eventType: SlackEventType.MessageKeyword, keywords: ['deploy']});
+      const metadata = JSON.parse(JSON.stringify(compilePackMetadata(agent as unknown as PackVersionDefinition)));
+      assert.deepEqual(metadata.defaultRoutines, [routine]);
+      assert.lengthOf(metadata.defaultTriggers, 1);
+    });
+
+    it('copies and freezes nested routine inputs without freezing caller objects', () => {
+      const routine = {
+        name: 'Deploy watch',
+        trigger: {
+          kind: DefaultTriggerKind.Event,
+          type: EventTriggerType.Slack,
+          eventType: SlackEventType.MessageKeyword,
+          keywords: ['deploy'],
+        },
+      } satisfies AgentRoutineDefinition;
+      agent.addDefaultRoutine(routine);
+      routine.trigger.keywords.push('rollback');
+      routine.name = 'Changed';
+      assert.equal(agent.defaultRoutines?.[0].name, 'Deploy watch');
+      assert.isTrue(Object.isFrozen(agent.defaultRoutines));
+      assert.isTrue(Object.isFrozen(agent.defaultRoutines?.[0].trigger));
+      assert.isFalse(Object.isFrozen(routine));
+    });
+
+    it('appends multiple routines without changing earlier declarations', () => {
+      const trigger: DefaultTriggerDefinition = {
+        kind: DefaultTriggerKind.WhileWriting,
+        condition: 'When writing statistics',
+      };
+      agent.addDefaultRoutine({name: 'First', trigger});
+      const first = agent.defaultRoutines;
+      agent.addDefaultRoutine({instruction: 'Second action.', trigger});
+      assert.lengthOf(first!, 1);
+      assert.lengthOf(agent.defaultRoutines!, 2);
+    });
+
+    it('rejects an unsafe schedule before changing builder state', () => {
+      assert.throws(
+        () =>
+          agent.addDefaultRoutine({
+            name: 'Brief',
+            trigger: {kind: DefaultTriggerKind.Schedule, rruleString: 'RRULE:FREQ=DAILY'},
+          }),
+        /DTSTART/,
+      );
+      assert.isUndefined(agent.defaultRoutines);
+    });
+
+    it('is not available on a connector-only builder', () => {
+      assert.notProperty(newPack(), 'addDefaultRoutine');
+      assert.notProperty(newPack(), 'defaultRoutines');
+    });
+  });
+
   it('keeps the last instructions set', () => {
     agent.setInstructions('First.').setInstructions('Second.');
     assert.deepEqual(agent.agent, {tools: [], instructions: 'Second.'});
@@ -952,6 +1017,21 @@ describe('Agent builder', () => {
         builder.setTools({mcp: true});
         // @ts-expect-error only newAgent() can stamp default triggers
         newPack({defaultTriggers: {}});
+        // @ts-expect-error only newAgent() can stamp routines
+        newPack({defaultRoutines: []});
+        // @ts-expect-error routines are not authorable on a connector builder
+        newPack().addDefaultRoutine({name: 'Brief'});
+        // @ts-expect-error browser-facing metadata must not carry routine instructions
+        (undefined as unknown as ExternalPackVersionMetadata).defaultRoutines;
+        // @ts-expect-error routines are reachable only through addDefaultRoutine
+        builder.defaultRoutines = [];
+        // @ts-expect-error the routine list is immutable
+        builder.defaultRoutines?.push({
+          name: 'Brief',
+          trigger: {kind: DefaultTriggerKind.WhileWriting, condition: 'x'},
+        });
+        // @ts-expect-error nested routine metadata is immutable
+        builder.defaultRoutines![0].instruction = 'Changed';
         // @ts-expect-error the agent is reachable only through its setters
         builder.agent.instructions = 'x';
         // @ts-expect-error as is its tool list

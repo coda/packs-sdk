@@ -3,6 +3,7 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import type {AgentDefinition} from '../types';
+import type {AgentRoutineDefinition} from '../types';
 import type {AgentTool} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
@@ -228,6 +229,8 @@ export const Limits = {
   PermissionsBatchSize: 5000,
   PromptLength: 20000,
   RRuleStringLength: 512,
+  RoutineNameLength: 80,
+  RoutineInstructionLength: 20_000,
   SuggestedPromptText: 500,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,
@@ -2600,34 +2603,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     whileWritingTriggerSchema,
   ]);
 
-  const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z
-    .array(defaultTriggerSchema)
-    .superRefine((triggers, context) => {
-      const seen = new Set<string>();
-      let eventTriggers = 0;
-      triggers.forEach((trigger, index) => {
-        // An agent listens to as many events as the server stores; the other kinds are one apiece.
-        if (trigger.kind === DefaultTriggerKind.Event) {
-          eventTriggers += 1;
-          if (eventTriggers > Limits.MaxDefaultEventTriggers) {
-            context.addIssue({
-              code: 'custom',
-              path: [index],
-              message: `An agent can only declare ${Limits.MaxDefaultEventTriggers} event default triggers.`,
-            });
-          }
-          return;
-        }
-        if (seen.has(trigger.kind)) {
-          context.addIssue({
-            code: 'custom',
-            path: [index],
-            message: `An agent can only declare one ${trigger.kind} default trigger.`,
-          });
-        }
-        seen.add(trigger.kind);
-      });
-    });
+  const defaultTriggersSchema: z.ZodType<DefaultTriggerDefinition[]> = z.array(defaultTriggerSchema);
+  const routineSchema = zodCompleteStrictObject<AgentRoutineDefinition>({
+    name: z.string().max(Limits.RoutineNameLength).optional(),
+    instruction: z.string().max(Limits.RoutineInstructionLength).optional(),
+    trigger: defaultTriggerSchema,
+  }).refine(routine => Boolean(routine.name?.trim() || routine.instruction?.trim()), {
+    message: 'A routine needs a name or instruction containing non-whitespace text.',
+  });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
@@ -2811,6 +2794,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     benchInitializationSkill: chatSkillSchema.optional(),
     agent: agentSchema.optional(),
     defaultTriggers: defaultTriggersSchema.optional(),
+    defaultRoutines: z.array(routineSchema).optional(),
     mcpServers: z
       .array(mcpServerSchema)
       .max(1)
@@ -3466,8 +3450,40 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       });
     })
     .superRefine((data, context) => {
+      const metadata = data as PackVersionMetadata;
+      const triggers = [
+        ...(metadata.defaultTriggers ?? []).map((trigger, index) => ({trigger, path: ['defaultTriggers', index]})),
+        ...(metadata.defaultRoutines ?? []).map((routine, index) => ({
+          trigger: routine.trigger,
+          path: ['defaultRoutines', index, 'trigger'],
+        })),
+      ];
+      const seen = new Set<DefaultTriggerKind>();
+      let eventTriggers = 0;
+      for (const {trigger, path} of triggers) {
+        if (trigger.kind === DefaultTriggerKind.Event) {
+          eventTriggers += 1;
+          if (eventTriggers > Limits.MaxDefaultEventTriggers) {
+            context.addIssue({
+              code: 'custom',
+              path,
+              message: `An agent can only declare ${Limits.MaxDefaultEventTriggers} event default triggers.`,
+            });
+          }
+        } else if (seen.has(trigger.kind)) {
+          context.addIssue({
+            code: 'custom',
+            path,
+            message: `An agent can only declare one ${trigger.kind} default trigger.`,
+          });
+        }
+        seen.add(trigger.kind);
+      }
       // The builder can't add these to an agent, but a hand-written manifest can.
-      if (!(data as PackVersionMetadata).agent) {
+      if (!metadata.agent) {
+        if (metadata.defaultRoutines?.length) {
+          context.addIssue({code: 'custom', path: ['defaultRoutines'], message: 'Only an agent can define routines.'});
+        }
         if (((data as PackVersionMetadata).defaultTriggers || []).length) {
           context.addIssue({
             code: 'custom',

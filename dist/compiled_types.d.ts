@@ -113,7 +113,7 @@ export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 /** @hidden */
 export type ExternalSkill = SkillMetadata;
-type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables' | 'skills' | 'agent' | 'defaultTriggers'>;
+type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables' | 'skills' | 'agent' | 'defaultTriggers' | 'defaultRoutines'>;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     authentication: {

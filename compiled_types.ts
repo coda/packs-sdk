@@ -170,6 +170,7 @@ type BasePackVersionMetadata = Omit<
   | 'skills'
   | 'agent'
   | 'defaultTriggers'
+  | 'defaultRoutines'
 >;
 
 // Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.

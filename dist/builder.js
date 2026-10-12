@@ -509,6 +509,35 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         // Own and enumerable, unlike a class getter, so compilePackMetadata's object rest still copies them.
         Object.defineProperty(this, 'agent', { enumerable: true, get: () => state.agent });
         Object.defineProperty(this, 'defaultTriggers', { enumerable: true, get: () => state.defaultTriggers });
+        Object.defineProperty(this, 'defaultRoutines', { enumerable: true, get: () => state.defaultRoutines });
+    }
+    /**
+     * Adds a routine with its own name or instructions and one trigger.
+     * Schedules install paused; event triggers install disabled until configured by the adopter.
+     *
+     * @example
+     * ```
+     * pack.addDefaultRoutine({
+     *   name: 'Daily brief',
+     *   instruction: 'Summarize overnight changes. Include source links.',
+     *   trigger: {
+     *     kind: sdk.DefaultTriggerKind.Schedule,
+     *     rruleString: 'DTSTART;TZID=America/New_York:20261012T090000\nRRULE:FREQ=DAILY',
+     *   },
+     * });
+     * ```
+     */
+    addDefaultRoutine(routine) {
+        var _a;
+        if (routine.trigger.kind === types_2.DefaultTriggerKind.Schedule) {
+            const message = (0, rrule_validation_1.validateRRuleString)(routine.trigger.rruleString);
+            if (message) {
+                throw new Error(message);
+            }
+        }
+        const state = stateOf(this);
+        state.defaultRoutines = frozenCopy([...((_a = state.defaultRoutines) !== null && _a !== void 0 ? _a : []), routine]);
+        return this;
     }
     /**
      * Sets this agent's instructions.
