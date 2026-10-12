@@ -29,10 +29,11 @@ To validate without submitting a package, run **Publish SDK release** manually
 while `main` still points to that PR's merge commit. Enter the merged PR number
 in `release-pr` (e.g. `1234`) and leave `dry-run` checked.
 
-## Recover a failed run
+## Troubleshooting and retries
 
 If preparation reports **No new version selected**, release-it did not change the
-version or create a PR. Check the requested version before running it again.
+version or create a PR. This can happen if the requested version is invalid or
+older than `package.json`. Correct the version and run preparation again.
 If preparation pushed its branch but failed to open the PR, open a PR from that
 branch to `main`, or delete the branch before preparing again.
 
