@@ -142,6 +142,18 @@ export enum AuthenticationType {
   /**
    * Only for use by Superhuman-authored packs.
    *
+   * App-only Microsoft Entra authentication with a customer-provided certificate. The connection
+   * stores the directory (tenant) id, one or more application (client) ids, the certificate, and
+   * its private key. The platform signs a client assertion and mints access tokens per request
+   * audience; the pack never sees the private key.
+   *
+   * @see {@link EntraCertificateAuthentication}
+   * @hidden
+   */
+  EntraCertificate = 'EntraCertificate',
+  /**
+   * Only for use by Superhuman-authored packs.
+   *
    * @see {@link VariousAuthentication}
    * @hidden
    */
@@ -892,6 +904,20 @@ export interface GoogleServiceAccountAuthentication extends BaseAuthentication {
 /**
  * Only for use by Superhuman-authored packs.
  *
+ * Scopes are granted on the Entra app registration by admin consent, so none are declared here.
+ * The platform selects the token audience from the request host (Microsoft Graph or the
+ * connection's SharePoint hostname).
+ *
+ * @hidden
+ */
+export interface EntraCertificateAuthentication extends BaseAuthentication {
+  /** Identifies this as EntraCertificate authentication. */
+  type: AuthenticationType.EntraCertificate;
+}
+
+/**
+ * Only for use by Superhuman-authored packs.
+ *
  * @hidden
  */
 export interface VariousAuthentication {
@@ -921,6 +947,7 @@ export type AllowedAuthentication =
   | AWSAssumeRoleAuthentication
   | GoogleDomainWideDelegationAuthentication
   | GoogleServiceAccountAuthentication
+  | EntraCertificateAuthentication
   | CustomAuthentication;
 
 /**
@@ -944,6 +971,7 @@ export interface AuthenticationTypeMap {
   [AuthenticationType.AWSAssumeRole]: AWSAssumeRoleAuthentication;
   [AuthenticationType.GoogleDomainWideDelegation]: GoogleDomainWideDelegationAuthentication;
   [AuthenticationType.GoogleServiceAccount]: GoogleServiceAccountAuthentication;
+  [AuthenticationType.EntraCertificate]: EntraCertificateAuthentication;
   [AuthenticationType.Custom]: CustomAuthentication;
 }
 
@@ -976,6 +1004,7 @@ export type AllowedAuthenticationDef =
   | AsAuthDef<AWSAssumeRoleAuthentication>
   | AsAuthDef<GoogleDomainWideDelegationAuthentication>
   | AsAuthDef<GoogleServiceAccountAuthentication>
+  | AsAuthDef<EntraCertificateAuthentication>
   | AsAuthDef<CustomAuthentication>;
 
 /**
@@ -1892,8 +1921,9 @@ export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
  */
 export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.Schedule> {
   /**
-   * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line anchoring the start and a
-   * `TZID` on it naming the timezone.
+   * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line.
+   * If `DTSTART` has a local date and time with no `TZID`, the schedule uses each installer's time zone.
+   * Set `TZID` to use one time zone for all installers. Use `Z` to set UTC.
    *
    * Takes `FREQ` of `HOURLY` through `YEARLY`, with `INTERVAL`, `COUNT`, `UNTIL`, `WKST`, `BYDAY`,
    * `BYHOUR`, `BYMINUTE`, `BYMONTH`, `BYMONTHDAY`, and `BYSETPOS`. Rules the builder's picker

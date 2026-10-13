@@ -442,6 +442,7 @@ class AuthenticatingFetcher {
             }
             case types_1.AuthenticationType.GoogleDomainWideDelegation:
             case types_1.AuthenticationType.GoogleServiceAccount:
+            case types_1.AuthenticationType.EntraCertificate:
             case types_1.AuthenticationType.Various:
                 throw new Error('Not yet implemented');
             default:

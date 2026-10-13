@@ -9530,6 +9530,18 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
+    it('entra certificate accepts platform-managed scopes', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['microsoft.com', 'sharepoint.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.EntraCertificate,
+          networkDomain: ['microsoft.com', 'sharepoint.com'],
+        },
+      });
+      const result = await validateJson(metadata);
+      assert.deepEqual(result.defaultAuthentication, metadata.defaultAuthentication);
+    });
+
     it('google sa with scope', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {

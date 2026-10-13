@@ -4759,6 +4759,18 @@ export declare enum AuthenticationType {
 	/**
 	 * Only for use by Superhuman-authored packs.
 	 *
+	 * App-only Microsoft Entra authentication with a customer-provided certificate. The connection
+	 * stores the directory (tenant) id, one or more application (client) ids, the certificate, and
+	 * its private key. The platform signs a client assertion and mints access tokens per request
+	 * audience; the pack never sees the private key.
+	 *
+	 * @see {@link EntraCertificateAuthentication}
+	 * @hidden
+	 */
+	EntraCertificate = "EntraCertificate",
+	/**
+	 * Only for use by Superhuman-authored packs.
+	 *
 	 * @see {@link VariousAuthentication}
 	 * @hidden
 	 */
@@ -5469,6 +5481,19 @@ export interface GoogleServiceAccountAuthentication extends BaseAuthentication {
 /**
  * Only for use by Superhuman-authored packs.
  *
+ * Scopes are granted on the Entra app registration by admin consent, so none are declared here.
+ * The platform selects the token audience from the request host (Microsoft Graph or the
+ * connection's SharePoint hostname).
+ *
+ * @hidden
+ */
+export interface EntraCertificateAuthentication extends BaseAuthentication {
+	/** Identifies this as EntraCertificate authentication. */
+	type: AuthenticationType.EntraCertificate;
+}
+/**
+ * Only for use by Superhuman-authored packs.
+ *
  * @hidden
  */
 export interface VariousAuthentication {
@@ -5483,7 +5508,7 @@ export interface VariousAuthentication {
  *
  * These authentication types all extend BaseAuthentication.
  */
-export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
+export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | EntraCertificateAuthentication | CustomAuthentication;
 /**
  * The union of supported authentication methods.
  */
@@ -5499,7 +5524,7 @@ export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName
 /**
  * The union of authentication types that pack makers are allowed to use.
  */
-export type AllowedAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
+export type AllowedAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<EntraCertificateAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of supported authentication definitions. These represent simplified configurations
  * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
@@ -6280,8 +6305,9 @@ export interface BaseDefaultTrigger<T extends DefaultTriggerKind> {
  */
 export interface ScheduleTriggerDefinition extends BaseDefaultTrigger<DefaultTriggerKind.Schedule> {
 	/**
-	 * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line anchoring the start and a
-	 * `TZID` on it naming the timezone.
+	 * The recurrence, as an RFC 5545 `RRULE`, with a `DTSTART` line.
+	 * If `DTSTART` has a local date and time with no `TZID`, the schedule uses each installer's time zone.
+	 * Set `TZID` to use one time zone for all installers. Use `Z` to set UTC.
 	 *
 	 * Takes `FREQ` of `HOURLY` through `YEARLY`, with `INTERVAL`, `COUNT`, `UNTIL`, `WKST`, `BYDAY`,
 	 * `BYHOUR`, `BYMINUTE`, `BYMONTH`, `BYMONTHDAY`, and `BYSETPOS`. Rules the builder's picker
@@ -7258,7 +7284,7 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * @example
 	 * ```
 	 * pack.setDefaultScheduleTrigger({
-	 *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+	 *   rruleString: 'DTSTART:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
 	 * });
 	 * ```
 	 */

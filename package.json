@@ -34,7 +34,7 @@
     "exorcist": "2.0.0",
     "express": "4.22.3",
     "fs-extra": "11.1.1",
-    "handlebars": "4.7.9",
+    "handlebars": "4.7.10",
     "jsonpath-plus": "10.4.0",
     "mersenne-twister": "1.1.0",
     "node-fetch": "2.6.13",
