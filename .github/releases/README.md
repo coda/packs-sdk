@@ -22,8 +22,10 @@ The job stages the npm package, tags the merge commit and creates a draft GitHub
 release. The run summary includes the npm approval command and draft URL. The
 package is not public yet.
 
-Inspect the stage and check npm `latest`, then approve with your YubiKey on
-npmjs.com or with `npm stage approve <stage-id>`. After npm approval, publish the
+Inspect the stage and check npm `latest`. Any maintainer with publish access to
+`@codahq/packs-sdk` can approve using their own npm account and 2FA on npmjs.com
+or with `npm stage approve <stage-id>`; approval does not require the token
+owner's account. After npm approval, publish the
 GitHub draft using the summary link. If a newer GitHub release exists, leave
 **Set as latest release** unchecked. Complete the documentation deployments and
 internal dependency update.

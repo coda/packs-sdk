@@ -75,7 +75,6 @@ jobs:
       contents: write
       pull-requests: read
       actions: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -90,9 +89,22 @@ jobs:
           node-version: '22.22.3'
           package-manager-cache: false
       - run: npm install --global npm@11.15.0
-      - run: node .github/releases/release.cjs publish
+      - name: Stage npm package and create GitHub draft
+        run: |
+          if [[ "$RELEASE_SKIP_NPM" != true ]]; then
+            if [[ -z "$NPM_TOKEN" ]]; then
+              echo '::error::Set NPM_TOKEN in the sdk-release environment to a granular npm token with stage-only access to @codahq/packs-sdk.'
+              exit 1
+            fi
+            umask 077
+            # npm expands this placeholder when reading the config.
+            # shellcheck disable=SC2016
+            printf '%s\n' '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > "$NPM_CONFIG_USERCONFIG"
+          fi
+          node .github/releases/release.cjs publish
         env:
-          npm_config_loglevel: verbose
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/packs-sdk-publish.npmrc
           RELEASE_SKIP_NPM: ${{ inputs.skip-npm || false }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKS_SDK_PUBLISH_ENABLED: ${{ vars.PACKS_SDK_PUBLISH_ENABLED }}
