@@ -51,8 +51,7 @@ submission, or the version was already published, select `skip-npm` to finish th
 missing Git/GitHub steps without resubmitting. Otherwise leave `skip-npm` unchecked.
 
 The workflow on `main` resolves the selected PR's original merge commit and uses
-that commit for validation and publication, even after `main` advances. Its
-publish job selects Node 22.22.3 after the checked-out release's setup action.
+that commit for validation and publication, even after `main` advances.
 
 If a retry reports an existing draft or a rejected tag push, inspect that draft
 and tag before trying again. Never move an existing release tag to another commit.
