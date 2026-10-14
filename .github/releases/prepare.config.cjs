@@ -18,7 +18,7 @@ module.exports = {
   github: {release: false},
   hooks: {
     'before:git:beforeRelease': [
-      'git switch -c release/v${version}',
+      'git switch -c sdk-release/v${version}',
       '.pnpm_install/bin/pnpm install --frozen-lockfile',
       'make build',
     ],

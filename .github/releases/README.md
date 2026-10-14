@@ -8,8 +8,8 @@
    exported changes and approve `sdk-release`. Leave `dry-run` checked to review
    the proposed version, changelog and generated files without creating a PR.
 3. After the dry run succeeds, run it again with `dry-run` unchecked. The job
-   pushes a `release/v<version>` branch and opens a release PR. Review the changelog
-   and diff, then merge after CI passes.
+   pushes a `sdk-release/v<version>` branch and opens a release PR. Review the
+   changelog and diff, then merge after CI passes.
 
 ## Publish
 
