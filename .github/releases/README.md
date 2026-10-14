@@ -22,8 +22,18 @@ The job stages the npm package, tags the merge commit and creates a draft GitHub
 release. The run summary includes the npm approval command and draft URL. The
 package is not public yet.
 
-Inspect the stage and check npm `latest`, then approve with your YubiKey on
-npmjs.com or with `npm stage approve <stage-id>`. After npm approval, publish the
+The job uses the **Publish SDK release token**, created on the
+`parkerlandon-codaio` npm account and stored as `NPM_TOKEN` in the `sdk-release`
+environment. The token expires on **January 12, 2027**.
+
+We use an access token because npm's OIDC token exchange returns HTTP 401 with
+our GitHub Enterprise issuer, matching the reported
+[enterprise-scoped OIDC issuer issue](https://github.com/npm/cli/issues/9203).
+
+Inspect the stage and check npm `latest`. Any maintainer with publish access to
+`@codahq/packs-sdk` can approve using their own npm account and 2FA on npmjs.com
+or with `npm stage approve <stage-id>`; approval does not require the token
+owner's account. After npm approval, publish the
 GitHub draft using the summary link. If a newer GitHub release exists, leave
 **Set as latest release** unchecked. Complete the documentation deployments and
 internal dependency update.
