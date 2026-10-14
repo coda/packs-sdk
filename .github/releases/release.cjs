@@ -53,7 +53,7 @@ async function prepare(env) {
     summary('No new version selected; no release PR created.', env);
     return;
   }
-  const branch = `release/v${version}`;
+  const branch = `sdk-release/v${version}`;
   if (env.RELEASE_DRY_RUN !== 'false') {
     summary(git('diff'), env);
     summary(`Dry run: ${version}; no branch pushed or PR created.`, env);
@@ -84,10 +84,10 @@ async function inspect(env) {
   } else {
     pr = api(`commits/${env.GITHUB_SHA}/pulls`, true)
       .flat()
-      .find(pr => pr.merged_at && pr.merge_commit_sha === env.GITHUB_SHA && pr.head.ref.startsWith('release/v'));
+      .find(pr => pr.merged_at && pr.merge_commit_sha === env.GITHUB_SHA && pr.head.ref.startsWith('sdk-release/v'));
   }
   if (!pr) return outputs({eligible: 'false'}, env);
-  assert(pr.head.ref.startsWith('release/v'), 'PR must be created by Prepare SDK release');
+  assert(pr.head.ref.startsWith('sdk-release/v'), 'PR must be created by Prepare SDK release');
   assert(pr.merged || pr.merged_at, 'release PR must be merged');
   assert.equal(pr.merge_commit_sha, env.GITHUB_SHA, 'run at the release PR merge commit');
   outputs({eligible: 'true', sha: pr.merge_commit_sha, pr: String(pr.number)}, env);
