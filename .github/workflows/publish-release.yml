@@ -92,6 +92,7 @@ jobs:
       - run: npm install --global npm@11.15.0
       - run: node .github/releases/release.cjs publish
         env:
+          npm_config_loglevel: verbose
           RELEASE_SKIP_NPM: ${{ inputs.skip-npm || false }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKS_SDK_PUBLISH_ENABLED: ${{ vars.PACKS_SDK_PUBLISH_ENABLED }}
