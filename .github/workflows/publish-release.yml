@@ -40,7 +40,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: '22.22.2'
+          node-version: '22.22.3'
           package-manager-cache: false
       - id: inspect
         run: node .github/releases/release.cjs inspect

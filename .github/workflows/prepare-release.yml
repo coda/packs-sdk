@@ -13,7 +13,7 @@ on:
         type: boolean
       dry-run:
         description: 'Validate and prepare locally without pushing a branch or opening a PR (dry run)'
-        default: true
+        default: false
         type: boolean
 permissions:
   contents: read

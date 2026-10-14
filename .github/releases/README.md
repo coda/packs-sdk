@@ -5,11 +5,14 @@
 1. Complete the documentation import, SDK export and internal deployment. Confirm
    all changes intended for release have been exported and merged to `main`.
 2. Run **Prepare SDK release** on `main` with the new stable version. Confirm the
-   exported changes and approve `sdk-release`. Leave `dry-run` checked to review
-   the proposed version, changelog and generated files without creating a PR.
-3. After the dry run succeeds, run it again with `dry-run` unchecked. The job
-   pushes a `sdk-release/v<version>` branch and opens a release PR. Review the
-   changelog and diff, then merge after CI passes.
+   exported changes and approve `sdk-release`. Leave `dry-run` unchecked (the
+   default) to push a `sdk-release/v<version>` branch and open a release PR.
+3. Review the changelog and diff, then merge after CI passes.
+
+For an optional preview, check `dry-run`. The job prepares the version, changelog
+and generated files in its temporary checkout and prints the diff without pushing
+a branch or opening a PR. Run Prepare again with `dry-run` unchecked to create the
+release PR.
 
 ## Publish
 
