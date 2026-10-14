@@ -13,6 +13,7 @@ jobs:
   diagnose:
     if: inputs.dry-run == true
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment: sdk-release
     permissions:
       contents: read
@@ -25,4 +26,6 @@ jobs:
         with:
           node-version: '22.22.3'
           package-manager-cache: false
+      - run: npm install --global npm@11.15.0
+      - run: make _bootstrap-install-pnpm
       - run: node .github/releases/diagnose-oidc.cjs
