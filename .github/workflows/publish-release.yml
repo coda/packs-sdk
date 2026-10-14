@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       release-pr:
-        description: 'PR # created by Prepare SDK release. Run on main after it has been merged at its merge commit, or on its v<version> tag for retries.'
+        description: 'Merged PR # created by Prepare SDK release. Run on main; validation and publication use its original merge commit.'
         required: true
         type: string
       dry-run:
@@ -85,6 +85,10 @@ jobs:
         with:
           cache: 'false'
           frozen-lockfile: 'true'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.22.3'
+          package-manager-cache: false
       - run: npm install --global npm@11.15.0
       - run: node .github/releases/release.cjs publish
         env:

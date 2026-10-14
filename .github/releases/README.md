@@ -29,8 +29,8 @@ GitHub draft using the summary link. If a newer GitHub release exists, leave
 internal dependency update.
 
 To validate without submitting a package, run **Publish SDK release** manually
-while `main` still points to that PR's merge commit. Enter the merged PR number
-in `release-pr` (e.g. `1234`) and leave `dry-run` checked.
+on `main`. Enter the merged PR number in `release-pr` (e.g. `1234`) and leave
+`dry-run` checked.
 
 ## Troubleshooting and retries
 
@@ -45,22 +45,17 @@ retrying. The summary retains any approval command or draft URL produced before
 the failure. If the stage and draft already exist, approve npm and publish the
 draft; no further CI run is needed.
 
-To retry publication, run **Publish SDK release** manually
+To retry publication, run **Publish SDK release** manually on `main`
 with the same `release-pr` number and `dry-run` unchecked. If npm accepted the
 submission, or the version was already published, select `skip-npm` to finish the
 missing Git/GitHub steps without resubmitting. Otherwise leave `skip-npm` unchecked.
 
-The workflow's branch/tag selector must point to the original release commit so
-the retry uses the same code:
+The workflow on `main` resolves the selected PR's original merge commit and uses
+that commit for validation and publication, even after `main` advances. Its
+publish job selects Node 22.22.3 after the checked-out release's setup action.
 
-- Select `v<version>` if the release tag exists.
-- Otherwise select `main` only if its latest commit is still that release PR's
-  merge commit.
-
-If `main` has advanced and no release tag exists, stop and ask a maintainer to
-resume from the original merge commit. If a retry reports an existing draft or
-a rejected tag push, inspect that draft and tag before trying again. Never move
-an existing release tag to another commit.
+If a retry reports an existing draft or a rejected tag push, inspect that draft
+and tag before trying again. Never move an existing release tag to another commit.
 
 ## Stop automated publication
 
