@@ -90,7 +90,20 @@ make lint
 The following section includes information about how to contribute to the SDK itself, which is only done by Superhuman engineers.
 
 
+### Feature documentation
+
+Add documentation for a feature only after it is generally available. When developing a new feature, keep the PRs focused on SDK implementation and tests. Do not add or update feature documentation under `docs/` in those PRs, including generated reference pages. SDK features may be implemented and even released in the package before they are generally available to Pack developers; publishing documentation at that point advertises functionality developers cannot use.
+
+All new SDK surface should be marked as @hidden initially, so it doesn't show up in the documentation. This annotation will later be removed when the feature is fully available. Alternatively, use @internal for SDK surface that is only ever intended to be used by Superhuman-created Packs.
+
+Leave feature documentation to separate follow-up PRs led by DevRel, who coordinates publication with developer availability. An SDK package release alone does not establish that a feature is ready to document.
+
+
 ### Publishing Changes Process
+
+`CHANGELOG.md` is for developers installing and using the public SDK package. Add an entry only when a change affects functionality those developers can use, such as an available API, a bug fix, or a compatibility change. Explain what the change enables or fixes for a Pack developer and include any action they need to take; a bare symbol name or internal implementation summary is insufficient.
+
+Do not include internal, unreleased, or hidden features, even if their implementation ships in an SDK package release. The `Unreleased` heading holds upcoming consumer-facing package changes; it is not a place to announce features developers cannot use. Omit small package maintenance changes and routine dependency or package version bumps. If a change has no consumer-facing effect, leave `CHANGELOG.md` unchanged.
 
 Add every new `CHANGELOG.md` entry only under `## [Unreleased]`, within an appropriate [Keep a Changelog][keepachangelog] category such as `### Added`, `### Changed`, or `### Fixed`. Category headings belong inside Unreleased; standalone bullets directly beneath the release heading fail `make lint-changelog`. Never add new entries to a versioned release section.
 

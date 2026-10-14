@@ -7,6 +7,7 @@ import type { CodaApiBearerTokenAuthentication } from './types';
 import type { CustomAuthentication } from './types';
 import type { CustomHeaderTokenAuthentication } from './types';
 import type { DistributiveOmit } from './type_utils';
+import type { EntraCertificateAuthentication } from './types';
 import type { Format } from './types';
 import type { GoogleDomainWideDelegationAuthentication } from './types';
 import type { GoogleServiceAccountAuthentication } from './types';
@@ -85,6 +86,7 @@ export interface AuthenticationMetadataTypeMap {
     [AuthenticationType.OAuth2ClientCredentials]: AuthenticationToMetadata<OAuth2ClientCredentialsAuthentication>;
     [AuthenticationType.GoogleDomainWideDelegation]: AuthenticationToMetadata<GoogleDomainWideDelegationAuthentication>;
     [AuthenticationType.GoogleServiceAccount]: AuthenticationToMetadata<GoogleServiceAccountAuthentication>;
+    [AuthenticationType.EntraCertificate]: AuthenticationToMetadata<EntraCertificateAuthentication>;
 }
 /** @hidden */
 export type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {

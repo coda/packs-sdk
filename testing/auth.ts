@@ -93,6 +93,7 @@ export async function setupAuth(
       return handler.handleAWSAssumeRole();
     case AuthenticationType.GoogleDomainWideDelegation:
     case AuthenticationType.GoogleServiceAccount:
+    case AuthenticationType.EntraCertificate:
     case AuthenticationType.Various:
       return printAndExit('This authentication type is not yet implemented');
     default:

@@ -749,6 +749,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             scopes: z.array(z.string()).nonempty(),
             ...baseAuthenticationValidators,
         }),
+        [types_1.AuthenticationType.EntraCertificate]: zodCompleteStrictObject({
+            type: zodDiscriminant(types_1.AuthenticationType.EntraCertificate),
+            ...baseAuthenticationValidators,
+        }),
         [types_1.AuthenticationType.Various]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.Various),
         }),
@@ -776,6 +780,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         [types_1.AuthenticationType.Custom]: true,
         [types_1.AuthenticationType.CustomHeaderToken]: true,
         [types_1.AuthenticationType.GoogleServiceAccount]: true,
+        [types_1.AuthenticationType.EntraCertificate]: true,
         [types_1.AuthenticationType.GoogleDomainWideDelegation]: true,
         [types_1.AuthenticationType.HeaderBearerToken]: true,
         [types_1.AuthenticationType.MultiHeaderToken]: true,
@@ -2920,6 +2925,7 @@ function getUsedAuthNetworkDomains(authentication, includeOAuthTokenUrls = false
         case types_1.AuthenticationType.CustomHeaderToken:
         case types_1.AuthenticationType.GoogleDomainWideDelegation:
         case types_1.AuthenticationType.GoogleServiceAccount:
+        case types_1.AuthenticationType.EntraCertificate:
         case types_1.AuthenticationType.HeaderBearerToken:
         case types_1.AuthenticationType.MultiHeaderToken:
         case types_1.AuthenticationType.MultiQueryParamToken:

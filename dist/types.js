@@ -135,6 +135,18 @@ var AuthenticationType;
     /**
      * Only for use by Superhuman-authored packs.
      *
+     * App-only Microsoft Entra authentication with a customer-provided certificate. The connection
+     * stores the directory (tenant) id, one or more application (client) ids, the certificate, and
+     * its private key. The platform signs a client assertion and mints access tokens per request
+     * audience; the pack never sees the private key.
+     *
+     * @see {@link EntraCertificateAuthentication}
+     * @hidden
+     */
+    AuthenticationType["EntraCertificate"] = "EntraCertificate";
+    /**
+     * Only for use by Superhuman-authored packs.
+     *
      * @see {@link VariousAuthentication}
      * @hidden
      */

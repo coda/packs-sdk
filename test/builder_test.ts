@@ -816,6 +816,12 @@ describe('Agent builder', () => {
       assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...scheduleTrigger}]);
     });
 
+    it('accepts a local start time with no author time zone', () => {
+      const localScheduleTrigger = {rruleString: 'DTSTART:20260105T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO'};
+      agent.setDefaultScheduleTrigger(localScheduleTrigger);
+      assert.deepEqual(agent.defaultTriggers, [{kind: DefaultTriggerKind.Schedule, ...localScheduleTrigger}]);
+    });
+
     it('rejects a trigger without DTSTART', () => {
       assert.throws(
         () => agent.setDefaultScheduleTrigger({rruleString: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0'}),

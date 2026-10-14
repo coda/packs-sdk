@@ -529,7 +529,7 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * @example
      * ```
      * pack.setDefaultScheduleTrigger({
-     *   rruleString: 'DTSTART;TZID=America/New_York:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
+     *   rruleString: 'DTSTART:20260101T090000\nRRULE:FREQ=WEEKLY;BYDAY=MO',
      * });
      * ```
      */

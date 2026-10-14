@@ -42,6 +42,7 @@ import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import type {EmbeddedContentTool} from '../types';
 import {EmbeddedContentType} from '../types';
+import type {EntraCertificateAuthentication} from '../types';
 import {EventTriggerType} from '../types';
 import {FeatureSet} from '../types';
 import {FilterCombinator} from '../types';
@@ -963,6 +964,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       scopes: z.array(z.string()).nonempty(),
       ...baseAuthenticationValidators,
     }),
+    [AuthenticationType.EntraCertificate]: zodCompleteStrictObject<EntraCertificateAuthentication>({
+      type: zodDiscriminant(AuthenticationType.EntraCertificate),
+      ...baseAuthenticationValidators,
+    }),
     [AuthenticationType.Various]: zodCompleteStrictObject<VariousAuthentication>({
       type: zodDiscriminant(AuthenticationType.Various),
     }),
@@ -993,6 +998,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     [AuthenticationType.Custom]: true,
     [AuthenticationType.CustomHeaderToken]: true,
     [AuthenticationType.GoogleServiceAccount]: true,
+    [AuthenticationType.EntraCertificate]: true,
     [AuthenticationType.GoogleDomainWideDelegation]: true,
     [AuthenticationType.HeaderBearerToken]: true,
     [AuthenticationType.MultiHeaderToken]: true,
@@ -3608,6 +3614,7 @@ function getUsedAuthNetworkDomains(
     case AuthenticationType.CustomHeaderToken:
     case AuthenticationType.GoogleDomainWideDelegation:
     case AuthenticationType.GoogleServiceAccount:
+    case AuthenticationType.EntraCertificate:
     case AuthenticationType.HeaderBearerToken:
     case AuthenticationType.MultiHeaderToken:
     case AuthenticationType.MultiQueryParamToken:

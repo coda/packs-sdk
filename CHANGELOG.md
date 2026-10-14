@@ -4,6 +4,27 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added `packs agent install` to install an uploaded agent version.
+  Use `--reinstall` after changing its tools or triggers.
+- Added `packs agent logs` to inspect agent logs.
+  Use `--tail` to follow new logs, or `--session` to select a session.
+
+### Changed
+
+- `packs agent chat` now runs an installed agent instance.
+  Pass `--agentInstanceId` to select it; `--version` and `--thread`
+  are no longer accepted.
+
+### Fixed
+
+- Agent chat now waits for confirmed completion, retries transient
+  polling failures until the timeout, and prints the reply transcript.
+  Pack mismatch errors identify the run queued on another instance.
+  These fixes were incorrectly listed in the 1.18.1 release notes;
+  they first ship in 1.18.2.
+
 ## [1.18.1] - 2026-10-08
 
 ### Changed

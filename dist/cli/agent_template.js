@@ -20,12 +20,11 @@ pack.setTools({
   // connectors: [{packId: 1234}],
 });
 
-// Fire on a schedule. Runs at install time for installers. Edit the RRULE to
-// taste; frequencies below hourly are rejected. Reinstall the agent after
-// changing triggers — installed copies do not live-sync from later uploads.
+// Each installer gets a paused schedule at 9 AM in their time zone.
+// Add TZID to use one time zone for all installers.
 // pack.setDefaultScheduleTrigger({
 //   rruleString: [
-//     "DTSTART;TZID=America/New_York:20260101T090000",
+//     "DTSTART:20260101T090000",
 //     "RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=0",
 //   ].join("\\n"),
 // });

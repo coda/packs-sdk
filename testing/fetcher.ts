@@ -553,6 +553,7 @@ export class AuthenticatingFetcher implements Fetcher {
       }
       case AuthenticationType.GoogleDomainWideDelegation:
       case AuthenticationType.GoogleServiceAccount:
+      case AuthenticationType.EntraCertificate:
       case AuthenticationType.Various:
         throw new Error('Not yet implemented');
 

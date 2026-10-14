@@ -37,6 +37,7 @@ export type {CodaApiBearerTokenAuthentication} from './types';
 export type {CustomAuthParameter} from './types';
 export type {CustomAuthentication} from './types';
 export type {CustomHeaderTokenAuthentication} from './types';
+export type {EntraCertificateAuthentication} from './types';
 export type {GoogleDomainWideDelegationAuthentication} from './types';
 export type {GoogleServiceAccountAuthentication} from './types';
 export type {HeaderBearerTokenAuthentication} from './types';
