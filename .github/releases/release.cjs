@@ -89,7 +89,10 @@ async function inspect(env) {
   if (!pr) return outputs({eligible: 'false'}, env);
   assert(pr.head.ref.startsWith('sdk-release/v'), 'PR must be created by Prepare SDK release');
   assert(pr.merged || pr.merged_at, 'release PR must be merged');
-  assert.equal(pr.merge_commit_sha, env.GITHUB_SHA, 'run at the release PR merge commit');
+  const retryFromMain = env.GITHUB_EVENT_NAME === 'workflow_dispatch' && env.GITHUB_REF === 'refs/heads/main';
+  if (!retryFromMain) {
+    assert.equal(pr.merge_commit_sha, env.GITHUB_SHA, 'run at the release PR merge commit');
+  }
   outputs({eligible: 'true', sha: pr.merge_commit_sha, pr: String(pr.number)}, env);
 }
 async function publish(env) {
