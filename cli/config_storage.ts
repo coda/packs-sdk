@@ -10,6 +10,7 @@ export const DEFAULT_GIT_TAG = false;
 
 const API_KEY_FILE_NAME = '.coda.json';
 export const PACK_ID_FILE_NAME = '.coda-pack.json';
+export const AGENT_INSTALL_FILE_NAME = '.coda-agent.json';
 
 export interface ApiKeyFile {
   apiKey: string;
@@ -42,6 +43,18 @@ export interface PackIdFile {
   options?: PackOptions;
   // Codan-only overrides for storing pack ids for other environments.
   environmentPackIds?: {[host: string]: number};
+}
+
+export interface StoredAgentInstall {
+  packId: number;
+  agentInstanceId: string;
+  tenantId?: string;
+}
+
+interface AgentInstallFile {
+  agentInstall?: StoredAgentInstall;
+  // Codan-only overrides for storing installs against other environments.
+  environmentAgentInstalls?: {[host: string]: StoredAgentInstall};
 }
 
 function isDefaultApiEndpoint(apiEndpoint: string): boolean {
@@ -112,6 +125,37 @@ export function getPackId(manifestDir: string, codaApiEndpoint: string): number 
   }
 }
 
+export function storeAgentInstall(manifestDir: string, codaApiEndpoint: string, install: StoredAgentInstall): void {
+  const fileContents: AgentInstallFile = readAgentInstallFile(manifestDir) || {};
+  if (isDefaultApiEndpoint(codaApiEndpoint)) {
+    fileContents.agentInstall = install;
+  } else {
+    const {host} = urlParse(codaApiEndpoint);
+    fileContents.environmentAgentInstalls = fileContents.environmentAgentInstalls || {};
+    fileContents.environmentAgentInstalls[host] = install;
+  }
+  writeAgentInstallFile(manifestDir, fileContents);
+}
+
+// Returns the install only when it belongs to the pack id stored for this directory
+// and endpoint. A later `create` in the same directory must not reuse a stale instance.
+export function getAgentInstall(manifestDir: string, codaApiEndpoint: string): StoredAgentInstall | undefined {
+  const fileContents = readAgentInstallFile(manifestDir);
+  if (!fileContents) {
+    return;
+  }
+  const install = isDefaultApiEndpoint(codaApiEndpoint)
+    ? fileContents.agentInstall
+    : fileContents.environmentAgentInstalls?.[urlParse(codaApiEndpoint).host];
+  if (!install?.agentInstanceId) {
+    return;
+  }
+  if (getPackId(manifestDir, codaApiEndpoint) !== install.packId) {
+    return;
+  }
+  return install;
+}
+
 // Merges new options with existing ones, if any.
 export function storePackOptions(manifestDir: string, options: PackOptions): void {
   const fileContents: PackIdFile = readPackIdFile(manifestDir) || {packId: -1};
@@ -132,4 +176,12 @@ function readPackIdFile(manifestDir: string): PackIdFile | undefined {
 function writePacksFile(manifestDir: string, fileContents: PackIdFile): void {
   const filename = path.join(manifestDir, PACK_ID_FILE_NAME);
   writeJSONFile(filename, fileContents);
+}
+
+function readAgentInstallFile(manifestDir: string): AgentInstallFile | undefined {
+  return readJSONFile(path.join(manifestDir, AGENT_INSTALL_FILE_NAME));
+}
+
+function writeAgentInstallFile(manifestDir: string, fileContents: AgentInstallFile): void {
+  writeJSONFile(path.join(manifestDir, AGENT_INSTALL_FILE_NAME), fileContents);
 }

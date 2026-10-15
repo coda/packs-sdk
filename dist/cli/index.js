@@ -73,12 +73,9 @@ const CommandExamples = {
     ],
     whoami: [['$0 whoami', 'Print the account and token currently registered.']],
     agent: [
-        [
-            '$0 agent chat pack.ts "what can you do?" --agentInstanceId <id> --tenantId <tenant>',
-            'Run your installed agent and print its reply.',
-        ],
+        ['$0 agent chat pack.ts "what can you do?"', 'Run your installed agent and print its reply.'],
         ['$0 agent install pack.ts', 'Install the latest uploaded agent version to your account.'],
-        ['$0 agent logs pack.ts --tenant <id> --instance <id>', 'Show recent logs for the installed agent.'],
+        ['$0 agent logs pack.ts', 'Show recent logs for the installed agent.'],
     ],
     build: [
         ['$0 build pack.ts', 'Compile the Pack bundle locally.'],
@@ -240,8 +237,7 @@ exports.commands = [
             builder: {
                 agentInstanceId: {
                     string: true,
-                    demandOption: true,
-                    desc: 'Installed agent instance to run. Copy it from the installed agent URL.',
+                    desc: 'Installed agent instance to run. Defaults to the instance saved by packs agent install.',
                 },
                 tenantId: {
                     string: true,
@@ -282,11 +278,11 @@ exports.commands = [
             builder: {
                 tenant: {
                     string: true,
-                    desc: 'Tenant id owning the agent instance. Ask your workspace admin for it.',
+                    desc: 'Tenant id owning the agent instance. Defaults to the install saved by packs agent install.',
                 },
                 instance: {
                     string: true,
-                    desc: 'Agent instance id. Shown in the agent builder page URL (/go/builder/<id>) after installing.',
+                    desc: 'Agent instance id. Defaults to the instance saved by packs agent install.',
                 },
                 session: {
                     string: true,

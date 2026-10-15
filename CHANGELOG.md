@@ -4,6 +4,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- `packs agent install` prints the agent instance id and tenant id, and saves them in `.coda-agent.json` for that directory. The next `packs agent chat` and `packs agent logs` in the directory use the saved ids, so you no longer copy them out of the builder URL. Pass `--agentInstanceId`, `--tenantId`, `--tenant`, or `--instance` to override. New `packs init` scaffolds ignore `.coda-agent.json`. Add that filename to `.gitignore` in directories created before this change.
+- `addSuggestedPrompt()` on agents, so an agent can declare up to 3 starter prompts that show as buttons on its chat landing. Agents no longer fail validation when they define `suggestedPrompts`.
+
 ## [1.18.2] - 2026-10-14
 
 ### Added

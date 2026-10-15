@@ -8294,17 +8294,33 @@ describe('Pack metadata Validation', async () => {
       });
     });
 
-    it('rejects suggested prompts alongside an agent', async () => {
+    it('accepts suggested prompts alongside an agent', async () => {
+      const suggestedPrompts = [{name: 'p', displayName: 'P', prompt: 'Do it.'}];
+      const result = await validateJson(
+        createFakeAgentMetadata({
+          agent: {instructions: 'Do a thing.', tools: []},
+          suggestedPrompts,
+        }),
+      );
+      assert.deepEqual(result.suggestedPrompts, suggestedPrompts);
+    });
+
+    it('rejects more than 3 suggested prompts on an agent', async () => {
       const err = await validateJsonAndAssertFails(
         createFakeAgentMetadata({
           agent: {instructions: 'Do a thing.', tools: []},
-          suggestedPrompts: [{name: 'p', displayName: 'P', prompt: 'Do it.'}],
+          suggestedPrompts: [
+            {name: 'first', displayName: 'First', prompt: 'First prompt'},
+            {name: 'second', displayName: 'Second', prompt: 'Second prompt'},
+            {name: 'third', displayName: 'Third', prompt: 'Third prompt'},
+            {name: 'fourth', displayName: 'Fourth', prompt: 'Fourth prompt'},
+          ],
         }),
       );
-      assert.deepInclude(err.validationErrors!, {
-        path: 'suggestedPrompts',
-        message: 'An agent cannot also define suggested prompts.',
-      });
+      assert.deepEqual(
+        err.validationErrors!.map(error => error.path),
+        ['suggestedPrompts'],
+      );
     });
 
     it('rejects admin authentication alongside an agent', async () => {

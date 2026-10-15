@@ -668,6 +668,7 @@ function frozenCopy<T extends {}>(value: T): T {
 interface AgentBuilderState {
   agent: Partial<AgentDefinition>;
   defaultTriggers?: DefaultTriggerDefinition[];
+  suggestedPrompts?: SuggestedPrompt[];
 }
 
 // Off the instance: an own property leaks into the metadata, and `#private` breaks pre-ES2015 .d.ts consumers.
@@ -694,6 +695,10 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
    * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
    */
   declare readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+  /**
+   * See {@link PackVersionDefinition.suggestedPrompts}. Set via {@link addSuggestedPrompt}.
+   */
+  declare readonly suggestedPrompts?: DeepReadonly<SuggestedPrompt[]>;
 
   constructor() {
     super();
@@ -702,6 +707,7 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     // Own and enumerable, unlike a class getter, so compilePackMetadata's object rest still copies them.
     Object.defineProperty(this, 'agent', {enumerable: true, get: () => state.agent});
     Object.defineProperty(this, 'defaultTriggers', {enumerable: true, get: () => state.defaultTriggers});
+    Object.defineProperty(this, 'suggestedPrompts', {enumerable: true, get: () => state.suggestedPrompts});
   }
 
   /**
@@ -748,6 +754,24 @@ export class AgentDefinitionBuilder extends BaseDefinitionBuilder {
     }
     const state = stateOf(this);
     state.agent = frozenCopy({...state.agent, tools});
+    return this;
+  }
+
+  /**
+   * Adds a starter prompt that shows as a button when someone opens this agent in chat. An agent can have up to 3.
+   *
+   * @example
+   * ```
+   * pack.addSuggestedPrompt({
+   *   name: 'ticketStatus',
+   *   displayName: 'Check ticket status',
+   *   prompt: 'Show me the status of all open support tickets',
+   * });
+   * ```
+   */
+  addSuggestedPrompt(prompt: SuggestedPrompt): this {
+    const state = stateOf(this);
+    state.suggestedPrompts = frozenCopy<SuggestedPrompt[]>([...(state.suggestedPrompts ?? []), prompt]);
     return this;
   }
 

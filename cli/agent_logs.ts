@@ -6,6 +6,7 @@ import {assertPackId} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatResponseError} from './errors';
+import {getAgentInstall} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
 import {print} from '../testing/helpers';
@@ -68,8 +69,8 @@ function logKey(item: PublicApiPackLog, fallback: string): string {
 function missingIdentityError(): never {
   return printAndExit(
     'Error: agent logs need a tenant and an agent instance.\n' +
-      '  packs agent logs pack.ts --tenant <tenantId> --instance <agentInstanceId>\n' +
-      'Find the instance id in the agent builder page URL after installing, and ask your workspace admin for the tenant id.',
+      '  packs agent install pack.ts\n' +
+      '  Or pass --tenant and --instance.',
   );
 }
 
@@ -91,7 +92,10 @@ export async function handleAgentLogs({
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   apiToken = assertApiToken(apiEndpoint, apiToken);
   const packId = assertPackId(manifestDir, apiEndpoint);
-  if (!tenant || !instance) {
+  const saved = tenant && instance ? undefined : getAgentInstall(manifestDir, apiEndpoint);
+  const tenantId = tenant || saved?.tenantId;
+  const instanceId = instance || saved?.agentInstanceId;
+  if (!tenantId || !instanceId) {
     return missingIdentityError();
   }
   const client = createCodaClient(apiToken, formattedEndpoint);
@@ -109,7 +113,7 @@ export async function handleAgentLogs({
   let sessionId = session;
   if (!sessionId) {
     try {
-      const sessions = await client.listAgentSessionIds(tenant, instance, {limit: 1});
+      const sessions = await client.listAgentSessionIds(tenantId, instanceId, {limit: 1});
       sessionId = firstSessionId(sessions.items);
     } catch (err: any) {
       if (isResponseError(err)) {
@@ -135,7 +139,7 @@ export async function handleAgentLogs({
       // Pick up chat sessions that started since the last poll so --tail follows new runs.
       let fresh;
       try {
-        fresh = await client.listAgentSessionIds(tenant, instance, {limit: 10});
+        fresh = await client.listAgentSessionIds(tenantId, instanceId, {limit: 10});
       } catch (err: any) {
         if (isResponseError(err)) {
           return printAndExit(`Error while listing agent sessions: ${await formatResponseError(err)}`);
@@ -155,8 +159,8 @@ export async function handleAgentLogs({
       // Drain every page before moving the cursor: with newest-first paging,
       // advancing past an undrained page would skip its records forever.
       const items = await fetchSessionLogs(client, {
-        tenant,
-        instance,
+        tenant: tenantId,
+        instance: instanceId,
         sessionId: watchedSessionId,
         afterTimestamp: cursors.get(watchedSessionId),
         limit: limit ?? 20,

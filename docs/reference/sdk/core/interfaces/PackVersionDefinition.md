@@ -138,15 +138,12 @@ Definitions of skills that can be executed within this pack.
 
 ***
 
-### ~~suggestedPrompts?~~
+### suggestedPrompts?
 
 > `optional` **suggestedPrompts**: [`SuggestedPrompt`](SuggestedPrompt.md)[]
 
-Static suggested prompts that appear when the agent is opened in chat.
-
-#### Deprecated
-
-No longer used, now that agents are connectors.
+Static suggested prompts that appear when the agent is opened in chat. Set them with
+`addSuggestedPrompt()` on an agent. Connector packs no longer use this field.
 
 ***
 

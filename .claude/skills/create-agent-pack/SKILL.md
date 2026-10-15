@@ -121,16 +121,17 @@ there is no separate "save" step. Proceed when upload succeeds and reports the n
 
 ```bash
 npx packs validate pack.ts   # single pre-upload check: schema, instructions, triggers, connector warnings
-npx packs agent chat pack.ts "what can you do?" --agentInstanceId <id> --tenantId <tenant>   # remote run
+npx packs agent install pack.ts   # binds the latest upload and saves the instance id
+npx packs agent chat pack.ts "what can you do?"   # remote run
 ```
 
-Run `validate` after any edit, before uploading — for agent packs it also warns about
+Run `validate` after any edit, before uploading. For agent packs it also warns about
 connector pack IDs that don't resolve (when you're logged in; pass `--no-checkConnectors`
-to skip). Run `agent chat` after uploading and installing —
-it runs your installed agent instance and polls until the reply lands (or `--timeout` expires).
-Copy `--agentInstanceId` from the installed agent's URL; `--tenantId` usually comes back
-from the trigger, so pass it only to override. The command checks the instance belongs
-to this pack. Multi-turn threads are not supported yet: every chat starts a new run.
+to skip). Run `agent install` after uploading. It prints the agent instance id and tenant
+id and saves them in `.coda-agent.json` for this directory. Run `agent chat` after that.
+It uses the saved instance and polls until the reply lands (or `--timeout` expires).
+Pass `--agentInstanceId` or `--tenantId` only to override. The command checks the instance
+belongs to this pack. Multi-turn threads are not supported yet: every chat starts a new run.
 
 ### 6. Set the listing name/description (UI)
 

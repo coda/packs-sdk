@@ -14,6 +14,7 @@ import {checkAgentConnectorListings} from '../cli/validate';
 import * as cliHelpers from '../cli/helpers';
 import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
+import * as configStorage from '../cli/config_storage';
 import {describeRunReason} from '../cli/agent_chat';
 import {firstSessionId} from '../cli/agent_logs';
 import {formatAgentLog} from '../cli/agent_logs';
@@ -24,6 +25,7 @@ import {getConnectorPackIds} from '../cli/validate';
 import {handleAgentChat} from '../cli/agent_chat';
 import {importManifest} from '../cli/helpers';
 import {joinAssistantTexts} from '../cli/agent_chat';
+import os from 'os';
 import {parsePackIdOrUrl} from '../cli/link';
 import path from 'path';
 import {redactSecrets} from '../cli/agent_logs';
@@ -348,6 +350,30 @@ describe('CLI', () => {
       assert.include(message, 'execution: execution-1');
       assert.include(message, 'chat: chat-1');
     });
+
+    it('uses the saved install when --agentInstanceId is omitted', async () => {
+      sinon.stub(configStorage, 'getAgentInstall').returns({
+        packId: 1234,
+        agentInstanceId: 'agent-1',
+        tenantId: 'bt-saved',
+      });
+      finishRunAt(1);
+      const {agentInstanceId: _agentInstanceId, ...withoutFlag} = args;
+      const polling = handleAgentChat(withoutFlag);
+      await clock.runAllAsync();
+      await polling;
+      const triggerRequest = JSON.parse(String(fetchStub.firstCall.args[1].body));
+      assert.equal(triggerRequest.agentInstanceId, 'agent-1');
+      sinon.assert.calledWithExactly(printStub, 'reply');
+    });
+
+    it('tells you to install when no instance is saved', async () => {
+      sinon.stub(configStorage, 'getAgentInstall').returns(undefined);
+      const {agentInstanceId: _agentInstanceId, ...withoutFlag} = args;
+      await handleAgentChat(withoutFlag);
+      sinon.assert.notCalled(fetchStub);
+      sinon.assert.calledOnceWithMatch(exitStub, 'packs agent install pack.ts');
+    });
   });
 
   describe('agent chat reply', () => {
@@ -399,6 +425,38 @@ describe('CLI', () => {
         buildAgentRouteUrl('https://coda.io', 1234, '3', 'agentInstall'),
         'https://coda.io/apis/v1/packs/1234/versions/3/agentInstall',
       );
+    });
+  });
+
+  describe('agent install storage', () => {
+    it('returns the install only for the matching pack and endpoint', () => {
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'agent-install-storage-'));
+      try {
+        configStorage.storePackId(dir, 1234, 'https://coda.io');
+        configStorage.storeAgentInstall(dir, 'https://coda.io', {
+          packId: 1234,
+          agentInstanceId: 'ai-1',
+          tenantId: 'bt-1',
+        });
+        configStorage.storePackId(dir, 7, 'https://head.coda.io');
+        configStorage.storeAgentInstall(dir, 'https://head.coda.io', {packId: 7, agentInstanceId: 'ai-head'});
+
+        assert.deepEqual(configStorage.getAgentInstall(dir, 'https://coda.io'), {
+          packId: 1234,
+          agentInstanceId: 'ai-1',
+          tenantId: 'bt-1',
+        });
+        assert.deepEqual(configStorage.getAgentInstall(dir, 'https://head.coda.io'), {
+          packId: 7,
+          agentInstanceId: 'ai-head',
+        });
+
+        configStorage.storePackId(dir, 999, 'https://coda.io');
+        assert.isUndefined(configStorage.getAgentInstall(dir, 'https://coda.io'));
+        assert.equal(configStorage.getAgentInstall(dir, 'https://head.coda.io')?.agentInstanceId, 'ai-head');
+      } finally {
+        fs.removeSync(dir);
+      }
     });
   });
 

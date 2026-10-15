@@ -2,6 +2,7 @@ import type {ArgumentsCamelCase} from 'yargs';
 import {assertApiToken} from './helpers';
 import {assertPackId} from './helpers';
 import {formatEndpoint} from './helpers';
+import {getAgentInstall} from './config_storage';
 import * as path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
@@ -10,7 +11,7 @@ import {tryParseSystemError} from './errors';
 export interface AgentChatArgs {
   manifestPath: string;
   prompt: string;
-  agentInstanceId: string;
+  agentInstanceId?: string;
   tenantId?: string;
   timeout?: number;
   apiToken?: string;
@@ -178,7 +179,7 @@ function isTransientStatus(status: number): boolean {
 export async function handleAgentChat({
   manifestPath,
   prompt,
-  agentInstanceId,
+  agentInstanceId: agentInstanceIdFlag,
   tenantId: tenantIdFlag,
   timeout,
   apiToken,
@@ -188,6 +189,14 @@ export async function handleAgentChat({
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   apiToken = assertApiToken(apiEndpoint, apiToken);
   const packId = assertPackId(manifestDir, apiEndpoint);
+  const agentInstanceId = agentInstanceIdFlag || getAgentInstall(manifestDir, apiEndpoint)?.agentInstanceId;
+  if (!agentInstanceId) {
+    return printAndExit(
+      'Error: agent chat needs an installed agent instance.\n' +
+        '  packs agent install pack.ts\n' +
+        '  Or pass --agentInstanceId.',
+    );
+  }
   const headers = {Authorization: `Bearer ${apiToken}`, 'Content-Type': 'application/json'};
   const timeoutSecs = timeout ?? DEFAULT_TIMEOUT_SECS;
 
@@ -210,7 +219,7 @@ export async function handleAgentChat({
       if (triggerResponse.status === 404) {
         return printAndExit(
           'Agent not found or agent triggering is not enabled.\n' +
-            '  Check --agentInstanceId (copy it from the installed agent URL) and that triggering is enabled.',
+            '  Check the agent instance id and that triggering is enabled.',
         );
       }
       if (triggerResponse.status === 429) {

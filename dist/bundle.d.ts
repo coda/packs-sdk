@@ -6140,6 +6140,7 @@ export interface SkillEntrypoints {
 /**
  * A suggested prompt that appears as a button when an agent is opened in chat.
  * These are static prompts defined in the pack manifest that provide quick access to common actions.
+ * An agent adds them with `addSuggestedPrompt()` on the agent builder.
  *
  * @example
  * ```ts
@@ -6149,8 +6150,6 @@ export interface SkillEntrypoints {
  *   prompt: "Show me the status of all open support tickets"
  * });
  * ```
- *
- * @deprecated No longer used, now that agents are connectors.
  */
 export interface SuggestedPrompt {
 	/** A unique identifier for this suggested prompt. This acts as a stable ID for the prompt. */
@@ -6723,8 +6722,8 @@ export interface PackVersionDefinition {
 	 */
 	skillEntrypoints?: SkillEntrypoints;
 	/**
-	 * Static suggested prompts that appear when the agent is opened in chat.
-	 * @deprecated No longer used, now that agents are connectors.
+	 * Static suggested prompts that appear when the agent is opened in chat. Set them with
+	 * `addSuggestedPrompt()` on an agent. Connector packs no longer use this field.
 	 */
 	suggestedPrompts?: SuggestedPrompt[];
 	/**
@@ -7192,6 +7191,10 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
 	 */
 	readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+	/**
+	 * See {@link PackVersionDefinition.suggestedPrompts}. Set via {@link addSuggestedPrompt}.
+	 */
+	readonly suggestedPrompts?: DeepReadonly<SuggestedPrompt[]>;
 	constructor();
 	/**
 	 * Sets this agent's instructions.
@@ -7212,6 +7215,19 @@ declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
 	 * ```
 	 */
 	setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+	/**
+	 * Adds a starter prompt that shows as a button when someone opens this agent in chat. An agent can have up to 3.
+	 *
+	 * @example
+	 * ```
+	 * pack.addSuggestedPrompt({
+	 *   name: 'ticketStatus',
+	 *   displayName: 'Check ticket status',
+	 *   prompt: 'Show me the status of all open support tickets',
+	 * });
+	 * ```
+	 */
+	addSuggestedPrompt(prompt: SuggestedPrompt): this;
 	/**
 	 * Sets the while-writing trigger this agent runs on.
 	 *

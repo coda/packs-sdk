@@ -437,6 +437,10 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * {@link addDefaultNotetakerEventTrigger}, and {@link setDefaultScheduleTrigger}.
      */
     readonly defaultTriggers?: DeepReadonly<DefaultTriggerDefinition[]>;
+    /**
+     * See {@link PackVersionDefinition.suggestedPrompts}. Set via {@link addSuggestedPrompt}.
+     */
+    readonly suggestedPrompts?: DeepReadonly<SuggestedPrompt[]>;
     constructor();
     /**
      * Sets this agent's instructions.
@@ -457,6 +461,19 @@ export declare class AgentDefinitionBuilder extends BaseDefinitionBuilder {
      * ```
      */
     setTools({ docs, mail, webSearch, connectors }: AgentToolsDef): this;
+    /**
+     * Adds a starter prompt that shows as a button when someone opens this agent in chat. An agent can have up to 3.
+     *
+     * @example
+     * ```
+     * pack.addSuggestedPrompt({
+     *   name: 'ticketStatus',
+     *   displayName: 'Check ticket status',
+     *   prompt: 'Show me the status of all open support tickets',
+     * });
+     * ```
+     */
+    addSuggestedPrompt(prompt: SuggestedPrompt): this;
     /**
      * Sets the while-writing trigger this agent runs on.
      *
