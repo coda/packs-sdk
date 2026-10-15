@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.18.3] - 2026-10-15
+
 ### Added
 
 - `packs agent install` prints the agent instance id and tenant id, and saves them in `.coda-agent.json` for that directory. The next `packs agent chat` and `packs agent logs` in the directory use the saved ids, so you no longer copy them out of the builder URL. Pass `--agentInstanceId`, `--tenantId`, `--tenant`, or `--instance` to override. New `packs init` scaffolds ignore `.coda-agent.json`. Add that filename to `.gitignore` in directories created before this change.
@@ -1181,7 +1183,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[Unreleased]: https://github.com/coda/packs-sdk/compare/v1.18.2...HEAD
+[Unreleased]: https://github.com/coda/packs-sdk/compare/v1.18.3...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1269,3 +1271,4 @@ await myHelper(context);
 [1.18.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.18.0
 [1.18.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.18.1
 [1.18.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.18.2
+[1.18.3]: https://github.com/coda/packs-sdk/compare/v1.18.2...v1.18.3
