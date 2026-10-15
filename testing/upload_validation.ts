@@ -3490,7 +3490,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         ['skills', 'skills'],
         ['mcpServers', 'MCP servers'],
         ['networkDomains', 'network domains'],
-        ['suggestedPrompts', 'suggested prompts'],
         ['adminAuthentications', 'admin authentication'],
       ];
       for (const [field, label] of listFields) {

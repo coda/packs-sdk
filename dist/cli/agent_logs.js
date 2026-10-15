@@ -30,6 +30,7 @@ const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
 const errors_1 = require("./errors");
+const config_storage_1 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const path = __importStar(require("path"));
 const helpers_5 = require("../testing/helpers");
@@ -79,8 +80,8 @@ function logKey(item, fallback) {
 }
 function missingIdentityError() {
     return (0, helpers_6.printAndExit)('Error: agent logs need a tenant and an agent instance.\n' +
-        '  packs agent logs pack.ts --tenant <tenantId> --instance <agentInstanceId>\n' +
-        'Find the instance id in the agent builder page URL after installing, and ask your workspace admin for the tenant id.');
+        '  packs agent install pack.ts\n' +
+        '  Or pass --tenant and --instance.');
 }
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -91,7 +92,10 @@ async function handleAgentLogs({ manifestPath, tenant, instance, session, limit,
     const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
     apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     const packId = (0, helpers_2.assertPackId)(manifestDir, apiEndpoint);
-    if (!tenant || !instance) {
+    const saved = tenant && instance ? undefined : (0, config_storage_1.getAgentInstall)(manifestDir, apiEndpoint);
+    const tenantId = tenant || (saved === null || saved === void 0 ? void 0 : saved.tenantId);
+    const instanceId = instance || (saved === null || saved === void 0 ? void 0 : saved.agentInstanceId);
+    if (!tenantId || !instanceId) {
         return missingIdentityError();
     }
     const client = (0, helpers_3.createCodaClient)(apiToken, formattedEndpoint);
@@ -108,7 +112,7 @@ async function handleAgentLogs({ manifestPath, tenant, instance, session, limit,
     let sessionId = session;
     if (!sessionId) {
         try {
-            const sessions = await client.listAgentSessionIds(tenant, instance, { limit: 1 });
+            const sessions = await client.listAgentSessionIds(tenantId, instanceId, { limit: 1 });
             sessionId = firstSessionId(sessions.items);
         }
         catch (err) {
@@ -133,7 +137,7 @@ async function handleAgentLogs({ manifestPath, tenant, instance, session, limit,
             // Pick up chat sessions that started since the last poll so --tail follows new runs.
             let fresh;
             try {
-                fresh = await client.listAgentSessionIds(tenant, instance, { limit: 10 });
+                fresh = await client.listAgentSessionIds(tenantId, instanceId, { limit: 10 });
             }
             catch (err) {
                 if ((0, coda_1.isResponseError)(err)) {
@@ -153,8 +157,8 @@ async function handleAgentLogs({ manifestPath, tenant, instance, session, limit,
             // Drain every page before moving the cursor: with newest-first paging,
             // advancing past an undrained page would skip its records forever.
             const items = await fetchSessionLogs(client, {
-                tenant,
-                instance,
+                tenant: tenantId,
+                instance: instanceId,
                 sessionId: watchedSessionId,
                 afterTimestamp: cursors.get(watchedSessionId),
                 limit: limit !== null && limit !== void 0 ? limit : 20,

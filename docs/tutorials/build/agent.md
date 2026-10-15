@@ -52,13 +52,14 @@ npx packs upload pack.ts --notes "First version"
 
 `create` runs once per pack and records the id in `.coda-pack.json`. Every upload mints a new version — uploads never overwrite, so re-run `upload` freely after each edit.
 
-`agent chat` runs your installed agent from the terminal and prints its reply:
+`agent install` binds the latest upload to your account and saves the instance id for this directory. `agent chat` then runs that install and prints its reply:
 
 ```bash
-npx packs agent chat pack.ts "what can you do?" --agentInstanceId <id> --tenantId <tenant>
+npx packs agent install pack.ts
+npx packs agent chat pack.ts "what can you do?"
 ```
 
-It triggers a run on the instance, polls its status, and prints the full reply transcript when the run settles. If the run fails or pauses for input, the command says so instead of hanging. Install the agent first (browser agent directory for now), and reinstall after uploads that change tools or triggers.
+Install prints the agent instance id and tenant id, and writes them to `.coda-agent.json` next to the pack. Chat uses that saved instance. Pass `--agentInstanceId` or `--tenantId` only to override. It triggers a run, polls its status, and prints the full reply transcript when the run settles. If the run fails or pauses for input, the command says so instead of hanging. Reinstall after uploads that change tools or triggers: `npx packs agent install pack.ts --reinstall --yes`.
 
 ## Common pitfalls
 

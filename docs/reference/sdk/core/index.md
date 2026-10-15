@@ -154,7 +154,7 @@ import * as sdk from "@codahq/packs-sdk";
 - [StringEmbedSchema](interfaces/StringEmbedSchema.md)
 - [StringTimeSchema](interfaces/StringTimeSchema.md)
 - [StringWithOptionsSchema](interfaces/StringWithOptionsSchema.md)
-- [~~SuggestedPrompt~~](interfaces/SuggestedPrompt.md)
+- [SuggestedPrompt](interfaces/SuggestedPrompt.md)
 - [SyncBase](interfaces/SyncBase.md)
 - [SyncCompletionMetadata](interfaces/SyncCompletionMetadata.md)
 - [SyncCompletionMetadataIncomplete](interfaces/SyncCompletionMetadataIncomplete.md)

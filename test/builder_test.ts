@@ -753,6 +753,45 @@ describe('Agent builder', () => {
     });
   });
 
+  describe('suggested prompts', () => {
+    const ticketStatus = {
+      name: 'ticketStatus',
+      displayName: 'Check ticket status',
+      prompt: 'Show me the status of all open support tickets',
+    };
+
+    it('has none until one is added', () => {
+      assert.isUndefined(agent.suggestedPrompts);
+    });
+
+    it('adds prompts in order', () => {
+      const urgent = {name: 'urgent', displayName: 'Urgent items', prompt: 'Find urgent tickets'};
+      agent.addSuggestedPrompt(ticketStatus).addSuggestedPrompt(urgent);
+      assert.deepEqual(agent.suggestedPrompts, [ticketStatus, urgent]);
+    });
+
+    it('carries through compilePackMetadata', () => {
+      agent.setInstructions('Do a thing.').addSuggestedPrompt(ticketStatus).setVersion('1.0.0');
+      const metadata = compilePackMetadata(agent as unknown as PackVersionDefinition);
+      assert.deepEqual(metadata.suggestedPrompts, [ticketStatus]);
+    });
+
+    it('copies the caller input rather than freezing it', () => {
+      const prompt = {...ticketStatus};
+      agent.addSuggestedPrompt(prompt);
+      assert.isFalse(Object.isFrozen(prompt));
+    });
+
+    it('still compiles and validates once frozen', async () => {
+      agent.setVersion('1.0.0').setInstructions('Do a thing.').addSuggestedPrompt(ticketStatus);
+      const result = await validatePackVersionMetadata(
+        compilePackMetadata(agent as unknown as PackVersionDefinition),
+        undefined,
+      );
+      assert.deepEqual(result.suggestedPrompts, [ticketStatus]);
+    });
+  });
+
   describe('default while-writing trigger', () => {
     const contextualTrigger = {condition: 'Offer a citation when the user asserts a statistic'};
 
@@ -989,8 +1028,9 @@ describe('Agent builder', () => {
     it('is not reachable at runtime either', () => {
       // Enumerated rather than hardcoded, so a method added to PackDefinitionBuilder later
       // can't quietly become reachable on an agent.
+      const authorableOnAgent = ['addSuggestedPrompt'];
       const packOnly = Object.getOwnPropertyNames(PackDefinitionBuilder.prototype).filter(
-        name => name !== 'constructor' && !name.startsWith('_'),
+        name => name !== 'constructor' && !name.startsWith('_') && !authorableOnAgent.includes(name),
       );
       const reachable = packOnly.filter(name => (agent as any)[name] !== undefined);
       assert.deepEqual(reachable, [], 'nothing pack-only is reachable on an agent');

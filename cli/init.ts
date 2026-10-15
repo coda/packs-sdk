@@ -10,6 +10,7 @@ const PacksExamplesDirectory = 'node_modules/@codahq/packs-examples';
 
 const GitIgnore = `.coda.json
 .coda-credentials.json
+.coda-agent.json
 `;
 
 function updateMoldSourceMap() {

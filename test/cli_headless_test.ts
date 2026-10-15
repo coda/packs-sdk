@@ -13,6 +13,7 @@ import {handleRelease} from '../cli/release';
 import {handleValidate} from '../cli/validate';
 import * as helpers from '../cli/helpers';
 import mockFs from 'mock-fs';
+import os from 'os';
 import path from 'path';
 import sinon from 'sinon';
 import * as testingHelpers from '../testing/helpers';
@@ -218,6 +219,14 @@ describe('Headless CLI', () => {
 
   describe('agent install', () => {
     const apiEndpoint = 'https://coda.io';
+    const installBody = {
+      agentInstanceId: 'ai-1',
+      tenantId: 'bt-1',
+      packId: 1234,
+      version: '3',
+      alreadyInstalled: false,
+    };
+    let manifestDir: string;
     let postedUrls: string[];
     let postedBodies: unknown[];
 
@@ -232,6 +241,8 @@ describe('Headless CLI', () => {
     }
 
     beforeEach(() => {
+      manifestDir = fsExtra.mkdtempSync(path.join(os.tmpdir(), 'agent-install-'));
+      configStorage.storePackId(manifestDir, 1234, apiEndpoint);
       postedUrls = [];
       postedBodies = [];
       sinon.stub(configStorage, 'getPackId').returns(1234);
@@ -241,13 +252,17 @@ describe('Headless CLI', () => {
       sinon.stub(global, 'fetch').callsFake(async (url: any, init: any) => {
         postedUrls.push(String(url));
         postedBodies.push(init?.body ? JSON.parse(String(init.body)) : undefined);
-        return jsonResponse({});
+        return jsonResponse(installBody);
       });
+    });
+
+    afterEach(() => {
+      fsExtra.removeSync(manifestDir);
     });
 
     async function install(args: Partial<Parameters<typeof handleAgentInstall>[0]>) {
       await handleAgentInstall({
-        manifestPath: 'pack.ts',
+        manifestPath: path.join(manifestDir, 'pack.ts'),
         apiEndpoint,
         apiToken: 'test-token',
         $0: '',
@@ -268,6 +283,13 @@ describe('Headless CLI', () => {
       assert.deepEqual(postedUrls, ['https://coda.io/apis/v1/packs/1234/versions/3/agentInstall']);
       assert.deepEqual(postedBodies, [{reinstall: false}]);
       assert.include(printedOutput(), 'Installed agent version 3 of pack 1234.');
+      assert.include(printedOutput(), 'agent instance: ai-1');
+      assert.include(printedOutput(), 'tenant: bt-1');
+      assert.deepEqual(configStorage.getAgentInstall(manifestDir, apiEndpoint), {
+        packId: 1234,
+        agentInstanceId: 'ai-1',
+        tenantId: 'bt-1',
+      });
     });
 
     it('uses an explicit version and skips the version lookup', async () => {
@@ -296,6 +318,35 @@ describe('Headless CLI', () => {
 
       assert.deepEqual(postedBodies, [{reinstall: true}]);
       assert.include(printedOutput(), 'Reinstalled agent version 3 of pack 1234.');
+      assert.include(printedOutput(), 'agent instance: ai-1');
+    });
+
+    it('says the agent is already installed and still saves the ids', async () => {
+      (global.fetch as unknown as sinon.SinonStub).callsFake(async (url: any, init: any) => {
+        postedUrls.push(String(url));
+        postedBodies.push(init?.body ? JSON.parse(String(init.body)) : undefined);
+        return jsonResponse({...installBody, alreadyInstalled: true});
+      });
+
+      await install({});
+
+      assert.include(printedOutput(), 'Agent version 3 of pack 1234 is already installed.');
+      assert.notInclude(printedOutput(), 'Installed agent version');
+      assert.deepEqual(configStorage.getAgentInstall(manifestDir, apiEndpoint)?.agentInstanceId, 'ai-1');
+    });
+
+    it('exits without saving when the response has no agent instance id', async () => {
+      (global.fetch as unknown as sinon.SinonStub).callsFake(async () => jsonResponse({}));
+      try {
+        await install({});
+        assert.fail('expected printAndExit');
+      } catch {
+        // printAndExit throws
+      }
+
+      assert.equal(exitCode, 1);
+      assert.include(exitMessage, 'did not include an agent instance id');
+      assert.isUndefined(configStorage.getAgentInstall(manifestDir, apiEndpoint));
     });
 
     it('prints the attempted URL and browser fallback for a missing route', async () => {
@@ -390,6 +441,58 @@ describe('Headless CLI', () => {
       assert.equal(lines.filter(line => line.includes('[fetcher]')).length, 1);
       assert.equal(lines.filter(line => line.includes('[custom]')).length, 1);
       assert.include(lines.join('\n'), 'Stopped polling after 5 minutes.');
+    });
+
+    it('uses the saved install when tenant and instance are omitted', async () => {
+      sinon.stub(configStorage, 'getPackId').returns(1234);
+      sinon.stub(configStorage, 'getAgentInstall').returns({
+        packId: 1234,
+        agentInstanceId: 'ai-saved',
+        tenantId: 'bt-saved',
+      });
+      const listAgentSessionIds = sinon.stub().resolves({items: []});
+      sinon.stub(helpers, 'createCodaClient').returns({
+        listPackVersions: async () => ({items: []}),
+        listAgentSessionIds,
+      } as any);
+
+      try {
+        await handleAgentLogs({
+          manifestPath: 'pack.ts',
+          apiEndpoint,
+          apiToken: 'test-token',
+          $0: '',
+          _: [],
+        } as any);
+        assert.fail('expected printAndExit');
+      } catch {
+        // printAndExit throws
+      }
+
+      sinon.assert.calledWith(listAgentSessionIds, 'bt-saved', 'ai-saved');
+      assert.include(exitMessage, 'No agent runs yet');
+    });
+
+    it('points at install when no ids are saved', async () => {
+      sinon.stub(configStorage, 'getPackId').returns(1234);
+      sinon.stub(configStorage, 'getAgentInstall').returns(undefined);
+      const createClient = sinon.stub(helpers, 'createCodaClient');
+
+      try {
+        await handleAgentLogs({
+          manifestPath: 'pack.ts',
+          apiEndpoint,
+          apiToken: 'test-token',
+          $0: '',
+          _: [],
+        } as any);
+        assert.fail('expected printAndExit');
+      } catch {
+        // printAndExit throws
+      }
+
+      sinon.assert.notCalled(createClient);
+      assert.include(exitMessage, 'packs agent install pack.ts');
     });
   });
 

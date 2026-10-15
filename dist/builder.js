@@ -509,6 +509,7 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         // Own and enumerable, unlike a class getter, so compilePackMetadata's object rest still copies them.
         Object.defineProperty(this, 'agent', { enumerable: true, get: () => state.agent });
         Object.defineProperty(this, 'defaultTriggers', { enumerable: true, get: () => state.defaultTriggers });
+        Object.defineProperty(this, 'suggestedPrompts', { enumerable: true, get: () => state.suggestedPrompts });
     }
     /**
      * Sets this agent's instructions.
@@ -553,6 +554,24 @@ class AgentDefinitionBuilder extends BaseDefinitionBuilder {
         }
         const state = stateOf(this);
         state.agent = frozenCopy({ ...state.agent, tools });
+        return this;
+    }
+    /**
+     * Adds a starter prompt that shows as a button when someone opens this agent in chat. An agent can have up to 3.
+     *
+     * @example
+     * ```
+     * pack.addSuggestedPrompt({
+     *   name: 'ticketStatus',
+     *   displayName: 'Check ticket status',
+     *   prompt: 'Show me the status of all open support tickets',
+     * });
+     * ```
+     */
+    addSuggestedPrompt(prompt) {
+        var _a;
+        const state = stateOf(this);
+        state.suggestedPrompts = frozenCopy([...((_a = state.suggestedPrompts) !== null && _a !== void 0 ? _a : []), prompt]);
         return this;
     }
     /**

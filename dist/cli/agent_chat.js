@@ -27,6 +27,7 @@ exports.handleAgentChat = exports.nextBackoffMs = exports.joinAssistantTexts = e
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
+const config_storage_1 = require("./config_storage");
 const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
@@ -139,11 +140,18 @@ async function readErrorBody(response) {
 function isTransientStatus(status) {
     return status === 429 || status >= 500;
 }
-async function handleAgentChat({ manifestPath, prompt, agentInstanceId, tenantId: tenantIdFlag, timeout, apiToken, apiEndpoint, }) {
+async function handleAgentChat({ manifestPath, prompt, agentInstanceId: agentInstanceIdFlag, tenantId: tenantIdFlag, timeout, apiToken, apiEndpoint, }) {
+    var _a;
     const manifestDir = path.dirname(manifestPath);
     const formattedEndpoint = (0, helpers_3.formatEndpoint)(apiEndpoint);
     apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     const packId = (0, helpers_2.assertPackId)(manifestDir, apiEndpoint);
+    const agentInstanceId = agentInstanceIdFlag || ((_a = (0, config_storage_1.getAgentInstall)(manifestDir, apiEndpoint)) === null || _a === void 0 ? void 0 : _a.agentInstanceId);
+    if (!agentInstanceId) {
+        return (0, helpers_5.printAndExit)('Error: agent chat needs an installed agent instance.\n' +
+            '  packs agent install pack.ts\n' +
+            '  Or pass --agentInstanceId.');
+    }
     const headers = { Authorization: `Bearer ${apiToken}`, 'Content-Type': 'application/json' };
     const timeoutSecs = timeout !== null && timeout !== void 0 ? timeout : DEFAULT_TIMEOUT_SECS;
     let triggerBody;
@@ -162,7 +170,7 @@ async function handleAgentChat({ manifestPath, prompt, agentInstanceId, tenantId
             }
             if (triggerResponse.status === 404) {
                 return (0, helpers_5.printAndExit)('Agent not found or agent triggering is not enabled.\n' +
-                    '  Check --agentInstanceId (copy it from the installed agent URL) and that triggering is enabled.');
+                    '  Check the agent instance id and that triggering is enabled.');
             }
             if (triggerResponse.status === 429) {
                 return (0, helpers_5.printAndExit)(`Agent is busy, retry later. (${triggerResponse.status} ${triggerResponse.statusText})`);

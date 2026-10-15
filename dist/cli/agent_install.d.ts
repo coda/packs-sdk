@@ -8,4 +8,4 @@ export interface AgentInstallArgs {
     apiEndpoint: string;
 }
 export declare function buildAgentInstallUrl(apiEndpoint: string, packId: number, version: string): string;
-export declare function handleAgentInstall({ manifestPath, version, reinstall, yes, apiToken, apiEndpoint, }: ArgumentsCamelCase<AgentInstallArgs>): Promise<void>;
+export declare function handleAgentInstall({ manifestPath, version, reinstall, yes, apiToken, apiEndpoint, }: ArgumentsCamelCase<AgentInstallArgs>): Promise<undefined>;
