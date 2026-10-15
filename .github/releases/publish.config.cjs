@@ -21,7 +21,7 @@ module.exports = {
     ...base.github,
     release: true,
     draft: true,
-    releaseName: 'v${version}',
+    releaseName: 'Release ${version}',
     tokenRef: 'GH_TOKEN',
   },
 };
