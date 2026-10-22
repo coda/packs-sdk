@@ -1,4 +1,5 @@
-> **This repository has moved to [superhuman/plugins-sdk](https://github.com/superhuman/plugins-sdk).**
+> [!IMPORTANT]
+> This repository has moved to [superhuman/plugins-sdk](https://github.com/superhuman/plugins-sdk).
 
 [![npm release](https://img.shields.io/npm/v/@codahq/packs-sdk?color=%23F8AD40&logo=coda&logoColor=%23EE5A29&style=flat-square)](https://www.npmjs.com/package/@codahq/packs-sdk)
 [![Downloads](https://img.shields.io/npm/dt/@codahq/packs-sdk?color=%23F8AD40&label=npm%20downloads&style=flat-square)](https://coda.io/gallery?filter=Packs)
