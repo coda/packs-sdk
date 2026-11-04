@@ -35,8 +35,8 @@ Inspect the stage and check npm `latest`. Any maintainer with publish access to
 or with `npm stage approve <stage-id>`; approval does not require the token
 owner's account. After npm approval, publish the
 GitHub draft using the summary link. If a newer GitHub release exists, leave
-**Set as latest release** unchecked. Complete the documentation deployments and
-internal dependency update.
+**Set as latest release** unchecked. Complete the internal documentation
+deployments and dependency update.
 
 To validate without submitting a package, run **Publish SDK release** manually
 on `main`. Enter the merged PR number in `release-pr` (e.g. `1234`) and leave
