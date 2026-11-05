@@ -193,7 +193,7 @@ export async function handleUpload({
   }
 
   cleanup(intermediateOutputDirectory, logger);
-  logger.info('Done!');
+  print(`uploaded pack_id: ${packId}\nversion: ${packVersion}\nurl: ${formattedEndpoint}/p/${packId}`);
 }
 
 async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[header: string]: any}) {

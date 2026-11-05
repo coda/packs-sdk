@@ -39,5 +39,5 @@ export async function handleWhoami({apiToken, apiEndpoint}: ArgumentsCamelCase<W
 export function formatWhoami(user: PublicApiUser) {
   const {name, loginId, tokenName, scoped} = user;
 
-  return `You are ${name} (${loginId}) using ${scoped ? 'scoped' : 'non-scoped'} token "${tokenName}"`;
+  return `name: ${name}\nlogin: ${loginId}\ntoken: ${tokenName}\nscoped: ${scoped}`;
 }

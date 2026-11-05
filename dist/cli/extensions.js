@@ -19,7 +19,7 @@ async function handleExtensions(args) {
         switch (tool) {
             case Tools.VSCode:
                 installVSCodeExtensions();
-                (0, helpers_2.print)('Installed Visual Studio Code extensions.');
+                (0, helpers_2.print)('installed tool: vscode');
                 break;
             default:
                 (0, helpers_3.printAndExit)(`Unsupported tool: ${tool}`);

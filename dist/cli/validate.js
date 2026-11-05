@@ -58,7 +58,7 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
         (0, helpers_5.printAndExit)(`${e.message}: \n${validationErrors}`);
     }
     if (!checkDeprecationWarnings) {
-        (0, helpers_4.print)('Pack is valid.');
+        (0, helpers_4.print)('valid');
         return;
     }
     try {
@@ -69,7 +69,7 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
         const deprecationWarnings = (_b = packMetadataValidationError.validationErrors) === null || _b === void 0 ? void 0 : _b.map(makeWarningMessage).join('\n');
         (0, helpers_5.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
     }
-    (0, helpers_4.print)('Pack is valid.');
+    (0, helpers_4.print)('valid');
 }
 exports.validateMetadata = validateMetadata;
 function makeErrorMessage({ path, message }) {

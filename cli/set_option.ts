@@ -18,7 +18,7 @@ export async function handleSetOption({manifestFile, option, value}: ArgumentsCa
   const manifestDir = path.dirname(manifestFile);
   const options = validateOption(option, value);
   storePackOptions(manifestDir, options);
-  print('Option stored successfully.');
+  print(`set option: ${option}\nvalue: ${value}`);
 }
 
 function validateOption(option: string, value: string): PackOptions {

@@ -131,7 +131,7 @@ export async function handleRelease({
     }
   }
 
-  return printAndExit('Done!', 0);
+  return process.exit(0);
 }
 
 function buildTagMessage(releaseId: number, notes: string): string {

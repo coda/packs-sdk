@@ -95,7 +95,7 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, a
             }
         }
     }
-    return (0, helpers_7.printAndExit)('Done!', 0);
+    return process.exit(0);
 }
 exports.handleRelease = handleRelease;
 function buildTagMessage(releaseId, notes) {

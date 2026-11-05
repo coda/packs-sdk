@@ -35,7 +35,7 @@ async function handleSetOption({ manifestFile, option, value }) {
     const manifestDir = path.dirname(manifestFile);
     const options = validateOption(option, value);
     (0, config_storage_2.storePackOptions)(manifestDir, options);
-    (0, helpers_1.print)('Option stored successfully.');
+    (0, helpers_1.print)(`set option: ${option}\nvalue: ${value}`);
 }
 exports.handleSetOption = handleSetOption;
 function validateOption(option, value) {

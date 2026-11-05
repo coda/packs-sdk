@@ -12,10 +12,10 @@ async function handleBuild({ outputDir, manifestFile, minify, timerStrategy, int
         intermediateOutputDirectory,
     });
     if (outputDir) {
-        (0, helpers_1.print)(`Pack built successfully. Compiled output is in ${bundlePath}. Intermediate files are in ${actualIntermediateOutputDirectory}`);
+        (0, helpers_1.print)(`built bundle: ${bundlePath}\nintermediate: ${actualIntermediateOutputDirectory}`);
     }
     else {
-        (0, helpers_1.print)(`Pack built successfully. Compiled output is in ${bundlePath}.`);
+        (0, helpers_1.print)(`built bundle: ${bundlePath}`);
     }
 }
 exports.handleBuild = handleBuild;

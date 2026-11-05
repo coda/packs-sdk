@@ -19,7 +19,7 @@ export async function handleExtensions(args: ArgumentsCamelCase<ExtensionsArgs>)
     switch (tool) {
       case Tools.VSCode:
         installVSCodeExtensions();
-        print('Installed Visual Studio Code extensions.');
+        print('installed tool: vscode');
         break;
       default:
         printAndExit(`Unsupported tool: ${tool}`);

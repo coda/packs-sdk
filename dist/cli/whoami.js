@@ -31,6 +31,6 @@ async function handleWhoami({ apiToken, apiEndpoint }) {
 exports.handleWhoami = handleWhoami;
 function formatWhoami(user) {
     const { name, loginId, tokenName, scoped } = user;
-    return `You are ${name} (${loginId}) using ${scoped ? 'scoped' : 'non-scoped'} token "${tokenName}"`;
+    return `name: ${name}\nlogin: ${loginId}\ntoken: ${tokenName}\nscoped: ${scoped}`;
 }
 exports.formatWhoami = formatWhoami;

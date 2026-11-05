@@ -48,7 +48,7 @@ export async function validateMetadata(
   }
 
   if (!checkDeprecationWarnings) {
-    print('Pack is valid.');
+    print('valid');
     return;
   }
 
@@ -60,7 +60,7 @@ export async function validateMetadata(
     printAndExit(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
   }
 
-  print('Pack is valid.');
+  print('valid');
 }
 
 function makeErrorMessage({path, message}: ValidationError): string {

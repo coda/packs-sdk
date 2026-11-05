@@ -26,11 +26,9 @@ export async function handleBuild({
     intermediateOutputDirectory,
   });
   if (outputDir) {
-    print(
-      `Pack built successfully. Compiled output is in ${bundlePath}. Intermediate files are in ${actualIntermediateOutputDirectory}`,
-    );
+    print(`built bundle: ${bundlePath}\nintermediate: ${actualIntermediateOutputDirectory}`);
   } else {
-    print(`Pack built successfully. Compiled output is in ${bundlePath}.`);
+    print(`built bundle: ${bundlePath}`);
   }
 }
 

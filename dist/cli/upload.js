@@ -165,7 +165,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, apiEndp
         printAndExit(errors.join(`\n`));
     }
     cleanup(intermediateOutputDirectory, logger);
-    logger.info('Done!');
+    (0, helpers_7.print)(`uploaded pack_id: ${packId}\nversion: ${packVersion}\nurl: ${formattedEndpoint}/p/${packId}`);
 }
 exports.handleUpload = handleUpload;
 async function uploadPack(uploadUrl, uploadPayload, headers) {
