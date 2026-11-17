@@ -38,14 +38,20 @@ const DEFINE_STUB_HELPER = `
      const __defineStub = (target, key, value) =>
        Object.defineProperty(target, key, {value, writable: true, enumerable: true, configurable: true});`;
 
-const FROZEN_TRANSFER_OPTS_HELPER = `
-     const __transferOpts = (copy, promise) => Object.freeze({
+// Transfer-option objects use object-literal syntax so every option isolated-vm reads is an own
+// property that a poisoned prototype cannot shadow. They are consumed immediately by the following
+// apply() and never exposed to guest code, so they need no freezing. Do NOT wrap these in
+// Object.freeze (or any other global): this helper runs in the guest realm after untrusted bundle
+// code, which can replace Object.freeze with a version that returns an object flipping `copy` to
+// `externalCopy`, leaking a native isolated-vm handle into the sandbox.
+const TRANSFER_OPTS_HELPER = `
+     const __transferOpts = (copy, promise) => ({
        copy,
        externalCopy: undefined,
        reference: undefined,
        promise,
      });
-     const __applyOpts = (args, result) => Object.freeze({
+     const __applyOpts = (args, result) => ({
        timeout: undefined,
        arguments: args,
        result,
@@ -109,7 +115,7 @@ export async function injectAsyncFunction(
   await context.evalClosure(
     `'use strict';
      ${DEFINE_STUB_HELPER}
-     ${FROZEN_TRANSFER_OPTS_HELPER}
+     ${TRANSFER_OPTS_HELPER}
      const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, true));
      __defineStub(${stubParent}, ${stubKey}, async function(...args) {
         return coda.handleErrorAsync(async () => {
@@ -143,7 +149,7 @@ export async function injectLogFunction(
   await context.evalClosure(
     `'use strict';
      ${DEFINE_STUB_HELPER}
-     ${FROZEN_TRANSFER_OPTS_HELPER}
+     ${TRANSFER_OPTS_HELPER}
      const __opts = __applyOpts(__transferOpts(true, undefined), undefined);
      __defineStub(${stubParent}, ${stubKey}, function(...args) {
         coda.handleError(() => {
@@ -171,7 +177,7 @@ export async function injectFetcherFunction(
   await context.evalClosure(
     `'use strict';
      ${DEFINE_STUB_HELPER}
-     ${FROZEN_TRANSFER_OPTS_HELPER}
+     ${TRANSFER_OPTS_HELPER}
      const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, true));
      __defineStub(${stubParent}, ${stubKey}, async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
@@ -246,7 +252,7 @@ export async function injectSerializer(context: Context, stubName: string) {
   await context.evalClosure(
     `'use strict';
      ${DEFINE_STUB_HELPER}
-     ${FROZEN_TRANSFER_OPTS_HELPER}
+     ${TRANSFER_OPTS_HELPER}
      const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, undefined));
      __defineStub(${stubName}, 'serialize', (arg) => $0.applySync(undefined, [arg], __opts))`,
     [serializeFn],
@@ -258,7 +264,7 @@ export async function injectSerializer(context: Context, stubName: string) {
   await context.evalClosure(
     `'use strict';
      ${DEFINE_STUB_HELPER}
-     ${FROZEN_TRANSFER_OPTS_HELPER}
+     ${TRANSFER_OPTS_HELPER}
      const __opts = __applyOpts(__transferOpts(true, undefined), __transferOpts(true, undefined));
      __defineStub(${stubName}, 'deserialize', (arg) => $0.applySync(undefined, [arg], __opts))`,
     [deserializeFn],
