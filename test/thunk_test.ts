@@ -214,4 +214,32 @@ describeVmOnly('Thunk', () => {
     const leaked = await ivmContext.eval('typeof globalThis.__leaked');
     assert.equal(leaked, 'undefined');
   });
+
+  // Regression test for the isolate escape where a Pack replaced the guest-realm `Object.freeze`
+  // before the host injected its bridges. The host used to build its isolated-vm transfer options
+  // with `Object.freeze(...)`, so the attacker's replacement ran on those objects and could flip
+  // the result policy from `copy` to `externalCopy`, leaking a native ExternalCopy into the guest.
+  // The transfer options are now plain object literals that never call any guest-controlled global.
+  it('injected host closures do not route transfer options through guest Object.freeze', async () => {
+    const isolate = new ivm.Isolate({memoryLimit: 128});
+    const ivmContext = await isolate.createContext();
+    const jail = ivmContext.global;
+    await jail.set('global', jail.derefInto());
+    await jail.set('coda', {}, {copy: true});
+    await jail.set('executionContext', {temporaryBlobStorage: {}}, {copy: true});
+    await registerBundle(isolate, ivmContext, getThunkPath(), 'coda');
+
+    await ivmContext.eval(`
+      globalThis.__freezeCalled = false;
+      Object.freeze = function(target) {
+        globalThis.__freezeCalled = true;
+        return target;
+      };
+    `);
+
+    await injectAsyncFunction(ivmContext, 'executionContext.temporaryBlobStorage.storeUrl', async () => undefined);
+
+    const freezeCalled = await ivmContext.eval('globalThis.__freezeCalled');
+    assert.equal(freezeCalled, false);
+  });
 });
